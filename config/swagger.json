@@ -1,0 +1,355 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Student Management System API",
+    "version": "1.0.0",
+    "description": "Interactive Swagger UI documentation for all endpoints of the Student Management System backend."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your JWT token obtained from /api/auth/login"
+      }
+    }
+  },
+  "tags": [
+    { "name": "System Health", "description": "Uptime and status check" },
+    { "name": "Authentication", "description": "Login, register, and profile access" },
+    { "name": "Departments", "description": "Academic department records" },
+    { "name": "Students", "description": "Student profiles, achievements, and certs" },
+    { "name": "Faculty", "description": "Faculty staff directory" },
+    { "name": "Activities", "description": "Student extracurricular and technical activities" },
+    { "name": "Verification", "description": "Faculty approval & point allocation workflow" },
+    { "name": "Analytics & Reports", "description": "Dashboard metrics and generated student reports" },
+    { "name": "Notifications", "description": "In-app alerts and notifications" }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["System Health"],
+        "summary": "Root welcome endpoint",
+        "responses": {
+          "200": { "description": "API status and docs link" }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": ["System Health"],
+        "summary": "Service uptime health check",
+        "responses": {
+          "200": { "description": "Service is UP" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Authenticate user & get JWT token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "alice@student.edu" },
+                  "password": { "type": "string", "example": "password123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Successful login with JWT token" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new user account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": { "type": "string", "example": "Ramya Sri" },
+                  "email": { "type": "string", "example": "ramya@student.edu" },
+                  "password": { "type": "string", "example": "password123" },
+                  "role": { "type": "string", "enum": ["student", "faculty", "admin"], "example": "student" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "400": { "description": "Missing fields or user exists" }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get profile of logged-in user",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User profile data" },
+          "401": { "description": "Not authorized" }
+        }
+      }
+    },
+    "/api/departments": {
+      "get": {
+        "tags": ["Departments"],
+        "summary": "List all departments",
+        "responses": {
+          "200": { "description": "Array of departments" }
+        }
+      }
+    },
+    "/api/departments/{id}": {
+      "get": {
+        "tags": ["Departments"],
+        "summary": "Get department details by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "dept_cse_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Department detail" }
+        }
+      }
+    },
+    "/api/students": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "List all students (Faculty or Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of student profiles" }
+        }
+      }
+    },
+    "/api/students/{id}": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get student by ID",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Student profile" }
+        }
+      }
+    },
+    "/api/students/{id}/achievements": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get student achievements",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "List of achievements" }
+        }
+      }
+    },
+    "/api/students/{id}/internships": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get student internships",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "List of internships" }
+        }
+      }
+    },
+    "/api/students/{id}/certifications": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get student certifications",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "List of certifications" }
+        }
+      }
+    },
+    "/api/faculty": {
+      "get": {
+        "tags": ["Faculty"],
+        "summary": "List faculty directory",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of faculty" }
+        }
+      }
+    },
+    "/api/faculty/{id}": {
+      "get": {
+        "tags": ["Faculty"],
+        "summary": "Get faculty by ID",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "faculty_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Faculty profile" }
+        }
+      }
+    },
+    "/api/activities": {
+      "get": {
+        "tags": ["Activities"],
+        "summary": "Get activities (Student views own; Faculty/Admin views all)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Activities list" }
+        }
+      },
+      "post": {
+        "tags": ["Activities"],
+        "summary": "Submit a new student activity",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "category", "activityDate"],
+                "properties": {
+                  "title": { "type": "string", "example": "National Robotics Championship 2026" },
+                  "category": { "type": "string", "example": "cat_hackathon" },
+                  "description": { "type": "string", "example": "Built autonomous navigation robot" },
+                  "activityDate": { "type": "string", "format": "date", "example": "2026-03-01" },
+                  "pointsRequested": { "type": "number", "example": 20 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Activity created" }
+        }
+      }
+    },
+    "/api/activities/{id}": {
+      "get": {
+        "tags": ["Activities"],
+        "summary": "Get single activity by ID",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "act_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Activity detail with evidence files" }
+        }
+      }
+    },
+    "/api/verification/{activityId}": {
+      "post": {
+        "tags": ["Verification"],
+        "summary": "Faculty verify or approve an activity",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "activityId", "in": "path", "required": true, "schema": { "type": "string", "example": "act_2" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": { "type": "string", "enum": ["approved", "rejected", "requested_changes"], "example": "approved" },
+                  "pointsGranted": { "type": "number", "example": 25 },
+                  "remarks": { "type": "string", "example": "Certificate credentials verified and approved." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verification recorded successfully" }
+        }
+      }
+    },
+    "/api/analytics/dashboard": {
+      "get": {
+        "tags": ["Analytics & Reports"],
+        "summary": "Get dashboard KPI counts",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "KPI metrics" }
+        }
+      }
+    },
+    "/api/analytics/departments": {
+      "get": {
+        "tags": ["Analytics & Reports"],
+        "summary": "Get department-wise activity analytics (Faculty or Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Department analytics breakdown" }
+        }
+      }
+    },
+    "/api/reports/student/{studentId}": {
+      "get": {
+        "tags": ["Analytics & Reports"],
+        "summary": "Generate comprehensive student report",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "studentId", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Student full academic and activity report" }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "Get user notifications",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of user alerts" }
+        }
+      }
+    },
+    "/api/notifications/read-all": {
+      "put": {
+        "tags": ["Notifications"],
+        "summary": "Mark all notifications as read",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "All marked as read" }
+        }
+      }
+    }
+  }
+}
