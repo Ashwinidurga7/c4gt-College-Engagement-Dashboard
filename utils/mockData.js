@@ -9,7 +9,28 @@ class MockQuery {
     return this; // chainable mock
   }
 
-  select() {
+  select(fields) {
+    if (fields && typeof fields === 'string' && fields.includes('-password')) {
+      const strippedPromise = this.resultPromise.then((data) => {
+        if (!data) return data;
+        if (Array.isArray(data)) {
+          return data.map((item) => {
+            if (item && typeof item === 'object') {
+              const copy = { ...item };
+              delete copy.password;
+              return copy;
+            }
+            return item;
+          });
+        } else if (typeof data === 'object') {
+          const copy = { ...data };
+          delete copy.password;
+          return copy;
+        }
+        return data;
+      });
+      return new MockQuery(strippedPromise);
+    }
     return this; // chainable mock
   }
 
@@ -137,24 +158,30 @@ class MockModel {
     };
   }
 
-  async findByIdAndUpdate(id, updates, options = {}) {
-    const idx = this.data.findIndex((item) => String(item._id) === String(id));
-    if (idx === -1) return null;
-    this.data[idx] = { ...this.data[idx], ...updates, updatedAt: new Date() };
-    return {
-      ...this.data[idx],
-      toObject: () => ({ ...this.data[idx] }),
-    };
+  findByIdAndUpdate(id, updates, options = {}) {
+    const promise = Promise.resolve().then(() => {
+      const idx = this.data.findIndex((item) => String(item._id) === String(id));
+      if (idx === -1) return null;
+      this.data[idx] = { ...this.data[idx], ...updates, updatedAt: new Date() };
+      return {
+        ...this.data[idx],
+        toObject: () => ({ ...this.data[idx] }),
+      };
+    });
+    return new MockQuery(promise);
   }
 
-  async findOneAndUpdate(query, updates, options = {}) {
-    const found = this.data.find((item) => this._matchesQuery(item, query));
-    if (!found) return null;
-    Object.assign(found, updates, { updatedAt: new Date() });
-    return {
-      ...found,
-      toObject: () => ({ ...found }),
-    };
+  findOneAndUpdate(query, updates, options = {}) {
+    const promise = Promise.resolve().then(() => {
+      const found = this.data.find((item) => this._matchesQuery(item, query));
+      if (!found) return null;
+      Object.assign(found, updates, { updatedAt: new Date() });
+      return {
+        ...found,
+        toObject: () => ({ ...found }),
+      };
+    });
+    return new MockQuery(promise);
   }
 
   async findByIdAndDelete(id) {
@@ -341,6 +368,156 @@ const mockNotifications = [
   },
 ];
 
+const mockCourses = [
+  {
+    _id: 'course_1',
+    code: 'CS301',
+    name: 'Data Structures & Algorithms',
+    department: 'dept_cse_1',
+    credits: 4,
+    semester: 3,
+    instructor: 'user_faculty_1',
+    description: 'Fundamental data structures and algorithmic complexity analysis.',
+    syllabus: 'Arrays, Linked Lists, Stacks, Queues, Trees, Graphs, Sorting Algorithms, Dynamic Programming',
+    capacity: 60,
+    enrolledStudents: ['student_1'],
+    status: 'active',
+  },
+  {
+    _id: 'course_2',
+    code: 'CS402',
+    name: 'Cloud Computing & DevOps',
+    department: 'dept_cse_1',
+    credits: 3,
+    semester: 6,
+    instructor: 'user_faculty_1',
+    description: 'Introduction to virtualization, cloud architectures, container orchestration, and CI/CD pipelines.',
+    syllabus: 'Virtual Machines, Docker, Kubernetes, AWS / Azure services, Terraform, GitHub Actions',
+    capacity: 50,
+    enrolledStudents: [],
+    status: 'active',
+  },
+  {
+    _id: 'course_3',
+    code: 'EC201',
+    name: 'Digital Signal Processing',
+    department: 'dept_ece_1',
+    credits: 4,
+    semester: 4,
+    instructor: null,
+    description: 'Study of discrete-time signals, filtering techniques, and digital transform algorithms.',
+    syllabus: 'Signals, Systems, Z-Transform, Discrete Fourier Transform, FFT, FIR and IIR filters',
+    capacity: 45,
+    enrolledStudents: [],
+    status: 'active',
+  },
+];
+
+const mockCertificates = [
+  {
+    _id: 'cert_1',
+    student: 'student_1',
+    title: 'AWS Certified Cloud Practitioner',
+    issuingOrganization: 'Amazon Web Services',
+    issueDate: new Date('2026-01-10'),
+    expiryDate: new Date('2029-01-10'),
+    credentialId: 'AWS-12345678',
+    credentialUrl: 'https://aws.amazon.com/verification/AWS-12345678',
+    skills: ['Cloud Computing', 'AWS', 'DevOps'],
+    status: 'verified',
+    verificationRemarks: 'Verified against official AWS certificate portal.',
+  },
+  {
+    _id: 'cert_2',
+    student: 'student_1',
+    title: 'Deep Learning Specialization',
+    issuingOrganization: 'DeepLearning.AI / Coursera',
+    issueDate: new Date('2025-11-20'),
+    expiryDate: null,
+    credentialId: 'COURSERA-DL-9988',
+    credentialUrl: 'https://coursera.org/verify/COURSERA-DL-9988',
+    skills: ['Neural Networks', 'PyTorch', 'Computer Vision'],
+    status: 'pending',
+    verificationRemarks: null,
+  },
+];
+
+const mockProjects = [
+  {
+    _id: 'proj_1',
+    student: 'student_1',
+    title: 'Smart Irrigation IoT System',
+    description: 'An automated solar-powered irrigation and soil moisture monitoring platform with mobile web dashboard.',
+    technologies: ['Node.js', 'React', 'C++', 'MQTT', 'MongoDB'],
+    githubUrl: 'https://github.com/alice/smart-irrigation',
+    liveUrl: 'https://smart-irrigation-demo.app',
+    startDate: new Date('2025-08-01'),
+    endDate: new Date('2025-11-30'),
+    status: 'completed',
+    teamMembers: ['Alice Johnson', 'Bob Miller'],
+    guideFaculty: 'Dr. John Smith',
+  },
+  {
+    _id: 'proj_2',
+    student: 'student_1',
+    title: 'College Activity & Placement Tracker',
+    description: 'Full stack web application for tracking student activities, certifications, and generating professional resumes.',
+    technologies: ['React', 'Express', 'Node.js', 'MongoDB'],
+    githubUrl: 'https://github.com/alice/college-portal',
+    liveUrl: null,
+    startDate: new Date('2026-01-15'),
+    endDate: null,
+    status: 'ongoing',
+    teamMembers: ['Alice Johnson'],
+    guideFaculty: 'Dr. John Smith',
+  },
+];
+
+const mockResumes = [
+  {
+    _id: 'resume_1',
+    student: 'student_1',
+    title: 'Alice Johnson - Software Engineer Resume',
+    summary: 'Passionate Computer Science student with experience in Full Stack Development, Cloud technologies, and IoT solutions. Winner of State Hackathon 2025.',
+    template: 'modern',
+    isDefault: true,
+    skills: ['JavaScript', 'TypeScript', 'Node.js', 'React', 'Python', 'MongoDB', 'AWS', 'Docker'],
+    education: [
+      {
+        institution: 'College of Engineering & Technology',
+        degree: 'B.Tech in Computer Science and Engineering',
+        startYear: '2022',
+        endYear: '2026',
+        cgpa: '8.9',
+      },
+    ],
+    experience: [
+      {
+        role: 'Full Stack Web Developer Intern',
+        company: 'Tech Innovations Corp',
+        duration: 'June 2025 - August 2025',
+        description: 'Developed microservices, REST APIs, and frontend dashboards.',
+      },
+    ],
+    projects: ['proj_1', 'proj_2'],
+    certifications: ['cert_1'],
+    fileUrl: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+const mockSystemSettings = {
+  academicYear: '2025-2026',
+  currentSemester: 'Even (Spring 2026)',
+  portalMaintenance: false,
+  allowStudentRegistration: true,
+  pointsApprovalThreshold: 100,
+  maxPointsPerSemester: 150,
+  contactSupportEmail: 'support@college.edu',
+  lastUpdated: new Date(),
+};
+
 // Export Models
 module.exports = {
   User: new MockModel('User', mockUsers),
@@ -353,7 +530,12 @@ module.exports = {
   Verification: new MockModel('Verification', []),
   Achievement: new MockModel('Achievement', mockAchievements),
   Internship: new MockModel('Internship', mockInternships),
-  Certification: new MockModel('Certification', mockCertifications),
+  Certification: new MockModel('Certification', mockCertificates),
+  Certificate: new MockModel('Certificate', mockCertificates),
+  Course: new MockModel('Course', mockCourses),
+  Project: new MockModel('Project', mockProjects),
+  Resume: new MockModel('Resume', mockResumes),
   Event: new MockModel('Event', []),
   Notification: new MockModel('Notification', mockNotifications),
+  mockSystemSettings,
 };

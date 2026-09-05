@@ -17,15 +17,12 @@ const verifyActivity = async (req, res, next) => {
     }
 
     let facultyProfile = await Faculty.findOne({ user: req.user.id });
-    if (!facultyProfile && req.user.role === 'admin') {
-      // fallback for admin if needed
-      facultyProfile = { _id: req.user.id };
-    }
+    const verifierId = facultyProfile ? facultyProfile._id : req.user.id;
 
     // Create verification log
     const verification = await Verification.create({
       activity: activity._id,
-      verifiedBy: facultyProfile._id,
+      verifiedBy: verifierId,
       status,
       remarks: remarks || '',
       pointsGranted: status === 'approved' ? pointsGranted || activity.pointsRequested : 0,

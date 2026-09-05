@@ -13,6 +13,11 @@ const departmentRoutes = require('./routes/departmentRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const certificateRoutes = require('./routes/certificateRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const resumeRoutes = require('./routes/resumeRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 
@@ -56,6 +61,11 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/certificates', certificateRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/resumes', resumeRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);
