@@ -30,7 +30,12 @@
     { "name": "Activities", "description": "Student extracurricular and technical activities" },
     { "name": "Verification", "description": "Faculty approval & point allocation workflow" },
     { "name": "Analytics & Reports", "description": "Dashboard metrics and generated student reports" },
-    { "name": "Notifications", "description": "In-app alerts and notifications" }
+    { "name": "Notifications", "description": "In-app alerts and notifications" },
+    { "name": "Events", "description": "College events and year-based notifications" },
+    { "name": "Certifications", "description": "Student certifications and verification workflows" },
+    { "name": "Internships & Achievements", "description": "Student internships and academic achievements" },
+    { "name": "Head of Department (HOD)", "description": "HOD scoped dashboard, students, reports, and CTPO approvals" },
+    { "name": "Class Teacher & Placement Officer (CTPO)", "description": "CTPO scoped class section dashboard and student tracking" }
   ],
   "paths": {
     "/": {
@@ -88,18 +93,20 @@
                 "type": "object",
                 "required": ["name", "email", "password"],
                 "properties": {
-                  "name": { "type": "string", "example": "Ramya Sri" },
-                  "email": { "type": "string", "example": "ramya@student.edu" },
+                  "name": { "type": "string", "example": "Ravi Kumar" },
+                  "email": { "type": "string", "example": "ravi@college.edu" },
                   "password": { "type": "string", "example": "password123" },
-                  "role": { "type": "string", "enum": ["student", "faculty", "admin"], "example": "student" }
+                  "role": { "type": "string", "enum": ["student", "faculty", "admin"], "example": "faculty" },
+                  "department": { "type": "string", "example": "CSE", "description": "Required for faculty" },
+                  "year": { "type": "string", "example": "3rd Year", "description": "Required for faculty" }
                 }
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "User created successfully" },
-          "400": { "description": "Missing fields or user exists" }
+          "201": { "description": "User created successfully (Faculty registered with pending status)" },
+          "400": { "description": "Missing fields, department/year missing for faculty, or user exists" }
         }
       }
     },
@@ -145,6 +152,102 @@
         }
       }
     },
+    "/api/students/dashboard": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Consolidated Student Dashboard (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Complete consolidated dashboard data" }
+        }
+      }
+    },
+    "/api/students/profile": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get logged-in student profile (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Student profile data" }
+        }
+      },
+      "put": {
+        "tags": ["Students"],
+        "summary": "Update logged-in student profile (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": { "type": "string", "example": "+1-555-0199" },
+                  "city": { "type": "string", "example": "Kakinada" },
+                  "area": { "type": "string", "example": "Sarpavaram" },
+                  "latitude": { "type": "number", "example": 16.9891 },
+                  "longitude": { "type": "number", "example": 82.2475 },
+                  "linkedinUrl": { "type": "string", "example": "https://linkedin.com/in/alice-johnson" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated student profile" }
+        }
+      }
+    },
+    "/api/students/academic": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get academic details (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Academic information" }
+        }
+      }
+    },
+    "/api/students/attendance": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get attendance report with calendar (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "month", "in": "query", "schema": { "type": "string", "example": "September" } },
+          { "name": "year", "in": "query", "schema": { "type": "string", "example": "2026" } }
+        ],
+        "responses": {
+          "200": { "description": "Attendance report with calendar and subject percentages" }
+        }
+      }
+    },
+    "/api/students/academic-report": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get academic report with semester grades and credits (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "semester", "in": "query", "schema": { "type": "integer", "example": 6 } }
+        ],
+        "responses": {
+          "200": { "description": "Academic report with subjects, grades, SGPA, and CGPA" }
+        }
+      }
+    },
+    "/api/students/nearby-activities": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get nearby activities matching location and department/year (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "radius", "in": "query", "schema": { "type": "number", "example": 10 } }
+        ],
+        "responses": {
+          "200": { "description": "Filtered list of nearby events and activities" }
+        }
+      }
+    },
     "/api/students/{id}": {
       "get": {
         "tags": ["Students"],
@@ -155,6 +258,19 @@
         ],
         "responses": {
           "200": { "description": "Student profile" }
+        }
+      },
+      "delete": {
+        "tags": ["Students"],
+        "summary": "Delete student profile (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "student_1" } }
+        ],
+        "responses": {
+          "200": { "description": "Student profile deleted successfully" },
+          "403": { "description": "Forbidden - Admin only" },
+          "404": { "description": "Student not found" }
         }
       }
     },
@@ -348,6 +464,565 @@
         "security": [{ "BearerAuth": [] }],
         "responses": {
           "200": { "description": "All marked as read" }
+        }
+      }
+    },
+    "/api/notifications/unread": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "Get unread notifications for logged-in user",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of unread notifications" }
+        }
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "put": {
+        "tags": ["Notifications"],
+        "summary": "Mark a single notification as read",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Notification marked as read" },
+          "404": { "description": "Notification not found" }
+        }
+      }
+    },
+    "/api/notifications/{id}": {
+      "delete": {
+        "tags": ["Notifications"],
+        "summary": "Delete a notification belonging to user",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Notification deleted successfully" },
+          "404": { "description": "Notification not found" }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get college events (filtered by audience scope & user role)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "targetType", "in": "query", "required": false, "schema": { "type": "string", "enum": ["specific_year", "all_years"] } },
+          { "name": "targetYear", "in": "query", "required": false, "schema": { "type": "string", "example": "3rd Year" } }
+        ],
+        "responses": {
+          "200": { "description": "List of visible events" }
+        }
+      },
+      "post": {
+        "tags": ["Events"],
+        "summary": "Create new event with audience targeting and automated notifications (Admin/Faculty)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "date", "targetType"],
+                "properties": {
+                  "title": { "type": "string", "example": "Python Workshop" },
+                  "description": { "type": "string", "example": "Hands-on Python training" },
+                  "date": { "type": "string", "format": "date", "example": "2026-09-15" },
+                  "time": { "type": "string", "example": "10:00 AM" },
+                  "venue": { "type": "string", "example": "Seminar Hall A" },
+                  "targetType": { "type": "string", "enum": ["specific_year", "all_years"], "example": "specific_year" },
+                  "targetYear": { "type": "string", "example": "3rd Year" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Event created and notifications dispatched" },
+          "400": { "description": "Validation error" },
+          "403": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get single event by ID",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Event details" },
+          "404": { "description": "Event not found" }
+        }
+      },
+      "put": {
+        "tags": ["Events"],
+        "summary": "Update event details (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Event updated successfully" },
+          "404": { "description": "Event not found" }
+        }
+      },
+      "delete": {
+        "tags": ["Events"],
+        "summary": "Delete event (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Event deleted successfully" },
+          "404": { "description": "Event not found" }
+        }
+      }
+    },
+    "/api/certifications": {
+      "get": {
+        "tags": ["Certifications"],
+        "summary": "Get student certifications (Returns logged-in student's own records)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of student certifications" }
+        }
+      },
+      "post": {
+        "tags": ["Certifications"],
+        "summary": "Add certification to portfolio (Student only - saved directly, no faculty approval)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "issuingOrganization"],
+                "properties": {
+                  "title": { "type": "string", "example": "Python Programming Certification" },
+                  "issuingOrganization": { "type": "string", "example": "Infosys Springboard" },
+                  "platform": { "type": "string", "example": "Infosys Springboard" },
+                  "issueDate": { "type": "string", "format": "date", "example": "2026-08-20" },
+                  "credentialId": { "type": "string", "example": "PY12345" },
+                  "credentialUrl": { "type": "string", "example": "https://example.com/certificate/PY12345" },
+                  "certificateFileUrl": { "type": "string", "example": "/uploads/certificates/python-certificate.png" },
+                  "description": { "type": "string", "example": "Python programming certification" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Certification added successfully" },
+          "400": { "description": "Invalid input or invalid credential URL" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden - Student only" }
+        }
+      }
+    },
+    "/api/certifications/{id}": {
+      "get": {
+        "tags": ["Certifications"],
+        "summary": "Get certification by ID (Ownership protected)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Certification details" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden - Not owner" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "tags": ["Certifications"],
+        "summary": "Update certification details (Owner student only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Python Programming Certification" },
+                  "issuingOrganization": { "type": "string", "example": "Infosys Springboard" },
+                  "credentialId": { "type": "string", "example": "PY12345" },
+                  "credentialUrl": { "type": "string", "example": "https://example.com/certificate/PY12345" },
+                  "certificateFileUrl": { "type": "string", "example": "/uploads/certificates/python-certificate.png" },
+                  "description": { "type": "string", "example": "Updated description" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Certification updated successfully" },
+          "400": { "description": "Invalid input or invalid credential URL" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden - Not owner" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "delete": {
+        "tags": ["Certifications"],
+        "summary": "Delete certification (Owner student only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Certification deleted successfully" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden - Not owner" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/api/internships": {
+      "get": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Get internships",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of internships" }
+        }
+      },
+      "post": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Create internship (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "201": { "description": "Internship created" }
+        }
+      }
+    },
+    "/api/internships/{id}": {
+      "delete": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Delete internship (Owner student or Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Internship deleted successfully" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/api/achievements": {
+      "get": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Get achievements",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of achievements" }
+        }
+      },
+      "post": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Create achievement (Student only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "201": { "description": "Achievement created" }
+        }
+      }
+    },
+    "/api/achievements/{id}": {
+      "delete": {
+        "tags": ["Internships & Achievements"],
+        "summary": "Delete achievement (Owner student or Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Achievement deleted successfully" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/api/admin/faculty/pending": {
+      "get": {
+        "tags": ["Faculty"],
+        "summary": "Get pending faculty registrations (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of pending faculty registrations" },
+          "403": { "description": "Forbidden - Admin access required" }
+        }
+      }
+    },
+    "/api/admin/faculty/{id}/approve": {
+      "put": {
+        "tags": ["Faculty"],
+        "summary": "Approve a faculty registration (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "User ID or Faculty ID" }
+        ],
+        "responses": {
+          "200": { "description": "Faculty registration approved successfully" },
+          "403": { "description": "Forbidden - Admin access required" },
+          "404": { "description": "Faculty registration not found" }
+        }
+      }
+    },
+    "/api/admin/faculty/{id}/reject": {
+      "put": {
+        "tags": ["Faculty"],
+        "summary": "Reject a faculty registration (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "User ID or Faculty ID" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "remarks": { "type": "string", "example": "Incomplete documentation" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Faculty registration rejected" },
+          "403": { "description": "Forbidden - Admin access required" },
+          "404": { "description": "Faculty registration not found" }
+        }
+      }
+    },
+    "/api/auth/register/hod": {
+      "post": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Register a new Head of Department (HOD) with pending status",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password", "college", "department", "academicYear"],
+                "properties": {
+                  "name": { "type": "string", "example": "Dr. V. Prasad" },
+                  "email": { "type": "string", "example": "hod.ece@college.edu" },
+                  "password": { "type": "string", "example": "password123" },
+                  "college": { "type": "string", "enum": ["KIET", "KIET+", "KIEW"], "example": "KIET" },
+                  "department": { "type": "string", "example": "ECE" },
+                  "academicYear": { "type": "string", "example": "3rd Year" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "HOD registration submitted (pending admin approval)" },
+          "400": { "description": "Missing or invalid fields (e.g. invalid college)" }
+        }
+      }
+    },
+    "/api/auth/register/ctpo": {
+      "post": {
+        "tags": ["Class Teacher & Placement Officer (CTPO)"],
+        "summary": "Register a new Class Teacher & Placement Officer (CTPO) with pending status",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password", "college", "department", "academicYear", "section"],
+                "properties": {
+                  "name": { "type": "string", "example": "K. Srinivas" },
+                  "email": { "type": "string", "example": "ctpo.cse.a@college.edu" },
+                  "password": { "type": "string", "example": "password123" },
+                  "college": { "type": "string", "enum": ["KIET", "KIET+", "KIEW"], "example": "KIET" },
+                  "department": { "type": "string", "example": "CSE" },
+                  "academicYear": { "type": "string", "example": "3rd Year" },
+                  "section": { "type": "string", "example": "A" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "CTPO registration submitted (pending HOD approval)" },
+          "400": { "description": "Missing or invalid fields" }
+        }
+      }
+    },
+    "/api/admin/hods/pending": {
+      "get": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Get pending HOD registrations (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of pending HOD registrations" },
+          "403": { "description": "Forbidden - Admin access required" }
+        }
+      }
+    },
+    "/api/admin/hods/{id}/approve": {
+      "put": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Approve HOD registration (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "HOD approved successfully" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/admin/hods/{id}/reject": {
+      "put": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Reject HOD registration (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "HOD registration rejected" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/hod/dashboard": {
+      "get": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Get scoped HOD dashboard metrics (College + Dept + Year)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Scoped dashboard statistics" },
+          "403": { "description": "Forbidden - HOD role required" }
+        }
+      }
+    },
+    "/api/hod/students": {
+      "get": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Get students matching HOD scope (supports section & search filters)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "section", "in": "query", "schema": { "type": "string" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "cgpaMin", "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": { "description": "List of scoped students" }
+        }
+      }
+    },
+    "/api/hod/students/{id}": {
+      "get": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Get single student details with HOD scope authorization guard",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Student details" },
+          "403": { "description": "Forbidden - Student outside HOD scope" }
+        }
+      }
+    },
+    "/api/hod/ctpos/pending": {
+      "get": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Get pending CTPO registrations within HOD department & year",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of pending CTPOs" }
+        }
+      }
+    },
+    "/api/hod/ctpos/{id}/approve": {
+      "put": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Approve CTPO registration (matching College + Dept + Year only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "CTPO approved" },
+          "403": { "description": "Forbidden - CTPO outside HOD scope" }
+        }
+      }
+    },
+    "/api/hod/ctpos/{id}/reject": {
+      "put": {
+        "tags": ["Head of Department (HOD)"],
+        "summary": "Reject CTPO registration (matching College + Dept + Year only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "CTPO rejected" },
+          "403": { "description": "Forbidden - CTPO outside HOD scope" }
+        }
+      }
+    },
+    "/api/ctpo/dashboard": {
+      "get": {
+        "tags": ["Class Teacher & Placement Officer (CTPO)"],
+        "summary": "Get scoped CTPO dashboard metrics (College + Dept + Year + Section)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Scoped class section statistics" },
+          "403": { "description": "Forbidden - CTPO role required" }
+        }
+      }
+    },
+    "/api/ctpo/students": {
+      "get": {
+        "tags": ["Class Teacher & Placement Officer (CTPO)"],
+        "summary": "Get students in CTPO assigned section",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "cgpaMin", "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": { "description": "List of students in CTPO class" }
+        }
+      }
+    },
+    "/api/ctpo/students/{id}": {
+      "get": {
+        "tags": ["Class Teacher & Placement Officer (CTPO)"],
+        "summary": "Get single student details with CTPO class section authorization guard",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Student details" },
+          "403": { "description": "Forbidden - Student outside CTPO assigned class section" }
         }
       }
     }

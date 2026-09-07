@@ -86,12 +86,7 @@ const createResume = async (req, res, next) => {
 
     if (isDefault) {
       // Unset previous default resumes
-      const existing = await Resume.find({ student: studentProfile._id });
-      for (const r of existing) {
-        if (r.isDefault) {
-          await Resume.findByIdAndUpdate(r._id, { isDefault: false });
-        }
-      }
+      await Resume.updateMany({ student: studentProfile._id, isDefault: true }, { isDefault: false });
     }
 
     const newResume = await Resume.create({
@@ -129,12 +124,7 @@ const updateResume = async (req, res, next) => {
     }
 
     if (req.body.isDefault) {
-      const existing = await Resume.find({ student: resume.student });
-      for (const r of existing) {
-        if (r.isDefault && String(r._id) !== String(req.params.id)) {
-          await Resume.findByIdAndUpdate(r._id, { isDefault: false });
-        }
-      }
+      await Resume.updateMany({ student: resume.student, isDefault: true }, { isDefault: false });
     }
 
     const updated = await Resume.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -156,6 +146,15 @@ const deleteResume = async (req, res, next) => {
     const resume = await Resume.findById(req.params.id);
     if (!resume) {
       return res.status(404).json({ success: false, message: 'Resume not found' });
+    }
+
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(resume.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to delete this resume' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the resume owner or an admin can delete this resume' });
     }
 
     await Resume.findByIdAndDelete(req.params.id);

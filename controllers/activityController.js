@@ -1,6 +1,7 @@
 const Activity = require('../models/Activity');
 const Student = require('../models/Student');
 const Evidence = require('../models/Evidence');
+const notificationService = require('../services/notificationService');
 
 // @desc    Get all activities (or student's own activities)
 // @route   GET /api/activities
@@ -84,6 +85,19 @@ const createActivity = async (req, res, next) => {
       status: 'pending',
     });
 
+    // Safely notify responsible faculty
+    try {
+      await notificationService.sendApprovalRequestNotification({
+        studentProfile,
+        studentName: req.user.name || 'Student',
+        itemType: 'ACTIVITY',
+        itemTitle: activity.title,
+        itemId: activity._id,
+      });
+    } catch (notifErr) {
+      console.error('Failed to notify faculty for activity submission:', notifErr.message);
+    }
+
     res.status(201).json({ success: true, data: activity });
   } catch (error) {
     next(error);
@@ -124,6 +138,16 @@ const deleteActivity = async (req, res, next) => {
     const activity = await Activity.findById(req.params.id);
     if (!activity) {
       return res.status(404).json({ success: false, message: 'Activity not found' });
+    }
+
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      const activityStudentId = activity.student?._id || activity.student?.id || activity.student;
+      if (!studentProfile || String(activityStudentId) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to delete this activity' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the activity owner or an admin can delete this activity' });
     }
 
     await Activity.findByIdAndDelete(req.params.id);

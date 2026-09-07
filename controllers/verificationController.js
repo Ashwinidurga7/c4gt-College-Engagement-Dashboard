@@ -1,8 +1,8 @@
 const Verification = require('../models/Verification');
 const Activity = require('../models/Activity');
 const Faculty = require('../models/Faculty');
-const Notification = require('../models/Notification');
 const Student = require('../models/Student');
+const notificationService = require('../services/notificationService');
 
 // @desc    Verify or reject an activity
 // @route   POST /api/verification/:activityId
@@ -18,6 +18,34 @@ const verifyActivity = async (req, res, next) => {
 
     let facultyProfile = await Faculty.findOne({ user: req.user.id });
     const verifierId = facultyProfile ? facultyProfile._id : req.user.id;
+
+    if (req.user.role === 'faculty') {
+      if (!facultyProfile || !notificationService.isFacultyApprovedAndActive(facultyProfile)) {
+        return res.status(403).json({
+          success: false,
+          message: 'Forbidden: Faculty account is pending approval or inactive',
+        });
+      }
+
+      const studentRec = activity.student && activity.student._id ? activity.student : await Student.findById(activity.student);
+      if (!studentRec) {
+        return res.status(404).json({ success: false, message: 'Associated student not found' });
+      }
+
+      const deptMatches = notificationService.doesDepartmentMatch(facultyProfile.department, studentRec.department);
+      const yearMatches = notificationService.isFacultyAssignedToYear(
+        facultyProfile,
+        studentRec.year || notificationService.getStudentYear(studentRec)
+      );
+
+      if (!deptMatches || !yearMatches) {
+        return res.status(403).json({
+          success: false,
+          message:
+            'Forbidden: You can only verify activities for students in your assigned department and academic year',
+        });
+      }
+    }
 
     // Create verification log
     const verification = await Verification.create({
@@ -37,14 +65,32 @@ const verifyActivity = async (req, res, next) => {
     }
     await activity.save();
 
-    // Notify student
-    if (activity.student && activity.student.user) {
-      await Notification.create({
-        recipient: activity.student.user,
-        title: `Activity ${status.toUpperCase()}`,
-        message: `Your activity "${activity.title}" has been ${status}.`,
-        type: 'verification',
-      });
+    // Notify student via centralized notification service
+    try {
+      let studentUserId = null;
+      if (activity.student) {
+        if (activity.student.user) {
+          studentUserId = activity.student.user._id || activity.student.user.id || activity.student.user;
+        } else {
+          const studentRec = await Student.findById(activity.student);
+          if (studentRec && studentRec.user) {
+            studentUserId = studentRec.user._id || studentRec.user.id || studentRec.user;
+          }
+        }
+      }
+
+      if (studentUserId) {
+        await notificationService.sendApprovalResponseNotification({
+          studentUserId,
+          itemType: 'ACTIVITY',
+          itemTitle: activity.title,
+          itemId: activity._id,
+          status,
+          remarks: remarks || '',
+        });
+      }
+    } catch (notifErr) {
+      console.error('Failed to notify student of verification result:', notifErr.message);
     }
 
     res.status(200).json({

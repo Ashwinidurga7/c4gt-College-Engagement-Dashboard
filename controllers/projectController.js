@@ -154,6 +154,15 @@ const deleteProject = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Project not found' });
     }
 
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(project.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to delete this project' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the project owner or an admin can delete this project' });
+    }
+
     await Project.findByIdAndDelete(req.params.id);
     res.status(200).json({
       success: true,

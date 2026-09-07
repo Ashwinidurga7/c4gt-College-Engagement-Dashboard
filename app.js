@@ -13,11 +13,17 @@ const departmentRoutes = require('./routes/departmentRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const certificateRoutes = require('./routes/certificateRoutes');
+const certificationRoutes = require('./routes/certificationRoutes');
+const internshipRoutes = require('./routes/internshipRoutes');
+const achievementRoutes = require('./routes/achievementRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const hodRoutes = require('./routes/hodRoutes');
+const ctpoRoutes = require('./routes/ctpoRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 
@@ -61,11 +67,17 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/events', eventRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/certifications', certificationRoutes);
+app.use('/api/internships', internshipRoutes);
+app.use('/api/achievements', achievementRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/hod', hodRoutes);
+app.use('/api/ctpo', ctpoRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);

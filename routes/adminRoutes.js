@@ -9,6 +9,12 @@ const {
   batchApproveActivities,
   getSystemSettings,
   updateSystemSettings,
+  getPendingFaculty,
+  approveFaculty,
+  rejectFaculty,
+  getPendingHods,
+  approveHod,
+  rejectHod,
 } = require('../controllers/adminController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
@@ -24,5 +30,15 @@ router.get('/pending', getPendingVerifications);
 router.post('/activities/batch-approve', batchApproveActivities);
 router.get('/settings', getSystemSettings);
 router.put('/settings', updateSystemSettings);
+
+// Faculty Registration Approval Endpoints
+router.get('/faculty/pending', getPendingFaculty);
+router.put('/faculty/:id/approve', approveFaculty);
+router.put('/faculty/:id/reject', rejectFaculty);
+
+// HOD Registration Approval Endpoints
+router.get('/hods/pending', getPendingHods);
+router.put('/hods/:id/approve', approveHod);
+router.put('/hods/:id/reject', rejectHod);
 
 module.exports = router;
