@@ -304,3 +304,43 @@ This document details the RESTful API endpoints for the College Management & Stu
 - `PUT /api/notifications/read-all`: Mark all notifications as read.
 - `GET /api/events`: List college events.
 - `GET /api/events/:id`: View event details.
+
+---
+
+## 10. College Club APIs (`/api/clubs`)
+
+### Core Visibility Rule:
+> **IMPORTANT**: All active college clubs must be visible to students from all three colleges (**KIET**, **KIET+**, **KIEW**).
+> The backend does **NOT** filter clubs based on the student's college (`student.college == club.college` is strictly NOT applied).
+> The `college` field represents the originating college and administrative scope, but never restricts student visibility.
+
+- `GET /api/clubs`:
+  - **Auth**: Authenticated (`student`, `faculty`, `hod`, `ctpo`, `admin`)
+  - **Behavior**: Returns all active clubs across all three colleges (KIET, KIET+, KIEW) for students. Admins can also see inactive clubs or filter by status.
+  - **Query Parameters**:
+    - `college`: (Optional) Filter by college (`KIET`, `KIET+`, `KIEW`)
+    - `category`: (Optional) Filter by category (e.g., `Technical`, `Open Source`, `Literary & Leadership`, `Social Service & Defense`)
+    - `search`: (Optional) Keyword search by club name, code, or description
+    - `status`: (Admin only) Filter by `active` or `inactive`
+- `GET /api/clubs/:id`:
+  - **Auth**: Authenticated
+  - **Description**: Get single club details by ID.
+- `POST /api/clubs`:
+  - **Auth**: Admin only
+  - **Description**: Create a new club for any of the 3 colleges (`KIET`, `KIET+`, `KIEW`).
+- `PUT /api/clubs/:id`:
+  - **Auth**: Admin only
+  - **Description**: Update club information, coordinator, schedule, or details.
+- `DELETE /api/clubs/:id`:
+  - **Auth**: Admin only
+  - **Description**: Delete a club.
+- `PATCH /api/clubs/:id/status`:
+  - **Auth**: Admin only
+  - **Description**: Toggle or set club status (`active` / `inactive`).
+- `PUT /api/clubs/:id/activate`:
+  - **Auth**: Admin only
+  - **Description**: Activate club.
+- `PUT /api/clubs/:id/deactivate`:
+  - **Auth**: Admin only
+  - **Description**: Deactivate club.
+

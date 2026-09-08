@@ -35,7 +35,8 @@
     { "name": "Certifications", "description": "Student certifications and verification workflows" },
     { "name": "Internships & Achievements", "description": "Student internships and academic achievements" },
     { "name": "Head of Department (HOD)", "description": "HOD scoped dashboard, students, reports, and CTPO approvals" },
-    { "name": "Class Teacher & Placement Officer (CTPO)", "description": "CTPO scoped class section dashboard and student tracking" }
+    { "name": "Class Teacher & Placement Officer (CTPO)", "description": "CTPO scoped class section dashboard and student tracking" },
+    { "name": "College Clubs", "description": "Active college clubs visible to all students across KIET, KIET+, and KIEW without restriction" }
   ],
   "paths": {
     "/": {
@@ -1023,6 +1024,136 @@
         "responses": {
           "200": { "description": "Student details" },
           "403": { "description": "Forbidden - Student outside CTPO assigned class section" }
+        }
+      }
+    },
+    "/api/clubs": {
+      "get": {
+        "tags": ["College Clubs"],
+        "summary": "Get all active college clubs (Visible to all students across KIET, KIET+, KIEW)",
+        "description": "Returns all active college clubs regardless of student college affiliation. College field is informational only.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "college", "in": "query", "schema": { "type": "string", "enum": ["KIET", "KIET+", "KIEW"] } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "description": "Admin only (active / inactive)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "List of active college clubs" }
+        }
+      },
+      "post": {
+        "tags": ["College Clubs"],
+        "summary": "Create new college club (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "college"],
+                "properties": {
+                  "name": { "type": "string", "example": "AI & Data Science Club" },
+                  "code": { "type": "string", "example": "AIDS" },
+                  "description": { "type": "string" },
+                  "college": { "type": "string", "enum": ["KIET", "KIET+", "KIEW"], "example": "KIET" },
+                  "category": { "type": "string", "example": "Technical" },
+                  "facultyCoordinator": { "type": "string" },
+                  "studentLead": { "type": "string" },
+                  "leadEmail": { "type": "string" },
+                  "membersCount": { "type": "number" },
+                  "status": { "type": "string", "enum": ["active", "inactive"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Club created successfully" },
+          "400": { "description": "Validation error" },
+          "403": { "description": "Forbidden - Admin only" }
+        }
+      }
+    },
+    "/api/clubs/{id}": {
+      "get": {
+        "tags": ["College Clubs"],
+        "summary": "Get club details by ID",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club details" },
+          "404": { "description": "Club not found" }
+        }
+      },
+      "put": {
+        "tags": ["College Clubs"],
+        "summary": "Update club details (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club updated successfully" },
+          "403": { "description": "Forbidden - Admin only" }
+        }
+      },
+      "delete": {
+        "tags": ["College Clubs"],
+        "summary": "Delete club (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club deleted successfully" },
+          "403": { "description": "Forbidden - Admin only" }
+        }
+      }
+    },
+    "/api/clubs/{id}/status": {
+      "patch": {
+        "tags": ["College Clubs"],
+        "summary": "Toggle or update club active status (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club status updated" },
+          "403": { "description": "Forbidden - Admin only" }
+        }
+      }
+    },
+    "/api/clubs/{id}/activate": {
+      "put": {
+        "tags": ["College Clubs"],
+        "summary": "Activate club (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club activated successfully" },
+          "403": { "description": "Forbidden - Admin only" }
+        }
+      }
+    },
+    "/api/clubs/{id}/deactivate": {
+      "put": {
+        "tags": ["College Clubs"],
+        "summary": "Deactivate club (Admin only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Club deactivated successfully" },
+          "403": { "description": "Forbidden - Admin only" }
         }
       }
     }

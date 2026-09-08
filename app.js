@@ -24,6 +24,7 @@ const resumeRoutes = require('./routes/resumeRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const hodRoutes = require('./routes/hodRoutes');
 const ctpoRoutes = require('./routes/ctpoRoutes');
+const clubRoutes = require('./routes/clubRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 
@@ -78,6 +79,7 @@ app.use('/api/resumes', resumeRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/hod', hodRoutes);
 app.use('/api/ctpo', ctpoRoutes);
+app.use('/api/clubs', clubRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);

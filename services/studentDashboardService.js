@@ -11,6 +11,7 @@ const Event = require('../models/Event');
 const Notification = require('../models/Notification');
 const Attendance = require('../models/Attendance');
 const AcademicReport = require('../models/AcademicReport');
+const Club = require('../models/Club');
 const {
   doesDepartmentMatch,
   getStudentYear,
@@ -179,6 +180,7 @@ const getStudentDashboard = async (userId, query = {}) => {
     attendanceList,
     academicReports,
     notifications,
+    allClubs,
   ] = await Promise.all([
     Course.find(),
     Certificate.find({ student: studentId }),
@@ -191,7 +193,11 @@ const getStudentDashboard = async (userId, query = {}) => {
     Attendance.find({ student: studentId }),
     AcademicReport.find({ student: studentId }),
     Notification.find({ recipient: userId }),
+    Club.find(),
   ]);
+
+  // All active college clubs are visible to students across all three colleges (no college filtering)
+  const activeClubs = allClubs.filter((c) => c.status === 'active' || c.isActive === true);
 
   // Filter enrolled courses
   const enrolledCourses = allCourses.filter(
@@ -331,6 +337,10 @@ const getStudentDashboard = async (userId, query = {}) => {
     notificationsSummary: {
       unreadCount: notifications.filter((n) => !n.isRead).length,
       recent: notifications.slice(0, 5),
+    },
+    clubsSummary: {
+      total: activeClubs.length,
+      clubs: activeClubs,
     },
     nearbyActivities,
     upcomingEvents: nearbyActivities,
