@@ -1,0 +1,4003 @@
+﻿===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\App.jsx =====
+import React from 'react'
+import { HashRouter, Routes, Route } from 'react-router-dom'
+
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
+
+import DashboardLayout from './components/layout/DashboardLayout'
+
+import StudentDashboard from './pages/student/StudentDashboard'
+import FacultyDashboard from './pages/faculty/FacultyDashboard'
+import HodDashboard from './pages/hod/HodDashboard'
+import AdminDashboard from './pages/admin/AdminDashboard'
+
+import MyActivities from './pages/student/MyActivities'
+import AddActivity from './pages/student/AddActivity'
+import ActivityDetails from './pages/student/ActivityDetails'
+import MyAchievements from './pages/student/MyAchievements'
+import MyAnalytics from './pages/student/MyAnalytics'
+import CampusPages from './pages/student/CampusPages'
+
+export default function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        <Route
+          path="/student"
+          element={
+            <DashboardLayout role="Student">
+              <StudentDashboard />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/activities"
+          element={
+            <DashboardLayout role="Student">
+              <MyActivities />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/add"
+          element={
+            <DashboardLayout role="Student">
+              <AddActivity />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/activity/:id"
+          element={
+            <DashboardLayout role="Student">
+              <ActivityDetails />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/achievements"
+          element={
+            <DashboardLayout role="Student">
+              <MyAchievements />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/analytics"
+          element={
+            <DashboardLayout role="Student">
+              <MyAnalytics />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/events"
+          element={
+            <DashboardLayout role="Student">
+              <CampusPages type="events" />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/announcements"
+          element={
+            <DashboardLayout role="Student">
+              <CampusPages type="announcements" />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/hub"
+          element={
+            <DashboardLayout role="Student">
+              <CampusPages type="hub" />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/student/clubs"
+          element={
+            <DashboardLayout role="Student">
+              <CampusPages type="clubs" />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/faculty"
+          element={
+            <DashboardLayout role="Faculty">
+              <FacultyDashboard />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/hod"
+          element={
+            <DashboardLayout role="HOD">
+              <HodDashboard />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <DashboardLayout role="Admin">
+              <AdminDashboard />
+            </DashboardLayout>
+          }
+        />
+      </Routes>
+    </HashRouter>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\main.jsx =====
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+import './styles/tokens.css'
+import { AuthProvider } from './contexts/AuthContext'
+import { DataProvider } from './contexts/DataContext'
+
+const root = createRoot(document.getElementById('root'))
+root.render(
+	<AuthProvider>
+		<DataProvider>
+			<App />
+		</DataProvider>
+	</AuthProvider>
+)
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\layout\DashboardLayout.jsx =====
+import React, { useEffect } from 'react'
+import Sidebar from './Sidebar'
+import Topbar from './Topbar'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { RealtimeProvider } from '../../contexts/RealtimeContext'
+
+export default function DashboardLayout({ children, role }) {
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) navigate('/')
+  }, [user, navigate])
+
+  useEffect(() => {
+    if (
+      user &&
+      role &&
+      String(user.role).toLowerCase() !== String(role).toLowerCase()
+    ) {
+      navigate(`/${String(user.role).toLowerCase()}`)
+    }
+  }, [user, role, navigate])
+
+  if (!user) return null
+
+  return (
+    <RealtimeProvider>
+      <div className="app-shell">
+        <Sidebar role={role} />
+        <div className="app-content">
+          <Topbar />
+          <main className="app-page">
+            <div className="app-page-inner">
+              {children}
+            </div>
+          </main>
+        </div>
+      </div>
+    </RealtimeProvider>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\layout\Sidebar.jsx =====
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+
+const linksByRole = {
+  Student: [
+    {
+      section: 'MAIN',
+      items: [
+        ['Dashboard', '/student', 'dashboard'],
+        ['My Activities', '/student/activities', 'activity'],
+      ],
+    },
+    {
+      section: 'CAMPUS',
+      items: [
+        ['Events', '/student/events', 'events'],
+        ['Announcements', '/student/announcements', 'announcements'],
+        ['C4GT Hub @ KIET', '/student/hub', 'hub'],
+        ['Clubs & Communities', '/student/clubs', 'clubs'],
+      ],
+    },
+    {
+      section: 'MY SPACE',
+      items: [
+        ['Achievements', '/student/achievements', 'achievements'],
+        ['Analytics', '/student/analytics', 'analytics'],
+      ],
+    },
+  ],
+
+  Faculty: [
+    {
+      section: 'MAIN',
+      items: [
+        ['Dashboard', '/faculty', 'dashboard'],
+        ['Activities', '/faculty/activities', 'activity'],
+        ['Announcements', '/faculty/announcements', 'announcements'],
+        ['Events', '/faculty/events', 'events'],
+      ],
+    },
+  ],
+
+  HOD: [
+    {
+      section: 'MAIN',
+      items: [
+        ['Dashboard', '/hod', 'dashboard'],
+        ['Department Activities', '/hod/activities', 'activity'],
+        ['Announcements', '/hod/announcements', 'announcements'],
+        ['Analytics', '/hod/analytics', 'analytics'],
+      ],
+    },
+  ],
+
+  Admin: [
+    {
+      section: 'MAIN',
+      items: [
+        ['Dashboard', '/admin', 'dashboard'],
+        ['Activities', '/admin/activities', 'activity'],
+        ['Events', '/admin/events', 'events'],
+        ['Announcements', '/admin/announcements', 'announcements'],
+        ['Analytics', '/admin/analytics', 'analytics'],
+      ],
+    },
+  ],
+}
+
+const icons = {
+  dashboard: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="4" y="4" width="6" height="6" rx="1.5" />
+      <rect x="14" y="4" width="6" height="6" rx="1.5" />
+      <rect x="4" y="14" width="6" height="6" rx="1.5" />
+      <rect x="14" y="14" width="6" height="6" rx="1.5" />
+    </svg>
+  ),
+
+  activity: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 12h4l2-7 4 14 2-7h4" />
+    </svg>
+  ),
+
+  events: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2" />
+      <path d="M7 3.5v4M17 3.5v4M3.5 9h17" />
+    </svg>
+  ),
+
+  announcements: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 10v4M7 9l10-4v14L7 15z" />
+      <path d="M17 9.5c1.5.8 2.5 2 2.5 3.5s-1 2.7-2.5 3.5" />
+    </svg>
+  ),
+
+  hub: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="5" r="2.3" />
+      <circle cx="5" cy="18" r="2.3" />
+      <circle cx="19" cy="18" r="2.3" />
+      <path d="M10.7 6.9 6.3 16M13.3 6.9l4.4 9.1M7.3 18h9.4" />
+    </svg>
+  ),
+
+  clubs: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="9" cy="8" r="3" />
+      <circle cx="17" cy="9" r="2.5" />
+      <path d="M3.5 20c.6-3.4 2.5-5 5.5-5s4.9 1.6 5.5 5M14 16c3.2-.7 5.5.8 6.5 4" />
+    </svg>
+  ),
+
+  achievements: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 4h8v5c0 3-1.8 5-4 5s-4-2-4-5z" />
+      <path d="M8 7H5c0 3 1.5 4.5 4 4.5M16 7h3c0 3-1.5 4.5-4 4.5M12 14v4M8.5 20h7" />
+    </svg>
+  ),
+
+  analytics: (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 19V10M12 19V5M19 19v-7" />
+      <path d="M3.5 19.5h17" />
+    </svg>
+  ),
+}
+
+function SidebarItem({ label, to, icon }) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `sidebar-link ${isActive ? 'active' : ''}`
+      }
+    >
+      <span className="sidebar-link-icon">
+        {icons[icon]}
+      </span>
+
+      <span className="sidebar-link-label">
+        {label}
+      </span>
+    </NavLink>
+  )
+}
+
+export default function Sidebar({ role = 'Student' }) {
+  const sections = linksByRole[role] || linksByRole.Student
+
+  return (
+    <aside className="sidebar">
+      <div className="sidebar-brand">
+        <div className="sidebar-logo">
+          C4
+        </div>
+
+        <div className="sidebar-brand-text">
+          <div className="sidebar-brand-title">
+            C4GT
+          </div>
+
+          <div className="sidebar-brand-subtitle">
+            KIET Engagement
+          </div>
+        </div>
+      </div>
+
+      <div className="sidebar-divider" />
+
+      <nav className="sidebar-nav">
+        {sections.map((section) => (
+          <div
+            className="sidebar-section"
+            key={section.section}
+          >
+            <div className="sidebar-section-title">
+              {section.section}
+            </div>
+
+            <div className="sidebar-section-items">
+              {section.items.map(([label, to, icon]) => (
+                <SidebarItem
+                  key={to}
+                  label={label}
+                  to={to}
+                  icon={icon}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      <div className="sidebar-bottom">
+        <div className="sidebar-campus-card">
+          <div className="sidebar-campus-label">
+            C4GT HUB @ KIET
+          </div>
+
+          <div className="sidebar-campus-text">
+            Innovation â€¢ Projects â€¢ Community
+          </div>
+        </div>
+      </div>
+    </aside>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\layout\Topbar.jsx =====
+import React from 'react'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
+
+export default function Topbar() {
+  const { user, logout } = useAuth()
+  const nav = useNavigate()
+
+  function handleLogout(){
+    logout()
+    nav('/')
+  }
+
+  return (
+    <header style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:14,borderBottom:'1px solid rgba(31,51,88,0.04)',background:'linear-gradient(180deg, rgba(255,255,255,0.6), transparent)'}}>
+      <div style={{fontWeight:700,fontFamily:'Fraunces, serif',color:'var(--ink-navy)',fontSize:18}}>C4GT Dashboard</div>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <div style={{textAlign:'right'}}>
+          <div style={{fontWeight:700}}>{user?.name || 'Guest'}</div>
+          <div style={{fontSize:12,color:'var(--muted)'}}>{user?.role || ''}</div>
+        </div>
+        {user && <button onClick={handleLogout} className="btn">Logout</button>}
+      </div>
+    </header>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\ActivityCard.jsx =====
+import React, { useRef, useCallback } from 'react'
+import Tilt from './Tilt'
+import AnimatedBadge from './AnimatedBadge'
+
+export default function ActivityCard({
+  avatar,
+  title,
+  subtitle,
+  time,
+  status = 'pending',
+  category, // e.g. 'C4GT Hub', 'GCC', 'Toust Masters', 'Internships'
+  count,
+  evidenceData,
+  evidenceThumb,
+  evidenceName,
+  onClick,
+  children,
+}){
+  const containerRef = useRef(null)
+
+  const createRipple = useCallback((e) => {
+    const el = containerRef.current
+    if(!el) return
+    const rect = el.getBoundingClientRect()
+    const size = Math.max(rect.width, rect.height) * 0.6
+    const x = e.clientX - rect.left - size / 2
+    const y = e.clientY - rect.top - size / 2
+    const span = document.createElement('span')
+    span.className = 'ripple-effect'
+    span.style.width = span.style.height = `${size}px`
+    span.style.left = `${x}px`
+    span.style.top = `${y}px`
+    el.appendChild(span)
+    setTimeout(()=>{ span.remove() }, 700)
+  }, [])
+
+  return (
+    <Tilt>
+      <div
+        ref={containerRef}
+        className="card frosted-panel activity-card"
+        onClick={onClick}
+        onMouseDown={createRipple}
+        role={onClick ? 'button' : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        onKeyDown={e => {
+          if(!onClick) return
+          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e) }
+        }}
+        style={{padding:14, cursor: onClick ? 'pointer' : 'default', WebkitTapHighlightColor: 'transparent', position:'relative', overflow:'hidden'}}
+      >
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <div style={{width:56,height:56,borderRadius:12,overflow:'hidden',flexShrink:0,background:'linear-gradient(135deg,var(--accent-1),var(--accent-3))'}}>
+            {avatar ? <img src={avatar} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : null}
+          </div>
+
+          <div style={{flex:1}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,justifyContent:'space-between'}}>
+              <div style={{fontSize:15,fontWeight:700,color:'var(--color-ink-navy)'}}>{title}</div>
+              {category && <AnimatedBadge label={category} count={count} variant={count ? 'count' : 'pill'} small />}
+            </div>
+              <div className="small muted" style={{marginTop:6}}>{subtitle}</div>
+              {(evidenceThumb || evidenceData) && (
+                <div style={{marginTop:8}}>
+                  {/* prefer thumbnail (image or generated from pdf), otherwise link to evidenceData */}
+                  {evidenceThumb ? (
+                    <img src={evidenceThumb} alt={evidenceName || 'evidence'} className="thumb" />
+                  ) : (evidenceData && String(evidenceData).startsWith('data:image') ? (
+                    <img src={evidenceData} alt={evidenceName || 'evidence'} className="thumb" />
+                  ) : evidenceData ? (
+                    <a href={evidenceData} target="_blank" rel="noreferrer">View evidence</a>
+                  ) : null)}
+                </div>
+              )}
+          </div>
+
+          <div style={{textAlign:'right'}}>
+            <div className={`seal ${status}`} style={{transform:'rotate(0deg)',fontSize:12,padding:'6px 8px'}}>
+              {status === 'verified' ? 'VERIFIED' : status === 'rejected' ? 'REJECTED' : 'PENDING'}
+            </div>
+            <div className="small muted" style={{marginTop:6}}>{time}</div>
+          </div>
+        </div>
+
+        {children && <div style={{marginTop:12}}>{children}</div>}
+      </div>
+    </Tilt>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\ActivityFeed.jsx =====
+import React from 'react'
+import { useRealtime } from '../../contexts/RealtimeContext'
+import ActivityCard from './ActivityCard'
+import CreateActivityForm from './CreateActivityForm'
+import { formatDistanceToNow } from 'date-fns'
+
+export default function ActivityFeed({ limit = 20, showComposer = true }){
+  const { events } = useRealtime() || { events: [] }
+
+  const items = (events || []).slice(0, limit)
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:12}}>
+      {showComposer && (
+        <div>
+          <CreateActivityForm />
+        </div>
+      )}
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr',gap:12}}>
+        {items.length === 0 && (
+          <div className="card frosted-panel" style={{padding:18}}>No recent activities</div>
+        )}
+
+        {items.map(evt => (
+          <ActivityCard
+            key={evt.id}
+            avatar={evt.avatar}
+            title={evt.title || `${evt.user || 'Someone'} â€¢ ${evt.category || ''}`}
+            subtitle={evt.subtitle || (evt.user ? `by ${evt.user}` : '')}
+            time={evt.time ? formatDistanceToNow(new Date(evt.time), { addSuffix: true }) : ''}
+            status={evt.status || 'pending'}
+            category={evt.category}
+            count={evt.count}
+            evidenceData={evt.evidenceData}
+            evidenceThumb={evt.evidenceThumb}
+            evidenceName={evt.evidenceName}
+            onClick={() => console.log('open', evt)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\AddCertificationForm.jsx =====
+import React, { useState } from 'react'
+import { useData } from '../../contexts/DataContext'
+import { useRealtime } from '../../contexts/RealtimeContext'
+import { useAuth } from '../../contexts/AuthContext'
+
+export default function AddCertificationForm({ onAdded }){
+  const { addActivity } = useData()
+  const { emitLocal } = useRealtime()
+  const { user } = useAuth()
+  const [title, setTitle] = useState('')
+  const [provider, setProvider] = useState('Coursera')
+  const [evidence, setEvidence] = useState('')
+  const [evidenceData, setEvidenceData] = useState(null)
+  const [evidenceThumb, setEvidenceThumb] = useState(null)
+  const [evidenceName, setEvidenceName] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e){
+    e.preventDefault()
+    if(!title.trim()) return
+    setLoading(true)
+    const payload = {
+      title: `${title} â€” ${provider}`,
+      category: 'Certification',
+      subtitle: evidence,
+      userId: user?.id,
+      user: user?.name,
+      status: 'Pending',
+      time: new Date().toISOString(),
+      evidenceName: evidenceName || undefined,
+      evidenceData: evidenceData || undefined,
+    }
+
+    // add to local data store for persistence
+    const saved = addActivity(payload)
+
+    // optimistic broadcast to realtime feed
+    if(emitLocal) emitLocal({ ...saved, title: payload.title, category: payload.category, user: payload.user, time: payload.time })
+
+    setTimeout(()=>{
+      setLoading(false)
+      setTitle('')
+      setEvidence('')
+      if(onAdded) onAdded(saved)
+    }, 400)
+  }
+
+  function handleFile(e){
+    const file = e.target.files && e.target.files[0]
+    if(!file) return
+    // validate type and size
+    const allowed = ['image/png','image/jpeg','image/jpg','application/pdf']
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if(!allowed.includes(file.type)){
+      setError('Unsupported file type. Upload PNG/JPG or PDF.')
+      setEvidenceData(null)
+      setEvidenceName('')
+      return
+    }
+    if(file.size > maxSize){
+      setError('File too large. Max 5MB allowed.')
+      setEvidenceData(null)
+      setEvidenceName('')
+      return
+    }
+    setError('')
+    setEvidenceName(file.name)
+    // handle PDF vs image
+    if (file.type === 'application/pdf'){
+      // read as ArrayBuffer to render first page thumbnail, and read as dataURL to store full PDF
+      const arrayReader = new FileReader()
+      arrayReader.onload = async function(ev){
+        try{
+          const arrayBuffer = ev.target.result
+          const pdfjs = await import('pdfjs-dist/legacy/build/pdf')
+          pdfjs.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@latest/build/pdf.worker.min.js'
+          const pdf = await pdfjs.getDocument({data: arrayBuffer}).promise
+          const page = await pdf.getPage(1)
+          const viewport = page.getViewport({scale:1.5})
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          canvas.width = viewport.width
+          canvas.height = viewport.height
+          await page.render({ canvasContext: ctx, viewport }).promise
+          const thumb = canvas.toDataURL('image/png')
+          setEvidenceThumb(thumb)
+        }catch(err){
+          console.warn('PDF thumb generation failed', err)
+          setEvidenceThumb(null)
+        }
+      }
+      arrayReader.readAsArrayBuffer(file)
+
+      const dataReader = new FileReader()
+      dataReader.onload = function(ev){ setEvidenceData(ev.target.result) }
+      dataReader.readAsDataURL(file)
+    } else {
+      const reader = new FileReader()
+      reader.onload = function(ev){ setEvidenceData(ev.target.result); setEvidenceThumb(ev.target.result) }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="card frosted-panel" style={{padding:12}}>
+      <div style={{display:'flex',gap:8}}>
+        <div style={{flex:1}}>
+          <label className="small muted">Certification title</label>
+          <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g., Data Science Professional" style={{width:'100%',marginTop:6}} />
+        </div>
+
+        <div style={{width:160}}>
+          <label className="small muted">Provider</label>
+          <input value={provider} onChange={e=>setProvider(e.target.value)} style={{width:'100%',marginTop:6}} />
+        </div>
+      </div>
+
+      <div style={{marginTop:8}}>
+        <label className="small muted">Evidence URL (optional)</label>
+        <input value={evidence} onChange={e=>setEvidence(e.target.value)} placeholder="https://..." style={{width:'100%',marginTop:6}} />
+      </div>
+
+      <div style={{marginTop:8}}>
+        <label className="small muted">Or upload evidence file</label>
+        <input type="file" onChange={handleFile} style={{width:'100%',marginTop:6}} />
+        {evidenceData && (
+          <div className="small muted" style={{marginTop:6}}>Selected: {evidenceName}</div>
+        )}
+        {error && <div style={{color:'#9C4A3C',marginTop:6,fontSize:13}}>{error}</div>}
+      </div>
+
+      <div style={{display:'flex',justifyContent:'flex-end',gap:8,marginTop:8}}>
+        <button type="submit" className="btn btn-primary" disabled={loading}>{loading? 'Submitting...' : 'Submit Certification'}</button>
+      </div>
+    </form>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\AnimatedBadge.jsx =====
+import React from 'react'
+import useCountUp from '../../hooks/useCountUp'
+
+export default function AnimatedBadge({ label, count, variant = 'count', small = false }){
+  const number = useCountUp(count || 0, 900)
+  return (
+    <div className={`badge ${variant === 'count' ? 'count' : 'pill'} ${small ? 'small':''} badge-animated`} aria-hidden={false}>
+      <span style={{fontWeight:700,fontSize:12}}>{label}</span>
+      {variant === 'count' && <span style={{background:'rgba(255,255,255,0.08)',padding:'4px 8px',borderRadius:999,fontWeight:700}}>{number}</span>}
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\ChartCard.jsx =====
+import React from 'react'
+import Tilt from './Tilt'
+
+export default function ChartCard({ title, children }) {
+  return (
+    <Tilt>
+      <div className="card" style={{padding:16}}>
+        <div style={{fontSize:14,fontWeight:600,color:'var(--ink-navy)'}}>{title}</div>
+        <div style={{marginTop:12}}>{children}</div>
+      </div>
+    </Tilt>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\CreateActivityForm.jsx =====
+import React, { useState } from 'react'
+import { useRealtime } from '../../contexts/RealtimeContext'
+
+const CATEGORIES = ['C4GT Hub','GCC','Toust Masters','Internships']
+
+export default function CreateActivityForm({ onCreated }){
+  const { emitLocal } = useRealtime()
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState(CATEGORIES[0])
+  const [subtext, setSubtext] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  function reset(){ setTitle(''); setSubtext(''); setCategory(CATEGORIES[0]) }
+
+  async function handleSubmit(e){
+    e.preventDefault()
+    if(!title.trim()) return
+    setLoading(true)
+    const payload = {
+      id: `local-${Date.now()}`,
+      title: title.trim(),
+      category,
+      subtitle: subtext.trim(),
+      user: 'You',
+      time: new Date().toISOString(),
+    }
+
+    // optimistic add
+    const item = emitLocal ? emitLocal(payload) : payload
+
+    // allow caller to react (optional)
+    if(onCreated) onCreated(item)
+
+    // simulate network latency until server echoes back (mock server will accept POST)
+    setTimeout(()=>{
+      setLoading(false)
+      reset()
+    }, 500)
+  }
+
+  return (
+    <form className="card frosted-panel" onSubmit={handleSubmit} style={{padding:14}}>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <div style={{flex:1}}>
+          <label className="small muted">Activity title</label>
+          <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Add activity title" style={{width:'100%',marginTop:6}} />
+        </div>
+
+        <div style={{width:160}}>
+          <label className="small muted">Category</label>
+          <select value={category} onChange={e=>setCategory(e.target.value)} style={{width:'100%',marginTop:6}}>
+            {CATEGORIES.map(c=> <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div style={{marginTop:12}}>
+        <label className="small muted">Details (optional)</label>
+        <textarea value={subtext} onChange={e=>setSubtext(e.target.value)} placeholder="Short description" style={{width:'100%',marginTop:6}} />
+      </div>
+
+      <div style={{display:'flex',justifyContent:'flex-end',gap:8,marginTop:12}}>
+        <button type="button" className="btn btn-ghost" onClick={reset} disabled={loading}>Cancel</button>
+        <button type="submit" className="btn btn-primary" disabled={loading}>{loading? 'Posting...' : 'Post Activity'}</button>
+      </div>
+    </form>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\DataTable.jsx =====
+import React from 'react'
+
+export default function DataTable({ columns, data }) {
+  return (
+    <table style={{width:'100%',borderCollapse:'collapse'}}>
+      <thead>
+        <tr>
+          {columns.map(col => (
+            <th key={col.key} style={{textAlign:'left',padding:10,color:'var(--muted)',fontSize:13}}>{col.title}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.length === 0 && (
+          <tr><td colSpan={columns.length} style={{padding:20}}>No records</td></tr>
+        )}
+        {data.map((row, idx) => (
+          <tr key={idx} style={{borderTop:'1px solid #f3f4f6'}} className="data-row">
+            {columns.map(col => (
+              <td key={col.key} style={{padding:12}}>{col.render ? col.render(row) : row[col.key]}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\Seal.jsx =====
+import React, { useEffect, useState } from 'react'
+
+export default function Seal({ status }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(()=>{ setMounted(true); return ()=>setMounted(false) }, [])
+  const color = status === 'Verified' ? 'var(--verified-green)' : status === 'Pending' ? 'var(--seal-gold)' : 'var(--rejected-red)'
+  const style = {display:'inline-block',background:color,color:'#fff',padding:'6px 8px',borderRadius:6,fontWeight:700,transform:'rotate(-6deg)'}
+    return (
+      <span className={`seal ${status === 'Verified' ? 'verified' : status === 'Rejected' ? 'rejected' : 'pending'}`} style={{fontFamily:'Fraunces, serif',padding:'6px 10px',boxShadow:'0 4px 10px rgba(31,51,88,0.08)',...style,opacity: mounted ? 1 : 0, transform: mounted ? 'rotate(-6deg) scale(1)' : 'rotate(-6deg) scale(.92)', transition: 'opacity .22s ease, transform .22s cubic-bezier(.2,.9,.25,1)'}}>
+        {status}
+      </span>
+    )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\StatCard.jsx =====
+import React from 'react'
+import Tilt from './Tilt'
+
+export default function StatCard({ title, value, caption }) {
+  return (
+    <Tilt className="depth-lg" max={10} scale={1.03}>
+      <div className="card" style={{padding:18,minWidth:160}}>
+        <div style={{fontSize:12,color:'var(--muted)',textTransform:'uppercase',letterSpacing:0.6}}>{title}</div>
+        <div style={{fontSize:26,fontWeight:800,color:'var(--ink-navy)',marginTop:8}}>{value}</div>
+        {caption && <div style={{fontSize:12,color:'var(--muted)',marginTop:10}}>{caption}</div>}
+      </div>
+    </Tilt>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\Tilt.backup.jsx =====
+import React from 'react'
+
+export default function Tilt({ children, className = '' }) {
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\components\ui\Tilt.jsx =====
+import React from 'react'
+
+export default function Tilt({ children, className = '' }) {
+  return <div className={className}>{children}</div>
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\contexts\AuthContext.jsx =====
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react'
+
+const AuthContext = createContext()
+
+function loadUsers() {
+  try {
+    const raw = localStorage.getItem('c4gt_users')
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveUsers(users) {
+  try {
+    localStorage.setItem('c4gt_users', JSON.stringify(users))
+  } catch {}
+}
+
+const demoUsers = [
+  {
+    id: 'faculty_demo',
+    name: 'Faculty User',
+    email: 'faculty@c4gt.edu',
+    password: '123456',
+    role: 'Faculty',
+    emailVerified: true,
+  },
+  {
+    id: 'hod_demo',
+    name: 'HOD User',
+    email: 'hod@c4gt.edu',
+    password: '123456',
+    role: 'HOD',
+    emailVerified: true,
+  },
+  {
+    id: 'admin_demo',
+    name: 'Admin User',
+    email: 'admin@c4gt.edu',
+    password: '123456',
+    role: 'Admin',
+    emailVerified: true,
+  },
+]
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    try {
+      const raw = localStorage.getItem('c4gt_user')
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  })
+
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem('c4gt_user', JSON.stringify(user))
+      } else {
+        localStorage.removeItem('c4gt_user')
+      }
+    } catch {}
+  }, [user])
+
+  const login = useCallback(async (identifier, password, role = 'Faculty') => {
+    const value = String(identifier || '').trim()
+    const pass = String(password || '').trim()
+
+    if (!value || !pass) {
+      return {
+        ok: false,
+        error: role === 'Student'
+          ? 'Roll Number and password are required'
+          : 'Email and password are required',
+      }
+    }
+
+    /* STUDENT */
+    if (role === 'Student') {
+      const rollNumber = value.toUpperCase()
+
+      if (pass !== rollNumber) {
+        return {
+          ok: false,
+          error: 'Student password must be the same as the Roll Number',
+        }
+      }
+
+      const student = {
+        id: `student_${rollNumber}`,
+        name: rollNumber,
+        rollNumber,
+        email: '',
+        password: rollNumber,
+        role: 'Student',
+        department: '',
+        emailVerified: true,
+      }
+
+      setUser(student)
+
+      return {
+        ok: true,
+        user: student,
+      }
+    }
+
+    /* FACULTY / HOD / ADMIN DEMO LOGIN */
+    const users = [...demoUsers, ...loadUsers()]
+
+    const found = users.find(
+      (item) =>
+        String(item.email || '').toLowerCase() === value.toLowerCase() &&
+        item.password === pass &&
+        String(item.role).toLowerCase() === String(role).toLowerCase()
+    )
+
+    if (!found) {
+      return {
+        ok: false,
+        error: 'Invalid email or password',
+      }
+    }
+
+    setUser(found)
+
+    return {
+      ok: true,
+      user: found,
+    }
+  }, [])
+
+  const signup = useCallback(async ({ name, email, password }) => {
+    const n = String(name || '').trim()
+    const e = String(email || '').trim().toLowerCase()
+    const p = String(password || '').trim()
+
+    if (!n || !e || !p) {
+      return {
+        ok: false,
+        error: 'Name, email and password are required',
+      }
+    }
+
+    const users = loadUsers()
+
+    if (users.find((u) => String(u.email).toLowerCase() === e)) {
+      return {
+        ok: false,
+        error: 'Email already registered',
+      }
+    }
+
+    const newUser = {
+      id: `u_${Date.now()}`,
+      name: n,
+      email: e,
+      password: p,
+      role: 'Student',
+      department: '',
+      rollNumber: '',
+      emailVerified: true,
+    }
+
+    users.push(newUser)
+    saveUsers(users)
+    setUser(newUser)
+
+    return {
+      ok: true,
+      user: newUser,
+    }
+  }, [])
+
+  const logout = useCallback(() => {
+    setUser(null)
+  }, [])
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        signup,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  return useContext(AuthContext)
+}
+
+export default AuthContext
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\contexts\DataContext.jsx =====
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import initialData from '../data/mockData'
+
+const STORAGE_KEY = 'c4gt_activities_v1'
+const DataContext = createContext()
+
+export function DataProvider({ children }) {
+  const [activities, setActivities] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) return JSON.parse(raw)
+    } catch (e) {
+      console.warn('Failed to parse activities from localStorage', e)
+    }
+    return initialData.activities || []
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(activities))
+    } catch (e) {
+      console.warn('Failed to persist activities to localStorage', e)
+    }
+  }, [activities])
+
+  function addActivity(payload) {
+    const item = { id: 'a' + (Date.now()), status: 'Pending', ...payload }
+    setActivities(prev => [item, ...prev])
+    return item
+  }
+
+  function updateActivityStatus(id, status) {
+    setActivities(prev => prev.map(a => a.id === id ? { ...a, status } : a))
+  }
+
+  // allow updating status with additional metadata, e.g. rejection reason
+  function updateActivityStatusWithMeta(id, status, meta) {
+    setActivities(prev => prev.map(a => a.id === id ? { ...a, status, ...(meta || {}) } : a))
+  }
+
+  return (
+    <DataContext.Provider value={{ activities, addActivity, updateActivityStatus, updateActivityStatusWithMeta }}>
+      {children}
+    </DataContext.Provider>
+  )
+}
+
+export function useData() { return useContext(DataContext) }
+
+export default DataContext
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\contexts\RealtimeContext.jsx =====
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
+
+const RealtimeContext = createContext(null)
+
+export function useRealtime(){
+  return useContext(RealtimeContext)
+}
+
+export function RealtimeProvider({ children, url }){
+  const [events, setEvents] = useState([])
+  const esRef = useRef(null)
+
+  useEffect(()=>{
+    const endpoint = url || (import.meta.env.VITE_REALTIME_URL || 'http://localhost:4000/events')
+    const es = new EventSource(endpoint)
+    esRef.current = es
+
+    es.onmessage = (e) => {
+      try{
+        const payload = JSON.parse(e.data)
+        setEvents(prev => [payload, ...prev].slice(0, 200))
+      }catch(err){
+        console.error('Realtime parse error', err)
+      }
+    }
+
+    es.onerror = (err) => {
+      console.warn('Realtime connection error', err)
+      // EventSource will auto-reconnect; we could implement backoff here
+    }
+
+    return ()=>{
+      es.close()
+      esRef.current = null
+    }
+  },[url])
+
+  // optimistic local emit (does not persist unless you POST to backend)
+  function emitLocal(event){
+    const item = { ...event, id: event.id || `local-${Date.now()}`, _local: true, ts: new Date().toISOString() }
+    setEvents(prev => [item, ...prev].slice(0,200))
+    // attempt to POST to server if available
+    const endpoint = (import.meta.env.VITE_REALTIME_EMIT_URL || 'http://localhost:4000/emit')
+    fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)}).catch(()=>{})
+    return item
+  }
+
+  return (
+    <RealtimeContext.Provider value={{events, emitLocal}}>
+      {children}
+    </RealtimeContext.Provider>
+  )
+}
+
+export default RealtimeContext
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\data\mockData.js =====
+const mockData = {
+  activities: [
+    { id: 'a1', title: 'Hackathon Alpha', category: 'Hackathon', userId: 's1', status: 'Verified' },
+    { id: 'a2', title: 'Workshop on AI', category: 'Workshop', userId: 's1', status: 'Pending' },
+    { id: 'a3', title: 'Internship at XYZ', category: 'Internship', userId: 's1', status: 'Verified' }
+  ]
+}
+
+export default mockData
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\hooks\useCountUp.js =====
+import { useState, useEffect, useRef } from 'react'
+
+export default function useCountUp(target = 0, duration = 1000){
+  const [value, setValue] = useState(0)
+  const rafRef = useRef(null)
+  const startRef = useRef(null)
+  const fromRef = useRef(0)
+
+  useEffect(()=>{
+    const from = fromRef.current
+    const to = Number(target) || 0
+    const diff = to - from
+    if(rafRef.current) cancelAnimationFrame(rafRef.current)
+    if(duration <= 0 || diff === 0){ setValue(to); fromRef.current = to; return }
+
+    function step(ts){
+      if(!startRef.current) startRef.current = ts
+      const elapsed = ts - startRef.current
+      const progress = Math.min(1, elapsed / duration)
+      const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+      setValue(Math.round(from + diff * eased))
+      if(progress < 1){ rafRef.current = requestAnimationFrame(step) }
+      else { fromRef.current = to; startRef.current = null }
+    }
+
+    rafRef.current = requestAnimationFrame(step)
+
+    return ()=>{ if(rafRef.current) cancelAnimationFrame(rafRef.current); startRef.current = null }
+  },[target,duration])
+
+  return value
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\Login.jsx =====
+import React, { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
+const roles = [
+  {
+    id: 'Student',
+    label: 'Student',
+    icon: 'ðŸŽ“',
+    description: 'Login using Roll Number',
+  },
+  {
+    id: 'Faculty',
+    label: 'Faculty',
+    icon: 'ðŸ‘©â€ðŸ«',
+    description: 'Login using college email',
+  },
+  {
+    id: 'HOD',
+    label: 'HOD',
+    icon: 'ðŸ«',
+    description: 'Department administration',
+  },
+  {
+    id: 'Admin',
+    label: 'Admin',
+    icon: 'âš™ï¸',
+    description: 'College administration',
+  },
+]
+
+export default function Login() {
+  const navigate = useNavigate()
+  const { login } = useAuth()
+
+  const [role, setRole] = useState('Student')
+  const [identifier, setIdentifier] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    setError('')
+
+    const value = identifier.trim()
+    const pass = password.trim()
+
+    if (!value || !pass) {
+      setError(
+        role === 'Student'
+          ? 'Roll Number and password are required'
+          : 'Email and password are required'
+      )
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      // FRONTEND-ONLY STUDENT LOGIN
+      // Student password is the same as Roll Number.
+      if (role === 'Student') {
+        const rollNumber = value.toUpperCase()
+
+        if (pass !== value) {
+          setError('Student password must be the same as the Roll Number')
+          setLoading(false)
+          return
+        }
+
+        const student = {
+          id: `student_${rollNumber}`,
+          name: 'Student',
+          rollNumber,
+          email: '',
+          role: 'Student',
+          department: '',
+          emailVerified: true,
+        }
+
+        localStorage.setItem('c4gt_user', JSON.stringify(student))
+
+        // Small delay so the loading state feels natural.
+        await new Promise((resolve) => setTimeout(resolve, 300))
+
+        navigate('/student')
+        return
+      }
+
+      // FACULTY / HOD / ADMIN
+      const result = await login(value, pass)
+
+      if (!result.ok) {
+        setError(result.error || 'Invalid email or password')
+        setLoading(false)
+        return
+      }
+
+      const actualRole = result.user?.role || role
+
+      navigate(`/${actualRole.toLowerCase()}`)
+    } catch (err) {
+      setError('Unable to sign in. Please try again.')
+      setLoading(false)
+    }
+  }
+
+  function handleClear() {
+    setIdentifier('')
+    setPassword('')
+    setError('')
+  }
+
+  const isStudent = role === 'Student'
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.backgroundShapeOne} />
+      <div style={styles.backgroundShapeTwo} />
+
+      <main style={styles.container}>
+        {/* BRAND */}
+        <section style={styles.brandSection}>
+          <div style={styles.logo}>
+            C4GT
+          </div>
+
+          <div>
+            <div style={styles.brandEyebrow}>
+              COLLEGE ENGAGEMENT
+            </div>
+
+            <h1 style={styles.brandTitle}>
+              Dashboard
+            </h1>
+
+            <p style={styles.brandSubtitle}>
+              A digital space for students, faculty and college activities.
+            </p>
+          </div>
+        </section>
+
+        {/* LOGIN CARD */}
+        <section style={styles.loginCard}>
+          <div style={styles.heading}>
+            <span style={styles.welcome}>
+              Welcome back
+            </span>
+
+            <h2 style={styles.loginTitle}>
+              Sign in to your account
+            </h2>
+
+            <p style={styles.loginSubtitle}>
+              Select your role and continue to your dashboard.
+            </p>
+          </div>
+
+          {/* ROLE SELECTOR */}
+          <div style={styles.roleGrid}>
+            {roles.map((item) => {
+              const active = role === item.id
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setRole(item.id)
+                    setIdentifier('')
+                    setPassword('')
+                    setError('')
+                  }}
+                  style={{
+                    ...styles.roleButton,
+                    ...(active
+                      ? styles.roleButtonActive
+                      : {}),
+                  }}
+                >
+                  <span style={styles.roleIcon}>
+                    {item.icon}
+                  </span>
+
+                  <span>
+                    <strong style={styles.roleLabel}>
+                      {item.label}
+                    </strong>
+
+                    <small style={styles.roleDescription}>
+                      {item.description}
+                    </small>
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            style={styles.form}
+          >
+            {/* IDENTIFIER */}
+            <label style={styles.field}>
+              <span style={styles.label}>
+                {isStudent ? 'Roll Number' : 'Email Address'}
+              </span>
+
+              <input
+                value={identifier}
+                onChange={(event) =>
+                  setIdentifier(event.target.value)
+                }
+                placeholder={
+                  isStudent
+                    ? 'Enter your roll number'
+                    : 'name@college.edu'
+                }
+                autoComplete="username"
+                style={styles.input}
+              />
+            </label>
+
+            {/* PASSWORD */}
+            <label style={styles.field}>
+              <span style={styles.label}>
+                Password
+              </span>
+
+              <div style={styles.passwordWrap}>
+                <input
+                  value={password}
+                  onChange={(event) =>
+                    setPassword(event.target.value)
+                  }
+                  type={
+                    showPassword
+                      ? 'text'
+                      : 'password'
+                  }
+                  placeholder={
+                    isStudent
+                      ? 'Enter Roll Number'
+                      : 'Enter password'
+                  }
+                  autoComplete="current-password"
+                  style={{
+                    ...styles.input,
+                    paddingRight: 80,
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowPassword((current) => !current)
+                  }
+                  style={styles.showButton}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+
+              {isStudent && (
+                <span style={styles.helperText}>
+                  Student password is the same as your Roll Number.
+                </span>
+              )}
+            </label>
+
+            {/* ERROR */}
+            {error && (
+              <div style={styles.errorBox}>
+                <span>!</span>
+                {error}
+              </div>
+            )}
+
+            {/* ACTIONS */}
+            <div style={styles.actionRow}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+                style={styles.signInButton}
+              >
+                {loading
+                  ? 'Signing in...'
+                  : `Sign in as ${role}`}
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={handleClear}
+              >
+                Clear
+              </button>
+            </div>
+          </form>
+
+          {/* EXTRA LINKS */}
+          <div style={styles.bottomArea}>
+            <button
+              type="button"
+              style={styles.linkButton}
+              onClick={() =>
+                alert(
+                  isStudent
+                    ? 'Please contact your college administration for account assistance.'
+                    : 'Please contact the college administrator to reset your password.'
+                )
+              }
+            >
+              Forgot password?
+            </button>
+
+            {isStudent && (
+              <div style={styles.signupRow}>
+                <span>
+                  New student?
+                </span>
+
+                <Link
+                  to="/signup"
+                  style={styles.signupLink}
+                >
+                  Create account
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* FEATURES */}
+        <section style={styles.features}>
+          <Feature
+            icon="ðŸ“¢"
+            title="Campus Updates"
+            text="Announcements and important college information."
+          />
+
+          <Feature
+            icon="ðŸŽ¯"
+            title="Activities"
+            text="Discover workshops, clubs, events and opportunities."
+          />
+
+          <Feature
+            icon="ðŸ“Š"
+            title="Engagement"
+            text="Track your participation and achievements."
+          />
+        </section>
+
+        <footer style={styles.footer}>
+          C4GT College Engagement Dashboard
+        </footer>
+      </main>
+    </div>
+  )
+}
+
+function Feature({ icon, title, text }) {
+  return (
+    <div style={styles.featureCard}>
+      <div style={styles.featureIcon}>
+        {icon}
+      </div>
+
+      <div>
+        <div style={styles.featureTitle}>
+          {title}
+        </div>
+
+        <div style={styles.featureText}>
+          {text}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background:
+      'linear-gradient(135deg, #f4f8fd 0%, #ffffff 52%, #eef5ff 100%)',
+    position: 'relative',
+    overflow: 'hidden',
+    padding: '40px 20px',
+  },
+
+  backgroundShapeOne: {
+    position: 'absolute',
+    width: 340,
+    height: 340,
+    borderRadius: '50%',
+    background: 'rgba(37, 99, 235, 0.06)',
+    top: -120,
+    right: -80,
+  },
+
+  backgroundShapeTwo: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: '50%',
+    background: 'rgba(15, 118, 110, 0.05)',
+    bottom: -130,
+    left: -80,
+  },
+
+  container: {
+    position: 'relative',
+    zIndex: 1,
+    width: '100%',
+    maxWidth: 1060,
+    margin: '0 auto',
+  },
+
+  brandSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 18,
+    marginBottom: 28,
+  },
+
+  logo: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    background:
+      'linear-gradient(135deg, #12325b, #2563eb)',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 19,
+    fontWeight: 900,
+    letterSpacing: 1,
+    boxShadow:
+      '0 8px 20px rgba(37, 99, 235, 0.18)',
+  },
+
+  brandEyebrow: {
+    color: '#2563eb',
+    fontSize: 10,
+    fontWeight: 800,
+    letterSpacing: 1.8,
+  },
+
+  brandTitle: {
+    margin: '3px 0 2px',
+    color: '#12325b',
+    fontSize: 27,
+    fontWeight: 850,
+  },
+
+  brandSubtitle: {
+    margin: 0,
+    color: '#64748b',
+    fontSize: 13,
+  },
+
+  loginCard: {
+    width: '100%',
+    maxWidth: 760,
+    margin: '0 auto',
+    background: '#ffffff',
+    border: '1px solid #dce5ef',
+    borderRadius: 20,
+    padding: 30,
+    boxShadow:
+      '0 14px 40px rgba(15, 23, 42, 0.08)',
+  },
+
+  heading: {
+    marginBottom: 22,
+  },
+
+  welcome: {
+    color: '#2563eb',
+    fontSize: 12,
+    fontWeight: 800,
+  },
+
+  loginTitle: {
+    margin: '5px 0 5px',
+    color: '#12325b',
+    fontSize: 24,
+    fontWeight: 800,
+  },
+
+  loginSubtitle: {
+    margin: 0,
+    color: '#64748b',
+    fontSize: 13,
+  },
+
+  roleGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(150px, 1fr))',
+    gap: 10,
+    marginBottom: 22,
+  },
+
+  roleButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 9,
+    textAlign: 'left',
+    padding: 12,
+    borderRadius: 12,
+    border: '1px solid #dce5ef',
+    background: '#fff',
+    cursor: 'pointer',
+  },
+
+  roleButtonActive: {
+    border: '1px solid #2563eb',
+    background: '#eff6ff',
+  },
+
+  roleIcon: {
+    fontSize: 19,
+  },
+
+  roleLabel: {
+    display: 'block',
+    color: '#12325b',
+    fontSize: 12,
+  },
+
+  roleDescription: {
+    display: 'block',
+    marginTop: 2,
+    color: '#64748b',
+    fontSize: 9,
+  },
+
+  form: {
+    display: 'grid',
+    gap: 17,
+  },
+
+  field: {
+    display: 'grid',
+    gap: 7,
+  },
+
+  label: {
+    color: '#334155',
+    fontSize: 12,
+    fontWeight: 700,
+  },
+
+  input: {
+    width: '100%',
+    height: 46,
+    border: '1px solid #d6e0eb',
+    borderRadius: 10,
+    outline: 'none',
+    padding: '0 13px',
+    background: '#fbfdff',
+    color: '#172033',
+    fontSize: 13,
+  },
+
+  passwordWrap: {
+    position: 'relative',
+  },
+
+  showButton: {
+    position: 'absolute',
+    right: 8,
+    top: 7,
+    height: 32,
+    padding: '0 10px',
+    border: 'none',
+    borderRadius: 7,
+    background: '#eef4fb',
+    color: '#2563eb',
+    fontSize: 11,
+    fontWeight: 700,
+    cursor: 'pointer',
+  },
+
+  helperText: {
+    color: '#64748b',
+    fontSize: 10,
+  },
+
+  errorBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    padding: '10px 12px',
+    borderRadius: 9,
+    background: '#fef2f2',
+    border: '1px solid #fecaca',
+    color: '#b91c1c',
+    fontSize: 12,
+    fontWeight: 600,
+  },
+
+  actionRow: {
+    display: 'flex',
+    gap: 10,
+    alignItems: 'center',
+  },
+
+  signInButton: {
+    flex: 1,
+    minHeight: 44,
+  },
+
+  bottomArea: {
+    marginTop: 21,
+    paddingTop: 18,
+    borderTop: '1px solid #edf2f7',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    flexWrap: 'wrap',
+  },
+
+  linkButton: {
+    border: 'none',
+    background: 'transparent',
+    color: '#2563eb',
+    padding: 0,
+    cursor: 'pointer',
+    fontSize: 12,
+    fontWeight: 600,
+  },
+
+  signupRow: {
+    display: 'flex',
+    gap: 5,
+    color: '#64748b',
+    fontSize: 12,
+  },
+
+  signupLink: {
+    color: '#12325b',
+    fontWeight: 800,
+  },
+
+  features: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(240px, 1fr))',
+    gap: 12,
+    marginTop: 18,
+  },
+
+  featureCard: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 11,
+    padding: 15,
+    background: 'rgba(255,255,255,0.92)',
+    border: '1px solid #dce5ef',
+    borderRadius: 13,
+  },
+
+  featureIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 9,
+    background: '#eff6ff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+
+  featureTitle: {
+    color: '#12325b',
+    fontSize: 12,
+    fontWeight: 800,
+  },
+
+  featureText: {
+    marginTop: 3,
+    color: '#64748b',
+    fontSize: 10,
+    lineHeight: 1.5,
+  },
+
+  footer: {
+    textAlign: 'center',
+    marginTop: 22,
+    color: '#94a3b8',
+    fontSize: 10,
+  },
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\SignUp.jsx =====
+import React, { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
+export default function SignUp(){
+  const { signup } = useAuth()
+  const nav = useNavigate()
+  const [name,setName] = useState('')
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const [error,setError] = useState('')
+  const [loading,setLoading] = useState(false)
+  const [show, setShow] = useState(false)
+
+  async function handleSubmit(e){
+    e.preventDefault()
+    setError('')
+    if (!name.trim() || !email.trim() || !password.trim()){
+      setError('All fields are required')
+      return
+    }
+    setLoading(true)
+    const res = await signup({ name, email, password })
+    setLoading(false)
+    if (!res.ok){
+      setError(res.error || 'Unable to create account')
+      return
+    }
+    nav(`/${res.user.role.toLowerCase()}`)
+  }
+
+  return (
+    <div style={{padding:40,maxWidth:640}}>
+      <h1 style={{fontFamily:'Fraunces, serif',color:'var(--ink-navy)'}}>Create an account</h1>
+      <div style={{marginTop:12}}>
+        <form onSubmit={handleSubmit} style={{display:'grid',gap:12}}>
+          <label>
+            <div style={{fontSize:13,color:'var(--muted)'}}>Full name</div>
+            <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" style={{padding:10,borderRadius:8,border:'1px solid #e5e7eb'}} />
+          </label>
+          <label>
+            <div style={{fontSize:13,color:'var(--muted)'}}>College email</div>
+            <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@college.edu" style={{padding:10,borderRadius:8,border:'1px solid #e5e7eb'}} />
+          </label>
+          <label>
+            <div style={{fontSize:13,color:'var(--muted)'}}>Password</div>
+            <div style={{display:'flex',gap:8}}>
+              <input type={show ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Create a secure password" style={{padding:10,borderRadius:8,border:'1px solid #e5e7eb',flex:1}} />
+              <button type="button" onClick={()=>setShow(s=>!s)} style={{padding:'8px 10px',borderRadius:6,border:'1px solid #e5e7eb',background:'#fff'}}>{show ? 'Hide' : 'Show'}</button>
+            </div>
+          </label>
+
+          {error && <div style={{color:'var(--rejected-red)'}}>{error}</div>}
+
+          <div style={{display:'flex',gap:8}}>
+            <button type="submit" disabled={loading} style={{background:'var(--ink-navy)',color:'#fff',border:'none',padding:'10px 14px',borderRadius:8}}>{loading ? 'Creating...' : 'Create account'}</button>
+            <Link to="/" style={{alignSelf:'center',color:'var(--muted)'}}>Back to sign in</Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\admin\AdminDashboard.jsx =====
+import React, { useState } from 'react'
+import Tilt from '../../components/ui/Tilt'
+import { useData } from '../../contexts/DataContext'
+import { useRealtime } from '../../contexts/RealtimeContext'
+
+function PreviewEvidence({ item }){
+  if (!item) return null
+  if (item.evidenceThumb) return <img src={item.evidenceThumb} alt={item.evidenceName || 'evidence'} style={{maxWidth:'100%',borderRadius:8}} />
+  if (item.evidenceData && String(item.evidenceData).startsWith('data:application/pdf')) return <a href={item.evidenceData} target="_blank" rel="noreferrer">Open PDF evidence</a>
+  if (item.evidenceData && String(item.evidenceData).startsWith('data:image')) return <img src={item.evidenceData} alt={item.evidenceName || 'evidence'} style={{maxWidth:'100%',borderRadius:8}} />
+  if (item.subtitle) return <a href={item.subtitle} target="_blank" rel="noreferrer">View evidence link</a>
+  return <div className="muted">No evidence provided</div>
+}
+
+function loadUsers(){
+  try {
+    const raw = localStorage.getItem('c4gt_users')
+    return raw ? JSON.parse(raw) : []
+  } catch { return [] }
+}
+
+export default function AdminDashboard() {
+  const initialUsers = loadUsers()
+  const [users, setUsers] = useState(initialUsers)
+  const { activities, updateActivityStatusWithMeta } = useData()
+  const { emitLocal } = useRealtime()
+
+  const pending = activities.filter(a=>a.status==='Pending')
+
+  function toggleActive(email){
+    setUsers(prev => prev.map(u => u.email === email ? { ...u, disabled: !u.disabled } : u))
+  }
+
+  function approve(id){
+    updateActivityStatusWithMeta(id,'Verified')
+    const item = activities.find(a=>a.id===id)
+    if(item && emitLocal) emitLocal({ ...item, status: 'Verified', time: new Date().toISOString() })
+  }
+
+  function reject(id, reason){
+    updateActivityStatusWithMeta(id,'Rejected',{ reason })
+    const item = activities.find(a=>a.id===id)
+    if(item && emitLocal) emitLocal({ ...item, status: 'Rejected', time: new Date().toISOString(), reason })
+  }
+
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <div>
+          <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif',margin:0}}>Admin â€” User Management</h2>
+          <div className="muted">Manage accounts and roles</div>
+        </div>
+      </div>
+
+      <div style={{marginTop:18,display:'grid',gridTemplateColumns:'1fr 360px',gap:12}}>
+        <Tilt>
+          <div className="card">
+          <div style={{fontWeight:800}}>Users</div>
+          <table style={{width:'100%',marginTop:12,borderCollapse:'collapse'}}>
+            <thead className="muted"><tr><th style={{textAlign:'left'}}>Name</th><th>Role</th><th>Email</th><th></th></tr></thead>
+            <tbody>
+              {users.map(u=> (
+                <tr key={u.email} style={{borderTop:'1px solid #f0f0f0'}}>
+                  <td style={{padding:'8px 6px'}}>{u.name}</td>
+                  <td style={{padding:'8px 6px'}}>{u.role}</td>
+                  <td style={{padding:'8px 6px'}} className="muted">{u.email}</td>
+                  <td style={{padding:'8px 6px',textAlign:'right'}}>
+                    <button className="btn" onClick={()=>toggleActive(u.email)}>{u.disabled ? 'Enable' : 'Disable'}</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        </Tilt>
+
+        <Tilt className="depth-lg">
+          <div className="card" style={{maxHeight:600,overflow:'auto'}}>
+            <div style={{fontWeight:800}}>Pending Verifications</div>
+            <div style={{marginTop:8}}>
+              {pending.length === 0 && <div className="muted">No pending submissions.</div>}
+              {pending.map(item => (
+                <div key={item.id} style={{borderTop:'1px solid #f3f3f3',padding:'10px 0'}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <div>
+                      <div style={{fontWeight:700}}>{item.title}</div>
+                      <div className="muted small">{item.category} â€¢ {item.user}</div>
+                    </div>
+                    <div style={{display:'flex',gap:8}}>
+                      <button className="btn" onClick={()=>approve(item.id)}>Approve</button>
+                      <button className="btn btn-ghost" onClick={()=>{ const reason = prompt('Rejection reason'); if(reason) reject(item.id, reason) }}>Reject</button>
+                    </div>
+                  </div>
+                  <div style={{marginTop:8}}>
+                    <PreviewEvidence item={item} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Tilt>
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\faculty\FacultyDashboard.jsx =====
+import React, { useState } from 'react'
+import { useData } from '../../contexts/DataContext'
+import { useAuth } from '../../contexts/AuthContext'
+import Tilt from '../../components/ui/Tilt'
+
+export default function FacultyDashboard() {
+  const { user } = useAuth()
+  const { activities, updateActivityStatus, updateActivityStatusWithMeta } = useData()
+  const pending = activities.filter(a => a.status === 'Pending')
+  const [showReject, setShowReject] = useState(false)
+  const [selected, setSelected] = useState(null)
+  const [reason, setReason] = useState('')
+
+  function handleApprove(id){
+    updateActivityStatus(id,'Verified')
+  }
+
+  function handleReject(id){
+    setSelected(id)
+    setReason('')
+    setShowReject(true)
+  }
+
+  function confirmReject(){
+    if(!selected) return
+    updateActivityStatusWithMeta(selected,'Rejected',{ rejectionReason: reason, rejectedBy: user?.name || 'Faculty', reviewedAt: Date.now() })
+    setShowReject(false)
+    setSelected(null)
+    setReason('')
+  }
+
+    return (
+      <div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div>
+            <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif',margin:0}}>Faculty Reviews</h2>
+            <div className="muted">Pending verifications from students</div>
+          </div>
+        </div>
+
+        <div style={{marginTop:18}}>
+          {pending.length===0 && <Tilt><div className="card">No pending activities.</div></Tilt>}
+          {pending.map(p=> (
+            <Tilt key={p.id}>
+              <div className="card" style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+                <div>
+                  <div style={{fontWeight:800}}>{p.title}</div>
+                  <div className="muted">Submitted by {p.studentName} â€” {p.category}</div>
+                </div>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                  <button className="btn btn-ghost" onClick={()=>handleReject(p.id)}>Reject</button>
+                  <button className="btn btn-primary" onClick={()=>handleApprove(p.id)}>Approve</button>
+                </div>
+              </div>
+            </Tilt>
+          ))}
+        </div>
+        {showReject && (
+          <div style={{position:'fixed',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(8,10,20,0.45)'}}>
+            <div className="card" style={{width:520}}>
+              <h3 style={{margin:0}}>Reject Activity</h3>
+              <div className="muted" style={{marginTop:8}}>Provide a reason for rejection.</div>
+              <textarea value={reason} onChange={e=>setReason(e.target.value)} placeholder="Reason" style={{width:'100%',marginTop:12,minHeight:100}} />
+              <div style={{display:'flex',justifyContent:'flex-end',gap:8,marginTop:12}}>
+                <button className="btn" onClick={()=>{setShowReject(false); setSelected(null)}}>Cancel</button>
+                <button className="btn btn-primary" onClick={confirmReject}>Confirm Reject</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\hod\HodDashboard.jsx =====
+import React from 'react'
+import { useData } from '../../contexts/DataContext'
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
+import Tilt from '../../components/ui/Tilt'
+
+export default function HodDashboard() {
+  const { activities } = useData()
+
+  const byCategory = activities.reduce((acc, a) => {
+    acc[a.category] = (acc[a.category] || 0) + 1
+    return acc
+  }, {})
+
+  const chartData = Object.entries(byCategory).map(([name, value]) => ({ name, value }))
+
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <div>
+          <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif',margin:0}}>HOD â€” Department Overview</h2>
+          <div className="muted">Overview of departmental activity and engagement</div>
+        </div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginTop:16}}>
+        <Tilt className="depth-lg">
+          <div className="card">
+            <div className="muted">Total Submissions</div>
+            <div style={{fontSize:28,fontWeight:800,color:'var(--ink-navy)'}}>{activities.length}</div>
+          </div>
+        </Tilt>
+        <Tilt className="depth-lg">
+          <div className="card">
+            <div className="muted">Verified</div>
+            <div style={{fontSize:28,fontWeight:800,color:'var(--verified-green)'}}>{activities.filter(a=>a.status==='Verified').length}</div>
+          </div>
+        </Tilt>
+        <Tilt className="depth-lg">
+          <div className="card">
+            <div className="muted">Pending Review</div>
+            <div style={{fontSize:28,fontWeight:800,color:'var(--seal-gold)'}}>{activities.filter(a=>a.status==='Pending').length}</div>
+          </div>
+        </Tilt>
+      </div>
+
+      <div style={{display:'flex',gap:12,marginTop:18}}>
+        <Tilt style={{flex:1}}>
+          <div style={{flex:1}} className="card">
+            <div style={{fontWeight:800}}>Activity by Category</div>
+            <div style={{height:200,marginTop:8}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="var(--ink-navy)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        </Tilt>
+
+        <div style={{width:360,display:'flex',flexDirection:'column',gap:12}}>
+          <Tilt>
+            <div className="card">
+              <div style={{fontWeight:800}}>Top Contributors</div>
+            <ul style={{listStyle:'none',padding:0,marginTop:8}}>
+              {Object.values(activities.reduce((m,a)=>{m[a.studentName]= (m[a.studentName]||0)+1; return m}, {})).length===0 && <li className="muted">No data</li>}
+              {Object.entries(activities.reduce((m,a)=>{m[a.studentName]= (m[a.studentName]||0)+1; return m}, {})).map(([name,count])=> (
+                <li key={name} style={{display:'flex',justifyContent:'space-between',padding:'6px 0'}}>
+                  <div>{name}</div>
+                  <div className="muted">{count}</div>
+                </li>
+              ))}
+            </ul>
+            </div>
+          </Tilt>
+
+          <Tilt>
+            <div className="card">
+              <div style={{fontWeight:800}}>Department Notes</div>
+              <div className="muted" style={{marginTop:8}}>No outstanding alerts.</div>
+            </div>
+          </Tilt>
+        </div>
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\ActivityDetails.jsx =====
+import React from 'react'
+import { useParams } from 'react-router-dom'
+import { useData } from '../../contexts/DataContext'
+import Tilt from '../../components/ui/Tilt'
+import Seal from '../../components/ui/Seal'
+
+export default function ActivityDetails(){
+  const { id } = useParams()
+  const { activities } = useData()
+  const activity = activities.find(a=>a.id===id)
+
+  if (!activity) return <div>Activity not found</div>
+
+  return (
+    <div>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>Activity Details</h2>
+      <Tilt>
+        <div className="card" style={{marginTop:12}}>
+          <h3>{activity.title}</h3>
+          <div style={{color:'var(--muted)'}}>Category: {activity.category}</div>
+          <div style={{marginTop:8}}>Status: <Seal status={activity.status} /></div>
+          <div style={{marginTop:12}}>Submitted by: {activity.userId}</div>
+        </div>
+      </Tilt>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\AddActivity.jsx =====
+import React, { useState } from 'react'
+import { useData } from '../../contexts/DataContext'
+import { useAuth } from '../../contexts/AuthContext'
+
+export default function AddActivity(){
+  const { addActivity } = useData()
+  const { user } = useAuth()
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('Workshop')
+
+  function handleSubmit(e){
+    e.preventDefault()
+    addActivity({ title, category, userId: user.id })
+    setTitle('')
+  }
+
+  return (
+    <div>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>Add Activity</h2>
+      <form onSubmit={handleSubmit} style={{display:'grid',gap:12,maxWidth:640}}>
+        <label>
+          <div style={{color:'var(--muted)'}}>Title</div>
+          <input value={title} onChange={e=>setTitle(e.target.value)} required style={{width:'100%',padding:8,borderRadius:6}} />
+        </label>
+        <label>
+          <div style={{color:'var(--muted)'}}>Category</div>
+          <select value={category} onChange={e=>setCategory(e.target.value)} style={{padding:8,borderRadius:6}}>
+            <option>Workshop</option>
+            <option>Hackathon</option>
+            <option>Internship</option>
+            <option>Certification</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>
+          <div style={{color:'var(--muted)'}}>Evidence (URL)</div>
+          <input placeholder="https://..." style={{width:'100%',padding:8,borderRadius:6}} />
+        </label>
+        <div>
+          <button type="submit" style={{background:'var(--ink-navy)',color:'#fff',padding:'8px 12px',borderRadius:6}}>Submit Activity</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\CampusPages.jsx =====
+import React from 'react'
+
+export default function CampusPages({ type }) {
+  const data = {
+    events: {
+      title: 'Events',
+      subtitle: 'Discover activities and events across the campus.',
+      items: [
+        ['AI Bootcamp', 'Technology', 'Hands-on AI learning and technical activities.'],
+        ['KPL Season 2', 'Sports', 'Campus sports and student participation.'],
+        ['Innovation Activities', 'Innovation', 'Project and innovation opportunities.'],
+      ],
+    },
+
+    announcements: {
+      title: 'Announcements',
+      subtitle: 'Important updates for students.',
+      items: [
+        ['Academic Updates', 'Academic', 'Latest academic and examination information.'],
+        ['Campus Updates', 'Campus', 'New campus activities and opportunities.'],
+        ['Student Updates', 'Student', 'Student engagement and participation updates.'],
+      ],
+    },
+
+    hub: {
+      title: 'C4GT Hub @ KIET',
+      subtitle: 'Technology, innovation, projects and student opportunities.',
+      items: [
+        ['Coding & Development', 'Technology', 'Build technical skills through coding and projects.'],
+        ['Projects & Innovation', 'Innovation', 'Work on practical projects and ideas.'],
+        ['Internships & Opportunities', 'Career', 'Explore practical learning and career opportunities.'],
+      ],
+    },
+
+    clubs: {
+      title: 'Clubs & Communities',
+      subtitle: 'Explore student communities and activities.',
+      items: [
+        ['Global Coding Club', 'Technical', 'Coding and technology-focused student community.'],
+        ['C4GT Hub @ KIET', 'Innovation', 'Technology and project-focused student community.'],
+        ['Toastmasters', 'Communication', 'Communication and leadership development.'],
+        ['NCC & NSS', 'Community', 'Social service and student activities.'],
+      ],
+    },
+  }
+
+  const page = data[type] || data.events
+
+  return (
+    <div className="campus-page">
+      <div className="campus-eyebrow">KIET ENGAGEMENT</div>
+      <h1 className="campus-title">{page.title}</h1>
+      <p className="campus-subtitle">{page.subtitle}</p>
+
+      <div className="campus-grid">
+        {page.items.map(([title, category, description]) => (
+          <div className="campus-item" key={title}>
+            <span className="campus-tag">{category}</span>
+
+            <h2>{title}</h2>
+
+            <p>{description}</p>
+
+            <button className="btn btn-primary">
+              View Details
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\MyAchievements.jsx =====
+import React from 'react'
+import { useAuth } from '../../contexts/AuthContext'
+import { useData } from '../../contexts/DataContext'
+import Tilt from '../../components/ui/Tilt'
+import Seal from '../../components/ui/Seal'
+import AddCertificationForm from '../../components/ui/AddCertificationForm'
+
+export default function MyAchievements(){
+  const { user } = useAuth()
+  const { activities } = useData()
+  const verified = activities.filter(a=>a.userId===user.id && a.status==='Verified')
+
+  return (
+    <div>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>My Achievements</h2>
+      <div style={{marginTop:12,marginBottom:12}}>
+        <AddCertificationForm onAdded={(item)=>{ /* optional callback */ }} />
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:12,marginTop:12}}>
+        {verified.map(a=> (
+          <Tilt key={a.id}>
+            <div className="card">
+              <div style={{fontWeight:700}}>{a.title}</div>
+              <div style={{color:'var(--muted)'}}>{a.category}</div>
+              <div style={{marginTop:8}}><Seal status={a.status} /></div>
+            </div>
+          </Tilt>
+        ))}
+        {verified.length===0 && <div>No verified achievements yet.</div>}
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\MyActivities.jsx =====
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import { useData } from '../../contexts/DataContext'
+import DataTable from '../../components/ui/DataTable'
+import Seal from '../../components/ui/Seal'
+
+export default function MyActivities(){
+  const { user } = useAuth()
+  const { activities } = useData()
+  const myActivities = activities.filter(a=>a.userId === user.id)
+
+  const columns = [
+    { key:'title', title:'Title' },
+    { key:'category', title:'Category' },
+    { key:'status', title:'Status', render: r => <Seal status={r.status} /> },
+    { key:'actions', title:'', render: r => <Link to={`/student/activity/${r.id}`}>View</Link> }
+  ]
+
+  return (
+    <div>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>My Activities</h2>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+        <div style={{color:'var(--muted)'}}>All submitted activities and their verification status.</div>
+        <Link to="/student/add"><button style={{background:'var(--seal-gold)',border:'none',padding:'8px 12px',borderRadius:6}}>Add Activity</button></Link>
+      </div>
+      <DataTable columns={columns} data={myActivities} />
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\MyAnalytics.jsx =====
+import React from 'react'
+import { useAuth } from '../../contexts/AuthContext'
+import { useData } from '../../contexts/DataContext'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import ChartCard from '../../components/ui/ChartCard'
+
+export default function MyAnalytics(){
+  const { user } = useAuth()
+  const { activities } = useData()
+  const my = activities.filter(a=>a.userId===user.id)
+
+  const byCategory = my.reduce((acc,a)=>{ acc[a.category]= (acc[a.category]||0)+1; return acc}, {})
+  const data = Object.entries(byCategory).map(([k,v])=>({name:k, value:v}))
+
+  return (
+    <div>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>My Analytics</h2>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginTop:12}}>
+        <ChartCard title="Activities by Category">
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data}><XAxis dataKey="name"/><YAxis/><Tooltip/><Bar dataKey="value" fill="#1F3358"/></BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+        <ChartCard title="Engagement Overview">
+          <div style={{padding:20,color:'var(--muted)'}}>Engagement score and trends (demo)</div>
+        </ChartCard>
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\StudentDashboard.backup.jsx =====
+import React from 'react'
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts'
+import { useAuth } from '../../contexts/AuthContext'
+import { useData } from '../../contexts/DataContext'
+import Tilt from '../../components/ui/Tilt'
+
+const departmentData = [
+  { department: 'CSE', students: 820 },
+  { department: 'AIDS', students: 610 },
+  { department: 'ECE', students: 720 },
+  { department: 'EEE', students: 480 },
+  { department: 'MECH', students: 390 },
+]
+
+const engagementData = [
+  { month: 'Apr', engagement: 58 },
+  { month: 'May', engagement: 64 },
+  { month: 'Jun', engagement: 68 },
+  { month: 'Jul', engagement: 72 },
+  { month: 'Aug', engagement: 79 },
+  { month: 'Sep', engagement: 84 },
+]
+
+const announcements = [
+  {
+    id: 1,
+    title: 'Mid Examination Schedule Released',
+    type: 'Academic',
+    time: '2 hours ago',
+  },
+  {
+    id: 2,
+    title: 'Hackathon 2026 registrations are now open',
+    type: 'Event',
+    time: '5 hours ago',
+  },
+  {
+    id: 3,
+    title: 'Campus placement training starts Monday',
+    type: 'Placement',
+    time: 'Yesterday',
+  },
+]
+
+const campusActivities = [
+  {
+    id: 1,
+    title: 'React & Web Development Workshop',
+    category: 'Technical',
+    organizer: 'Coding Club',
+    date: 'Sep 05, 2026',
+    participants: 120,
+  },
+  {
+    id: 2,
+    title: 'Inter College Football Tournament',
+    category: 'Sports',
+    organizer: 'Sports Club',
+    date: 'Sep 07, 2026',
+    participants: 80,
+  },
+  {
+    id: 3,
+    title: 'NSS Community Service Drive',
+    category: 'Social',
+    organizer: 'NSS Unit',
+    date: 'Sep 09, 2026',
+    participants: 65,
+  },
+]
+
+export default function StudentDashboard() {
+  const { user } = useAuth()
+  const { activities = [] } = useData()
+
+  const myActivities = activities.filter(
+    (activity) => activity.userId === user?.id
+  )
+
+  const verifiedActivities = myActivities.filter(
+    (activity) => activity.status === 'Verified'
+  )
+
+  return (
+    <div style={{ paddingBottom: 30 }}>
+      {/* HEADER */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 16,
+          flexWrap: 'wrap',
+        }}
+      >
+        <div>
+          <h2
+            style={{
+              color: 'var(--ink-navy)',
+              fontFamily: 'Fraunces, serif',
+              margin: 0,
+            }}
+          >
+            Good Morning, {user?.name || 'Student'} ðŸ‘‹
+          </h2>
+
+          <div className="muted" style={{ marginTop: 6 }}>
+            Here&apos;s what&apos;s happening across the campus today.
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-ghost">ðŸ”” Notifications</button>
+          <button className="btn btn-primary">Profile</button>
+        </div>
+      </div>
+
+      {/* SUMMARY CARDS */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+          gap: 14,
+          marginTop: 20,
+        }}
+      >
+        <StatCard
+          label="Total Students"
+          value="4,280"
+          icon="ðŸ‘¨â€ðŸŽ“"
+        />
+
+        <StatCard
+          label="Active Staff"
+          value="186"
+          icon="ðŸ‘©â€ðŸ«"
+        />
+
+        <StatCard
+          label="Today's Activities"
+          value={campusActivities.length}
+          icon="ðŸ“…"
+        />
+
+        <StatCard
+          label="My Verified Activities"
+          value={verifiedActivities.length}
+          icon="âœ…"
+        />
+      </div>
+
+      {/* MAIN GRID */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 2fr) minmax(280px, 1fr)',
+          gap: 16,
+          marginTop: 18,
+        }}
+      >
+        {/* ANNOUNCEMENTS */}
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 800,
+                    color: 'var(--ink-navy)',
+                  }}
+                >
+                  College Announcements
+                </div>
+
+                <div className="muted" style={{ fontSize: 13 }}>
+                  Latest updates from college and staff
+                </div>
+              </div>
+
+              <button className="btn btn-ghost">View All</button>
+            </div>
+
+            <div style={{ marginTop: 14 }}>
+              {announcements.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    padding: '13px 0',
+                    borderBottom: '1px solid #ececec',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: 12,
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700 }}>
+                        ðŸ“¢ {item.title}
+                      </div>
+
+                      <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                        {item.type}
+                      </div>
+                    </div>
+
+                    <div
+                      className="muted"
+                      style={{
+                        fontSize: 12,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {item.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Tilt>
+
+        {/* QUICK ACTIONS */}
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                fontSize: 16,
+                fontWeight: 800,
+                color: 'var(--ink-navy)',
+              }}
+            >
+              Quick Actions
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 9,
+                marginTop: 14,
+              }}
+            >
+              <a
+                href="/#/student/activities"
+                className="btn btn-primary"
+              >
+                Explore Activities
+              </a>
+
+              <a
+                href="/#/student/add"
+                className="btn"
+              >
+                Add My Activity
+              </a>
+
+              <a
+                href="/#/student/achievements"
+                className="btn"
+              >
+                My Achievements
+              </a>
+
+              <a
+                href="/#/student/analytics"
+                className="btn"
+              >
+                My Analytics
+              </a>
+            </div>
+          </div>
+        </Tilt>
+      </div>
+
+      {/* CAMPUS ACTIVITIES */}
+      <div style={{ marginTop: 18 }}>
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 800,
+                    color: 'var(--ink-navy)',
+                  }}
+                >
+                  Campus Activities
+                </div>
+
+                <div className="muted" style={{ fontSize: 13 }}>
+                  Activities happening around your college
+                </div>
+              </div>
+
+              <button className="btn btn-ghost">
+                Explore
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(230px, 1fr))',
+                gap: 12,
+                marginTop: 15,
+              }}
+            >
+              {campusActivities.map((activity) => (
+                <div
+                  key={activity.id}
+                  style={{
+                    border: '1px solid #ececec',
+                    borderRadius: 12,
+                    padding: 14,
+                    background: '#fff',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      fontSize: 11,
+                      fontWeight: 700,
+                      padding: '5px 8px',
+                      borderRadius: 999,
+                      background: '#f2f4f7',
+                    }}
+                  >
+                    {activity.category}
+                  </div>
+
+                  <div
+                    style={{
+                      fontWeight: 800,
+                      marginTop: 10,
+                      color: 'var(--ink-navy)',
+                    }}
+                  >
+                    {activity.title}
+                  </div>
+
+                  <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>
+                    {activity.organizer}
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginTop: 12,
+                      fontSize: 12,
+                    }}
+                  >
+                    <span>ðŸ“… {activity.date}</span>
+                    <span>ðŸ‘¥ {activity.participants}</span>
+                  </div>
+
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: '100%', marginTop: 12 }}
+                  >
+                    View Activity
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Tilt>
+      </div>
+
+      {/* CHARTS */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 16,
+          marginTop: 18,
+        }}
+      >
+        {/* BAR CHART */}
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 800,
+                color: 'var(--ink-navy)',
+              }}
+            >
+              Students by Department
+            </div>
+
+            <div
+              className="muted"
+              style={{
+                fontSize: 12,
+                marginTop: 4,
+                marginBottom: 12,
+              }}
+            >
+              Current student distribution
+            </div>
+
+            <div style={{ width: '100%', height: 280 }}>
+              <ResponsiveContainer>
+                <BarChart data={departmentData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="department" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="students" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </Tilt>
+
+        {/* LINE CHART */}
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 800,
+                color: 'var(--ink-navy)',
+              }}
+            >
+              Student Engagement Trend
+            </div>
+
+            <div
+              className="muted"
+              style={{
+                fontSize: 12,
+                marginTop: 4,
+                marginBottom: 12,
+              }}
+            >
+              Monthly participation score
+            </div>
+
+            <div style={{ width: '100%', height: 280 }}>
+              <ResponsiveContainer>
+                <LineChart data={engagementData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="engagement"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </Tilt>
+      </div>
+
+      {/* MY ACTIVITY SUMMARY */}
+      <div style={{ marginTop: 18 }}>
+        <Tilt>
+          <div className="card">
+            <div
+              style={{
+                fontSize: 16,
+                fontWeight: 800,
+                color: 'var(--ink-navy)',
+              }}
+            >
+              My Activity Summary
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: 12,
+                marginTop: 14,
+              }}
+            >
+              <MiniStat
+                label="Total Activities"
+                value={myActivities.length}
+              />
+
+              <MiniStat
+                label="Verified"
+                value={verifiedActivities.length}
+              />
+
+              <MiniStat
+                label="Pending"
+                value={
+                  myActivities.filter(
+                    (activity) => activity.status === 'Pending'
+                  ).length
+                }
+              />
+
+              <MiniStat
+                label="Engagement Score"
+                value="84 / 100"
+              />
+            </div>
+          </div>
+        </Tilt>
+      </div>
+    </div>
+  )
+}
+
+function StatCard({ label, value, icon }) {
+  return (
+    <Tilt>
+      <div className="card" style={{ minHeight: 105 }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div className="muted" style={{ fontSize: 12 }}>
+            {label}
+          </div>
+
+          <div style={{ fontSize: 21 }}>{icon}</div>
+        </div>
+
+        <div
+          style={{
+            fontSize: 28,
+            fontWeight: 800,
+            marginTop: 8,
+            color: 'var(--ink-navy)',
+          }}
+        >
+          {value}
+        </div>
+      </div>
+    </Tilt>
+  )
+}
+
+function MiniStat({ label, value }) {
+  return (
+    <div
+      style={{
+        border: '1px solid #ececec',
+        borderRadius: 12,
+        padding: 14,
+      }}
+    >
+      <div className="muted" style={{ fontSize: 12 }}>
+        {label}
+      </div>
+
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 800,
+          marginTop: 6,
+          color: 'var(--ink-navy)',
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  )
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\pages\student\StudentDashboard.jsx =====
+import React from 'react'
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts'
+import { useAuth } from '../../contexts/AuthContext'
+import { useData } from '../../contexts/DataContext'
+
+const activityData = [
+  { month: 'Apr', participation: 42 },
+  { month: 'May', participation: 56 },
+  { month: 'Jun', participation: 61 },
+  { month: 'Jul', participation: 70 },
+  { month: 'Aug', participation: 76 },
+  { month: 'Sep', participation: 84 },
+]
+
+const categoryData = [
+  { name: 'Technical', value: 34 },
+  { name: 'Workshops', value: 25 },
+  { name: 'Clubs', value: 18 },
+  { name: 'Sports', value: 13 },
+  { name: 'Social', value: 10 },
+]
+
+const departmentData = [
+  { name: 'CAI', students: 520 },
+  { name: 'CSM', students: 460 },
+  { name: 'AID', students: 430 },
+  { name: 'CSD', students: 390 },
+  { name: 'CSC', students: 350 },
+]
+
+const announcements = [
+  {
+    title: 'AI and technology activities',
+    type: 'Academic',
+    time: 'Today',
+  },
+  {
+    title: 'New campus activity updates are available',
+    type: 'Campus',
+    time: 'Today',
+  },
+  {
+    title: 'Workshop and student engagement opportunities',
+    type: 'Student',
+    time: 'Yesterday',
+  },
+]
+
+const activities = [
+  {
+    title: 'Global Coding Club',
+    category: 'Club',
+    description: 'Coding, development and technical activities',
+    action: 'Explore',
+  },
+  {
+    title: 'K-Hub',
+    category: 'Innovation',
+    description: 'Learning, innovation and technology community',
+    action: 'Explore',
+  },
+  {
+    title: 'Toastmasters',
+    category: 'Communication',
+    description: 'Communication and leadership development',
+    action: 'Explore',
+  },
+  {
+    title: 'NCC / NSS',
+    category: 'Community',
+    description: 'Social service and student participation',
+    action: 'Explore',
+  },
+]
+
+const upcomingEvents = [
+  {
+    title: 'AI Bootcamp',
+    date: '09 Feb 2026',
+    category: 'Technology',
+    venue: 'Campus',
+  },
+  {
+    title: 'KPL Season 2',
+    date: '06 Feb 2026',
+    category: 'Sports',
+    venue: 'Campus',
+  },
+  {
+    title: 'Innovation Activities',
+    date: 'Upcoming',
+    category: 'Innovation',
+    venue: 'Campus',
+  },
+]
+
+const pieColors = ['#2563eb', '#0f766e', '#7c3aed', '#ea580c', '#15803d']
+
+export default function StudentDashboard() {
+  const currentHour = new Date().getHours()
+
+const greeting =
+  currentHour < 12
+    ? 'Good Morning'
+    : currentHour < 17
+      ? 'Good Afternoon'
+      : 'Good Evening'
+      
+  const { user } = useAuth()
+  const { activities: myActivitiesData = [] } = useData()
+
+  const myActivities = myActivitiesData.filter(
+    (item) => item.userId === user?.id
+  )
+
+  const verified = myActivities.filter(
+    (item) => item.status === 'Verified'
+  )
+
+  const pending = myActivities.filter(
+    (item) => item.status === 'Pending'
+  )
+
+  return (
+    <div style={styles.page}>
+      {/* HERO */}
+      <section style={styles.hero}>
+        <div>
+          <div style={styles.eyebrow}>KIET ENGAGE</div>
+
+          <h1 style={styles.title}>
+           {greeting}, {user?.name || 'Student'}
+          </h1>
+
+          <p style={styles.subtitle}>
+            Your campus, activities and opportunities â€” all in one place.
+          </p>
+        </div>
+
+        <div style={styles.heroButtons}>
+          <button className="btn btn-ghost">
+            ðŸ”” Notifications
+          </button>
+
+          <button className="btn btn-primary">
+            View Profile
+          </button>
+        </div>
+      </section>
+
+      {/* OVERVIEW */}
+      <section style={styles.statsGrid}>
+        <StatCard
+          title="Upcoming Events"
+          value="06"
+          icon="ðŸ“…"
+          accent="#2563eb"
+        />
+
+        <StatCard
+          title="Active Communities"
+          value="04"
+          icon="ðŸ‘¥"
+          accent="#0f766e"
+        />
+
+        <StatCard
+          title="My Activities"
+          value={myActivities.length}
+          icon="ðŸŽ¯"
+          accent="#7c3aed"
+        />
+
+        <StatCard
+          title="Certificates"
+          value={verified.length}
+          icon="ðŸ†"
+          accent="#b45309"
+        />
+      </section>
+
+      {/* UPDATES */}
+      <div style={styles.mainGrid}>
+        <section style={styles.card}>
+          <div style={styles.sectionHeader}>
+            <div>
+              <h2 style={styles.sectionTitle}>
+                Campus Updates
+              </h2>
+
+              <p style={styles.sectionSub}>
+                Latest information for students
+              </p>
+            </div>
+
+            <button className="btn btn-ghost">
+              View All
+            </button>
+          </div>
+
+          <div>
+            {announcements.map((item, index) => (
+              <div key={index} style={styles.updateRow}>
+                <div style={styles.updateIcon}>
+                  ðŸ“¢
+                </div>
+
+                <div style={{ flex: 1 }}>
+                  <div style={styles.updateTitle}>
+                    {item.title}
+                  </div>
+
+                  <div style={styles.updateMeta}>
+                    {item.type}
+                  </div>
+                </div>
+
+                <span style={styles.time}>
+                  {item.time}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* QUICK ACTIONS */}
+        <section style={styles.card}>
+          <h2 style={styles.sectionTitle}>
+            Quick Access
+          </h2>
+
+          <p style={styles.sectionSub}>
+            Frequently used student features
+          </p>
+
+          <div style={styles.quickGrid}>
+            <QuickAction
+              icon="ðŸŽ¯"
+              label="Activities"
+              href="/#/student/activities"
+            />
+
+            <QuickAction
+              icon="ðŸ†"
+              label="Achievements"
+              href="/#/student/achievements"
+            />
+
+            <QuickAction
+              icon="ðŸ“Š"
+              label="Analytics"
+              href="/#/student/analytics"
+            />
+
+            <QuickAction
+              icon="âž•"
+              label="Add Activity"
+              href="/#/student/add"
+            />
+          </div>
+        </section>
+      </div>
+
+      {/* EXPLORE */}
+      <section style={styles.card}>
+        <div style={styles.sectionHeader}>
+          <div>
+            <h2 style={styles.sectionTitle}>
+              Explore KIET
+            </h2>
+
+            <p style={styles.sectionSub}>
+              Discover communities and student opportunities
+            </p>
+          </div>
+        </div>
+
+        <div style={styles.activityGrid}>
+          {activities.map((item) => (
+            <div key={item.title} style={styles.activityCard}>
+              <div style={styles.category}>
+                {item.category}
+              </div>
+
+              <h3 style={styles.activityTitle}>
+                {item.title}
+              </h3>
+
+              <p style={styles.activityDescription}>
+                {item.description}
+              </p>
+
+              <button className="btn btn-primary">
+                {item.action}
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* EVENTS */}
+      <section style={styles.card}>
+        <div style={styles.sectionHeader}>
+          <div>
+            <h2 style={styles.sectionTitle}>
+              Upcoming & Recent Events
+            </h2>
+
+            <p style={styles.sectionSub}>
+              Stay connected with campus activities
+            </p>
+          </div>
+
+          <button className="btn btn-ghost">
+            All Events
+          </button>
+        </div>
+
+        <div style={styles.eventGrid}>
+          {upcomingEvents.map((event) => (
+            <div key={event.title} style={styles.eventCard}>
+              <div style={styles.eventDate}>
+                {event.date}
+              </div>
+
+              <h3 style={styles.eventTitle}>
+                {event.title}
+              </h3>
+
+              <div style={styles.eventMeta}>
+                {event.category} Â· {event.venue}
+              </div>
+
+              <button className="btn btn-primary">
+                View Details
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ANALYTICS */}
+      <div style={styles.chartGrid}>
+        <section style={styles.card}>
+          <h2 style={styles.sectionTitle}>
+            Student Participation
+          </h2>
+
+          <p style={styles.sectionSub}>
+            Engagement trend over time
+          </p>
+
+          <div style={styles.chart}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={activityData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="participation"
+                  stroke="#2563eb"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        <section style={styles.card}>
+          <h2 style={styles.sectionTitle}>
+            Activities by Category
+          </h2>
+
+          <p style={styles.sectionSub}>
+            Current participation distribution
+          </p>
+
+          <div style={styles.chart}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={categoryData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  label
+                >
+                  {categoryData.map((_, index) => (
+                    <Cell
+                      key={index}
+                      fill={pieColors[index]}
+                    />
+                  ))}
+                </Pie>
+
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      </div>
+
+      <section style={styles.card}>
+        <h2 style={styles.sectionTitle}>
+          Student Distribution
+        </h2>
+
+        <p style={styles.sectionSub}>
+          Student count by current programme
+        </p>
+
+        <div style={styles.chart}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={departmentData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar
+                dataKey="students"
+                fill="#12325b"
+                radius={[5, 5, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
+
+      {/* PERSONAL */}
+      <section style={styles.card}>
+        <div style={styles.sectionHeader}>
+          <div>
+            <h2 style={styles.sectionTitle}>
+              My Engagement
+            </h2>
+
+            <p style={styles.sectionSub}>
+              Your activity participation summary
+            </p>
+          </div>
+
+          <strong style={styles.score}>
+            84 / 100
+          </strong>
+        </div>
+
+        <div style={styles.summaryGrid}>
+          <SummaryCard
+            label="Total Activities"
+            value={myActivities.length}
+          />
+
+          <SummaryCard
+            label="Verified"
+            value={verified.length}
+          />
+
+          <SummaryCard
+            label="Pending"
+            value={pending.length}
+          />
+
+          <SummaryCard
+            label="Certificates"
+            value={verified.length}
+          />
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function StatCard({ title, value, icon, accent }) {
+  return (
+    <div style={styles.statCard}>
+      <div style={styles.statTop}>
+        <span style={styles.statTitle}>{title}</span>
+
+        <span
+          style={{
+            ...styles.statIcon,
+            background: `${accent}12`,
+          }}
+        >
+          {icon}
+        </span>
+      </div>
+
+      <div style={styles.statValue}>
+        {value}
+      </div>
+    </div>
+  )
+}
+
+function QuickAction({ icon, label, href }) {
+  return (
+    <a href={href} style={styles.quickAction}>
+      <span style={styles.quickIcon}>
+        {icon}
+      </span>
+
+      <span>{label}</span>
+
+      <span style={styles.arrow}>â†’</span>
+    </a>
+  )
+}
+
+function SummaryCard({ label, value }) {
+  return (
+    <div style={styles.summaryCard}>
+      <div style={styles.summaryLabel}>
+        {label}
+      </div>
+
+      <div style={styles.summaryValue}>
+        {value}
+      </div>
+    </div>
+  )
+}
+
+const styles = {
+  page: {
+    maxWidth: 1400,
+    margin: '0 auto',
+    paddingBottom: 40,
+  },
+
+  hero: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 20,
+    flexWrap: 'wrap',
+    marginBottom: 24,
+  },
+
+  eyebrow: {
+    fontSize: 11,
+    fontWeight: 800,
+    letterSpacing: 1.5,
+    color: '#2563eb',
+    marginBottom: 8,
+  },
+
+  title: {
+    margin: 0,
+    fontSize: 30,
+    fontWeight: 800,
+    color: '#12325b',
+  },
+
+  subtitle: {
+    margin: '7px 0 0',
+    fontSize: 14,
+    color: '#64748b',
+  },
+
+  heroButtons: {
+    display: 'flex',
+    gap: 10,
+  },
+
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(190px, 1fr))',
+    gap: 14,
+  },
+
+  statCard: {
+    background: '#fff',
+    border: '1px solid #dbe4f0',
+    borderRadius: 16,
+    padding: 18,
+    boxShadow:
+      '0 3px 10px rgba(15, 23, 42, 0.05)',
+  },
+
+  statTop: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  statTitle: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+
+  statIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  statValue: {
+    marginTop: 12,
+    fontSize: 28,
+    fontWeight: 800,
+    color: '#12325b',
+  },
+
+  mainGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'minmax(0, 2fr) minmax(280px, 1fr)',
+    gap: 16,
+    marginTop: 16,
+  },
+
+  card: {
+    background: '#fff',
+    border: '1px solid #dbe4f0',
+    borderRadius: 16,
+    padding: 20,
+    boxShadow:
+      '0 3px 10px rgba(15, 23, 42, 0.04)',
+    marginTop: 16,
+  },
+
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+  },
+
+  sectionTitle: {
+    margin: 0,
+    fontSize: 17,
+    fontWeight: 800,
+    color: '#12325b',
+  },
+
+  sectionSub: {
+    margin: '5px 0 0',
+    color: '#64748b',
+    fontSize: 12,
+  },
+
+  updateRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '14px 0',
+    borderBottom: '1px solid #edf2f7',
+  },
+
+  updateIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    background: '#eff6ff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  updateTitle: {
+    fontSize: 14,
+    fontWeight: 700,
+    color: '#1e293b',
+  },
+
+  updateMeta: {
+    marginTop: 4,
+    fontSize: 11,
+    color: '#64748b',
+  },
+
+  time: {
+    fontSize: 11,
+    color: '#94a3b8',
+  },
+
+  quickGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 10,
+    marginTop: 16,
+  },
+
+  quickAction: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    border: '1px solid #dbe4f0',
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 12,
+    fontWeight: 700,
+  },
+
+  quickIcon: {
+    fontSize: 18,
+  },
+
+  arrow: {
+    marginLeft: 'auto',
+    color: '#2563eb',
+  },
+
+  activityGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: 14,
+    marginTop: 18,
+  },
+
+  activityCard: {
+    background: '#f8fbff',
+    border: '1px solid #dbe4f0',
+    borderRadius: 14,
+    padding: 16,
+  },
+
+  category: {
+    display: 'inline-block',
+    padding: '5px 9px',
+    borderRadius: 999,
+    background: '#eff6ff',
+    color: '#1d4ed8',
+    fontSize: 10,
+    fontWeight: 800,
+  },
+
+  activityTitle: {
+    margin: '12px 0 7px',
+    fontSize: 16,
+    color: '#12325b',
+  },
+
+  activityDescription: {
+    minHeight: 40,
+    margin: 0,
+    fontSize: 12,
+    lineHeight: 1.5,
+    color: '#64748b',
+  },
+
+  eventGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(230px, 1fr))',
+    gap: 14,
+    marginTop: 18,
+  },
+
+  eventCard: {
+    border: '1px solid #dbe4f0',
+    borderRadius: 14,
+    padding: 16,
+  },
+
+  eventDate: {
+    fontSize: 11,
+    fontWeight: 800,
+    color: '#2563eb',
+  },
+
+  eventTitle: {
+    margin: '10px 0 5px',
+    fontSize: 16,
+    color: '#12325b',
+  },
+
+  eventMeta: {
+    marginBottom: 14,
+    fontSize: 12,
+    color: '#64748b',
+  },
+
+  chartGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 16,
+  },
+
+  chart: {
+    width: '100%',
+    height: 300,
+    marginTop: 16,
+  },
+
+  summaryGrid: {
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(auto-fit, minmax(160px, 1fr))',
+    gap: 12,
+    marginTop: 18,
+  },
+
+  summaryCard: {
+    background: '#f8fbff',
+    border: '1px solid #dbe4f0',
+    borderRadius: 12,
+    padding: 15,
+  },
+
+  summaryLabel: {
+    fontSize: 11,
+    color: '#64748b',
+  },
+
+  summaryValue: {
+    marginTop: 6,
+    fontSize: 23,
+    fontWeight: 800,
+    color: '#12325b',
+  },
+
+  score: {
+    fontSize: 20,
+    color: '#2563eb',
+  },
+}
+===== C:\Users\gandh\OneDrive\Desktop\c4gt-dashboard-frontend (1)\c4gt-dashboard\src\styles\tokens.css =====
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  background: #f3f7fb;
+}
+
+.app-main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 28px 32px 40px;
+}
+
+.content-width {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 22px 18px 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 18px 14px 25px;
+  }
+}
