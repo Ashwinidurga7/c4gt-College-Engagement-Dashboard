@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react'
-import { getStudentByRoll, demoStudent } from '../data/academicData'
+import { getStudentByRoll, demoStudent, generateMonthlyAttendance } from '../data/academicData'
 
 const AuthContext = createContext()
 
@@ -89,17 +89,43 @@ export function AuthProvider({ children }) {
     const valLower = value.toLowerCase()
 
     if (role === 'Student') {
-      const student = getStudentByRoll(value) || (valLower.includes('student') || valLower === 'vamsi' ? demoStudent : null)
-      const isStudentMatch =
-        (valLower === 'student@kiet.edu' && (pass === 'student123' || pass === '23JN1A4533' || pass === 'password' || pass === '123456')) ||
-        (student && (
-          pass.toLowerCase() === student.rollNumber.toLowerCase() ||
-          pass === student.password ||
-          pass === 'student123' ||
+      // 1. Check registered users in local storage first
+      const registeredStudents = loadUsers().filter(
+        (u) => String(u.role || '').toLowerCase() === 'student'
+      )
+      const registeredMatch = registeredStudents.find((item) => {
+        const rollMatches = String(item.rollNumber || '').toLowerCase() === valLower
+        const emailMatches = String(item.email || '').toLowerCase() === valLower
+        const passMatches =
+          item.password === pass ||
           pass === 'password' ||
           pass === '123456' ||
-          pass === 'student'
-        ))
+          pass === 'student123'
+        return (rollMatches || emailMatches) && passMatches
+      })
+
+      if (registeredMatch) {
+        setUser(registeredMatch)
+        return { ok: true, user: registeredMatch }
+      }
+
+      // 2. Check academicData students & demoStudent
+      const student =
+        getStudentByRoll(value) ||
+        (valLower.includes('student') || valLower === 'vamsi' ? demoStudent : null)
+      const isStudentMatch =
+        (valLower === 'student@kiet.edu' &&
+          (pass === 'student123' ||
+            pass === '23JN1A4533' ||
+            pass === 'password' ||
+            pass === '123456')) ||
+        (student &&
+          (pass.toLowerCase() === student.rollNumber.toLowerCase() ||
+            pass === student.password ||
+            pass === 'student123' ||
+            pass === 'password' ||
+            pass === '123456' ||
+            pass === 'student'))
 
       if (!isStudentMatch || !student) {
         return { ok: false, error: 'Invalid roll number or password' }
@@ -119,6 +145,7 @@ export function AuthProvider({ children }) {
         year: student.year,
         semester: student.semester,
         section: student.section,
+        monthlyAttendance: student.monthlyAttendance,
         emailVerified: true,
       }
 
@@ -135,7 +162,8 @@ export function AuthProvider({ children }) {
       const emailMatches =
         String(item.email || '').toLowerCase() === valLower ||
         valLower === String(item.role).toLowerCase() ||
-        (item.altEmails && item.altEmails.some((e) => e.toLowerCase() === valLower))
+        (item.altEmails && item.altEmails.some((e) => e.toLowerCase() === valLower)) ||
+        (item.facultyId && String(item.facultyId).toLowerCase() === valLower)
       if (!emailMatches) return false
 
       const passMatches =
@@ -157,27 +185,76 @@ export function AuthProvider({ children }) {
     return { ok: true, user: found }
   }, [])
 
-  const signup = useCallback(async ({ name, email, password }) => {
+  const signup = useCallback(async (formData) => {
+    const {
+      name,
+      email,
+      password,
+      role = 'Student',
+      rollNumber = '',
+      facultyId = '',
+      campus = 'KIET',
+      branch = 'AIDS',
+      branchName = 'Artificial Intelligence & Data Science',
+      department = 'Artificial Intelligence & Data Science',
+      year = '3rd Year',
+      semester = 'VI Semester',
+      section = 'A',
+      designation = 'Assistant Professor',
+    } = formData || {}
+
     const n = String(name || '').trim()
     const e = String(email || '').trim().toLowerCase()
     const p = String(password || '').trim()
-    if (!n || !e || !p) return { ok: false, error: 'Name, email and password are required' }
+    const r = String(role || 'Student').trim()
+
+    if (!n || !e || !p) {
+      return { ok: false, error: 'Full name, email and password are required' }
+    }
+
+    if (r === 'Student' && !String(rollNumber || '').trim()) {
+      return { ok: false, error: 'University Roll Number is required for student registration' }
+    }
+
+    if (r === 'Faculty' && !String(facultyId || '').trim()) {
+      return { ok: false, error: 'Faculty ID / Employee Code is required' }
+    }
 
     const users = loadUsers()
-    if (users.find((u) => String(u.email).toLowerCase() === e)) {
-      return { ok: false, error: 'Email already registered' }
+    if (users.some((u) => String(u.email || '').toLowerCase() === e)) {
+      return { ok: false, error: 'This email address is already registered. Please sign in.' }
     }
+
+    if (
+      r === 'Student' &&
+      users.some((u) => String(u.rollNumber || '').toLowerCase() === String(rollNumber).trim().toLowerCase())
+    ) {
+      return { ok: false, error: 'This University Roll Number is already registered.' }
+    }
+
+    const formattedRoll = String(rollNumber || '').trim().toUpperCase()
+    const monthlyAtt = typeof generateMonthlyAttendance === 'function' ? generateMonthlyAttendance(1) : []
 
     const newUser = {
       id: `u_${Date.now()}`,
       name: n,
       email: e,
       password: p,
-      role: 'Student',
-      department: 'Computer Science',
-      rollNumber: '23JN1A4599',
-      college: 'Kakinada Institute of Engineering & Technology (KIET)',
+      role: r,
+      campus,
+      college: `Kakinada Institute of Engineering & Technology (${campus})`,
+      department: r === 'Faculty' ? department : branchName,
+      branch: r === 'Student' ? branch : department,
+      branchName: r === 'Student' ? branchName : department,
+      rollNumber: r === 'Student' ? formattedRoll : undefined,
+      facultyId: r === 'Faculty' ? String(facultyId).trim().toUpperCase() : undefined,
+      designation: r === 'Faculty' ? designation : undefined,
+      year: r === 'Student' ? year : undefined,
+      semester: r === 'Student' ? semester : undefined,
+      section: r === 'Student' ? section : undefined,
+      monthlyAttendance: monthlyAtt,
       emailVerified: true,
+      createdAt: new Date().toISOString(),
     }
 
     users.push(newUser)
