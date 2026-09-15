@@ -192,6 +192,15 @@ export default function Login() {
                 <span>AICTE Approved</span>
               </p>
             </div>
+            <div className="gateway-header-actions">
+              <button
+                type="button"
+                className="gateway-header-signup-btn"
+                onClick={() => navigate('/signup')}
+              >
+                <span>✨ New User? Register</span>
+              </button>
+            </div>
           </header>
 
           {/* Gateway Title Box */}
@@ -257,6 +266,31 @@ export default function Login() {
             ))}
           </div>
 
+          {/* Institutional Registration Invite Banner */}
+          <div className="gateway-signup-banner">
+            <div className="signup-banner-content">
+              <div className="signup-banner-badge">
+                <span className="gateway-pulse-dot" />
+                <span>STUDENT & FACULTY ONBOARDING</span>
+              </div>
+              <h3>Need an Institutional Dashboard Account?</h3>
+              <p>
+                Self-register your student roll number or faculty employee profile to activate your digital portfolio, 12-month attendance tracking, and semester ERP records.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="gateway-banner-signup-btn"
+              onClick={() => navigate('/signup')}
+            >
+              <span>Create Account / Register</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </div>
+
           {/* Institutional Trust Footer */}
           <footer className="gateway-footer">
             <div className="gateway-security-row">
@@ -301,6 +335,18 @@ export default function Login() {
               <span className="status-dot" />
               <span>COLLEGE ENGAGEMENT DASHBOARD • {role.toUpperCase()} GATEWAY</span>
             </div>
+
+            <button
+              type="button"
+              className="nav-register-btn"
+              onClick={() => navigate('/signup', { state: { role } })}
+            >
+              <span>Create Account</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
           </div>
 
           {/* Unified Two-Panel Login Shell */}
@@ -487,6 +533,17 @@ export default function Login() {
                     </>
                   )}
                 </button>
+
+                <div className="login-signup-prompt">
+                  <span>Don't have an account yet?</span>
+                  <button
+                    type="button"
+                    className="signup-redirect-btn"
+                    onClick={() => navigate('/signup', { state: { role } })}
+                  >
+                    Register for {activeRoleConfig.shortLabel} Portal →
+                  </button>
+                </div>
 
                 <div className="login-footer-help">
                   <span>Having trouble signing in? Contact </span>
