@@ -115,16 +115,16 @@ export default function MyAchievements() {
       <html>
       <head>
         <title>KIET Official Certificate - ${item.title}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Manrope:wght@700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Maven+Pro:wght@700;800;900&display=swap" rel="stylesheet">
         <style>
           body { margin: 0; padding: 24px; font-family: 'Inter', sans-serif; background: #fdfbf7; color: #0f2b48; }
           .cert-container { max-width: 840px; margin: auto; padding: 24px; border: 4px solid #0f2b48; outline: 2px solid #d4af37; outline-offset: 4px; background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
           .cert-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2b48; padding-bottom: 14px; margin-bottom: 20px; }
-          .cert-header h2 { margin: 0; font-size: 17px; font-family: 'Manrope', sans-serif; color: #0f2b48; font-weight: 900; }
+          .cert-header h2 { margin: 0; font-size: 17px; font-family: 'Maven Pro', sans-serif; color: #0f2b48; font-weight: 900; }
           .cert-header small { color: #2563eb; font-weight: 700; font-size: 10px; display: block; }
           .cert-title { text-align: center; font-size: 13px; font-weight: 800; color: #b45309; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
           .cert-conferred { text-align: center; font-size: 13px; color: #64748b; font-style: italic; margin-bottom: 8px; }
-          .student-name { text-align: center; font-size: 28px; font-weight: 900; color: #0f2b48; text-transform: uppercase; font-family: 'Manrope', Georgia, serif; margin: 0 0 6px 0; }
+          .student-name { text-align: center; font-size: 28px; font-weight: 900; color: #0f2b48; text-transform: uppercase; font-family: 'Maven Pro', sans-serif; margin: 0 0 6px 0; }
           .student-meta { text-align: center; font-size: 12px; color: #334155; margin-bottom: 16px; }
           .course-box { text-align: center; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 16px 24px; margin-bottom: 24px; }
           .course-title { font-size: 20px; font-weight: 800; color: #1e3a8a; margin: 0 0 8px 0; }

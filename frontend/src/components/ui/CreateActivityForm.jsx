@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRealtime } from '../../contexts/RealtimeContext'
 
-const CATEGORIES = ['KIET Innovation Hub (EDC)', 'Global Coding Club', 'Toastmasters', 'Internships', 'Certifications']
+const CATEGORIES = ['Google Coding Club', 'C4GT club', 'Smart City Lab', 'NCC And Nss', 'Toastmasters', 'Kiet sports and athaletics council(kpl)', 'Hackathons', 'Robotics', 'Cyber Security', 'Internships', 'Certifications']
 
 export default function CreateActivityForm({ onCreated }){
   const { emitLocal } = useRealtime()

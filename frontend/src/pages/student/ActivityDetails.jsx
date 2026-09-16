@@ -13,7 +13,7 @@ export default function ActivityDetails(){
 
   return (
     <div>
-      <h2 style={{color:'var(--ink-navy)',fontFamily:'Fraunces, serif'}}>Activity Details</h2>
+      <h2 style={{color:'var(--ink-navy)',fontFamily:'var(--font-heading)',fontWeight:900}}>Activity Details</h2>
       <Tilt>
         <div className="card" style={{marginTop:12}}>
           <h3>{activity.title}</h3>

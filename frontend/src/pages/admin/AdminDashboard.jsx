@@ -345,51 +345,35 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
   return (
     <div className="admin-governance-container">
-      {/* 1. Top Institutional Admin Banner */}
+      {/* 1. Clean Institutional Header */}
       <div className="admin-header-card">
         <div className="admin-header-meta">
-          <div className="admin-badge-row">
-            <span className="admin-governance-tag">KIET GROUP OF INSTITUTIONS • CENTRAL GOVERNANCE</span>
-            <span className="admin-campus-tag">3 AUTONOMOUS CAMPUSES (KIET • KIET+ • KIEW)</span>
-            <span className="admin-session-tag">AY 2025–26 • CONSOLIDATED DESK</span>
-          </div>
-          <h1 className="admin-portal-title">
-            Central Administrative Governance &amp; Multi-Campus Operations
+          <span className="admin-governance-tag">🏛️ CENTRAL ADMINISTRATIVE GOVERNANCE</span>
+          <h1 className="admin-portal-title maven-black">
+            Multi-Campus Administrative Command
           </h1>
           <p className="admin-portal-subtitle">
-            Executive control portal overseeing <strong>3 Autonomous Campuses</strong>, <strong>4,330 Students</strong>, <strong>188 Faculty Members</strong>, <strong>24 Transport Fleet Buses &amp; Drivers</strong>, and <strong>90 Campus Operations Workers</strong> across Korangi &amp; Yanam.
+            Consolidated operations and telemetry for <strong>KIET Main Autonomous</strong>, <strong>KIET+</strong>, and <strong>KIET Women's</strong> campuses.
           </p>
         </div>
 
         <div className="admin-header-actions">
           <button className="btn-admin-export" onClick={handleExportCSV}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Export Audit CSV
-          </button>
-          <button
-            className="btn-admin-sync"
-            onClick={() => addToast('Synchronized all 3 campus databases with Central Autonomous ERP.', 'info')}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M23 4v6h-6" />
-              <path d="M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-            </svg>
-            Sync 3 Campuses
+            <span>Export Audit CSV</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Campus Scope Selector Bar */}
+      {/* 2. Compact, Balanced Campus Scope Selector */}
       <div className="admin-scope-card">
-        <div className="scope-label-wrap">
+        <div className="admin-scope-header">
           <span className="scope-indicator-dot" />
-          <span className="scope-title">Select Institutional Scope:</span>
-          <span className="scope-hint">Toggle between overall group consolidation and individual campus administration.</span>
+          <span className="scope-title">INSTITUTIONAL SCOPE:</span>
         </div>
 
         <div className="admin-scope-pills">
@@ -399,11 +383,8 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             onClick={() => setSelectedCampusScope('ALL')}
           >
             <span className="scope-pill-icon">🏛️</span>
-            <div className="scope-pill-text">
-              <span className="pill-name">All 3 Campuses (Overall Group)</span>
-              <span className="pill-sub">4,330 Students • 270+ Total Staff • 24 Buses</span>
-            </div>
-            {selectedCampusScope === 'ALL' && <span className="pill-active-check">✓ Active</span>}
+            <span className="pill-name">All 3 Campuses</span>
+            <span className="pill-count">4,330</span>
           </button>
 
           {campusProfiles.map((cp) => {
@@ -416,26 +397,22 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 onClick={() => setSelectedCampusScope(cp.code)}
               >
                 <span className="scope-pill-dot" style={{ backgroundColor: cp.color }} />
-                <div className="scope-pill-text">
-                  <span className="pill-name">{cp.code} ({cp.shortName})</span>
-                  <span className="pill-sub">{cp.totalStudents} Students • {cp.totalFaculty} Faculty • {cp.totalBuses} Buses</span>
-                </div>
-                {isActive && <span className="pill-active-check">✓ Active</span>}
+                <span className="pill-name">{cp.shortName}</span>
+                <span className="pill-count">{cp.totalStudents}</span>
               </button>
             )
           })}
         </div>
       </div>
 
-      {/* 3. Slide Tabs Navigation (One by one show like slides) */}
+      {/* 3. Streamlined, Balanced Slide Tabs Navigation */}
       <div className="admin-tabs-bar">
         <button
           className={`admin-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => handleTabChange('overview')}
         >
           <span className="tab-icon">🏛️</span>
-          <span className="tab-title">Executive Overview</span>
-          <span className="tab-badge">{stats.totalStudents} Students</span>
+          <span className="tab-title">Overview</span>
         </button>
 
         <button
@@ -443,8 +420,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('students')}
         >
           <span className="tab-icon">🎓</span>
-          <span className="tab-title">Students by Year (1-4 Yr)</span>
-          <span className="tab-badge">4 Cohorts</span>
+          <span className="tab-title">Students (1st–4th Yr)</span>
         </button>
 
         <button
@@ -452,8 +428,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('placements')}
         >
           <span className="tab-icon">💼</span>
-          <span className="tab-title">Campus Placements</span>
-          <span className="tab-badge text-green">{stats.totalPlaced} Placed</span>
+          <span className="tab-title">Placements</span>
         </button>
 
         <button
@@ -461,8 +436,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('faculty')}
         >
           <span className="tab-icon">👨‍🏫</span>
-          <span className="tab-title">HODs &amp; Faculty Roster</span>
-          <span className="tab-badge">{stats.totalHODs} HODs / {stats.totalFaculty} Fac</span>
+          <span className="tab-title">Faculty &amp; HODs</span>
         </button>
 
         <button
@@ -470,8 +444,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('transport')}
         >
           <span className="tab-icon">🚌</span>
-          <span className="tab-title">Transport Fleet &amp; Drivers</span>
-          <span className="tab-badge">{stats.totalDrivers} Fleet Buses</span>
+          <span className="tab-title">Transport Fleet</span>
         </button>
 
         <button
@@ -479,8 +452,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('workers')}
         >
           <span className="tab-icon">🔧</span>
-          <span className="tab-title">Operations &amp; Workers</span>
-          <span className="tab-badge">{stats.totalWorkers} Support Staff</span>
+          <span className="tab-title">Operations &amp; Staff</span>
         </button>
 
         <button
@@ -488,9 +460,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           onClick={() => handleTabChange('approvals')}
         >
           <span className="tab-icon">📋</span>
-          <span className="tab-title">Pending Approvals</span>
+          <span className="tab-title">Approvals</span>
           {pendingApprovals.length > 0 && (
-            <span className="tab-badge badge-warning">{pendingApprovals.length} Pending</span>
+            <span className="tab-badge badge-warning">{pendingApprovals.length}</span>
           )}
         </button>
       </div>
@@ -506,7 +478,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">{selectedCampusScope === 'ALL' ? 'All 3 Campuses' : selectedCampusScope}</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number">{stats.totalStudents}</span>
+                <span className="kpi-number maven-black">{stats.totalStudents}</span>
                 <span className="kpi-subtext">Students Registered</span>
               </div>
               <div className="kpi-footer">
@@ -522,7 +494,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag status-clear">{stats.placementRate}% Placed</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number text-emerald">{stats.totalPlaced}</span>
+                <span className="kpi-number maven-black text-emerald">{stats.totalPlaced}</span>
                 <span className="kpi-subtext">out of {stats.eligiblePlaced} final years</span>
               </div>
               <div className="kpi-footer">
@@ -538,7 +510,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">{stats.totalHODs} Departments</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number text-purple">{stats.totalHODs + stats.totalFaculty}</span>
+                <span className="kpi-number maven-black text-purple">{stats.totalHODs + stats.totalFaculty}</span>
                 <span className="kpi-subtext">HODs &amp; Professors</span>
               </div>
               <div className="kpi-footer">
@@ -554,7 +526,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">24 Bus Fleet</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number text-amber">{stats.totalDrivers + stats.totalWorkers}</span>
+                <span className="kpi-number maven-black text-amber">{stats.totalDrivers + stats.totalWorkers}</span>
                 <span className="kpi-subtext">Drivers &amp; Workers</span>
               </div>
               <div className="kpi-footer">
@@ -571,7 +543,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="admin-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Student Strength Distribution by Campus</h3>
+                  <h3 className="chart-title maven-black">Student Strength Distribution by Campus</h3>
                   <p className="chart-subtitle">Proportional enrollment across KIET, KIET+, and KIET Women's</p>
                 </div>
               </div>
@@ -610,7 +582,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="admin-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Student Population by Academic Year</h3>
+                  <h3 className="chart-title maven-black">Student Population by Academic Year</h3>
                   <p className="chart-subtitle">1st Year (Freshers), 2nd Year, 3rd Year, and Final Year cohorts</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('students')}>
@@ -646,7 +618,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="admin-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Placement Success by Campus</h3>
+                  <h3 className="chart-title maven-black">Placement Success by Campus</h3>
                   <p className="chart-subtitle">Students placed out of final year graduating eligible cohort</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('placements')}>
@@ -679,7 +651,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="admin-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Human Resources &amp; Staff Deployment</h3>
+                  <h3 className="chart-title maven-black">Human Resources &amp; Staff Deployment</h3>
                   <p className="chart-subtitle">Teaching faculty, HODs, transport drivers, and campus operational staff</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('faculty')}>
@@ -711,7 +683,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
           {/* 3 Campus Profiles Showcase */}
           <div className="campus-spotlight-section">
-            <h3 className="spotlight-section-title">Institutional Campus Profiles &amp; Leadership</h3>
+            <h3 className="spotlight-section-title maven-black">Institutional Campus Profiles &amp; Leadership</h3>
             <div className="campus-cards-grid">
               {campusProfiles.map((cp) => (
                 <div key={cp.code} className="admin-campus-profile-card">
@@ -725,7 +697,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     <span className="profile-code-badge" style={{ backgroundColor: cp.color }}>{cp.code}</span>
                   </div>
                   <div className="profile-card-body">
-                    <h4 className="profile-name">{cp.name}</h4>
+                    <h4 className="profile-name maven-black">{cp.name}</h4>
                     <span className="profile-tag">{cp.tag}</span>
                     <p className="profile-location">📍 {cp.location} • {cp.campusArea}</p>
 
@@ -736,19 +708,19 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
                     <div className="profile-quick-stats">
                       <div className="stat-pill">
-                        <span className="stat-num">{cp.totalStudents}</span>
+                        <span className="stat-num maven-black">{cp.totalStudents}</span>
                         <span className="stat-label">Students</span>
                       </div>
                       <div className="stat-pill">
-                        <span className="stat-num">{cp.totalFaculty}</span>
+                        <span className="stat-num maven-black">{cp.totalFaculty}</span>
                         <span className="stat-label">Faculty</span>
                       </div>
                       <div className="stat-pill">
-                        <span className="stat-num">{cp.totalBuses}</span>
+                        <span className="stat-num maven-black">{cp.totalBuses}</span>
                         <span className="stat-label">Buses</span>
                       </div>
                       <div className="stat-pill">
-                        <span className="stat-num">{cp.placementRate}</span>
+                        <span className="stat-num maven-black">{cp.placementRate}</span>
                         <span className="stat-label">Placed</span>
                       </div>
                     </div>
@@ -765,7 +737,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
         <div className="admin-tab-content fade-in">
           <div className="admin-section-header">
             <div>
-              <h2 className="section-title">Student Cohorts by Academic Year (1st to 4th Year)</h2>
+              <h2 className="section-title maven-black">Student Cohorts by Academic Year (1st to 4th Year)</h2>
               <p className="section-desc">
                 Comprehensive demographics covering <strong>{stats.totalStudents} Students</strong> across <strong>1st Year (Freshers)</strong>, <strong>2nd Year</strong>, <strong>3rd Year</strong>, and <strong>Final Year</strong>.
                 Showing full details for <strong>KIET</strong>, <strong>KIET+</strong>, and <strong>KIET Women's</strong>.
@@ -783,9 +755,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="year-cohort-card card-1st">
               <div className="year-card-header">
                 <span className="year-badge">Batch 2025–29</span>
-                <span className="year-title">1st Year (Freshers)</span>
+                <span className="year-title maven-black">1st Year (Freshers)</span>
               </div>
-              <div className="year-card-count">{stats.firstYear}</div>
+              <div className="year-card-count maven-black">{stats.firstYear}</div>
               <div className="year-card-sub">Enrolled Scholars</div>
               <div className="year-campus-breakdown">
                 <span>KIET: <strong>540</strong></span>
@@ -797,9 +769,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="year-cohort-card card-2nd">
               <div className="year-card-header">
                 <span className="year-badge">Batch 2024–28</span>
-                <span className="year-title">2nd Year (Sophomores)</span>
+                <span className="year-title maven-black">2nd Year (Sophomores)</span>
               </div>
-              <div className="year-card-count">{stats.secondYear}</div>
+              <div className="year-card-count maven-black">{stats.secondYear}</div>
               <div className="year-card-sub">Enrolled Scholars</div>
               <div className="year-campus-breakdown">
                 <span>KIET: <strong>500</strong></span>
@@ -811,9 +783,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="year-cohort-card card-3rd">
               <div className="year-card-header">
                 <span className="year-badge">Batch 2023–27</span>
-                <span className="year-title">3rd Year (Juniors)</span>
+                <span className="year-title maven-black">3rd Year (Juniors)</span>
               </div>
-              <div className="year-card-count">{stats.thirdYear}</div>
+              <div className="year-card-count maven-black">{stats.thirdYear}</div>
               <div className="year-card-sub">Core Specialization</div>
               <div className="year-campus-breakdown">
                 <span>KIET: <strong>480</strong></span>
@@ -825,9 +797,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="year-cohort-card card-4th">
               <div className="year-card-header">
                 <span className="year-badge">Batch 2022–26</span>
-                <span className="year-title">Final Year (Graduating)</span>
+                <span className="year-title maven-black">Final Year (Graduating)</span>
               </div>
-              <div className="year-card-count">{stats.finalYear}</div>
+              <div className="year-card-count maven-black">{stats.finalYear}</div>
               <div className="year-card-sub">Drive &amp; Capstone Phase</div>
               <div className="year-campus-breakdown">
                 <span>KIET: <strong>440</strong></span>
@@ -838,9 +810,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           </div>
 
           {/* Detailed Branch Breakdown Table across Campuses */}
-          <div className="admin-table-card" style={{ marginTop: 20 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>Year-Wise Branch Enrollment Matrix ({selectedCampusScope === 'ALL' ? 'All Campuses' : selectedCampusScope})</h3>
+              <h3 className="maven-black">Year-Wise Branch Enrollment Matrix ({selectedCampusScope === 'ALL' ? 'All Campuses' : selectedCampusScope})</h3>
               <span className="text-muted">Includes 1st, 2nd, 3rd, Final Year, and Day Scholar / Hosteler counts</span>
             </div>
 
@@ -945,14 +917,14 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           </div>
 
           {/* Top Recruiting Partners Grid */}
-          <div className="recruiting-partners-card" style={{ marginTop: 20 }}>
-            <h3 className="card-inner-title">Top Institutional Recruitment Partners</h3>
+          <div className="recruiting-partners-card">
+            <h3 className="card-inner-title maven-black">Top Institutional Recruitment Partners</h3>
             <div className="partners-grid">
               {campusPlacementData.topHiringPartners.map((partner, idx) => (
                 <div key={idx} className="partner-item">
                   <span className="partner-logo">{partner.logo}</span>
                   <div>
-                    <h4 className="partner-name">{partner.name}</h4>
+                    <h4 className="partner-name maven-black">{partner.name}</h4>
                     <span className="partner-cat">{partner.category} • {partner.packages}</span>
                     <div className="partner-hired">
                       <strong>{partner.hiredCount} Students Hired</strong>
@@ -963,10 +935,26 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             </div>
           </div>
 
+          {/* Placements Search Bar */}
+          <div className="admin-filter-bar">
+            <div className="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search placed students by name, roll number, company, or role..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
           {/* Recent Placed Students Roster */}
-          <div className="admin-table-card" style={{ marginTop: 20 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>Recent Campus Placement Confirmations (Graduating Batch)</h3>
+              <h3 className="maven-black">Recent Campus Placement Confirmations (Graduating Batch)</h3>
               <span className="text-muted">Official offer letters verified by KIET Central Placement Cell</span>
             </div>
 
@@ -985,11 +973,24 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
               </thead>
               <tbody>
                 {campusPlacementData.recentPlacedStudents
-                  .filter(s => selectedCampusScope === 'ALL' || selectedCampusScope === s.campus)
+                  .filter(s => {
+                    if (selectedCampusScope !== 'ALL' && selectedCampusScope !== s.campus) return false
+                    if (searchQuery.trim()) {
+                      const q = searchQuery.toLowerCase()
+                      return (
+                        s.name.toLowerCase().includes(q) ||
+                        s.roll.toLowerCase().includes(q) ||
+                        s.company.toLowerCase().includes(q) ||
+                        s.role.toLowerCase().includes(q) ||
+                        s.branch.toLowerCase().includes(q)
+                      )
+                    }
+                    return true
+                  })
                   .map((s, idx) => (
                     <tr key={idx}>
-                      <td><strong>{s.roll}</strong></td>
-                      <td>{s.name}</td>
+                      <td><code>{s.roll}</code></td>
+                      <td><strong>{s.name}</strong></td>
                       <td><span className="campus-badge-small">{s.campus}</span></td>
                       <td>{s.branch}</td>
                       <td><strong>{s.company}</strong></td>
@@ -1009,7 +1010,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
         <div className="admin-tab-content fade-in">
           <div className="admin-section-header">
             <div>
-              <h2 className="section-title">Department Heads (HODs) &amp; Academic Faculty Directory</h2>
+              <h2 className="section-title maven-black">Department Heads (HODs) &amp; Academic Faculty Directory</h2>
               <p className="section-desc">
                 Monitoring <strong>{stats.totalHODs} Heads of Departments</strong> and <strong>{stats.totalFaculty} Teaching Faculty</strong> across <strong>KIET</strong>, <strong>KIET+</strong>, and <strong>KIET Women's</strong>.
               </p>
@@ -1023,7 +1024,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
           {/* HODs Leadership Cards */}
           <div className="hods-leadership-section">
-            <h3 className="section-subtitle">Department Heads &amp; Academic Leadership ({filteredHods.length} HODs)</h3>
+            <h3 className="section-subtitle maven-black">Department Heads &amp; Academic Leadership ({filteredHods.length} HODs)</h3>
             <div className="hods-grid">
               {filteredHods.map((hod) => (
                 <div key={hod.id} className="admin-hod-card" onClick={() => setSelectedItemModal({ type: 'HOD', data: hod })}>
@@ -1035,7 +1036,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     showBadge={true}
                   />
                   <div className="hod-details">
-                    <h4 className="hod-name">{hod.name}</h4>
+                    <h4 className="hod-name maven-black">{hod.name}</h4>
                     <span className="hod-title">{hod.title}</span>
                     <span className="hod-dept">{hod.department}</span>
                     <p className="hod-office">📍 {hod.office} • {hod.phone}</p>
@@ -1051,7 +1052,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           </div>
 
           {/* Faculty Search & Filter Bar */}
-          <div className="admin-filter-bar" style={{ marginTop: 24 }}>
+          <div className="admin-filter-bar">
             <div className="search-box">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
@@ -1080,9 +1081,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           </div>
 
           {/* Faculty Roster Table */}
-          <div className="admin-table-card" style={{ marginTop: 14 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>Teaching Faculty Directory ({filteredFaculty.length} Faculty Members)</h3>
+              <h3 className="maven-black">Teaching Faculty Directory ({filteredFaculty.length} Faculty Members)</h3>
               <span className="text-muted">Showing professors and assistant professors across active campus scope</span>
             </div>
 
@@ -1134,7 +1135,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
         <div className="admin-tab-content fade-in">
           <div className="admin-section-header">
             <div>
-              <h2 className="section-title">Transport Fleet, College Buses &amp; Drivers</h2>
+              <h2 className="section-title maven-black">Transport Fleet, College Buses &amp; Drivers</h2>
               <p className="section-desc">
                 Managing <strong>{stats.totalDrivers} Fleet Buses &amp; Commercial Drivers</strong> across <strong>KIET</strong> (12 Buses), <strong>KIET+</strong> (7 Buses), and <strong>KIET Women's</strong> (5 Buses).
                 All buses are equipped with real-time GPS tracking and emergency SOS telemetry.
@@ -1150,26 +1151,42 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           {/* Transport KPI Row */}
           <div className="fleet-kpi-row">
             <div className="fleet-kpi-box">
-              <span className="fleet-num">{stats.totalDrivers}</span>
-              <span className="fleet-label">Active College Buses</span>
+              <span className="fleet-num maven-black">{stats.totalDrivers}</span>
+              <span className="fleet-label maven-black">Active College Buses</span>
               <span className="fleet-sub">Full GPS Live Tracking</span>
             </div>
             <div className="fleet-kpi-box">
-              <span className="fleet-num">{stats.dayScholars}</span>
-              <span className="fleet-label">Registered Day Scholars</span>
+              <span className="fleet-num maven-black">{stats.dayScholars}</span>
+              <span className="fleet-label maven-black">Registered Day Scholars</span>
               <span className="fleet-sub">Boarding across 24 routes</span>
             </div>
             <div className="fleet-kpi-box">
-              <span className="fleet-num">100%</span>
-              <span className="fleet-label">On-Time Dispatch Rate</span>
+              <span className="fleet-num maven-black">100%</span>
+              <span className="fleet-label maven-black">On-Time Dispatch Rate</span>
               <span className="fleet-sub">Kakinada • Yanam • Samalkota</span>
             </div>
           </div>
 
+          {/* Transport Fleet Search & Filter Bar */}
+          <div className="admin-filter-bar">
+            <div className="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search fleet by bus ID, driver name, route, or destination..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
           {/* Driver Fleet Table */}
-          <div className="admin-table-card" style={{ marginTop: 20 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>College Bus Drivers &amp; Route Telemetry Roster ({filteredDrivers.length} Buses)</h3>
+              <h3 className="maven-black">College Bus Drivers &amp; Route Telemetry Roster ({filteredDrivers.length} Buses)</h3>
               <span className="text-muted">Direct operational logistics for East Godavari &amp; Yanam (Puducherry)</span>
             </div>
 
@@ -1217,7 +1234,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
         <div className="admin-tab-content fade-in">
           <div className="admin-section-header">
             <div>
-              <h2 className="section-title">Operations, Campus Workers &amp; Support Staff</h2>
+              <h2 className="section-title maven-black">Operations, Campus Workers &amp; Support Staff</h2>
               <p className="section-desc">
                 Monitoring <strong>{stats.totalWorkers} Operational Workers</strong> including Lab Technicians, Hostel Wardens, Facility Engineers, Electricians, Security Personnel, and Mess Coordinators across all 3 campuses.
               </p>
@@ -1261,9 +1278,9 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           </div>
 
           {/* Workers Table */}
-          <div className="admin-table-card" style={{ marginTop: 14 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>Campus Operations &amp; Support Staff Directory ({filteredWorkers.length} Personnel)</h3>
+              <h3 className="maven-black">Campus Operations &amp; Support Staff Directory ({filteredWorkers.length} Personnel)</h3>
               <span className="text-muted">Showing work location, shifts, and duty assignments</span>
             </div>
 
@@ -1306,7 +1323,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
         <div className="admin-tab-content fade-in">
           <div className="admin-section-header">
             <div>
-              <h2 className="section-title">Institutional Approvals &amp; Activity Verification Queue</h2>
+              <h2 className="section-title maven-black">Institutional Approvals &amp; Activity Verification Queue</h2>
               <p className="section-desc">
                 Review and certify student activity submissions, hackathon prizes, industrial internship certificates, and placement clearances.
               </p>
@@ -1324,16 +1341,16 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             </div>
           </div>
 
-          <div className="admin-table-card" style={{ marginTop: 16 }}>
+          <div className="admin-table-card">
             <div className="table-header-wrap">
-              <h3>Pending Submissions Awaiting Central Approval ({pendingApprovals.length} Items)</h3>
+              <h3 className="maven-black">Pending Submissions Awaiting Central Approval ({pendingApprovals.length} Items)</h3>
               <span className="text-muted">Synchronized with JNTUK accreditation repository</span>
             </div>
 
             {pendingApprovals.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '48px', color: '#64748b' }}>
+              <div style={{ textAlign: 'center', padding: '48px', color: 'var(--muted)' }}>
                 <div style={{ fontSize: 32, marginBottom: 8 }}>✅</div>
-                <h4>All Submissions Verified!</h4>
+                <h4 className="maven-black" style={{ color: 'var(--text)' }}>All Submissions Verified!</h4>
                 <p>There are no outstanding student activity submissions awaiting admin review.</p>
               </div>
             ) : (
@@ -1387,7 +1404,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h3 className="modal-title">{selectedItemModal.type} Operational Record</h3>
+                <h3 className="modal-title maven-black">{selectedItemModal.type} Operational Record</h3>
                 <span className="modal-subtitle">KIET Central Administration Registry</span>
               </div>
               <button className="btn-modal-close" onClick={() => setSelectedItemModal(null)}>✕</button>
@@ -1395,8 +1412,8 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
             <div className="modal-body">
               {selectedItemModal.type === 'HOD' && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16, padding: 14, background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                <div>
+                  <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 16, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <StaffAvatar
                       name={selectedItemModal.data.name}
                       photo={selectedItemModal.data.photo}
@@ -1404,33 +1421,33 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                       size={72}
                     />
                     <div>
-                      <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: '#0f172a' }}>{selectedItemModal.data.name}</h4>
-                      <div style={{ color: '#2563eb', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.title}</div>
-                      <div style={{ color: '#64748b', fontSize: 12.5, marginTop: 2 }}>{selectedItemModal.data.department} • <strong>{selectedItemModal.data.campusTag}</strong></div>
+                      <h4 className="maven-black" style={{ margin: 0, fontSize: 18, color: 'var(--text)' }}>{selectedItemModal.data.name}</h4>
+                      <div style={{ color: '#0284c7', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.title}</div>
+                      <div style={{ color: 'var(--muted)', fontSize: 12.5, marginTop: 2 }}>{selectedItemModal.data.department} • <strong>{selectedItemModal.data.campusTag}</strong></div>
                     </div>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Office &amp; Cabin Hours</span>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Office &amp; Cabin Hours</span>
                       <strong>📍 {selectedItemModal.data.office}</strong>
-                      <div style={{ fontSize: 11.5, color: '#475569' }}>🕒 {selectedItemModal.data.cabinHours}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>🕒 {selectedItemModal.data.cabinHours}</div>
                     </div>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Direct Contact</span>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Direct Contact</span>
                       <strong>📞 {selectedItemModal.data.phone}</strong>
-                      <div style={{ fontSize: 11.5, color: '#475569' }}>✉️ {selectedItemModal.data.email}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>✉️ {selectedItemModal.data.email}</div>
                     </div>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Qualifications &amp; Experience</span>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Qualifications &amp; Experience</span>
                       <strong>🎓 {selectedItemModal.data.qualification}</strong>
                     </div>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Research Publications</span>
-                      <strong style={{ color: '#7c3aed' }}>📚 {selectedItemModal.data.publications} International Papers</strong>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Research Publications</span>
+                      <strong style={{ color: '#0284c7' }}>📚 {selectedItemModal.data.publications} International Papers</strong>
                     </div>
                   </div>
                   {selectedItemModal.data.specialization && (
-                    <div style={{ marginTop: 10, padding: '10px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, fontSize: 12.5, color: '#166534' }}>
+                    <div style={{ marginTop: 10, padding: '10px 12px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: 8, fontSize: 12.5, color: '#10b981' }}>
                       <strong>Core Specialization:</strong> {selectedItemModal.data.specialization}
                     </div>
                   )}
@@ -1438,8 +1455,8 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
               )}
 
               {selectedItemModal.type === 'Faculty' && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                <div>
+                  <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <StaffAvatar
                       name={selectedItemModal.data.name}
                       photo={null}
@@ -1447,32 +1464,93 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                       size={60}
                     />
                     <div>
-                      <h4 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: '#0f172a' }}>{selectedItemModal.data.name}</h4>
-                      <div style={{ color: '#2563eb', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.designation}</div>
-                      <div style={{ color: '#64748b', fontSize: 12.5, marginTop: 2 }}>{selectedItemModal.data.department} • <strong>{selectedItemModal.data.campus}</strong></div>
+                      <h4 className="maven-black" style={{ margin: 0, fontSize: 17, color: 'var(--text)' }}>{selectedItemModal.data.name}</h4>
+                      <div style={{ color: '#0284c7', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.designation}</div>
+                      <div style={{ color: 'var(--muted)', fontSize: 12.5, marginTop: 2 }}>{selectedItemModal.data.department} • <strong>{selectedItemModal.data.campus}</strong></div>
                     </div>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Direct Contact</span>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Direct Contact</span>
                       <strong>📞 {selectedItemModal.data.phone}</strong>
-                      <div style={{ fontSize: 11.5, color: '#475569' }}>✉️ {selectedItemModal.data.email}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>✉️ {selectedItemModal.data.email}</div>
                     </div>
-                    <div style={{ padding: '10px 12px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-                      <span style={{ color: '#64748b', fontSize: 11, display: 'block' }}>Experience &amp; Qualification</span>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Experience &amp; Qualification</span>
                       <strong>{selectedItemModal.data.experience}</strong>
-                      <div style={{ fontSize: 11.5, color: '#475569' }}>{selectedItemModal.data.qualification}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>{selectedItemModal.data.qualification}</div>
                     </div>
                   </div>
                 </div>
               )}
 
-              <details style={{ marginTop: 12 }}>
-                <summary style={{ cursor: 'pointer', fontSize: 12, color: '#64748b', fontWeight: 600 }}>View Raw ERP Registry Metadata</summary>
-                <pre style={{ background: '#f8fafc', padding: 12, borderRadius: 8, fontSize: 12, overflowX: 'auto', border: '1px solid #e2e8f0', marginTop: 8 }}>
-                  {JSON.stringify(selectedItemModal.data, null, 2)}
-                </pre>
-              </details>
+              {selectedItemModal.type === 'Driver' && (
+                <div>
+                  <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
+                    <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, #f59e0b, #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0, color: '#fff' }}>
+                      🚌
+                    </div>
+                    <div>
+                      <h4 className="maven-black" style={{ margin: 0, fontSize: 17, color: 'var(--text)' }}>{selectedItemModal.data.driverName}</h4>
+                      <div style={{ color: '#0284c7', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.busId} • {selectedItemModal.data.busNumber}</div>
+                      <div style={{ color: 'var(--muted)', fontSize: 12.5, marginTop: 2 }}>Assigned Campus: <strong>{selectedItemModal.data.campus}</strong></div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Route &amp; Destination</span>
+                      <strong>📍 {selectedItemModal.data.route}</strong>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>To: {selectedItemModal.data.destination}</div>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Driver Contact &amp; License</span>
+                      <strong>📞 {selectedItemModal.data.phone}</strong>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>License: <code>{selectedItemModal.data.license}</code></div>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Bus Seating Capacity</span>
+                      <strong>👥 {selectedItemModal.data.studentsAssigned} / {selectedItemModal.data.capacity} Seats</strong>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Fleet Operating Status</span>
+                      <strong style={{ color: '#059669' }}>✓ {selectedItemModal.data.status} (GPS Live)</strong>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedItemModal.type === 'Worker' && (
+                <div>
+                  <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
+                    <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0, color: '#fff' }}>
+                      🔧
+                    </div>
+                    <div>
+                      <h4 className="maven-black" style={{ margin: 0, fontSize: 17, color: 'var(--text)' }}>{selectedItemModal.data.name}</h4>
+                      <div style={{ color: '#0284c7', fontWeight: 700, fontSize: 13, marginTop: 2 }}>{selectedItemModal.data.role} ({selectedItemModal.data.empId})</div>
+                      <div style={{ color: 'var(--muted)', fontSize: 12.5, marginTop: 2 }}>Category: {selectedItemModal.data.category} • <strong>{selectedItemModal.data.campus}</strong></div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Building / Work Station</span>
+                      <strong>📍 {selectedItemModal.data.block}</strong>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Duty Shift Schedule</span>
+                      <strong>🕒 {selectedItemModal.data.shift}</strong>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Phone Contact</span>
+                      <strong>📞 {selectedItemModal.data.phone}</strong>
+                    </div>
+                    <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
+                      <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Registry Status</span>
+                      <strong style={{ color: '#16a34a' }}>✓ {selectedItemModal.data.status}</strong>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="modal-footer">
