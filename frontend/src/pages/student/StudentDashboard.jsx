@@ -28,31 +28,66 @@ const announcements = [
 
 const communities = [
   {
-    title: 'Google Coding Club (KIET)',
-    category: 'TECH COMMUNITY',
-    description: 'Competitive programming, open-source projects, and algorithmic development.',
-    image: 'https://www.kietgroup.com/uploads/1769937787_spot_Untitled%20design.jpg',
+    title: 'Google Coding Club',
+    category: 'TECHNICAL & AI',
+    description: 'Competitive programming, LeetCode sprints, and Google technologies.',
+    image: '/images/kiet/aboutus_club1.jpg',
     link: '/student/clubs',
   },
   {
-    title: 'KIET Robotics Lab',
-    category: 'INNOVATION & ROBOTICS',
-    description: 'Student engineering lab building autonomous systems, robotics, and hardware IoT prototypes.',
-    image: 'https://www.kietgroup.com/images/aboutus_club1.jpg',
+    title: 'C4GT club',
+    category: 'TECHNICAL & AI',
+    description: 'Digital Public Goods, GovTech open source, and national fellowship sprints.',
+    image: '/images/kiet/aboutus_kiet.jpg',
     link: '/student/clubs',
   },
   {
-    title: 'KIET Toastmasters Club',
-    category: 'LEADERSHIP & SPEECH',
-    description: 'International public speaking, debate, and professional communication leadership forum.',
-    image: 'https://www.kietgroup.com/images/aboutus_club2.jpg',
+    title: 'Smart City Lab',
+    category: 'TECHNICAL & AI',
+    description: 'Municipal LoRaWAN telemetry and IoT embedded sensing for Kakinada.',
+    image: '/images/kiet/aboutus_ttl.jpg',
     link: '/student/clubs',
   },
   {
-    title: 'KIET Sports & Athletics Club',
-    category: 'SPORTS & ATHLETICS',
-    description: 'Inter-collegiate championships, annual KPL cricket tournaments, and athletics coaching.',
-    image: 'https://www.kietgroup.com/images/aboutus_club4.jpg',
+    title: 'NCC And Nss',
+    category: 'SOCIETIES & OUTREACH',
+    description: 'Paramilitary discipline, blood donation drives, and community leadership.',
+    image: '/images/kiet/aboutus_kiew.jpg',
+    link: '/student/clubs',
+  },
+  {
+    title: 'Toastmasters',
+    category: 'SOCIETIES & OUTREACH',
+    description: 'International public speaking, debate, and executive leadership forum.',
+    image: '/images/kiet/aboutus_club2.jpg',
+    link: '/student/clubs',
+  },
+  {
+    title: 'Kiet sports and athaletics council(kpl)',
+    category: 'SOCIETIES & OUTREACH',
+    description: 'Inter-collegiate championships, annual KPL cricket tournaments, and athletics.',
+    image: '/images/kiet/aboutus_club4.jpg',
+    link: '/student/clubs',
+  },
+  {
+    title: 'Hackathons',
+    category: 'INNOVATION & COMPETITIONS',
+    description: 'Smart India Hackathon (SIH) mentoring squads and national 48-hour competitions.',
+    image: '/images/kiet/aboutus_hackathon.jpg',
+    link: '/student/clubs',
+  },
+  {
+    title: 'Robotics',
+    category: 'TECHNICAL & AI',
+    description: 'ROS 2 autonomous exploration rovers, drones, and e-Yantra engineering.',
+    image: '/images/kiet/aboutus_club1.jpg',
+    link: '/student/clubs',
+  },
+  {
+    title: 'Cyber Security',
+    category: 'TECHNICAL & AI',
+    description: 'VAPT vulnerability audits, reverse engineering, and national CTF challenges.',
+    image: '/images/kiet/aboutus_ttl.jpg',
     link: '/student/clubs',
   },
 ]
@@ -197,7 +232,7 @@ export default function StudentDashboard() {
             <span className="bullet-sep">•</span>
             <span>{student?.branch || 'CSE'}</span>
           </div>
-          <h1>
+          <h1 className="maven-black">
             {greeting}, <span>{student?.name || user?.name || 'Student'}</span> 👋
           </h1>
           <p>
@@ -241,7 +276,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">12-Mo. Attendance</span>
-            <strong className="stat-value">{attendanceStats.percentage}%</strong>
+            <strong className="stat-value maven-black">{attendanceStats.percentage}%</strong>
             <span className={`status-badge-inline ${attendanceStats.percentage >= 75 ? 'positive' : 'warning'}`}>
               {attendanceStats.percentage >= 75 ? 'Eligible (>75%)' : 'Shortage'}
             </span>
@@ -256,7 +291,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">College Fees</span>
-            <strong className="stat-value">{isFeeClear ? 'Cleared' : `₹${feeBalance.toLocaleString()}`}</strong>
+            <strong className="stat-value maven-black">{isFeeClear ? 'Cleared' : `₹${feeBalance.toLocaleString()}`}</strong>
             <span className={`status-badge-inline ${isFeeClear ? 'positive' : 'warning'}`}>
               {isFeeClear ? 'All Paid' : 'Due Balance'}
             </span>
@@ -271,7 +306,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">Transport Route</span>
-            <strong className="stat-value" style={{ fontSize: '1.05rem', marginTop: '4px' }}>
+            <strong className="stat-value maven-black" style={{ fontSize: '1.05rem', marginTop: '4px' }}>
               {student?.transport?.route?.split('·')[0]?.trim() || 'Route 03'}
             </strong>
             <span className="status-badge-inline positive">
@@ -288,7 +323,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">Sem {latestResult?.semester || 'IV'} SGPA</span>
-            <strong className="stat-value">{latestResult?.sgpa || '8.75'}</strong>
+            <strong className="stat-value maven-black">{latestResult?.sgpa || '8.75'}</strong>
             <span className="status-badge-inline positive">CGPA: {student?.cgpa || '8.65'}</span>
           </div>
           <div className="stat-accent" />
@@ -301,7 +336,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">Logged Activities</span>
-            <strong className="stat-value">{myActivities.length}</strong>
+            <strong className="stat-value maven-black">{myActivities.length}</strong>
             <span className="status-badge-inline neutral">All Categories</span>
           </div>
           <div className="stat-accent" />
@@ -314,7 +349,7 @@ export default function StudentDashboard() {
           </div>
           <div className="stat-info">
             <span className="stat-label">Achievements</span>
-            <strong className="stat-value">{verifiedActivities.length || 3}</strong>
+            <strong className="stat-value maven-black">{verifiedActivities.length || 3}</strong>
             <span className="status-badge-inline positive">Verified</span>
           </div>
           <div className="stat-accent" />
@@ -325,7 +360,7 @@ export default function StudentDashboard() {
       <section className="surface-card">
         <div className="card-header-flex">
           <div>
-            <h2 className="card-title">12-Month Attendance Progression (Jan – Dec)</h2>
+            <h2 className="card-title maven-black">12-Month Attendance Progression (Jan – Dec)</h2>
             <p className="card-subtitle">
               Calculated dynamically: Total Working Days = {attendanceStats.totalWorking}, Present = {attendanceStats.totalPresent} days ({attendanceStats.percentage}%)
             </p>
@@ -456,7 +491,7 @@ function SectionHeading({ title, subtitle, action, href }) {
   return (
     <div className="section-heading">
       <div>
-        <h2>{title}</h2>
+        <h2 className="maven-black">{title}</h2>
         <p>{subtitle}</p>
       </div>
       {action && (

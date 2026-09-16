@@ -27,22 +27,22 @@
 [data-theme="dark"], body.dark-theme {
   --font-sans: 'Maven Pro', Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-heading: 'Maven Pro', sans-serif;
-  --navy: #f8fafc;
-  --navy-2: #e2e8f0;
-  --blue: #38bdf8;
-  --blue-soft: rgba(56, 189, 248, 0.12);
-  --text: #f8fafc;
+  --navy: #ffffff;
+  --navy-2: #f4f4f5;
+  --blue: #ffffff;
+  --blue-soft: #27272a;
+  --text: #f4f4f5;
   --text-primary: #ffffff;
-  --muted: #94a3b8;
-  --line: rgba(255, 255, 255, 0.09);
-  --surface: #111e38;
-  --surface-hover: #162646;
-  --bg: #0b1426;
-  --card-bg: #111e38;
-  --border: rgba(255, 255, 255, 0.09);
-  --green: #10b981;
-  --purple: #a78bfa;
-  --orange: #fbbf24;
+  --muted: #a1a1aa;
+  --line: #27272a;
+  --surface: #141417;
+  --surface-hover: #1e1e22;
+  --bg: #09090b;
+  --card-bg: #141417;
+  --border: #27272a;
+  --green: #22c55e;
+  --purple: #a855f7;
+  --orange: #f97316;
   color: var(--text);
   background: var(--bg);
 }

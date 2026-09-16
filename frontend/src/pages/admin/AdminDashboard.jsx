@@ -25,18 +25,21 @@ import {
 import { useData } from '../../contexts/DataContext'
 import { useToast } from '../../components/ui/Toast'
 
-// Chart palettes
+// Two subtle, un-highlighted neutral tones across all graphs
+const GRAPH_TONE_1 = '#334155' // Deep Slate / Charcoal
+const GRAPH_TONE_2 = '#64748b' // Muted Steel / Slate
+
 const CAMPUS_COLORS = {
-  KIET: '#0284c7',        // Sky Blue
-  'KIET+': '#8b5cf6',      // Purple
-  "KIET Women's": '#ec4899', // Pink
+  KIET: GRAPH_TONE_1,
+  'KIET+': GRAPH_TONE_2,
+  "KIET Women's": '#475569',
 }
 
 const YEAR_COLORS = {
-  '1st Year': '#10b981',
-  '2nd Year': '#0284c7',
-  '3rd Year': '#f59e0b',
-  'Final Year': '#8b5cf6',
+  '1st Year': GRAPH_TONE_1,
+  '2nd Year': GRAPH_TONE_2,
+  '3rd Year': GRAPH_TONE_1,
+  'Final Year': GRAPH_TONE_2,
 }
 
 // Resilient institutional staff avatar with executive monogram profiles
@@ -279,10 +282,10 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
   // Chart 4: Human Resources Breakdown Bar
   const staffBreakdownBarData = useMemo(() => [
-    { name: 'Faculty Members', count: stats.totalFaculty, fill: '#0284c7' },
-    { name: 'Campus Workers', count: stats.totalWorkers, fill: '#10b981' },
-    { name: 'Bus Drivers', count: stats.totalDrivers, fill: '#f59e0b' },
-    { name: 'Department HODs', count: stats.totalHODs, fill: '#8b5cf6' },
+    { name: 'Faculty Members', count: stats.totalFaculty, fill: GRAPH_TONE_1 },
+    { name: 'Campus Workers', count: stats.totalWorkers, fill: GRAPH_TONE_2 },
+    { name: 'Bus Drivers', count: stats.totalDrivers, fill: GRAPH_TONE_1 },
+    { name: 'Department HODs', count: stats.totalHODs, fill: GRAPH_TONE_2 },
   ], [stats])
 
   // Pending Verifications queue

@@ -111,13 +111,13 @@ export default function StudentAttendance() {
             <span className="bullet-sep">•</span>
             <span>ANNUAL ATTENDANCE REGISTER</span>
           </div>
-          <h1>12-Month Working-Days Attendance</h1>
+          <h1 className="maven-black">12-Month Working-Days Attendance</h1>
           <p className="hero-subtitle">
             <strong>{student?.name || user?.name || 'Student'}</strong> · Roll No: <strong>{student?.rollNumber || '23JN1A4533'}</strong> · {student?.branch || 'CSE'} · {student?.campus || 'KIET Korangi'}
           </p>
         </div>
         <div className="attendance-gauge-card">
-          <div className="gauge-value">{stats.percentage}%</div>
+          <div className="gauge-value maven-black">{stats.percentage}%</div>
           <div className="gauge-label">Cumulative Annual</div>
           <span className={`gauge-badge ${stats.percentage >= 75 ? 'eligible' : 'shortage'}`}>
             {stats.percentage >= 75 ? 'Eligible for Exams (>75%)' : 'Attendance Shortage (<75%)'}
@@ -131,7 +131,7 @@ export default function StudentAttendance() {
           <div className="stat-icon">📊</div>
           <div className="stat-info">
             <span className="stat-label">Overall Attendance</span>
-            <strong className="stat-value">{stats.percentage}%</strong>
+            <strong className="stat-value maven-black">{stats.percentage}%</strong>
             <span className="stat-subtext">Dynamic Annual Calculation</span>
           </div>
           <div className="stat-accent" />
@@ -141,7 +141,7 @@ export default function StudentAttendance() {
           <div className="stat-icon">📅</div>
           <div className="stat-info">
             <span className="stat-label">Total Working Days</span>
-            <strong className="stat-value">{stats.totalWorking} Days</strong>
+            <strong className="stat-value maven-black">{stats.totalWorking} Days</strong>
             <span className="stat-subtext">Jan – Dec Academic Cycle</span>
           </div>
           <div className="stat-accent" />
@@ -151,7 +151,7 @@ export default function StudentAttendance() {
           <div className="stat-icon">✅</div>
           <div className="stat-info">
             <span className="stat-label">Total Present Days</span>
-            <strong className="stat-value">{stats.totalPresent} Days</strong>
+            <strong className="stat-value maven-black">{stats.totalPresent} Days</strong>
             <span className="stat-subtext">Verified Classroom Sessions</span>
           </div>
           <div className="stat-accent" />
@@ -161,8 +161,8 @@ export default function StudentAttendance() {
           <div className="stat-icon">❌</div>
           <div className="stat-info">
             <span className="stat-label">Total Absent Days</span>
-            <strong className="stat-value">{stats.totalAbsent} Days</strong>
-            <span className="stat-subtext">Leaves & Absences</span>
+            <strong className="stat-value maven-black">{stats.totalAbsent} Days</strong>
+            <span className="stat-subtext">Leaves &amp; Absences</span>
           </div>
           <div className="stat-accent" />
         </div>
@@ -172,7 +172,7 @@ export default function StudentAttendance() {
       <section className="surface-card">
         <div className="card-header-flex">
           <div>
-            <h2 className="card-title">12-Month Working vs. Present Days Comparison</h2>
+            <h2 className="card-title maven-black">12-Month Working vs. Present Days Comparison</h2>
             <p className="card-subtitle">
               Interactive distribution from January to December. Click any month below to inspect day-by-day calendar logs.
             </p>
@@ -307,7 +307,7 @@ export default function StudentAttendance() {
         <div className="card-header-flex">
           <div>
             <div className="kicker-sub">DETAILED DAY-WISE REGISTER</div>
-            <h2 className="card-title">
+            <h2 className="card-title maven-black">
               {activeMonthData.month} 2026 Daily Attendance Sheet
             </h2>
             <p className="card-subtitle">

@@ -203,7 +203,7 @@ export default function MyAchievements() {
             <span className="bullet-sep">•</span>
             <span>MERIT & CREDENTIALS</span>
           </div>
-          <h1>Achievements & Verified Credentials</h1>
+          <h1 className="maven-black">Achievements &amp; Verified Credentials</h1>
           <p className="hero-subtitle">
             Authenticated repository of your co-curricular certifications, hackathon awards, and industrial recognitions.
           </p>
@@ -222,8 +222,20 @@ export default function MyAchievements() {
         </div>
 
         <div className="academic-id-badge">
-          <strong>{verifiedList.length} Verified</strong>
-          <span>{totalPoints} Activity Credits</span>
+          <div className="badge-stat-box">
+            <span className="stat-badge-icon">🏆</span>
+            <div>
+              <strong className="maven-black">{verifiedList.length}</strong>
+              <small>Verified Records</small>
+            </div>
+          </div>
+          <div className="badge-stat-box">
+            <span className="stat-badge-icon">🎖️</span>
+            <div>
+              <strong className="maven-black">{totalPoints}</strong>
+              <small>Activity Credits</small>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -233,7 +245,7 @@ export default function MyAchievements() {
           <div className="stat-icon">🏆</div>
           <div className="stat-info">
             <span className="stat-label">Verified Credentials</span>
-            <strong className="stat-value">{verifiedList.length}</strong>
+            <strong className="stat-value maven-black">{verifiedList.length}</strong>
             <span className="stat-subtext">Official KIET Portfolio</span>
           </div>
           <div className="stat-accent" />
@@ -243,7 +255,7 @@ export default function MyAchievements() {
           <div className="stat-icon">🎖️</div>
           <div className="stat-info">
             <span className="stat-label">Activity Credits</span>
-            <strong className="stat-value">{totalPoints} Pts</strong>
+            <strong className="stat-value maven-black">{totalPoints} Pts</strong>
             <span className="stat-subtext">JNTUK Activity Bank</span>
           </div>
           <div className="stat-accent" />
@@ -253,7 +265,7 @@ export default function MyAchievements() {
           <div className="stat-icon">📜</div>
           <div className="stat-info">
             <span className="stat-label">Certificates Available</span>
-            <strong className="stat-value">{verifiedList.length}</strong>
+            <strong className="stat-value maven-black">{verifiedList.length}</strong>
             <span className="stat-subtext">Downloadable PDFs</span>
           </div>
           <div className="stat-accent" />
@@ -263,7 +275,7 @@ export default function MyAchievements() {
           <div className="stat-icon">⏳</div>
           <div className="stat-info">
             <span className="stat-label">Pending Review</span>
-            <strong className="stat-value">{pendingList.length}</strong>
+            <strong className="stat-value maven-black">{pendingList.length}</strong>
             <span className="stat-subtext">Faculty In-Review</span>
           </div>
           <div className="stat-accent" />
@@ -274,7 +286,7 @@ export default function MyAchievements() {
       <section className="surface-card">
         <div className="card-header-flex">
           <div>
-            <h2 className="card-title">Verified Student Credentials</h2>
+            <h2 className="card-title maven-black">Verified Student Credentials</h2>
             <p className="card-subtitle">
               All records below are confirmed by department coordinators and include official verification timestamps.
             </p>
@@ -309,7 +321,7 @@ export default function MyAchievements() {
                 </div>
 
                 <div className="cert-card-center">
-                  <div className="cert-mini-title">{item.title}</div>
+                  <div className="cert-crest-watermark">🎖️ OFFICIAL KIET CREDENTIAL</div>
                   <div className="cert-mini-student">Conferred to: {user?.name || 'G. Sai Vamsi'} ({user?.rollNumber || '23JN1A4533'})</div>
                 </div>
 
@@ -325,7 +337,7 @@ export default function MyAchievements() {
                   <span className="points-pill">+{item.points || 15} pts</span>
                 </div>
 
-                <h3 className="achievement-card-title">{item.title}</h3>
+                <h3 className="achievement-card-title maven-black">{item.title}</h3>
                 <p className="achievement-issuer">
                   {item.issuer || 'KIET Korangi (JNTUK)'} · {item.date || 'AY 2025-26'}
                 </p>
@@ -369,7 +381,7 @@ export default function MyAchievements() {
           <img src={KIET_ASSETS.robotics} alt="KIET Innovation" />
           <div>
             <span>KIET INNOVATION & ROBOTICS</span>
-            <h3>Practical R&D and Student Incubation</h3>
+            <h3 className="maven-black">Practical R&D and Student Incubation</h3>
             <p>
               Students at KIET have registered over 45+ student patents and represented Andhra Pradesh at national technical symposiums.
             </p>
@@ -379,7 +391,7 @@ export default function MyAchievements() {
           <img src={KIET_ASSETS.campus} alt="KIET Main Campus" />
           <div>
             <span>ACADEMIC EXCELLENCE</span>
-            <h3>Integrated Resume Portfolio</h3>
+            <h3 className="maven-black">Integrated Resume Portfolio</h3>
             <p>
               Every verified certificate connects directly with your KIET Resume Builder, auto-generating ATS-friendly bullet points.
             </p>
@@ -394,7 +406,7 @@ export default function MyAchievements() {
             <div className="modal-header">
               <div>
                 <div className="eyebrow">CREDENTIAL VERIFICATION & OFFICIAL RECORD</div>
-                <h2 className="modal-title">{selectedAchievement.title}</h2>
+                <h2 className="modal-title maven-black">{selectedAchievement.title}</h2>
               </div>
               <button
                 type="button"

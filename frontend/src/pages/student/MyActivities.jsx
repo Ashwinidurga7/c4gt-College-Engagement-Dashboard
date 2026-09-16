@@ -85,17 +85,11 @@ export default function MyActivities() {
       {/* 1. Hero Banner */}
       <section className="activities-hero-card">
         <div className="activities-hero-copy">
-          <span className="activities-hero-badge">MY SPACE • PARTICIPATION &amp; MERIT</span>
-          <h1>My Activities &amp; Credentials</h1>
+          <span className="activities-hero-badge">🎓 MY SPACE • PARTICIPATION &amp; MERIT</span>
+          <h1 className="maven-black">My Activities &amp; Credentials</h1>
           <p>
             Consolidated record of your academic projects, professional certifications, hackathon victories, and campus club participations.
           </p>
-          <div className="activities-hero-tags">
-            <span>Verified Credentials</span>
-            <span>SIH Finalists</span>
-            <span>AWS / Coursera</span>
-            <span>Campus Leadership</span>
-          </div>
         </div>
         <div className="activities-hero-actions">
           <Link to="/student/add" className="btn-add-activity-primary">
@@ -114,22 +108,22 @@ export default function MyActivities() {
       <section className="space-stat-grid">
         <div className="space-stat">
           <span>Total Records</span>
-          <strong>{myActivities.length + projects.length}</strong>
+          <strong className="maven-black">{myActivities.length + projects.length}</strong>
           <small>Activities &amp; projects on record</small>
         </div>
         <div className="space-stat">
           <span>Verified Merit</span>
-          <strong>{verified}</strong>
+          <strong className="maven-black">{verified}</strong>
           <small>Approved by HOD &amp; Faculty</small>
         </div>
         <div className="space-stat">
           <span>Pending Review</span>
-          <strong>{pending}</strong>
+          <strong className="maven-black">{pending}</strong>
           <small>Awaiting evaluation</small>
         </div>
         <div className="space-stat">
           <span>Active Projects</span>
-          <strong>{projects.length}</strong>
+          <strong className="maven-black">{projects.length}</strong>
           <small>Public code repositories</small>
         </div>
       </section>
@@ -166,7 +160,7 @@ export default function MyActivities() {
                     ● {proj.deployedUrl ? 'Live Deployed' : 'Public Repo'}
                   </span>
                 </div>
-                <h3 className="project-card-title">{proj.title}</h3>
+                <h3 className="project-card-title maven-black">{proj.title}</h3>
                 <p className="project-card-intro">{proj.intro}</p>
               </div>
 
@@ -204,7 +198,7 @@ export default function MyActivities() {
                     </a>
                   )}
                 </div>
-                <Link to="/student/projects" style={{ fontSize: 11, color: '#0284c7', fontWeight: 800 }}>
+                <Link to="/student/projects" className="activity-manage-link">
                   Manage Projects →
                 </Link>
               </div>
@@ -233,7 +227,7 @@ export default function MyActivities() {
                   </div>
                   <Seal status={a.status} />
                 </div>
-                <h3>{a.title}</h3>
+                <h3 className="maven-black">{a.title}</h3>
                 <p>
                   {a.description || 'Student participation recorded in the KIET engagement profile.'}
                 </p>
@@ -275,11 +269,11 @@ export default function MyActivities() {
           <img src={IMAGES.innovation} alt="KIET innovation" onError={e => (e.currentTarget.src = IMAGES.campus)} />
           <div>
             <span>KIET PROJECTS &amp; GITHUB</span>
-            <h3>Publish software to your portfolio</h3>
+            <h3 className="maven-black">Publish software to your portfolio</h3>
             <p>
               Recruiters evaluate working GitHub code and deployed URLs. Add your full-stack apps and ML models to stand out during campus placements.
             </p>
-            <Link to="/student/projects" style={{ marginTop: 8, display: 'inline-block', fontSize: 11.5, fontWeight: 800, color: '#0284c7' }}>
+            <Link to="/student/projects" className="space-card-action-link">
               Open Projects Portfolio →
             </Link>
           </div>
@@ -288,11 +282,11 @@ export default function MyActivities() {
           <img src={IMAGES.campus} alt="KIET internships" onError={e => (e.currentTarget.src = IMAGES.campus)} />
           <div>
             <span>INDUSTRY INTERNSHIPS</span>
-            <h3>Separate corporate &amp; research cohorts</h3>
+            <h3 className="maven-black">Separate corporate &amp; research cohorts</h3>
             <p>
               Capture Remote vs Offline modes, dates, and domain foundations under the dedicated Internships section.
             </p>
-            <Link to="/student/internships" style={{ marginTop: 8, display: 'inline-block', fontSize: 11.5, fontWeight: 800, color: '#38bdf8' }}>
+            <Link to="/student/internships" className="space-card-action-link accent">
               View Dedicated Internships →
             </Link>
           </div>

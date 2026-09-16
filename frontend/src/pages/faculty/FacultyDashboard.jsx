@@ -220,108 +220,103 @@ export default function FacultyDashboard() {
 
   return (
     <div className="faculty-workspace">
-      {/* 1. CLEAN INSTITUTIONAL PAGE TITLE ROW */}
-      <div className="page-title-row">
-        <div>
-          <div className="eyebrow">
-            <span>KIET FACULTY WORKSPACE</span>
-            <span className="bullet-sep">•</span>
-            <span>{selectedCampus}</span>
-            <span className="bullet-sep">•</span>
-            <span>{selectedBranch} DEPARTMENT</span>
-          </div>
-          <h1>Faculty Overview & Cohort Management</h1>
-          <p>
-            Welcome, <strong>{user?.name || 'Dr. K. V. Ramana'}</strong> • Monitoring active student cohort, capstone project teams, and attendance.
+      {/* 1. Clean Institutional Header */}
+      <div className="faculty-hero-banner">
+        <div className="faculty-header-meta">
+          <span className="faculty-governance-tag">👨‍🏫 FACULTY ACADEMIC WORKSPACE</span>
+          <h1 className="faculty-title maven-black">
+            Faculty Overview &amp; Cohort Management
+          </h1>
+          <p className="faculty-subtitle">
+            Welcome, <strong>{user?.name || 'Dr. K. V. Ramana'}</strong> • Monitoring active student cohort for <strong>{selectedCampus} ({selectedBranch})</strong>, practical lab teams, and attendance.
           </p>
         </div>
 
-        <div className="faculty-actions-top">
-          <button type="button" className="button button-light" onClick={handleExportRegister}>
-            📥 Export Register (CSV)
+        <div className="faculty-hero-actions">
+          <button type="button" className="btn-faculty-action" onClick={handleExportRegister}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>Export Register</span>
           </button>
           <button
             type="button"
-            className="button button-primary"
+            className="btn-faculty-broadcast"
             onClick={() => {
               if (showToast) {
                 showToast(`Broadcast notice drafted for ${selectedCampus} ${selectedBranch} cohort.`, 'info')
               }
             }}
           >
-            📢 Broadcast Notice
+            <span>📢 Broadcast</span>
           </button>
         </div>
       </div>
 
-      {/* 2. CAMPUS SWITCHER (KIET, KIET+, KIET WOMEN'S) */}
-      <section className="faculty-selector-card">
-        <div className="selector-group-block">
-          <div className="selector-label-col">
-            <span className="selector-title">1. Select Campus</span>
-            <span className="selector-hint">Switch between KIET group institutions</span>
+      {/* 2. Compact, Balanced Campus & Branch Scope Selectors */}
+      <div className="faculty-selector-card">
+        {/* Campus Selection */}
+        <div className="faculty-selector-group">
+          <div className="faculty-selector-header">
+            <span className="scope-indicator-dot" />
+            <span className="scope-title">INSTITUTIONAL CAMPUS:</span>
           </div>
-          <div className="campus-pills-row">
-            {campuses.map((camp) => (
-              <button
-                key={camp}
-                type="button"
-                className={`campus-pill-btn ${selectedCampus === camp ? 'active' : ''}`}
-                onClick={() => {
-                  setSelectedCampus(camp)
-                  // Reset branch if not available
-                  const available = (branchesByCampus[camp] || []).map((b) => b.code)
-                  if (!available.includes(selectedBranch)) {
-                    setSelectedBranch(available[0] || 'AIDS')
-                  }
-                }}
-              >
-                <span className="campus-pill-dot" />
-                <div className="campus-pill-text">
-                  <strong>{camp}</strong>
-                  <small>
-                    {camp === 'KIET'
-                      ? 'Autonomous Main Campus'
-                      : camp === 'KIET+'
-                      ? 'Advanced Tech Studies'
-                      : "Women's Engineering Campus"}
-                  </small>
-                </div>
-              </button>
-            ))}
+          <div className="faculty-pills-row">
+            {campuses.map((camp) => {
+              const isActive = selectedCampus === camp
+              return (
+                <button
+                  key={camp}
+                  type="button"
+                  className={`faculty-scope-pill ${isActive ? 'active' : ''}`}
+                  onClick={() => {
+                    setSelectedCampus(camp)
+                    const available = (branchesByCampus[camp] || []).map((b) => b.code)
+                    if (!available.includes(selectedBranch)) {
+                      setSelectedBranch(available[0] || 'AIDS')
+                    }
+                  }}
+                >
+                  <span className="pill-dot" />
+                  <span className="pill-name">{camp}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
-        <div className="selector-divider" />
-
-        {/* 3. BRANCH SELECTOR (AIDS, CSM, CAI, CSC, CSD) */}
-        <div className="selector-group-block">
-          <div className="selector-label-col">
-            <span className="selector-title">2. Select Academic Branch</span>
-            <span className="selector-hint">Active cohort syllabus & rosters</span>
+        {/* Branch Selection */}
+        <div className="faculty-selector-group">
+          <div className="faculty-selector-header">
+            <span className="scope-indicator-dot" style={{ backgroundColor: '#10b981' }} />
+            <span className="scope-title">ACADEMIC BRANCH:</span>
           </div>
-          <div className="branch-pills-row">
-            {branchList.map((br) => (
-              <button
-                key={br.code}
-                type="button"
-                className={`branch-pill-btn ${selectedBranch === br.code ? 'active' : ''}`}
-                onClick={() => setSelectedBranch(br.code)}
-              >
-                <div className="branch-code-badge">{br.code}</div>
-                <div className="branch-name-info">
-                  <strong>{br.name}</strong>
-                  <small>
-                    {br.code === 'AIDS' ? '180 Enrolled (Sec A, B, C)' : '60 Enrolled (Sec A)'}
-                  </small>
-                </div>
-              </button>
-            ))}
+          <div className="faculty-pills-row">
+            {branchList.map((br) => {
+              const isActive = selectedBranch === br.code
+              const count = students.filter(
+                (s) => s.campus === selectedCampus && s.branch === br.code
+              ).length
+              return (
+                <button
+                  key={br.code}
+                  type="button"
+                  className={`faculty-branch-pill ${isActive ? 'active' : ''}`}
+                  onClick={() => setSelectedBranch(br.code)}
+                >
+                  <span className="branch-code-badge">{br.code}</span>
+                  <span className="pill-name">{br.name}</span>
+                  <span className="pill-count">{count}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 4. COHORT EXECUTIVE METRICS (180 TOTAL, 60 HOSTELERS, 120 DAY SCHOLARS, 14 TEAMS) */}
+      {/* 3. COHORT EXECUTIVE METRICS */}
       <section className="cohort-metrics-grid">
         {/* Total Students Card */}
         <div className="cohort-kpi-card card-blue">
@@ -329,7 +324,7 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">TOTAL COHORT STUDENTS</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{cohortMetrics.total}</strong>
+              <strong className="kpi-main-val maven-black">{cohortMetrics.total}</strong>
               <span className="kpi-tag-sub">3 Sections</span>
             </div>
             <p className="kpi-breakdown">
@@ -344,13 +339,13 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">DAY SCHOLARS</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{cohortMetrics.dayScholars}</strong>
+              <strong className="kpi-main-val maven-black">{cohortMetrics.dayScholars}</strong>
               <span className="kpi-tag-sub">
                 {Math.round((cohortMetrics.dayScholars / cohortMetrics.total) * 100)}% Cohort
               </span>
             </div>
             <p className="kpi-breakdown">
-              Availing 12 active college bus routes from Kakinada, Rajahmundry & Ramachandrapuram.
+              Availing 12 active college bus routes from Kakinada, Rajahmundry &amp; Ramachandrapuram.
             </p>
           </div>
         </div>
@@ -361,13 +356,13 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">HOSTELERS</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{cohortMetrics.hostelers}</strong>
+              <strong className="kpi-main-val maven-black">{cohortMetrics.hostelers}</strong>
               <span className="kpi-tag-sub">
                 {Math.round((cohortMetrics.hostelers / cohortMetrics.total) * 100)}% Cohort
               </span>
             </div>
             <p className="kpi-breakdown">
-              Campus Hostels (Godavari Boys Block A & B, Sarada Girls Block C).
+              Campus Hostels (Godavari Boys Block A &amp; B, Sarada Girls Block C).
             </p>
           </div>
         </div>
@@ -378,7 +373,7 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">CLASS TEAMS (1 TO {cohortMetrics.teamsCount})</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{cohortMetrics.teamsCount} Teams</strong>
+              <strong className="kpi-main-val maven-black">{cohortMetrics.teamsCount} Teams</strong>
               <span className="kpi-tag-sub">5 Members / Team</span>
             </div>
             <p className="kpi-breakdown">
@@ -393,7 +388,7 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">CLASS AVG ATTENDANCE</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{cohortMetrics.avgAttendance}%</strong>
+              <strong className="kpi-main-val maven-black">{cohortMetrics.avgAttendance}%</strong>
               <span className="kpi-tag-sub status-pill-safe">Safe Standing</span>
             </div>
             <p className="kpi-breakdown">
@@ -408,8 +403,8 @@ export default function FacultyDashboard() {
           <div className="kpi-info-box">
             <span className="kpi-label">PENDING APPROVALS</span>
             <div className="kpi-value-row">
-              <strong className="kpi-main-val">{pendingActivities.length}</strong>
-              <span className="kpi-tag-sub">Student Submissions</span>
+              <strong className="kpi-main-val maven-black">{pendingActivities.length}</strong>
+              <span className="kpi-tag-sub">Submissions</span>
             </div>
             <p className="kpi-breakdown">
               AWS, SIH 2026, NPTEL, and OpenVINO student certificates to review.
@@ -418,7 +413,7 @@ export default function FacultyDashboard() {
         </div>
       </section>
 
-      {/* 5. WORKSPACE TABS */}
+      {/* 4. WORKSPACE TABS */}
       <div className="faculty-tabs-container">
         <div className="faculty-tabs-header">
           <button
@@ -428,7 +423,7 @@ export default function FacultyDashboard() {
           >
             <span className="tab-icon">👥</span>
             <span className="tab-title">Class Teams</span>
-            <span className="tab-count-pill">Teams 1 to {currentTeams.length} • 5 Mems Each</span>
+            <span className="tab-count-pill">{currentTeams.length} Teams</span>
           </button>
 
           <button
@@ -437,7 +432,7 @@ export default function FacultyDashboard() {
             onClick={() => setActiveTab('roster')}
           >
             <span className="tab-icon">📋</span>
-            <span className="tab-title">Cohort Class Register</span>
+            <span className="tab-title">Class Register</span>
             <span className="tab-count-pill">{cohortMetrics.total} Students</span>
           </button>
 
@@ -447,9 +442,9 @@ export default function FacultyDashboard() {
             onClick={() => setActiveTab('reviews')}
           >
             <span className="tab-icon">⚡</span>
-            <span className="tab-title">Pending Student Submissions</span>
+            <span className="tab-title">Pending Submissions</span>
             {pendingActivities.length > 0 && (
-              <span className="tab-alert-pill">{pendingActivities.length} Review</span>
+              <span className="tab-alert-pill">{pendingActivities.length}</span>
             )}
           </button>
 
@@ -459,8 +454,10 @@ export default function FacultyDashboard() {
             onClick={() => setActiveTab('shortage')}
           >
             <span className="tab-icon">⚠️</span>
-            <span className="tab-title">Attendance Shortage Watchlist</span>
-            <span className="tab-warning-pill">{cohortMetrics.shortageCount} Below 75%</span>
+            <span className="tab-title">Shortage Watchlist</span>
+            {cohortMetrics.shortageCount > 0 && (
+              <span className="tab-warning-pill">{cohortMetrics.shortageCount}</span>
+            )}
           </button>
         </div>
 
@@ -526,7 +523,7 @@ export default function FacultyDashboard() {
 
                   {/* Project Title */}
                   <div className="team-project-body">
-                    <h3 className="team-project-title">{team.title}</h3>
+                    <h3 className="team-project-title maven-black">{team.title}</h3>
                     <div className="team-meta-row">
                       <span className="meta-guide">
                         Faculty Advisor: <strong>{team.guide}</strong>
@@ -843,7 +840,7 @@ export default function FacultyDashboard() {
           <div className="tab-view-content">
             <div className="reviews-header-banner">
               <div>
-                <h2>Student Credential & Activity Review Desk</h2>
+                <h2 className="maven-black">Student Credential &amp; Activity Review Desk</h2>
                 <p>
                   Verify certifications, hackathon awards, workshops and technical achievements submitted by students.
                   Approved credentials award academic credit points and show on their official resume.
@@ -860,7 +857,7 @@ export default function FacultyDashboard() {
                   <div className="review-card-top">
                     <div>
                       <span className="category-tag-review">{act.category}</span>
-                      <h3 className="review-title">{act.title}</h3>
+                      <h3 className="review-title maven-black">{act.title}</h3>
                       <div className="review-issuer">
                         Issued by <strong>{act.issuer}</strong> • {act.issuerType || 'Accredited'}
                       </div>
@@ -929,7 +926,7 @@ export default function FacultyDashboard() {
           <div className="tab-view-content">
             <div className="shortage-header-banner">
               <div>
-                <h2>Mandatory Attendance Shortage Watchlist (&lt; 75%)</h2>
+                <h2 className="maven-black">Mandatory Attendance Shortage Watchlist (&lt; 75%)</h2>
                 <p>
                   As per KIET Autonomous regulations, students below 75% aggregate attendance require condonation or parent notification.
                   Immediate faculty interventions are recorded below.
@@ -1037,7 +1034,7 @@ export default function FacultyDashboard() {
             <div className="modal-header">
               <div>
                 <span className="eyebrow">KIET AUTONOMOUS STUDENT DOSSIER</span>
-                <h2 className="modal-title">{selectedStudent.name}</h2>
+                <h2 className="modal-title maven-black">{selectedStudent.name}</h2>
                 <p className="modal-subtitle">
                   {selectedStudent.rollNumber} • {selectedStudent.campus} • {selectedStudent.branch} • 3rd Year Sec {selectedStudent.section}
                 </p>
@@ -1161,7 +1158,7 @@ export default function FacultyDashboard() {
             <div className="modal-header">
               <div>
                 <span className="eyebrow">CAPSTONE INNOVATION BRIEF</span>
-                <h2 className="modal-title">{selectedTeamModal.name}</h2>
+                <h2 className="modal-title maven-black">{selectedTeamModal.name}</h2>
                 <p className="modal-subtitle">{selectedTeamModal.title}</p>
               </div>
               <button

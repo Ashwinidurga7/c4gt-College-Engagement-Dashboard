@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/Toast'
@@ -11,9 +11,8 @@ const portalRoles = [
     shortLabel: 'Student',
     tag: 'B.Tech & Degree ERP',
     inputLabel: 'University Roll Number or College Email',
-    placeholder: 'Enter 10-digit Roll No. (e.g. 23JN1A4533)',
-    desc: 'Unified academic services: 12-month attendance, semester SGPA results, fee clearance, bus pass and portfolio.',
-    features: ['Real-time Attendance Tracking', 'Semester Results & SGPA', 'Online Fee Receipts & Bus Pass', 'Digital Portfolio & Resume'],
+    placeholder: 'Enter Roll Number (e.g. 23JN1A4533)',
+    desc: 'Access attendance tracking, semester SGPA results, fee receipts, and digital portfolio.',
     accent: '#1e40af',
     accentBg: '#eff6ff',
     demoId: '23JN1A4533',
@@ -28,8 +27,7 @@ const portalRoles = [
     tag: 'Academic Instruction',
     inputLabel: 'Institutional Faculty Email',
     placeholder: 'Enter College Email (e.g. faculty@kiet.edu)',
-    desc: 'Academic teaching tools: lecture attendance entry, student activity validation, and internal assessments.',
-    features: ['Lecture Attendance Entry', 'Student Activity Verification', 'Internal Mark Entry & Grades', 'Department Mentorship'],
+    desc: 'Manage lecture attendance, review student co-curricular activities, and mentor projects.',
     accent: '#0d9488',
     accentBg: '#f0fdfa',
     demoId: 'faculty@kiet.edu',
@@ -44,8 +42,7 @@ const portalRoles = [
     tag: 'Department Administration',
     inputLabel: 'Department Head Email',
     placeholder: 'Enter Department Email (e.g. hod@kiet.edu)',
-    desc: 'Branch administration: department attendance monitoring, faculty workload review, and executive approvals.',
-    features: ['Department Attendance Analytics', 'Faculty Teaching Oversight', 'Student Verification Approvals', 'Curriculum Monitoring'],
+    desc: 'Department attendance analytics, faculty instruction oversight, and verification approvals.',
     accent: '#7c3aed',
     accentBg: '#f5f3ff',
     demoId: 'hod@kiet.edu',
@@ -60,8 +57,7 @@ const portalRoles = [
     tag: 'Campus Administration',
     inputLabel: 'Administrator Email / Username',
     placeholder: 'Enter Admin Email (e.g. admin@kiet.edu)',
-    desc: 'Central college operations: examination cell records, multi-campus governance, and institutional audits.',
-    features: ['Central Campus Ecosystem Overview', 'Multi-Branch Academic Registry', 'Campus Facilities & Network', 'Master Data Audits'],
+    desc: 'Central campus governance, multi-branch academic registries, and institutional audits.',
     accent: '#d97706',
     accentBg: '#fffbeb',
     demoId: 'admin@kiet.edu',
@@ -74,6 +70,25 @@ export default function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
   const { showToast } = useToast()
+
+  // Strictly isolate Login and Gateway pages to clean, modern, high-contrast light mode
+  useEffect(() => {
+    const prevTheme = document.documentElement.getAttribute('data-theme')
+    document.documentElement.setAttribute('data-theme', 'light')
+    document.body.setAttribute('data-theme', 'light')
+    document.documentElement.classList.remove('dark-theme')
+    document.body.classList.remove('dark-theme')
+
+    return () => {
+      const saved = localStorage.getItem('kiet_theme_mode') || prevTheme || 'light'
+      document.documentElement.setAttribute('data-theme', saved)
+      document.body.setAttribute('data-theme', saved)
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark-theme')
+        document.body.classList.add('dark-theme')
+      }
+    }
+  }, [])
 
   // Two-step flow: 'select' -> 'login'
   const [step, setStep] = useState('select')
@@ -114,7 +129,7 @@ export default function Login() {
     setStep('login')
     setError('')
     setShowDemoModal(false)
-    showToast(`Test credentials populated for ${demoRole} portal.`, 'info')
+    showToast(`Test credentials loaded for ${demoRole} portal.`, 'info')
   }
 
   async function handleSubmit(e) {
@@ -140,7 +155,7 @@ export default function Login() {
         return
       }
 
-      showToast(`Welcome to College Engagement Dashboard, ${result.user?.name || role}!`, 'success')
+      showToast(`Welcome, ${result.user?.name || role}!`, 'success')
       const targetRole = (result.user?.role || role).toLowerCase()
       navigate(`/${targetRole}`)
     } catch {
@@ -155,7 +170,7 @@ export default function Login() {
     if (!forgotEmail) return
     setShowForgotModal(false)
     setForgotEmail('')
-    showToast('Password recovery instructions sent to your institutional email.', 'info')
+    showToast('Password recovery instructions dispatched to your institutional email.', 'info')
   }
 
   return (
@@ -165,32 +180,20 @@ export default function Login() {
         <div className="gateway-shell">
           {/* Institutional Top Crest Header */}
           <header className="gateway-top-header">
-            <div className="gateway-logo-wrap">
-              <img
-                src="/images/kiet-logo.png"
-                alt="KIET Logo"
-                className="gateway-kiet-logo"
-              />
-            </div>
-            <div className="gateway-branding">
-              <div className="gateway-brand-top-row">
-                <span className="gateway-eyebrow">KIET GROUP OF INSTITUTIONS</span>
-                <span className="gateway-project-pill">
-                  <span className="project-pill-dot" />
-                  College-Engagement-Dashboard
-                </span>
+            <div className="gateway-header-left">
+              <div className="gateway-logo-wrap">
+                <img
+                  src="/images/kiet-logo.png"
+                  alt="KIET Logo"
+                  className="gateway-kiet-logo"
+                />
               </div>
-              <h1 className="gateway-institution-title">College Engagement Dashboard</h1>
-              <p className="gateway-institution-subtitle">
-                Kakinada Institute of Engineering & Technology • Institutional ERP & Engagement Gateway
-              </p>
-              <p className="gateway-institution-meta">
-                <span>📍 Korangi, Kakinada Dist. • Andhra Pradesh</span>
-                <span className="meta-sep">•</span>
-                <span>Affiliated to JNTUK Kakinada</span>
-                <span className="meta-sep">•</span>
-                <span>AICTE Approved</span>
-              </p>
+              <div className="gateway-branding">
+                <h1 className="gateway-institution-title">College Engagement Dashboard</h1>
+                <p className="gateway-institution-subtitle">
+                  KIET Group of Institutions • Affiliated to JNTUK Kakinada
+                </p>
+              </div>
             </div>
             <div className="gateway-header-actions">
               <button
@@ -198,20 +201,16 @@ export default function Login() {
                 className="gateway-header-signup-btn"
                 onClick={() => navigate('/signup')}
               >
-                <span>✨ New User? Register</span>
+                <span>Create Account</span>
               </button>
             </div>
           </header>
 
           {/* Gateway Title Box */}
           <div className="gateway-intro">
-            <div className="gateway-badge">
-              <span className="gateway-pulse-dot" />
-              <span>COLLEGE ENGAGEMENT DASHBOARD • AY 2025–26</span>
-            </div>
-            <h2>Select Portal Access</h2>
+            <h2>Select Portal</h2>
             <p>
-              Welcome to the official <strong>College-Engagement-Dashboard</strong>. Please select your designated institutional portal option below to proceed to the secure single sign-on authentication portal.
+              Choose your institutional role to access attendance, academics, and portal services.
             </p>
           </div>
 
@@ -226,235 +225,111 @@ export default function Login() {
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleSelectRole(item.id)}
               >
-                <div className="gateway-card-top">
+                <div className="gateway-card-header">
                   <div className="gateway-icon-box" style={{ background: item.accentBg, color: item.accent }}>
                     <span>{item.icon}</span>
                   </div>
-                  <span className="gateway-tag">{item.tag}</span>
+                  <span className="gateway-role-badge">{item.shortLabel}</span>
                 </div>
 
                 <h3 className="gateway-card-title">{item.label}</h3>
                 <p className="gateway-card-desc">{item.desc}</p>
 
-                <ul className="gateway-feature-list">
-                  {item.features.map((feat, idx) => (
-                    <li key={idx}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  type="button"
-                  className="gateway-card-btn"
-                  style={{ '--card-accent': item.accent }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleSelectRole(item.id)
-                  }}
-                >
-                  <span>Enter {item.shortLabel} Login</span>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </button>
+                <div className="gateway-card-action">
+                  <button
+                    type="button"
+                    className="gateway-card-btn"
+                    style={{ '--card-accent': item.accent }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleSelectRole(item.id)
+                    }}
+                  >
+                    <span>Sign In</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Institutional Registration Invite Banner */}
-          <div className="gateway-signup-banner">
-            <div className="signup-banner-content">
-              <div className="signup-banner-badge">
-                <span className="gateway-pulse-dot" />
-                <span>STUDENT & FACULTY ONBOARDING</span>
-              </div>
-              <h3>Need an Institutional Dashboard Account?</h3>
-              <p>
-                Self-register your student roll number or faculty employee profile to activate your digital portfolio, 12-month attendance tracking, and semester ERP records.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="gateway-banner-signup-btn"
-              onClick={() => navigate('/signup')}
-            >
-              <span>Create Account / Register</span>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Institutional Trust Footer */}
+          {/* Institutional Minimal Footer */}
           <footer className="gateway-footer">
-            <div className="gateway-security-row">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span>256-Bit SSL Encrypted Campus ERP • Affiliated to JNTUK Kakinada • ISO 9001:2015</span>
+            <div className="gateway-footer-left">
+              <span>KIET Group of Institutions • Affiliated to JNTUK Kakinada • AICTE Approved</span>
             </div>
-            <div className="gateway-help-row">
-              <span>Need technical assistance? </span>
-              <a href="mailto:itdesk@kiet.edu" className="help-link">KIET Campus IT Cell</a>
-              <span className="meta-sep">•</span>
+            <div className="gateway-footer-right">
               <button
                 type="button"
-                className="text-helper-btn"
+                className="footer-ghost-btn"
                 onClick={() => setShowDemoModal(true)}
               >
-                Institutional Test Credentials Guide
+                Test Accounts
               </button>
+              <span className="footer-sep">•</span>
+              <a href="mailto:itdesk@kiet.edu" className="footer-support-link">IT Support</a>
             </div>
           </footer>
         </div>
       ) : (
         /* STEP 2: DESIGNATED ROLE LOGIN FORM */
         <div className="portal-auth-container">
-          {/* Top Return / Breadcrumb Bar */}
-          <div className="portal-auth-nav">
-            <button
-              type="button"
-              className="back-gateway-btn"
-              onClick={() => setStep('select')}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
-              </svg>
-              <span>Switch Portal Option</span>
-            </button>
+          <div className="auth-center-shell">
+            {/* Top Navigation Row */}
+            <div className="auth-card-top-nav">
+              <button
+                type="button"
+                className="back-gateway-btn"
+                onClick={() => setStep('select')}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+                <span>All Portals</span>
+              </button>
 
-            <div className="portal-session-status">
-              <span className="status-dot" />
-              <span>COLLEGE ENGAGEMENT DASHBOARD • {role.toUpperCase()} GATEWAY</span>
+              <span className="auth-institution-tag">KIET Kakinada</span>
             </div>
 
-            <button
-              type="button"
-              className="nav-register-btn"
-              onClick={() => navigate('/signup', { state: { role } })}
-            >
-              <span>Create Account</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </button>
-          </div>
+            {/* Seamless Portal Switcher Tabs */}
+            <div className="login-role-tabs" role="tablist">
+              {portalRoles.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={role === r.id}
+                  className={`login-role-tab ${role === r.id ? 'active' : ''}`}
+                  onClick={() => handleSwitchRoleInLogin(r.id)}
+                >
+                  <span className="tab-icon">{r.icon}</span>
+                  <span className="tab-label">{r.shortLabel}</span>
+                </button>
+              ))}
+            </div>
 
-          {/* Unified Two-Panel Login Shell */}
-          <main className="login-shell auth-split-shell">
-            {/* Left Panel: Institutional Credentials & Security Info */}
-            <section className="login-brand auth-info-panel">
-              <div className="brand-top-block">
-                <div className="kiet-logo-badge">
-                  <img
-                    src="/images/kiet-logo.png"
-                    alt="KIET Logo"
-                    className="kiet-official-logo"
-                  />
-                </div>
-
-                <div className="kiet-institution-block">
-                  <div className="gateway-brand-top-row" style={{ marginBottom: '4px' }}>
-                    <span className="kiet-abbr-tag">KIET GROUP OF INSTITUTIONS</span>
-                    <span className="gateway-project-pill sm">
-                      College-Engagement-Dashboard
-                    </span>
-                  </div>
-                  <h2 className="kiet-institution-name">
-                    College Engagement Dashboard
-                  </h2>
-                  <p className="kiet-location">
-                    Kakinada Institute of Engineering & Technology • <span className="location-pin">📍</span> Korangi
-                  </p>
-                </div>
+            {/* Card Content Header */}
+            <div className="auth-card-header">
+              <div className="auth-card-logo-wrap">
+                <img src="/images/kiet-logo.png" alt="KIET Official" className="auth-card-logo" />
               </div>
+              <h2 className="auth-portal-title">Sign in to {activeRoleConfig.label}</h2>
+              <p className="auth-portal-subtitle">
+                Enter your institutional credentials to access the portal.
+              </p>
+            </div>
 
-              {/* Role-Specific Institutional Brief */}
-              <div className="auth-role-summary-card">
-                <div className="role-summary-head">
-                  <span className="role-avatar-circle">{activeRoleConfig.icon}</span>
-                  <div>
-                    <span className="role-sub-pill">{activeRoleConfig.tag}</span>
-                    <h3 className="role-header-title">{activeRoleConfig.label}</h3>
-                  </div>
-                </div>
-                <p className="role-summary-desc">{activeRoleConfig.desc}</p>
-
-                <div className="role-guidelines-box">
-                  <strong>Access Guidelines:</strong>
-                  <ul>
-                    {role === 'Student' ? (
-                      <>
-                        <li>Use your 10-digit University Roll Number (e.g. 23JN1A4533).</li>
-                        <li>Keep your ERP portal password confidential at all times.</li>
-                        <li>For password recovery, contact the Examination / Academic Cell.</li>
-                      </>
-                    ) : role === 'Faculty' ? (
-                      <>
-                        <li>Sign in using your official @kiet.edu institutional faculty ID.</li>
-                        <li>Ensure attendance is submitted within 15 minutes of lecture commencement.</li>
-                        <li>Review pending student activity verifications regularly.</li>
-                      </>
-                    ) : role === 'HOD' ? (
-                      <>
-                        <li>Sign in using your verified Department Head credentials.</li>
-                        <li>Access real-time branch attendance summaries & faculty logs.</li>
-                        <li>Approve pending co-curricular student activity submissions.</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>Authorized administrative personnel access only.</li>
-                        <li>Session activity is encrypted, logged and audited.</li>
-                        <li>Comply with KIET IT institutional security guidelines.</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="brand-security-seal">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <span>256-Bit SSL Encrypted Campus ERP • Affiliated to JNTUK Kakinada • ISO 9001:2015</span>
-              </div>
-            </section>
-
-            {/* Right Panel: Official Authentication Form */}
-            <section className="login-panel auth-form-panel">
-              <div className="mobile-login-brand">
-                <img src="/images/kiet-logo.png" alt="KIET" className="mobile-kiet-logo" />
-                <div className="mobile-brand-text">
-                  <strong>College Engagement Dashboard</strong>
-                  <small>{activeRoleConfig.label} • KIET Kakinada</small>
-                </div>
-              </div>
-
-              <div className="login-head">
-                <div className="portal-badge" style={{ color: activeRoleConfig.accent, borderColor: activeRoleConfig.accentBg, background: activeRoleConfig.accentBg }}>
-                  <span className="portal-live-dot" style={{ background: activeRoleConfig.accent }} />
-                  <span>{activeRoleConfig.icon} {activeRoleConfig.tag.toUpperCase()}</span>
-                </div>
-                <h2>Sign in to {activeRoleConfig.label}</h2>
-                <p>Enter your institutional login credentials to access the College Engagement Dashboard.</p>
-              </div>
-
-              {/* Secure Login Form - Dedicated Strictly to Selected Portal */}
-              <form onSubmit={handleSubmit} className="login-form">
-                <div className="input-field-group">
-                  <div className="input-label-row">
-                    <span>{activeRoleConfig.inputLabel}</span>
-                  </div>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="auth-form-body">
+              <div className="auth-input-group">
+                <label className="auth-label">
+                  {activeRoleConfig.inputLabel}
+                </label>
+                <div className="auth-input-wrap">
                   <input
                     type={role === 'Student' ? 'text' : 'email'}
                     value={identifier}
@@ -464,113 +339,114 @@ export default function Login() {
                     autoComplete={role === 'Student' ? 'username' : 'email'}
                     spellCheck="false"
                     required
+                    className="auth-input"
                   />
                 </div>
+              </div>
 
-                <div className="input-field-group">
-                  <div className="input-label-row">
-                    <span>Portal Password</span>
-                    <button
-                      type="button"
-                      className="forgot-link-btn"
-                      onClick={() => setShowForgotModal(true)}
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                  <div className="password-box">
-                    <input
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter your portal password"
-                      autoComplete="current-password"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="password-toggle-btn"
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? 'Hide' : 'Show'}
-                    </button>
-                  </div>
+              <div className="auth-input-group">
+                <div className="auth-label-split">
+                  <label className="auth-label">Portal Password</label>
+                  <button
+                    type="button"
+                    className="forgot-link-btn"
+                    onClick={() => setShowForgotModal(true)}
+                  >
+                    Forgot password?
+                  </button>
                 </div>
-
-                <div className="login-options-row">
-                  <label className="remember-label">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                    <span>Remember this device for 30 days</span>
-                  </label>
+                <div className="auth-input-wrap password-wrap">
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your portal password"
+                    autoComplete="current-password"
+                    required
+                    className="auth-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="auth-pwd-toggle"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
                 </div>
+              </div>
 
-                {error && (
-                  <div className="login-error">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="12" y1="8" x2="12" y2="12" />
-                      <line x1="12" y1="16" x2="12.01" y2="16" />
+              <div className="auth-options-row">
+                <label className="remember-label">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <span>Remember this device</span>
+                </label>
+              </div>
+
+              {error && (
+                <div className="login-error">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <button type="submit" className="auth-submit-btn" disabled={loading}>
+                {loading ? (
+                  <span>Signing in…</span>
+                ) : (
+                  <>
+                    <span>Sign In to {activeRoleConfig.shortLabel} Portal</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
                     </svg>
-                    <span>{error}</span>
-                  </div>
+                  </>
                 )}
+              </button>
 
-                <button type="submit" className="login-submit" disabled={loading}>
-                  {loading ? (
-                    <span className="login-spinner">Verifying credentials…</span>
-                  ) : (
-                    <>
-                      <span>Sign In to {activeRoleConfig.shortLabel} Portal</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                        <polyline points="12 5 19 12 12 19" />
-                      </svg>
-                    </>
-                  )}
+              {/* Instant One-Click Demo Fill Pill */}
+              <div className="auth-quick-demo">
+                <button
+                  type="button"
+                  className="quick-demo-pill"
+                  onClick={() => handleFillDemo(activeRoleConfig.id, activeRoleConfig.demoId, activeRoleConfig.demoPass)}
+                >
+                  <span className="quick-demo-icon">⚡</span>
+                  <span>Quick Demo: <strong>{activeRoleConfig.demoId}</strong></span>
                 </button>
+              </div>
 
-                <div className="login-signup-prompt">
-                  <span>Don't have an account yet?</span>
-                  <button
-                    type="button"
-                    className="signup-redirect-btn"
-                    onClick={() => navigate('/signup', { state: { role } })}
-                  >
-                    Register for {activeRoleConfig.shortLabel} Portal →
-                  </button>
-                </div>
-
-                <div className="login-footer-help">
-                  <span>Having trouble signing in? Contact </span>
-                  <a href="mailto:itdesk@kiet.edu">KIET IT Operations</a>
-                  <span className="footer-bullet">•</span>
-                  <button
-                    type="button"
-                    className="text-helper-btn"
-                    onClick={() => setShowDemoModal(true)}
-                  >
-                    View Test Accounts
-                  </button>
-                </div>
-              </form>
-            </section>
-          </main>
+              <div className="auth-footer-redirect">
+                <span>Need an account?</span>
+                <button
+                  type="button"
+                  className="auth-link-btn"
+                  onClick={() => navigate('/signup', { state: { role } })}
+                >
+                  Register here →
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* Discrete Demo Credentials Guide Modal (Clean & Hidden from main UI) */}
+      {/* Discrete Demo Credentials Guide Modal */}
       {showDemoModal && (
         <div className="modal-backdrop" onClick={() => setShowDemoModal(false)}>
           <div className="modal-card demo-credentials-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-title-group">
-                <span className="modal-kicker">COLLEGE ENGAGEMENT DASHBOARD • TEST ENVIRONMENT</span>
-                <h3>{step === 'login' ? `Authorized ${activeRoleConfig.label} Test Account` : 'Authorized Institutional Test Accounts'}</h3>
+                <span className="modal-kicker">INSTITUTIONAL TEST ACCOUNTS</span>
+                <h3>Authorized Demo Profiles</h3>
               </div>
               <button
                 type="button"
@@ -583,9 +459,7 @@ export default function Login() {
 
             <div className="modal-body-content">
               <p className="modal-desc">
-                {step === 'login'
-                  ? `Authorized test account profile configured for the ${activeRoleConfig.label}.`
-                  : 'Select any authorized test profile below to auto-populate credentials and test role-specific functionalities.'}
+                Select any authorized test profile below to auto-populate credentials and test role-specific functionalities.
               </p>
 
               <div className="demo-accounts-table-wrap">
@@ -600,7 +474,7 @@ export default function Login() {
                     </tr>
                   </thead>
                   <tbody>
-                    {(step === 'login' ? portalRoles.filter((r) => r.id === role) : portalRoles).map((r) => (
+                    {portalRoles.map((r) => (
                       <tr key={r.id}>
                         <td>
                           <span className="role-table-badge">
@@ -632,15 +506,12 @@ export default function Login() {
               </div>
 
               <div className="demo-modal-footer">
-                <p>
-                  * Note: In production mode, authentication requires active LDAP credentials verified by JNTUK campus servers.
-                </p>
                 <button
                   type="button"
                   className="button button-outline"
                   onClick={() => setShowDemoModal(false)}
                 >
-                  Close Guide
+                  Close
                 </button>
               </div>
             </div>
@@ -654,7 +525,7 @@ export default function Login() {
           <div className="modal-card small-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-title-group">
-                <span className="modal-kicker">COLLEGE ENGAGEMENT DASHBOARD • CREDENTIAL RECOVERY</span>
+                <span className="modal-kicker">CREDENTIAL RECOVERY</span>
                 <h3>Reset Portal Password</h3>
               </div>
               <button
@@ -667,7 +538,7 @@ export default function Login() {
             </div>
             <form onSubmit={handleForgotSubmit} className="modal-body-form">
               <p className="modal-desc">
-                Enter your registered University Roll Number or official college email. We will dispatch a secure reset OTP to your registered institutional contact.
+                Enter your registered University Roll Number or official college email to receive password reset instructions.
               </p>
               <label>
                 <span>Roll Number or College Email Address</span>
@@ -688,7 +559,7 @@ export default function Login() {
                   Cancel
                 </button>
                 <button type="submit" className="button button-primary">
-                  Send Recovery OTP
+                  Send Recovery Link
                 </button>
               </div>
             </form>
