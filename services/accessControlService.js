@@ -11,11 +11,11 @@ const VALID_COLLEGES = ['KIET', 'KIET+', 'KIEW'];
  * Accepts exact casing or variations like 'kiet', 'kiet+', 'kiew'.
  */
 const normalizeCollege = (val) => {
-  if (!val) return '';
+  if (!val) return 'KIET';
   const clean = String(val).trim().toUpperCase();
-  if (clean === 'KIET' || clean === 'KIET-1') return 'KIET';
-  if (clean === 'KIET+' || clean === 'KIET PLUS' || clean === 'KIETPLUS') return 'KIET+';
-  if (clean === 'KIEW' || clean === 'KIET WOMEN' || clean === 'KIET-W') return 'KIEW';
+  if (clean.includes('KIET+') || clean.includes('PLUS')) return 'KIET+';
+  if (clean.includes('KIEW') || clean.includes('WOMEN') || clean.includes('KIET-W')) return 'KIEW';
+  if (clean.includes('KIET') || clean.includes('KAKINADA')) return 'KIET';
   return clean;
 };
 

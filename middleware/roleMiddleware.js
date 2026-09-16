@@ -20,7 +20,9 @@ const authorize = (...roles) => {
     // If role is faculty, verify approved status and active account
     if (req.user.role === 'faculty') {
       const user = await User.findById(userId);
-      const faculty = await Faculty.findOne({ user: userId });
+      const faculty = await Faculty.findOne({
+        $or: [{ user: userId }, { 'user._id': userId }, { 'user.id': userId }]
+      });
 
       const isApproved =
         (user && user.approvalStatus === 'approved') ||
@@ -43,7 +45,9 @@ const authorize = (...roles) => {
     // If role is hod, verify approved status and active account
     if (req.user.role === 'hod') {
       const user = await User.findById(userId);
-      const hod = await Hod.findOne({ user: userId });
+      const hod = await Hod.findOne({
+        $or: [{ user: userId }, { 'user._id': userId }, { 'user.id': userId }]
+      });
 
       const isApproved =
         (user && user.approvalStatus === 'approved') ||

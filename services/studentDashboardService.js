@@ -155,9 +155,19 @@ const getNearbyActivitiesForStudent = async (student, query = {}) => {
  * Compiles the complete consolidated Student Dashboard dataset.
  */
 const getStudentDashboard = async (userId, query = {}) => {
-  const student = await Student.findOne({ user: userId })
-    .populate('user', 'name email avatar')
-    .populate('department', 'name code');
+  const User = require('../models/User');
+  let student = await Student.findOne({ user: userId });
+  if (!student) {
+    const u = await User.findById(userId);
+    if (u && u.rollNumber) {
+      student = await Student.findOne({ rollNumber: u.rollNumber });
+    }
+  }
+  if (!student) {
+    student = await Student.findOne({
+      $or: [{ 'user._id': userId }, { 'user.id': userId }]
+    });
+  }
 
   if (!student) {
     const error = new Error('Student profile not found');

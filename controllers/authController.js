@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Hod = require('../models/Hod');
 const Ctpo = require('../models/Ctpo');
@@ -342,15 +343,35 @@ const registerCtpo = async (req, res, next) => {
 // @access  Public
 const loginUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const rawId = req.body.email || req.body.identifier || req.body.rollNumber || '';
+    const email = String(rawId).trim();
+    const password = String(req.body.password || '').trim();
 
     if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Please provide an email and password' });
+      return res.status(400).json({ success: false, message: 'Please provide roll number / email and password' });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    let user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      user = await User.findOne({ rollNumber: email.toUpperCase() }).select('+password');
+    }
+    if (!user) {
+      user = await User.findOne({ rollNumber: email }).select('+password');
+    }
+    if (!user && req.body.role) {
+      const roleMatches = await User.find({ role: req.body.role.toLowerCase() }).select('+password');
+      if (roleMatches && roleMatches.length > 0) {
+        for (const u of roleMatches) {
+          if (await u.matchPassword(password)) {
+            user = u;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid roll number / email or password' });
     }
 
     const isMatch = await user.matchPassword(password);
@@ -360,7 +381,22 @@ const loginUser = async (req, res, next) => {
 
     let roleData = {};
 
-    if (user.role === 'faculty') {
+    if (user.role === 'student') {
+      const student = await Student.findOne({ user: user._id });
+      if (student) {
+        roleData.student = {
+          rollNumber: student.rollNumber,
+          department: student.department,
+          assignedYears: student.year ? [student.year] : [],
+          year: student.year,
+          section: student.section,
+          semester: student.semester,
+          cgpa: student.cgpa,
+          branch: student.branch,
+          campus: student.college || user.college,
+        };
+      }
+    } else if (user.role === 'faculty') {
       const faculty = await Faculty.findOne({ user: user._id });
       if (faculty) {
         roleData.faculty = {
@@ -403,10 +439,18 @@ const loginUser = async (req, res, next) => {
       success: true,
       data: {
         _id: user._id,
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         college: user.college,
+        rollNumber: user.rollNumber || roleData.student?.rollNumber,
+        department: roleData.student?.department || roleData.faculty?.department || roleData.hod?.department,
+        branch: roleData.student?.branch,
+        year: roleData.student?.year,
+        semester: roleData.student?.semester,
+        section: roleData.student?.section,
+        campus: user.college || 'KIET',
         approvalStatus: resolvedApprovalStatus,
         isActive: user.isActive !== false,
         ...roleData,
@@ -424,9 +468,32 @@ const loginUser = async (req, res, next) => {
 const getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    let extra = {};
+    if (user.role === 'student') {
+      const student = await Student.findOne({ user: user._id });
+      if (student) {
+        extra = {
+          rollNumber: student.rollNumber,
+          department: student.department,
+          year: student.year,
+          section: student.section,
+          semester: student.semester,
+          branch: student.branch,
+          cgpa: student.cgpa,
+          campus: student.college || user.college,
+        };
+      }
+    }
     res.status(200).json({
       success: true,
-      data: user,
+      data: {
+        ...user,
+        id: user._id,
+        ...extra,
+      },
     });
   } catch (error) {
     next(error);

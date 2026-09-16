@@ -15,7 +15,12 @@ const {
   getPendingHods,
   approveHod,
   rejectHod,
+  getCampusOverview,
+  getAllHods,
 } = require('../controllers/adminController');
+const { getAdminTransport, addFleetRoute } = require('../controllers/transportController');
+const { getAdminPlacements } = require('../controllers/placementController');
+const { getAdminWorkers, addWorker } = require('../controllers/workerController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 
@@ -23,6 +28,13 @@ router.use(protect);
 router.use(authorize('admin'));
 
 router.get('/dashboard', getAdminDashboardStats);
+router.get('/campus-overview', getCampusOverview);
+router.get('/transport', getAdminTransport);
+router.post('/transport', addFleetRoute);
+router.get('/placements', getAdminPlacements);
+router.get('/workers', getAdminWorkers);
+router.post('/workers', addWorker);
+router.get('/hods', getAllHods);
 router.get('/users', getAllUsers);
 router.put('/users/:id/role', updateUserRole);
 router.put('/users/:id/status', toggleUserStatus);

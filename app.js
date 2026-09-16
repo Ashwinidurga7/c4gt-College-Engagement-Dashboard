@@ -25,6 +25,11 @@ const adminRoutes = require('./routes/adminRoutes');
 const hodRoutes = require('./routes/hodRoutes');
 const ctpoRoutes = require('./routes/ctpoRoutes');
 const clubRoutes = require('./routes/clubRoutes');
+const realtimeRoutes = require('./routes/realtimeRoutes');
+const feeRoutes = require('./routes/feeRoutes');
+const transportRoutes = require('./routes/transportRoutes');
+const placementRoutes = require('./routes/placementRoutes');
+const workerRoutes = require('./routes/workerRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 
@@ -34,6 +39,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Request Logging Middleware (logs every request to terminal)
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`📡 [${new Date().toLocaleTimeString()}] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`);
+  });
+  next();
+});
 
 // Swagger UI Interactive Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -58,6 +73,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // API Routes
+app.use('/api/realtime', realtimeRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
@@ -80,6 +96,10 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/hod', hodRoutes);
 app.use('/api/ctpo', ctpoRoutes);
 app.use('/api/clubs', clubRoutes);
+app.use('/api/fees', feeRoutes);
+app.use('/api/transport', transportRoutes);
+app.use('/api/placements', placementRoutes);
+app.use('/api/workers', workerRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);

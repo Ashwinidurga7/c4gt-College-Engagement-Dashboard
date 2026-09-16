@@ -10,7 +10,9 @@ const {
   getPendingCtpos,
   approveCtpo,
   rejectCtpo,
+  getHodDemographics,
 } = require('../controllers/hodController');
+const { getHodPlacements } = require('../controllers/placementController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 
@@ -24,6 +26,8 @@ router.get('/students/:id', getHodStudentById);
 router.get('/attendance', getHodAttendance);
 router.get('/academic-report', getHodAcademicReport);
 router.get('/reports', getHodReports);
+router.get('/demographics', getHodDemographics);
+router.get('/placements', getHodPlacements);
 
 // CTPO Approval Workflow for this HOD
 router.get('/ctpos/pending', getPendingCtpos);

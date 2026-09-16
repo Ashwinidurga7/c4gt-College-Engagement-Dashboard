@@ -14,7 +14,18 @@ const { validateRequiredFields } = require('../middleware/validationMiddleware')
 router.post('/register', validateRequiredFields(['name', 'email', 'password']), registerUser);
 router.post('/register/hod', validateRequiredFields(['name', 'email', 'password', 'college', 'department']), registerHod);
 router.post('/register/ctpo', validateRequiredFields(['name', 'email', 'password', 'college', 'department']), registerCtpo);
-router.post('/login', validateRequiredFields(['email', 'password']), loginUser);
+const validateLogin = (req, res, next) => {
+  const id = req.body && (req.body.email || req.body.identifier || req.body.rollNumber);
+  if (!id || !req.body.password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide roll number / email and password',
+    });
+  }
+  next();
+};
+
+router.post('/login', validateLogin, loginUser);
 router.get('/me', protect, getMe);
 router.put('/updatepassword', protect, updatePassword);
 

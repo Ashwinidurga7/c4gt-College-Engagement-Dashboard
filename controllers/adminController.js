@@ -7,11 +7,21 @@ const Certificate = require('../models/Certificate');
 const Project = require('../models/Project');
 const Department = require('../models/Department');
 const Hod = require('../models/Hod');
+const Campus = require('../models/Campus');
 const notificationService = require('../services/notificationService');
-const { mockSystemSettings } = require('../utils/mockData');
+const defaultSystemSettings = {
+  academicYear: '2025-2026',
+  currentSemester: 'Even (Spring 2026)',
+  portalMaintenance: false,
+  allowStudentRegistration: true,
+  pointsApprovalThreshold: 100,
+  maxPointsPerSemester: 150,
+  contactSupportEmail: 'support@kiet.edu',
+  lastUpdated: new Date(),
+};
 
 // In-memory reference for dynamic system settings
-let currentSettings = { ...mockSystemSettings };
+let currentSettings = { ...defaultSystemSettings };
 
 // @desc    Get comprehensive admin dashboard analytics and counts
 // @route   GET /api/admin/dashboard
@@ -602,6 +612,37 @@ const rejectHod = async (req, res, next) => {
   }
 };
 
+// @desc    Get multi-campus overview governance data (KIET, KIET+, KIEW)
+// @route   GET /api/admin/campus-overview
+// @access  Private (Admin)
+const getCampusOverview = async (req, res, next) => {
+  try {
+    const campuses = await Campus.find();
+    res.status(200).json({
+      success: true,
+      data: campuses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get all HODs from DB
+// @route   GET /api/admin/hods
+// @access  Private (Admin)
+const getAllHods = async (req, res, next) => {
+  try {
+    const hods = await Hod.find();
+    res.status(200).json({
+      success: true,
+      count: hods.length,
+      data: hods,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminDashboardStats,
   getAllUsers,
@@ -617,4 +658,6 @@ module.exports = {
   getPendingHods,
   approveHod,
   rejectHod,
+  getCampusOverview,
+  getAllHods,
 };
