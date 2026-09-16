@@ -28,7 +28,7 @@ const announcements = [
 
 const communities = [
   {
-    title: 'Global Coding Club (KIET)',
+    title: 'Google Coding Club (KIET)',
     category: 'TECH COMMUNITY',
     description: 'Competitive programming, open-source projects, and algorithmic development.',
     image: 'https://www.kietgroup.com/uploads/1769937787_spot_Untitled%20design.jpg',

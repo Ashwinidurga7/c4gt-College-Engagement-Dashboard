@@ -1,6 +1,7 @@
 import React from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastProvider } from './components/ui/Toast'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
@@ -13,6 +14,8 @@ import HodDashboard from './pages/hod/HodDashboard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 
 import MyActivities from './pages/student/MyActivities'
+import StudentProjects from './pages/student/StudentProjects'
+import StudentInternships from './pages/student/StudentInternships'
 import AddActivity from './pages/student/AddActivity'
 import ActivityDetails from './pages/student/ActivityDetails'
 import MyAchievements from './pages/student/MyAchievements'
@@ -28,8 +31,9 @@ import OverallCampus from './pages/admin/OverallCampus'
 
 export default function App() {
   return (
-    <ToastProvider>
-      <HashRouter>
+    <ThemeProvider>
+      <ToastProvider>
+        <HashRouter>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
@@ -116,10 +120,18 @@ export default function App() {
             }
           />
           <Route
+            path="/student/projects"
+            element={
+              <DashboardLayout role="Student">
+                <StudentProjects />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/student/internships"
             element={
               <DashboardLayout role="Student">
-                <MyActivities initialCategory="Internships" />
+                <StudentInternships />
               </DashboardLayout>
             }
           />
@@ -327,5 +339,6 @@ export default function App() {
         </Routes>
       </HashRouter>
     </ToastProvider>
+  </ThemeProvider>
   )
 }
