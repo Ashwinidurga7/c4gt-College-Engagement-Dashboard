@@ -119,6 +119,12 @@ const icons = {
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   ),
+  projects: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  ),
 }
 
 const navConfig = {
@@ -134,9 +140,10 @@ const navConfig = {
     {
       section: 'CAREER & ACTIVITIES',
       items: [
+        { label: 'Projects & Repos', to: '/student/projects', icon: 'projects' },
+        { label: 'Industry Internships', to: '/student/internships', icon: 'internships' },
         { label: 'My Activities', to: '/student/activities', icon: 'activity' },
-        { label: 'Achievements / Certifications', to: '/student/achievements', icon: 'achievements' },
-        { label: 'Internships & Participation', to: '/student/internships', icon: 'internships' },
+        { label: 'Achievements / Certs', to: '/student/achievements', icon: 'achievements' },
         { label: 'Resume', to: '/student/resume', icon: 'resume' },
       ],
     },

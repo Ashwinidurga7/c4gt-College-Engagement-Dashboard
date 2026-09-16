@@ -103,7 +103,7 @@ export const initialDurgaPrasadResume = {
     'LeetCode: 380+ algorithmic problems solved with 50+ days active streak (Top 15% global ranking).',
     '1st Prize Winner — Smart KIET Annual Hackathon 2025 (AI & Smart Campus Solutions track).',
     'AWS Certified Cloud Practitioner (CLF-C02) credential earned in 2025.',
-    'Lead Coordinator for Global Coding Club (KIET Chapter), mentoring 100+ students in competitive DSA.',
+    'Lead Coordinator for Google Coding Club (KIET Chapter), mentoring 100+ students in competitive DSA.',
   ],
 }
 
