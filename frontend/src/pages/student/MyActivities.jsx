@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import Seal from '../../components/ui/Seal'
+import Icon from '../../components/ui/Icon'
 
 const IMAGES = {
   coding: '/images/kiet/aboutus_club1.jpg',
@@ -85,7 +86,7 @@ export default function MyActivities() {
       {/* 1. Hero Banner */}
       <section className="activities-hero-card">
         <div className="activities-hero-copy">
-          <span className="activities-hero-badge">🎓 MY SPACE • PARTICIPATION &amp; MERIT</span>
+          <span className="activities-hero-badge"><Icon name="student" /> MY SPACE • PARTICIPATION &amp; MERIT</span>
           <h1 className="maven-black">My Activities &amp; Credentials</h1>
           <p>
             Consolidated record of your academic projects, professional certifications, hackathon victories, and campus club participations.
@@ -96,10 +97,10 @@ export default function MyActivities() {
             + Add New Activity
           </Link>
           <Link to="/student/projects" className="btn-add-activity-secondary">
-            🚀 Open Projects Hub →
+            <Icon name="trending-up" /> Open Projects Hub <Icon name="arrow-right" />
           </Link>
           <Link to="/student/internships" className="btn-add-activity-secondary">
-            💼 Open Internships View →
+            <Icon name="briefcase" /> Open Internships View <Icon name="arrow-right" />
           </Link>
         </div>
       </section>
@@ -157,7 +158,7 @@ export default function MyActivities() {
                 <div className="project-header-top">
                   <span className="project-category-badge">{proj.category || 'Project'}</span>
                   <span className="project-status-badge deployed">
-                    ● {proj.deployedUrl ? 'Live Deployed' : 'Public Repo'}
+                    <Icon name="dot" /> {proj.deployedUrl ? 'Live Deployed' : 'Public Repo'}
                   </span>
                 </div>
                 <h3 className="project-card-title maven-black">{proj.title}</h3>
@@ -194,12 +195,12 @@ export default function MyActivities() {
                       rel="noopener noreferrer"
                       className="btn-project-link live"
                     >
-                      <span>Live App ↗</span>
+                      <span>Live App <Icon name="trending-up" /></span>
                     </a>
                   )}
                 </div>
                 <Link to="/student/projects" className="activity-manage-link">
-                  Manage Projects →
+                  Manage Projects <Icon name="arrow-right" />
                 </Link>
               </div>
             </article>
@@ -243,7 +244,7 @@ export default function MyActivities() {
               </div>
               <div className="activity-row-action">
                 <Link to={`/student/activity/${a.id}`}>
-                  View Details <span>→</span>
+                  View Details <span><Icon name="arrow-right" /></span>
                 </Link>
               </div>
             </article>
@@ -274,7 +275,7 @@ export default function MyActivities() {
               Recruiters evaluate working GitHub code and deployed URLs. Add your full-stack apps and ML models to stand out during campus placements.
             </p>
             <Link to="/student/projects" className="space-card-action-link">
-              Open Projects Portfolio →
+              Open Projects Portfolio <Icon name="arrow-right" />
             </Link>
           </div>
         </div>
@@ -287,7 +288,7 @@ export default function MyActivities() {
               Capture Remote vs Offline modes, dates, and domain foundations under the dedicated Internships section.
             </p>
             <Link to="/student/internships" className="space-card-action-link accent">
-              View Dedicated Internships →
+              View Dedicated Internships <Icon name="arrow-right" />
             </Link>
           </div>
         </div>

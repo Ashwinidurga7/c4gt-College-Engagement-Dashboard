@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { getStudentByRoll, calcAttendanceStats } from '../../data/academicData'
+import Icon from '../../components/ui/Icon'
 
 const cards = [
   ['Attendance', '12-Month working-days attendance & daily calendar', '/student/attendance', '01'],
@@ -42,7 +43,7 @@ export default function StudentPortfolio() {
               View academic record
             </Link>
             <Link to="/student/resume" className="hero-text-link">
-              Edit resume studio →
+              Edit resume studio <Icon name="arrow-right" />
             </Link>
           </div>
         </div>
@@ -79,7 +80,7 @@ export default function StudentPortfolio() {
               <p>{d}</p>
             </div>
             <span className="portfolio-arrow">
-              Open <b>→</b>
+              Open <b><Icon name="arrow-right" /></b>
             </span>
           </Link>
         ))}

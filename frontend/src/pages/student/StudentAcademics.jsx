@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { getStudentByRoll, calcAttendanceStats } from '../../data/academicData'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 // Comprehensive semester course data for AIDS branch
 const SEMESTER_COURSES = {
@@ -310,7 +311,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
 
       <div class="signatures-grid">
         <div class="sig-box">
-          <div style="font-size: 11px; color: #10b981; font-weight: 700;">✓ Digitally Authenticated</div>
+          <div style="font-size: 11px; color: #10b981; font-weight: 700;"><Icon name="check" /> Digitally Authenticated</div>
           <div class="sig-line">Cashier / Accounts Officer</div>
           <div style="font-size: 9px; color: #64748b;">Finance Department, KIET</div>
         </div>
@@ -353,7 +354,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
       </div>
 
       <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 16px;">
-        <strong style="color: #166534;">🟢 PASS STATUS: ACTIVE &amp; VERIFIED</strong>
+        <strong style="color: #166534;"><Icon name="dot" /> PASS STATUS: ACTIVE &amp; VERIFIED</strong>
         <div style="color: #15803d; margin-top: 2px;">Morning Pickup: <strong>07:40 AM IST</strong> | Driver: <strong>${student.transport.driverName} (${student.transport.driverPhone})</strong></div>
       </div>
 
@@ -493,7 +494,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
         <div className="academic-hero-glow" />
         <div className="academic-hero-content">
           <div className="academic-hero-tags">
-            <span className="hero-pill-badge primary">🎓 KIET STUDENT ERP • AY 2025–26</span>
+            <span className="hero-pill-badge primary"><Icon name="student" /> KIET STUDENT ERP • AY 2025–26</span>
           </div>
 
           <div className="academic-hero-main">
@@ -542,7 +543,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
           className={`academic-nav-tab ${tab === 'fees' ? 'active' : ''}`}
           onClick={() => setTab('fees')}
         >
-          <span className="tab-icon">💳</span>
+          <span className="tab-icon"><Icon name="card" /></span>
           <span className="tab-title">Tuition &amp; College Fees</span>
           <span className="tab-pill-badge cleared">CLEARED</span>
         </button>
@@ -552,7 +553,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
           className={`academic-nav-tab ${tab === 'transport' ? 'active' : ''}`}
           onClick={() => setTab('transport')}
         >
-          <span className="tab-icon">🚌</span>
+          <span className="tab-icon"><Icon name="bus" /></span>
           <span className="tab-title">Smart Bus Pass &amp; Route</span>
           <span className="tab-pill-badge active">ROUTE 03</span>
         </button>
@@ -562,7 +563,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
           className={`academic-nav-tab ${tab === 'results' ? 'active' : ''}`}
           onClick={() => setTab('results')}
         >
-          <span className="tab-icon">📜</span>
+          <span className="tab-icon"><Icon name="document" /></span>
           <span className="tab-title">Semester Results &amp; SGPA</span>
           <span className="tab-pill-badge distinction">CGPA 8.65</span>
         </button>
@@ -654,61 +655,61 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
 
           <div className="fee-components-grid">
             <div className="component-card">
-              <div className="comp-icon-box">🏛️</div>
+              <div className="comp-icon-box"><Icon name="institution" /></div>
               <div className="comp-info">
                 <h4>Tuition &amp; Academic Instruction</h4>
                 <p>Prescribed tuition, faculty instruction, classroom labs and compute resources.</p>
                 <div className="comp-foot">
                   <span className="comp-amount">₹65,000</span>
-                  <span className="status-pill-paid">✓ PAID</span>
+                  <span className="status-pill-paid"><Icon name="check" /> PAID</span>
                 </div>
               </div>
             </div>
 
             <div className="component-card">
-              <div className="comp-icon-box">📝</div>
+              <div className="comp-icon-box"><Icon name="document" /></div>
               <div className="comp-info">
                 <h4>University &amp; Semester Examination Fee</h4>
                 <p>Semester theory, practical exam operations, continuous internal assessment &amp; grade sheets.</p>
                 <div className="comp-foot">
                   <span className="comp-amount">₹12,000</span>
-                  <span className="status-pill-paid">✓ PAID</span>
+                  <span className="status-pill-paid"><Icon name="check" /> PAID</span>
                 </div>
               </div>
             </div>
 
             <div className="component-card">
-              <div className="comp-icon-box">📚</div>
+              <div className="comp-icon-box"><Icon name="books" /></div>
               <div className="comp-info">
                 <h4>Digital Library &amp; IEEE E-Resources</h4>
                 <p>IEEE Xplore, DELNET journal subscriptions, ACM library and digital textbook repository.</p>
                 <div className="comp-foot">
                   <span className="comp-amount">₹5,000</span>
-                  <span className="status-pill-paid">✓ PAID</span>
+                  <span className="status-pill-paid"><Icon name="check" /> PAID</span>
                 </div>
               </div>
             </div>
 
             <div className="component-card">
-              <div className="comp-icon-box">💻</div>
+              <div className="comp-icon-box"><Icon name="laptop" /></div>
               <div className="comp-info">
                 <h4>Technical Skill &amp; Career Placement</h4>
                 <p>Industry coding bootcamps, AI hackathons, guest corporate lectures &amp; placement mock drives.</p>
                 <div className="comp-foot">
                   <span className="comp-amount">₹3,000</span>
-                  <span className="status-pill-paid">✓ PAID</span>
+                  <span className="status-pill-paid"><Icon name="check" /> PAID</span>
                 </div>
               </div>
             </div>
 
             <div className="component-card">
-              <div className="comp-icon-box">⚡</div>
+              <div className="comp-icon-box"><Icon name="bolt" /></div>
               <div className="comp-info">
                 <h4>Special Amenities &amp; Infrastructure</h4>
                 <p>High-speed campus Wi-Fi, R&amp;D Innovation Gallery, sports pavilion and campus safety.</p>
                 <div className="comp-foot">
                   <span className="comp-amount">₹13,000</span>
-                  <span className="status-pill-paid">✓ PAID</span>
+                  <span className="status-pill-paid"><Icon name="check" /> PAID</span>
                 </div>
               </div>
             </div>
@@ -726,7 +727,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-download-file-tag"
                 onClick={handleDownloadFeeReceiptFile}
               >
-                💾 Export Receipt (.html)
+                <Icon name="save" /> Export Receipt (.html)
               </button>
             </div>
 
@@ -755,7 +756,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                         className="btn-table-action"
                         onClick={handleOpenFeeReceipt}
                       >
-                        View Receipt →
+                        View Receipt <Icon name="arrow-right" />
                       </button>
                     </td>
                   </tr>
@@ -829,7 +830,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                     className="btn-sbp-download"
                     onClick={handleOpenBusPass}
                   >
-                    🖨️ Download Digital Pass (PDF)
+                    <Icon name="printer" /> Download Digital Pass (PDF)
                   </button>
                 </div>
               </div>
@@ -842,7 +843,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                   <h4>Route 03 Express Stops &amp; Timings</h4>
                   <p>Daily scheduled morning stops and pickup coordinates.</p>
                 </div>
-                <span className="status-live-chip">● On Schedule</span>
+                <span className="status-live-chip"><Icon name="dot" /> On Schedule</span>
               </div>
 
               <div className="timeline-steps">
@@ -854,7 +855,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                   <div className="t-step-info">
                     <div className="t-step-time">07:40 AM IST</div>
                     <h5>Bhanugudi Junction, Kakinada</h5>
-                    <span className="boarding-pill">★ YOUR DESIGNATED BOARDING POINT</span>
+                    <span className="boarding-pill"><Icon name="star" /> YOUR DESIGNATED BOARDING POINT</span>
                   </div>
                 </div>
 
@@ -901,7 +902,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                   <div className="t-step-info">
                     <div className="t-step-time">08:35 AM IST</div>
                     <h5>KIET Central Engineering Campus Porch</h5>
-                    <span className="dest-pill">🏁 ARRIVAL DESTINATION (KORANGI)</span>
+                    <span className="dest-pill"><Icon name="flag" /> ARRIVAL DESTINATION (KORANGI)</span>
                   </div>
                 </div>
               </div>
@@ -911,7 +912,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
           {/* Driver & Support Cards */}
           <div className="transport-support-grid">
             <div className="support-card driver-card">
-              <div className="sc-icon">👨‍✈️</div>
+              <div className="sc-icon"><Icon name="user" />‍<Icon name="globe" /></div>
               <div className="sc-info">
                 <h4>Designated Route Driver</h4>
                 <div className="driver-name-row">
@@ -921,14 +922,14 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 <p>Assigned to Ashok Leyland 52-Seater AC Bus AP 05 TJ 4512.</p>
                 <div className="driver-actions">
                   <a href={`tel:${student.transport.driverPhone}`} className="btn-call-driver">
-                    📞 Call Driver ({student.transport.driverPhone})
+                    <Icon name="phone" /> Call Driver ({student.transport.driverPhone})
                   </a>
                 </div>
               </div>
             </div>
 
             <div className="support-card desk-card">
-              <div className="sc-icon">🛡️</div>
+              <div className="sc-icon"><Icon name="shield" /></div>
               <div className="sc-info">
                 <h4>Campus Transport Desk &amp; Helpline</h4>
                 <p>Route adjustments, emergency inquiries, or temporary stop changes.</p>
@@ -1069,7 +1070,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                         </span>
                       </td>
                       <td className="text-center font-bold text-navy">{sub.points.toFixed(1)}</td>
-                      <td className="text-center"><span className="status-pill-paid">✓ PASS</span></td>
+                      <td className="text-center"><span className="status-pill-paid"><Icon name="check" /> PASS</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -1105,7 +1106,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-modal-close"
                 onClick={() => setShowFeeReceiptModal(false)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -1126,7 +1127,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-academic-secondary"
                 onClick={handleDownloadFeeReceiptFile}
               >
-                💾 Download Receipt File
+                <Icon name="save" /> Download Receipt File
               </button>
               <button
                 type="button"
@@ -1155,7 +1156,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-modal-close"
                 onClick={() => setShowBusPassModal(false)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -1176,7 +1177,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-academic-primary"
                 onClick={handlePrintBusPassDirect}
               >
-                🖨️ Print / Save Pass (PDF)
+                <Icon name="printer" /> Print / Save Pass (PDF)
               </button>
             </div>
           </div>
@@ -1197,7 +1198,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-modal-close"
                 onClick={() => setShowMarksMemoModal(false)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -1218,7 +1219,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 className="btn-academic-primary"
                 onClick={handlePrintMarksMemoDirect}
               >
-                🖨️ Print / Save Memo (PDF)
+                <Icon name="printer" /> Print / Save Memo (PDF)
               </button>
             </div>
           </div>

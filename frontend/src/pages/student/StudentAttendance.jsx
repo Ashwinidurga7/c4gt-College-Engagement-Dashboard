@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { useAuth } from '../../contexts/AuthContext'
 import { getStudentByRoll, calcAttendanceStats, months } from '../../data/academicData'
+import Icon from '../../components/ui/Icon'
 
 // Helper to generate day-by-day status for a specific month
 function generateMonthDays(monthIndex, workingDays, presentDays, absentDays, year = 2026) {
@@ -128,7 +129,7 @@ export default function StudentAttendance() {
       {/* 4 Summary Cards */}
       <section className="stat-grid four-col-grid">
         <div className="stat-card blue">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon"><Icon name="chart" /></div>
           <div className="stat-info">
             <span className="stat-label">Overall Attendance</span>
             <strong className="stat-value maven-black">{stats.percentage}%</strong>
@@ -138,7 +139,7 @@ export default function StudentAttendance() {
         </div>
 
         <div className="stat-card indigo">
-          <div className="stat-icon">📅</div>
+          <div className="stat-icon"><Icon name="calendar" /></div>
           <div className="stat-info">
             <span className="stat-label">Total Working Days</span>
             <strong className="stat-value maven-black">{stats.totalWorking} Days</strong>
@@ -148,7 +149,7 @@ export default function StudentAttendance() {
         </div>
 
         <div className="stat-card green">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon"><Icon name="check-circle" /></div>
           <div className="stat-info">
             <span className="stat-label">Total Present Days</span>
             <strong className="stat-value maven-black">{stats.totalPresent} Days</strong>
@@ -158,7 +159,7 @@ export default function StudentAttendance() {
         </div>
 
         <div className="stat-card red">
-          <div className="stat-icon">❌</div>
+          <div className="stat-icon"><Icon name="close" /></div>
           <div className="stat-info">
             <span className="stat-label">Total Absent Days</span>
             <strong className="stat-value maven-black">{stats.totalAbsent} Days</strong>
@@ -345,9 +346,9 @@ export default function StudentAttendance() {
                 <span className="day-week">{item.dayOfWeek}</span>
               </div>
               <div className="day-status-pill">
-                {item.status === 'Present' && '✓ Present'}
-                {item.status === 'Absent' && '✕ Absent'}
-                {item.status === 'Holiday' && '★ Holiday'}
+                {item.status === 'Present' && 'Present'}
+                {item.status === 'Absent' && 'Absent'}
+                {item.status === 'Holiday' && 'Holiday'}
                 {item.status === 'Weekend' && '— Off'}
               </div>
             </div>

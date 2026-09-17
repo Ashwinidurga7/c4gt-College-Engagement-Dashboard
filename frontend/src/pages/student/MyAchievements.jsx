@@ -5,6 +5,7 @@ import { useData } from '../../contexts/DataContext'
 import Seal from '../../components/ui/Seal'
 import AddCertificationForm from '../../components/ui/AddCertificationForm'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 const KIET_ASSETS = {
   innovators: 'https://www.kietgroup.com/images/aboutus_ttl.jpg',
@@ -56,11 +57,11 @@ const defaultMockAchievements = [
 
 function getCategoryIcon(cat = '') {
   const c = cat.toLowerCase()
-  if (c.includes('cert')) return '📜'
-  if (c.includes('hack')) return '⚡'
-  if (c.includes('work') || c.includes('train')) return '🛠️'
-  if (c.includes('intern')) return '💼'
-  return '🏆'
+  if (c.includes('cert')) return 'document'
+  if (c.includes('hack')) return 'bolt'
+  if (c.includes('work') || c.includes('train')) return 'wrench'
+  if (c.includes('intern')) return 'briefcase'
+  return 'trophy'
 }
 
 export default function MyAchievements() {
@@ -145,10 +146,10 @@ export default function MyAchievements() {
               <div style="font-size:9px;color:#64748b;margin-top:2px;">Korangi, Kakinada, Andhra Pradesh — 533461 • Accredited by NAAC & NBA</div>
             </div>
             <div style="text-align:right;font-size:11px;font-weight:bold;color:#0f2b48;">
-              ${item.issuer}<br><span style="color:#16a34a;font-size:10px;">✓ KIET VERIFIED</span>
+              ${item.issuer}<br><span style="color:#16a34a;font-size:10px;"><Icon name="check" /> KIET VERIFIED</span>
             </div>
           </div>
-          <div class="cert-title">★ CERTIFICATE OF VERIFIED ACHIEVEMENT ★</div>
+          <div class="cert-title"><Icon name="star" /> CERTIFICATE OF VERIFIED ACHIEVEMENT <Icon name="star" /></div>
           <div class="cert-conferred">This is to officially certify that</div>
           <div class="student-name">${user?.name || 'G. SAI VAMSI'}</div>
           <div class="student-meta">Roll Number: <strong>${user?.rollNumber || '23JN1A4533'}</strong> • B.Tech in Artificial Intelligence & Data Science (AIDS) • KIET (Affiliated to JNTUK)</div>
@@ -161,10 +162,10 @@ export default function MyAchievements() {
             <div>
               <div style="font-size:11px;font-family:monospace;font-weight:bold;color:#0f2b48;">CREDENTIAL ID: ${item.credentialId}</div>
               <div style="font-size:10px;color:#64748b;margin-top:2px;">Awarded: ${item.date} • +${item.points || 20} Activity Credits</div>
-              <div style="font-size:9px;color:#16a34a;font-weight:bold;margin-top:2px;">✓ Officially Verified by ${item.verifiedBy || 'KIET Academic Council'}</div>
+              <div style="font-size:9px;color:#16a34a;font-weight:bold;margin-top:2px;"><Icon name="check" /> Officially Verified by ${item.verifiedBy || 'KIET Academic Council'}</div>
             </div>
             <div class="gold-seal">
-              <span style="font-size:9px;">★</span>
+              <span style="font-size:9px;"><Icon name="star" /></span>
               <span>KIET • JNTUK</span>
               <span style="font-size:8px;margin:1px 0;">+${item.points || 20} PTS</span>
               <span>MERIT BANK</span>
@@ -216,21 +217,21 @@ export default function MyAchievements() {
               + Upload New Certificate
             </button>
             <Link to="/student/resume" className="button button-light">
-              Include in Resume Builder →
+              Include in Resume Builder <Icon name="arrow-right" />
             </Link>
           </div>
         </div>
 
         <div className="academic-id-badge">
           <div className="badge-stat-box">
-            <span className="stat-badge-icon">🏆</span>
+            <span className="stat-badge-icon"><Icon name="trophy" /></span>
             <div>
               <strong className="maven-black">{verifiedList.length}</strong>
               <small>Verified Records</small>
             </div>
           </div>
           <div className="badge-stat-box">
-            <span className="stat-badge-icon">🎖️</span>
+            <span className="stat-badge-icon"><Icon name="award" /></span>
             <div>
               <strong className="maven-black">{totalPoints}</strong>
               <small>Activity Credits</small>
@@ -242,7 +243,7 @@ export default function MyAchievements() {
       {/* Metrics Row */}
       <div className="stat-grid four-col-grid">
         <div className="stat-card blue">
-          <div className="stat-icon">🏆</div>
+          <div className="stat-icon"><Icon name="trophy" /></div>
           <div className="stat-info">
             <span className="stat-label">Verified Credentials</span>
             <strong className="stat-value maven-black">{verifiedList.length}</strong>
@@ -252,7 +253,7 @@ export default function MyAchievements() {
         </div>
 
         <div className="stat-card green">
-          <div className="stat-icon">🎖️</div>
+          <div className="stat-icon"><Icon name="award" /></div>
           <div className="stat-info">
             <span className="stat-label">Activity Credits</span>
             <strong className="stat-value maven-black">{totalPoints} Pts</strong>
@@ -262,7 +263,7 @@ export default function MyAchievements() {
         </div>
 
         <div className="stat-card purple">
-          <div className="stat-icon">📜</div>
+          <div className="stat-icon"><Icon name="document" /></div>
           <div className="stat-info">
             <span className="stat-label">Certificates Available</span>
             <strong className="stat-value maven-black">{verifiedList.length}</strong>
@@ -272,7 +273,7 @@ export default function MyAchievements() {
         </div>
 
         <div className="stat-card orange">
-          <div className="stat-icon">⏳</div>
+          <div className="stat-icon"><Icon name="clock" /></div>
           <div className="stat-info">
             <span className="stat-label">Pending Review</span>
             <strong className="stat-value maven-black">{pendingList.length}</strong>
@@ -313,21 +314,21 @@ export default function MyAchievements() {
               <div className="cert-card-preview">
                 <div className="cert-card-top-row">
                   <span className="cert-issuer-badge">
-                    <span>{getCategoryIcon(item.category)}</span> {item.issuer || 'Official Issuer'}
+                    <span><Icon name={getCategoryIcon(item.category)} /></span> {item.issuer || 'Official Issuer'}
                   </span>
                   <span className={`cert-status-badge ${item.status === 'Verified' ? 'verified' : 'pending'}`}>
-                    {item.status === 'Verified' ? '✓ VERIFIED' : '⏳ IN REVIEW'}
+                    {item.status === 'Verified' ? 'VERIFIED' : 'IN REVIEW'}
                   </span>
                 </div>
 
                 <div className="cert-card-center">
-                  <div className="cert-crest-watermark">🎖️ OFFICIAL KIET CREDENTIAL</div>
+                  <div className="cert-crest-watermark"><Icon name="award" /> OFFICIAL KIET CREDENTIAL</div>
                   <div className="cert-mini-student">Conferred to: {user?.name || 'G. Sai Vamsi'} ({user?.rollNumber || '23JN1A4533'})</div>
                 </div>
 
                 <div className="cert-card-bottom-row">
                   <span className="cert-id-code">{item.credentialId || 'KIET-MERIT'}</span>
-                  <span className="cert-gold-star-badge">★ +{item.points || 20} CREDITS</span>
+                  <span className="cert-gold-star-badge"><Icon name="star" /> +{item.points || 20} CREDITS</span>
                 </div>
               </div>
 
@@ -352,14 +353,14 @@ export default function MyAchievements() {
                     className="btn-cert-view"
                     onClick={() => setSelectedAchievement(item)}
                   >
-                    <span>📜 View Certificate</span>
+                    <span><Icon name="document" /> View Certificate</span>
                   </button>
                   <button
                     type="button"
                     className="btn-cert-download"
                     onClick={() => handleDownloadCert(item)}
                   >
-                    <span>📥 Download PDF</span>
+                    <span><Icon name="download" /> Download PDF</span>
                   </button>
                 </div>
               </div>
@@ -414,7 +415,7 @@ export default function MyAchievements() {
                 onClick={() => setSelectedAchievement(null)}
                 aria-label="Close certificate preview"
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -499,7 +500,7 @@ export default function MyAchievements() {
 
                         <div className="cert-gold-seal">
                           <div className="gold-seal-inner">
-                            <span className="seal-star">★</span>
+                            <span className="seal-star"><Icon name="star" /></span>
                             <span className="seal-text-top">KIET • JNTUK</span>
                             <span className="seal-credit">+{selectedAchievement.points || 20} PTS</span>
                             <span className="seal-text-bot">MERIT BANK VERIFIED</span>
@@ -551,7 +552,7 @@ export default function MyAchievements() {
                 className="button button-primary"
                 onClick={() => handleDownloadCert(selectedAchievement)}
               >
-                📥 Download Official Certificate (PDF)
+                <Icon name="download" /> Download Official Certificate (PDF)
               </button>
               <button
                 type="button"
@@ -582,7 +583,7 @@ export default function MyAchievements() {
                 className="modal-close"
                 onClick={() => setShowUploadModal(false)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 

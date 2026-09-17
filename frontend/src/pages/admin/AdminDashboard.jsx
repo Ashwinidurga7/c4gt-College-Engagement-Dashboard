@@ -24,6 +24,7 @@ import {
 } from '../../data/adminData'
 import { useData } from '../../contexts/DataContext'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 // Two subtle, un-highlighted neutral tones across all graphs
 const GRAPH_TONE_1 = '#334155' // Deep Slate / Charcoal
@@ -351,7 +352,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
       {/* 1. Clean Institutional Header */}
       <div className="admin-header-card">
         <div className="admin-header-meta">
-          <span className="admin-governance-tag">🏛️ CENTRAL ADMINISTRATIVE GOVERNANCE</span>
+          <span className="admin-governance-tag"><Icon name="institution" /> CENTRAL ADMINISTRATIVE GOVERNANCE</span>
           <h1 className="admin-portal-title maven-black">
             Multi-Campus Administrative Command
           </h1>
@@ -385,7 +386,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             className={`admin-scope-pill ${selectedCampusScope === 'ALL' ? 'active' : ''}`}
             onClick={() => setSelectedCampusScope('ALL')}
           >
-            <span className="scope-pill-icon">🏛️</span>
+            <span className="scope-pill-icon"><Icon name="institution" /></span>
             <span className="pill-name">All 3 Campuses</span>
             <span className="pill-count">4,330</span>
           </button>
@@ -414,7 +415,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => handleTabChange('overview')}
         >
-          <span className="tab-icon">🏛️</span>
+          <span className="tab-icon"><Icon name="institution" /></span>
           <span className="tab-title">Overview</span>
         </button>
 
@@ -422,7 +423,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'students' ? 'active' : ''}`}
           onClick={() => handleTabChange('students')}
         >
-          <span className="tab-icon">🎓</span>
+          <span className="tab-icon"><Icon name="student" /></span>
           <span className="tab-title">Students (1st–4th Yr)</span>
         </button>
 
@@ -430,7 +431,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'placements' ? 'active' : ''}`}
           onClick={() => handleTabChange('placements')}
         >
-          <span className="tab-icon">💼</span>
+          <span className="tab-icon"><Icon name="briefcase" /></span>
           <span className="tab-title">Placements</span>
         </button>
 
@@ -438,7 +439,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'faculty' ? 'active' : ''}`}
           onClick={() => handleTabChange('faculty')}
         >
-          <span className="tab-icon">👨‍🏫</span>
+          <span className="tab-icon"><Icon name="faculty" /></span>
           <span className="tab-title">Faculty &amp; HODs</span>
         </button>
 
@@ -446,7 +447,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'transport' ? 'active' : ''}`}
           onClick={() => handleTabChange('transport')}
         >
-          <span className="tab-icon">🚌</span>
+          <span className="tab-icon"><Icon name="bus" /></span>
           <span className="tab-title">Transport Fleet</span>
         </button>
 
@@ -454,7 +455,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'workers' ? 'active' : ''}`}
           onClick={() => handleTabChange('workers')}
         >
-          <span className="tab-icon">🔧</span>
+          <span className="tab-icon"><Icon name="wrench" /></span>
           <span className="tab-title">Operations &amp; Staff</span>
         </button>
 
@@ -462,7 +463,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
           className={`admin-tab-btn ${activeTab === 'approvals' ? 'active' : ''}`}
           onClick={() => handleTabChange('approvals')}
         >
-          <span className="tab-icon">📋</span>
+          <span className="tab-icon"><Icon name="clipboard" /></span>
           <span className="tab-title">Approvals</span>
           {pendingApprovals.length > 0 && (
             <span className="tab-badge badge-warning">{pendingApprovals.length}</span>
@@ -589,7 +590,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">1st Year (Freshers), 2nd Year, 3rd Year, and Final Year cohorts</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('students')}>
-                  View Year Details →
+                  View Year Details <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -625,7 +626,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Students placed out of final year graduating eligible cohort</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('placements')}>
-                  Explore Placements →
+                  Explore Placements <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -646,7 +647,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 </ResponsiveContainer>
               </div>
               <div className="chart-note-bar">
-                ⚡ <strong>{stats.totalPlaced} Students Placed</strong> ({stats.placementRate}%) across TCS, AWS, Infosys, and Tech Mahindra.
+                <Icon name="bolt" /> <strong>{stats.totalPlaced} Students Placed</strong> ({stats.placementRate}%) across TCS, AWS, Infosys, and Tech Mahindra.
               </div>
             </div>
 
@@ -658,7 +659,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Teaching faculty, HODs, transport drivers, and campus operational staff</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('faculty')}>
-                  Staff Directory →
+                  Staff Directory <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -679,7 +680,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 </ResponsiveContainer>
               </div>
               <div className="chart-note-bar">
-                👥 Total Staff Count: <strong>{stats.totalStaff} Personnel</strong> deployed across all three institutional campuses.
+                <Icon name="users" /> Total Staff Count: <strong>{stats.totalStaff} Personnel</strong> deployed across all three institutional campuses.
               </div>
             </div>
           </div>
@@ -702,7 +703,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <div className="profile-card-body">
                     <h4 className="profile-name maven-black">{cp.name}</h4>
                     <span className="profile-tag">{cp.tag}</span>
-                    <p className="profile-location">📍 {cp.location} • {cp.campusArea}</p>
+                    <p className="profile-location"><Icon name="location" /> {cp.location} • {cp.campusArea}</p>
 
                     <div className="profile-leadership">
                       <div><strong>Director:</strong> {cp.director}</div>
@@ -925,7 +926,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
             <div className="partners-grid">
               {campusPlacementData.topHiringPartners.map((partner, idx) => (
                 <div key={idx} className="partner-item">
-                  <span className="partner-logo">{partner.logo}</span>
+                  <span className="partner-logo"><Icon name={partner.logo} size={20} /></span>
                   <div>
                     <h4 className="partner-name maven-black">{partner.name}</h4>
                     <span className="partner-cat">{partner.category} • {partner.packages}</span>
@@ -1042,7 +1043,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     <h4 className="hod-name maven-black">{hod.name}</h4>
                     <span className="hod-title">{hod.title}</span>
                     <span className="hod-dept">{hod.department}</span>
-                    <p className="hod-office">📍 {hod.office} • {hod.phone}</p>
+                    <p className="hod-office"><Icon name="location" /> {hod.office} • {hod.phone}</p>
                     <div className="hod-meta-row">
                       <span>Publications: <strong>{hod.publications}</strong></span>
                       <span>•</span>
@@ -1122,7 +1123,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     <td><code>{f.email}</code></td>
                     <td>
                       <button className="btn-table-action" onClick={(e) => { e.stopPropagation(); setSelectedItemModal({ type: 'Faculty', data: f }); }}>
-                        View Profile →
+                        View Profile <Icon name="arrow-right" />
                       </button>
                     </td>
                   </tr>
@@ -1223,7 +1224,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     <td>{d.destination}</td>
                     <td><span className="campus-badge-small">{d.campus}</span></td>
                     <td>{d.studentsAssigned} / {d.capacity} Seats</td>
-                    <td><span className="tag-live-fleet">✓ {d.status}</span></td>
+                    <td><span className="tag-live-fleet"><Icon name="check" /> {d.status}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -1312,7 +1313,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                     <td>{w.block}</td>
                     <td>{w.phone}</td>
                     <td>{w.shift}</td>
-                    <td><span className="tag-active-worker">✓ {w.status}</span></td>
+                    <td><span className="tag-active-worker"><Icon name="check" /> {w.status}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -1352,7 +1353,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
 
             {pendingApprovals.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '48px', color: 'var(--muted)' }}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>✅</div>
+                <div style={{ fontSize: 32, marginBottom: 8 }}><Icon name="check-circle" /></div>
                 <h4 className="maven-black" style={{ color: 'var(--text)' }}>All Submissions Verified!</h4>
                 <p>There are no outstanding student activity submissions awaiting admin review.</p>
               </div>
@@ -1380,7 +1381,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                       <td>
                         {item.evidenceData ? (
                           <a href={item.evidenceData} target="_blank" rel="noreferrer" className="btn-view-evidence">
-                            📄 View File
+                            <Icon name="document" /> View File
                           </a>
                         ) : (
                           <span className="text-muted">Digital Record</span>
@@ -1410,7 +1411,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <h3 className="modal-title maven-black">{selectedItemModal.type} Operational Record</h3>
                 <span className="modal-subtitle">KIET Central Administration Registry</span>
               </div>
-              <button className="btn-modal-close" onClick={() => setSelectedItemModal(null)}>✕</button>
+              <button className="btn-modal-close" onClick={() => setSelectedItemModal(null)}><Icon name="close" /></button>
             </div>
 
             <div className="modal-body">
@@ -1432,21 +1433,21 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Office &amp; Cabin Hours</span>
-                      <strong>📍 {selectedItemModal.data.office}</strong>
-                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>🕒 {selectedItemModal.data.cabinHours}</div>
+                      <strong><Icon name="location" /> {selectedItemModal.data.office}</strong>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}><Icon name="clock" /> {selectedItemModal.data.cabinHours}</div>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Direct Contact</span>
-                      <strong>📞 {selectedItemModal.data.phone}</strong>
-                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>✉️ {selectedItemModal.data.email}</div>
+                      <strong><Icon name="phone" /> {selectedItemModal.data.phone}</strong>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}><Icon name="mail" /> {selectedItemModal.data.email}</div>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Qualifications &amp; Experience</span>
-                      <strong>🎓 {selectedItemModal.data.qualification}</strong>
+                      <strong><Icon name="student" /> {selectedItemModal.data.qualification}</strong>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Research Publications</span>
-                      <strong style={{ color: '#0284c7' }}>📚 {selectedItemModal.data.publications} International Papers</strong>
+                      <strong style={{ color: '#0284c7' }}><Icon name="books" /> {selectedItemModal.data.publications} International Papers</strong>
                     </div>
                   </div>
                   {selectedItemModal.data.specialization && (
@@ -1475,8 +1476,8 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Direct Contact</span>
-                      <strong>📞 {selectedItemModal.data.phone}</strong>
-                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>✉️ {selectedItemModal.data.email}</div>
+                      <strong><Icon name="phone" /> {selectedItemModal.data.phone}</strong>
+                      <div style={{ fontSize: 11.5, color: 'var(--muted)' }}><Icon name="mail" /> {selectedItemModal.data.email}</div>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Experience &amp; Qualification</span>
@@ -1491,7 +1492,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <div>
                   <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, #f59e0b, #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0, color: '#fff' }}>
-                      🚌
+                      <Icon name="bus" />
                     </div>
                     <div>
                       <h4 className="maven-black" style={{ margin: 0, fontSize: 17, color: 'var(--text)' }}>{selectedItemModal.data.driverName}</h4>
@@ -1502,21 +1503,21 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Route &amp; Destination</span>
-                      <strong>📍 {selectedItemModal.data.route}</strong>
+                      <strong><Icon name="location" /> {selectedItemModal.data.route}</strong>
                       <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>To: {selectedItemModal.data.destination}</div>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Driver Contact &amp; License</span>
-                      <strong>📞 {selectedItemModal.data.phone}</strong>
+                      <strong><Icon name="phone" /> {selectedItemModal.data.phone}</strong>
                       <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>License: <code>{selectedItemModal.data.license}</code></div>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Bus Seating Capacity</span>
-                      <strong>👥 {selectedItemModal.data.studentsAssigned} / {selectedItemModal.data.capacity} Seats</strong>
+                      <strong><Icon name="users" /> {selectedItemModal.data.studentsAssigned} / {selectedItemModal.data.capacity} Seats</strong>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Fleet Operating Status</span>
-                      <strong style={{ color: '#059669' }}>✓ {selectedItemModal.data.status} (GPS Live)</strong>
+                      <strong style={{ color: '#059669' }}><Icon name="check" /> {selectedItemModal.data.status} (GPS Live)</strong>
                     </div>
                   </div>
                 </div>
@@ -1526,7 +1527,7 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                 <div>
                   <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, padding: 14, background: 'var(--bg)', borderRadius: 12, border: '1px solid var(--line)' }}>
                     <div style={{ width: 60, height: 60, borderRadius: 12, background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0, color: '#fff' }}>
-                      🔧
+                      <Icon name="wrench" />
                     </div>
                     <div>
                       <h4 className="maven-black" style={{ margin: 0, fontSize: 17, color: 'var(--text)' }}>{selectedItemModal.data.name}</h4>
@@ -1537,19 +1538,19 @@ export default function AdminDashboard({ defaultTab = 'overview' }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, fontSize: 13 }}>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Building / Work Station</span>
-                      <strong>📍 {selectedItemModal.data.block}</strong>
+                      <strong><Icon name="location" /> {selectedItemModal.data.block}</strong>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Duty Shift Schedule</span>
-                      <strong>🕒 {selectedItemModal.data.shift}</strong>
+                      <strong><Icon name="clock" /> {selectedItemModal.data.shift}</strong>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Phone Contact</span>
-                      <strong>📞 {selectedItemModal.data.phone}</strong>
+                      <strong><Icon name="phone" /> {selectedItemModal.data.phone}</strong>
                     </div>
                     <div style={{ padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8 }}>
                       <span style={{ color: 'var(--muted)', fontSize: 11, display: 'block' }}>Registry Status</span>
-                      <strong style={{ color: '#16a34a' }}>✓ {selectedItemModal.data.status}</strong>
+                      <strong style={{ color: '#16a34a' }}><Icon name="check" /> {selectedItemModal.data.status}</strong>
                     </div>
                   </div>
                 </div>

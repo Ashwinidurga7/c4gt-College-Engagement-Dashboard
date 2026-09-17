@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../components/ui/Toast'
 import Seal from '../../components/ui/Seal'
+import Icon from '../../components/ui/Icon'
 
 const DEFAULT_INTERNSHIPS = [
   {
@@ -209,7 +210,7 @@ export default function StudentInternships() {
       <section className="internships-hero-card">
         <div className="internships-hero-copy">
           <div className="internships-hero-badge">
-            🏢 CAREER &amp; INDUSTRY APPRENTICESHIPS • KIET ENGAGEMENT
+            <Icon name="building" /> CAREER &amp; INDUSTRY APPRENTICESHIPS • KIET ENGAGEMENT
           </div>
           <h1 className="maven-black">Industry Internships &amp; Practical Training</h1>
           <p>
@@ -265,7 +266,7 @@ export default function StudentInternships() {
             <div className="internship-card-top">
               <div className="intern-company-box">
                 <span className="intern-icon-wrap">
-                  {intern.mode === 'Remote' ? '🌐' : intern.mode === 'Offline' ? '🏢' : '🔄'}
+                  {intern.mode === 'Remote' ? <Icon name="globe" /> : intern.mode === 'Offline' ? <Icon name="building" /> : <Icon name="refresh" />}
                 </span>
                 <div>
                   <h3 className="intern-role-title maven-black">{intern.role}</h3>
@@ -275,7 +276,7 @@ export default function StudentInternships() {
 
               <div className="intern-top-badges">
                 <span className={`intern-mode-pill ${intern.mode.toLowerCase()}`}>
-                  {intern.mode === 'Remote' ? '📶 Remote' : intern.mode === 'Offline' ? '📍 Offline (On-Site)' : '🔀 Hybrid'}
+                  {intern.mode === 'Remote' ? 'Remote' : intern.mode === 'Offline' ? 'Offline (On-Site)' : 'Hybrid'}
                 </span>
                 <Seal status={intern.status === 'Verified' ? 'Verified' : 'Pending'} />
               </div>
@@ -305,7 +306,7 @@ export default function StudentInternships() {
             {/* The User's Special Requirement: "On what based that internship actually" */}
             <div className="intern-technical-basis-card">
               <div className="basis-header">
-                <span className="basis-icon">🔬</span>
+                <span className="basis-icon"><Icon name="flask" /></span>
                 <strong>ON WHAT BASED THAT INTERNSHIP ACTUALLY:</strong>
               </div>
               <p className="basis-text">{intern.technicalBasis}</p>
@@ -323,7 +324,7 @@ export default function StudentInternships() {
                 className="btn-view-dossier"
                 onClick={() => setViewDossierModal(intern)}
               >
-                Inspect Official Dossier →
+                Inspect Official Dossier <Icon name="arrow-right" />
               </button>
             </div>
           </article>
@@ -331,7 +332,7 @@ export default function StudentInternships() {
 
         {filteredInternships.length === 0 && (
           <div className="internships-empty-card">
-            <span style={{ fontSize: 36 }}>💼</span>
+            <span style={{ fontSize: 36 }}><Icon name="briefcase" /></span>
             <h4>No internships found under this filter</h4>
             <p>Switch to "All Internships" or add your industrial training and apprenticeship records.</p>
             <button className="btn-add-internship" onClick={() => setShowAddModal(true)}>
@@ -347,7 +348,7 @@ export default function StudentInternships() {
           <div className="admin-modal-card intern-form-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 24 }}>💼</span>
+                <span style={{ fontSize: 24 }}><Icon name="briefcase" /></span>
                 <div>
                   <h3 className="modal-title">Record New Internship</h3>
                   <span className="modal-subtitle">
@@ -356,7 +357,7 @@ export default function StudentInternships() {
                 </div>
               </div>
               <button className="btn-modal-close" onClick={() => setShowAddModal(false)}>
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -519,7 +520,7 @@ export default function StudentInternships() {
           <div className="admin-modal-card intern-dossier-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 28 }}>📜</span>
+                <span style={{ fontSize: 28 }}><Icon name="document" /></span>
                 <div>
                   <h3 className="modal-title">{viewDossierModal.role}</h3>
                   <span className="intern-dossier-sub">
@@ -528,7 +529,7 @@ export default function StudentInternships() {
                 </div>
               </div>
               <button className="btn-modal-close" onClick={() => setViewDossierModal(null)}>
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -554,7 +555,7 @@ export default function StudentInternships() {
 
               <div className="intern-technical-basis-card" style={{ marginBottom: 16 }}>
                 <div className="basis-header">
-                  <span className="basis-icon">🔬</span>
+                  <span className="basis-icon"><Icon name="flask" /></span>
                   <strong>CORE TECHNICAL FOUNDATION:</strong>
                 </div>
                 <p className="basis-text">{viewDossierModal.technicalBasis}</p>
@@ -573,7 +574,7 @@ export default function StudentInternships() {
 
               <div className="intern-verify-banner">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span>🛡️</span>
+                  <span><Icon name="shield" /></span>
                   <div>
                     <strong className="intern-verify-title">Verified by Department Industry Cell</strong>
                     <small className="intern-verify-sub">Assigned Mentor: {viewDossierModal.mentor}</small>

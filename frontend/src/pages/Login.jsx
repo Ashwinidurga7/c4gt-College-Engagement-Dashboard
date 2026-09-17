@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/Toast'
+import Icon from '../components/ui/Icon'
 
 const portalRoles = [
   {
     id: 'Student',
-    icon: '🎓',
+    icon: 'student',
     label: 'Student Portal',
     shortLabel: 'Student',
     tag: 'B.Tech & Degree ERP',
@@ -21,7 +22,7 @@ const portalRoles = [
   },
   {
     id: 'Faculty',
-    icon: '👩‍🏫',
+    icon: 'faculty',
     label: 'Faculty Portal',
     shortLabel: 'Faculty',
     tag: 'Academic Instruction',
@@ -36,7 +37,7 @@ const portalRoles = [
   },
   {
     id: 'HOD',
-    icon: '🏫',
+    icon: 'school',
     label: 'HOD Portal',
     shortLabel: 'HOD',
     tag: 'Department Administration',
@@ -51,7 +52,7 @@ const portalRoles = [
   },
   {
     id: 'Admin',
-    icon: '🏛️',
+    icon: 'institution',
     label: 'Admin Portal',
     shortLabel: 'Admin',
     tag: 'Campus Administration',
@@ -227,7 +228,7 @@ export default function Login() {
               >
                 <div className="gateway-card-header">
                   <div className="gateway-icon-box" style={{ background: item.accentBg, color: item.accent }}>
-                    <span>{item.icon}</span>
+                    <span><Icon name={item.icon} /></span>
                   </div>
                   <span className="gateway-role-badge">{item.shortLabel}</span>
                 </div>
@@ -306,7 +307,7 @@ export default function Login() {
                   className={`login-role-tab ${role === r.id ? 'active' : ''}`}
                   onClick={() => handleSwitchRoleInLogin(r.id)}
                 >
-                  <span className="tab-icon">{r.icon}</span>
+                  <span className="tab-icon"><Icon name={r.icon} /></span>
                   <span className="tab-label">{r.shortLabel}</span>
                 </button>
               ))}
@@ -419,7 +420,7 @@ export default function Login() {
                   className="quick-demo-pill"
                   onClick={() => handleFillDemo(activeRoleConfig.id, activeRoleConfig.demoId, activeRoleConfig.demoPass)}
                 >
-                  <span className="quick-demo-icon">⚡</span>
+                  <span className="quick-demo-icon"><Icon name="bolt" /></span>
                   <span>Quick Demo: <strong>{activeRoleConfig.demoId}</strong></span>
                 </button>
               </div>
@@ -431,7 +432,7 @@ export default function Login() {
                   className="auth-link-btn"
                   onClick={() => navigate('/signup', { state: { role } })}
                 >
-                  Register here →
+                  Register here <Icon name="arrow-right" />
                 </button>
               </div>
             </form>
@@ -478,7 +479,7 @@ export default function Login() {
                       <tr key={r.id}>
                         <td>
                           <span className="role-table-badge">
-                            <span>{r.icon}</span> {r.shortLabel}
+                            <span><Icon name={r.icon} /></span> {r.shortLabel}
                           </span>
                         </td>
                         <td>
@@ -496,7 +497,7 @@ export default function Login() {
                             className="button button-primary button-sm"
                             onClick={() => handleFillDemo(r.id, r.demoId, r.demoPass)}
                           >
-                            Fill & Test →
+                            Fill & Test <Icon name="arrow-right" />
                           </button>
                         </td>
                       </tr>

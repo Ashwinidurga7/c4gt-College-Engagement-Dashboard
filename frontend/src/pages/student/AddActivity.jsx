@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useData } from '../../contexts/DataContext'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 export const activityCategories = [
   'Technical Competitions & Hackathons',
@@ -125,7 +126,7 @@ export default function AddActivity() {
         </div>
         <div>
           <Link to="/student/activities" className="button button-light">
-            ← Back to Activities
+            <Icon name="arrow-left" /> Back to Activities
           </Link>
         </div>
       </div>
@@ -263,7 +264,7 @@ export default function AddActivity() {
                   className="upload-input-hidden"
                 />
                 <label htmlFor="file-upload" className="upload-label">
-                  <div className="upload-icon">📄</div>
+                  <div className="upload-icon"><Icon name="document" /></div>
                   <div className="upload-text">
                     <strong>Click to upload certificate</strong> or drag & drop here
                   </div>
@@ -274,7 +275,7 @@ export default function AddActivity() {
               {fileName && (
                 <div className="upload-preview-bar">
                   <div className="file-info">
-                    <span className="file-icon">📎</span>
+                    <span className="file-icon"><Icon name="paperclip" /></span>
                     <strong className="file-name">{fileName}</strong>
                   </div>
                   <button
@@ -283,7 +284,7 @@ export default function AddActivity() {
                     onClick={handleRemoveFile}
                     title="Remove attached file"
                   >
-                    ✕
+                    <Icon name="close" />
                   </button>
                 </div>
               )}

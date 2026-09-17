@@ -18,6 +18,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import { getStudentByRoll, calcAttendanceStats } from '../../data/academicData'
+import Icon from '../../components/ui/Icon'
 
 const announcements = [
   { title: 'Mid-Semester Examination Schedule Notification (AY 2025-26)', type: 'Academic', time: 'Today', date: 'Sep 12' },
@@ -118,64 +119,6 @@ const upcomingEvents = [
 
 const pieColors = ['#0f3569', '#2458d3', '#10b981', '#f59e0b', '#8b5cf6']
 
-function Icon({ name }) {
-  const paths = {
-    calendar: (
-      <>
-        <rect x="3" y="5" width="18" height="16" rx="3" />
-        <path d="M7 3v4M17 3v4M3 9h18" />
-      </>
-    ),
-    users: (
-      <>
-        <circle cx="9" cy="8" r="3" />
-        <circle cx="17" cy="9" r="2.5" />
-        <path d="M3.5 20c.6-3.4 2.5-5 5.5-5s4.9 1.6 5.5 5M14 16c3.2-.7 5.5.8 6.5 4" />
-      </>
-    ),
-    target: (
-      <>
-        <circle cx="12" cy="12" r="8" />
-        <circle cx="12" cy="12" r="3" />
-        <path d="m15.5 8.5 2-2" />
-      </>
-    ),
-    award: (
-      <>
-        <path d="M8 4h8v5c0 3-1.8 5-4 5s-4-2-4-5z" />
-        <path d="M8 7H5c0 3 1.5 4.5 4 4.5M16 7h3c0 3-1.5 4.5-4 4.5M12 14v4M8.5 20h7" />
-      </>
-    ),
-    check: <polyline points="20 6 9 17 4 12" />,
-    bus: (
-      <>
-        <rect x="3" y="4" width="18" height="14" rx="2" />
-        <path d="M7 18v2M17 18v2M3 10h18" />
-      </>
-    ),
-    rupee: (
-      <>
-        <line x1="6" y1="4" x2="18" y2="4" />
-        <line x1="6" y1="9" x2="18" y2="9" />
-        <path d="M6 14h5a4 4 0 0 0 0-8H6" />
-        <line x1="6" y1="9" x2="14" y2="20" />
-      </>
-    ),
-    book: (
-      <>
-        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-        <path d="M6 6h10M6 10h10" />
-      </>
-    ),
-    arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
-  }
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      {paths[name]}
-    </svg>
-  )
-}
-
 export default function StudentDashboard() {
   const { user } = useAuth()
   const { activities: myActivitiesData = [] } = useData()
@@ -233,7 +176,7 @@ export default function StudentDashboard() {
             <span>{student?.branch || 'CSE'}</span>
           </div>
           <h1 className="maven-black">
-            {greeting}, <span>{student?.name || user?.name || 'Student'}</span> 👋
+            {greeting}, <span>{student?.name || user?.name || 'Student'}</span> 
           </h1>
           <p>
             Welcome to your unified academic portal. Track real-time attendance, fee clearances, bus passes, semester SGPA, and co-curricular achievements.
@@ -366,7 +309,7 @@ export default function StudentDashboard() {
             </p>
           </div>
           <Link to="/student/attendance" className="link-button">
-            View Monthly Breakdown →
+            View Monthly Breakdown <Icon name="arrow-right" />
           </Link>
         </div>
         <div className="chart-wrap" style={{ height: '240px', marginTop: '16px' }}>
@@ -418,12 +361,12 @@ export default function StudentDashboard() {
         <section className="surface-card">
           <SectionHeading title="Student Quick Access" subtitle="Navigate essential campus services" />
           <div className="quick-grid">
-            <QuickAction icon="📅" label="12-Mo. Attendance" href="/student/attendance" />
-            <QuickAction icon="💳" label="Fee Details" href="/student/fees" />
-            <QuickAction icon="🚌" label="Bus Transport" href="/student/transport" />
-            <QuickAction icon="📜" label="Semester Results" href="/student/results" />
-            <QuickAction icon="📄" label="Resume Builder" href="/student/resume" />
-            <QuickAction icon="➕" label="Add Activity" href="/student/add" />
+            <QuickAction icon="calendar" label="12-Mo. Attendance" href="/student/attendance" />
+            <QuickAction icon="card" label="Fee Details" href="/student/fees" />
+            <QuickAction icon="bus" label="Bus Transport" href="/student/transport" />
+            <QuickAction icon="document" label="Semester Results" href="/student/results" />
+            <QuickAction icon="document" label="Resume Builder" href="/student/resume" />
+            <QuickAction icon="upload" label="Add Activity" href="/student/add" />
           </div>
         </section>
       </div>
@@ -507,7 +450,7 @@ function SectionHeading({ title, subtitle, action, href }) {
 function QuickAction({ icon, label, href }) {
   return (
     <Link to={href} className="quick-action">
-      <span className="quick-emoji">{icon}</span>
+      <span className="quick-emoji"><Icon name={icon} size={18} /></span>
       <span>{label}</span>
       <span className="quick-arrow">
         <Icon name="arrow" />

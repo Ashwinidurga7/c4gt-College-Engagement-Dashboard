@@ -1,4 +1,5 @@
 import React from 'react'
+import Icon from '../ui/Icon'
 
 export default function ProfileModal({ profile, onClose }) {
   if (!profile) return null
@@ -52,7 +53,7 @@ export default function ProfileModal({ profile, onClose }) {
             </div>
           </div>
           <button className="btn-modal-close" onClick={onClose} aria-label="Close modal">
-            ✕
+            <Icon name="close" />
           </button>
         </div>
 
@@ -61,19 +62,19 @@ export default function ProfileModal({ profile, onClose }) {
           <div className="profile-dossier-grid">
             <div className="profile-info-pill">
               <span className="pill-label">DEPARTMENT / CELL</span>
-              <strong>🏫 {department}</strong>
+              <strong><Icon name="school" /> {department}</strong>
             </div>
             <div className="profile-info-pill">
               <span className="pill-label">OFFICIAL EMAIL</span>
-              <strong>✉️ {email}</strong>
+              <strong><Icon name="mail" /> {email}</strong>
             </div>
             <div className="profile-info-pill">
               <span className="pill-label">CAMPUS OFFICE</span>
-              <strong>📍 {office}</strong>
+              <strong><Icon name="location" /> {office}</strong>
             </div>
             <div className="profile-info-pill">
               <span className="pill-label">CONTACT DIRECTORY</span>
-              <strong>📞 {phone}</strong>
+              <strong><Icon name="phone" /> {phone}</strong>
             </div>
           </div>
 
@@ -104,7 +105,7 @@ export default function ProfileModal({ profile, onClose }) {
               <ul className="profile-achieve-list">
                 {achievements.map((a, idx) => (
                   <li key={idx}>
-                    <span className="achieve-bullet">✓</span>
+                    <span className="achieve-bullet"><Icon name="check" /></span>
                     <span>{a}</span>
                   </li>
                 ))}
@@ -119,7 +120,7 @@ export default function ProfileModal({ profile, onClose }) {
             className="btn-modal-action"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}
           >
-            ✉️ Contact via Email
+            <Icon name="mail" /> Contact via Email
           </a>
           <button className="btn-modal-close-secondary" onClick={onClose}>
             Close Dossier

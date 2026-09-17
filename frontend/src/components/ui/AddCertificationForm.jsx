@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 import { useRealtime } from '../../contexts/RealtimeContext'
 import { useAuth } from '../../contexts/AuthContext'
+import Icon from '../ui/Icon'
 
 export default function AddCertificationForm({ onAdded }){
   const { addActivity } = useData()
@@ -125,7 +126,7 @@ export default function AddCertificationForm({ onAdded }){
         <label>Certificate / evidence file</label>
         <label className="cert-dropzone">
           <input type="file" onChange={handleFile} accept=".png,.jpg,.jpeg,.pdf" />
-          <span className="cert-drop-icon">↑</span>
+          <span className="cert-drop-icon"><Icon name="upload" /></span>
           <strong>{evidenceName || 'Choose a certificate file'}</strong>
           <small>{evidenceName ? 'File selected and ready to submit' : 'PNG, JPG or PDF · Max 5 MB'}</small>
         </label>
