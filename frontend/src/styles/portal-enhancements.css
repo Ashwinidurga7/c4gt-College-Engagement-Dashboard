@@ -21,7 +21,7 @@ img {
 .app-shell {
   display: flex;
   min-height: 100vh;
-  background: #f4f7fb;
+  background: var(--bg);
   position: relative;
   overflow-x: clip;
 }
@@ -222,7 +222,7 @@ img {
 }
 
 .sidebar-link.active {
-  background: #1d5fd1 !important;
+  background: var(--blue) !important;
   color: #ffffff !important;
   font-weight: 700;
   box-shadow: 0 4px 14px rgba(29, 95, 209, 0.35);
@@ -268,7 +268,7 @@ img {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #1d5fd1;
+  background: var(--blue);
   color: #fff;
   font-weight: 800;
   font-size: 12px;
@@ -355,7 +355,7 @@ img {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #1d5fd1;
+  background: var(--blue);
   color: #fff;
   font-weight: 800;
   font-size: 12px;
@@ -435,7 +435,7 @@ img {
 .topbar {
   height: 72px;
   background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -457,7 +457,7 @@ img {
   width: 38px;
   height: 38px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   background: #f8fafc;
   color: #334155;
   display: flex;
@@ -469,8 +469,8 @@ img {
 }
 
 .topbar-toggle-btn:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: var(--border);
+  color: var(--text);
 }
 
 .topbar-headings {
@@ -486,7 +486,7 @@ img {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.5px;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -571,7 +571,7 @@ img {
   gap: 10px;
   padding: 5px 14px 5px 6px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   background: #f8fafc;
   white-space: nowrap;
   flex-shrink: 0;
@@ -611,7 +611,7 @@ img {
 .profile-role {
   font-size: 10px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -649,14 +649,14 @@ img {
 
 .login-page.institutional-portal {
   min-height: 100vh;
-  background: radial-gradient(circle at 15% 15%, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background: radial-gradient(circle at 15% 15%, #f8fafc 0%, #f1f5f9 50%, var(--border) 100%);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 32px 20px;
   font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .login-page.institutional-portal::before {
@@ -681,7 +681,7 @@ img {
 
 .gateway-top-header {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px 24px;
   display: flex;
@@ -700,7 +700,7 @@ img {
 .gateway-logo-wrap {
   background: #ffffff;
   padding: 6px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -726,7 +726,7 @@ img {
 .gateway-institution-title {
   font-size: 17px;
   font-weight: 800;
-  color: #0f172a !important;
+  color: var(--text) !important;
   font-family: 'Maven Pro', 'Plus Jakarta Sans', sans-serif;
   margin: 0;
   letter-spacing: -0.2px;
@@ -735,7 +735,7 @@ img {
 .gateway-institution-subtitle {
   font-size: 12px;
   font-weight: 600;
-  color: #64748b !important;
+  color: var(--muted) !important;
   margin: 0;
 }
 
@@ -775,7 +775,7 @@ img {
 .gateway-intro h2 {
   font-size: 28px;
   font-weight: 800;
-  color: #0f172a !important;
+  color: var(--text) !important;
   font-family: 'Maven Pro', 'Plus Jakarta Sans', sans-serif;
   margin: 0;
   letter-spacing: -0.5px;
@@ -809,7 +809,7 @@ img {
 
 .gateway-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 22px 20px;
   display: flex;
@@ -855,20 +855,20 @@ img {
   background: #f1f5f9;
   padding: 3px 9px;
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .gateway-card-title {
   font-size: 18px;
   font-weight: 800;
-  color: #0f172a !important;
+  color: var(--text) !important;
   font-family: 'Maven Pro', 'Plus Jakarta Sans', sans-serif;
   margin: 0 0 8px 0;
 }
 
 .gateway-card-desc {
   font-size: 13px;
-  color: #64748b !important;
+  color: var(--muted) !important;
   line-height: 1.5;
   margin: 0 0 20px 0;
   flex-grow: 1;
@@ -888,7 +888,7 @@ img {
   border-radius: 10px;
   border: 1px solid #cbd5e1;
   background: #f8fafc;
-  color: #0f172a !important;
+  color: var(--text) !important;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -905,7 +905,7 @@ img {
 /* Gateway Footer */
 .gateway-footer {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 14px 20px;
   display: flex;
@@ -919,7 +919,7 @@ img {
 .gateway-footer-left {
   font-size: 12px;
   font-weight: 600;
-  color: #64748b !important;
+  color: var(--muted) !important;
 }
 
 .gateway-footer-right {
@@ -949,7 +949,7 @@ img {
 }
 
 .footer-support-link {
-  color: #64748b !important;
+  color: var(--muted) !important;
   font-weight: 600;
   text-decoration: none;
 }
@@ -977,7 +977,7 @@ img {
   width: 100%;
   max-width: 470px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 20px;
   padding: 32px 32px;
   box-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8);
@@ -1015,14 +1015,14 @@ img {
 }
 
 .back-gateway-btn:hover {
-  background: #e2e8f0;
-  color: #0f172a !important;
+  background: var(--border);
+  color: var(--text) !important;
 }
 
 .auth-institution-tag {
   font-size: 11px;
   font-weight: 700;
-  color: #64748b !important;
+  color: var(--muted) !important;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -1034,7 +1034,7 @@ img {
   background: #f1f5f9;
   padding: 4px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   gap: 4px;
   margin-bottom: 22px;
 }
@@ -1056,8 +1056,8 @@ img {
 }
 
 .login-role-tab:hover {
-  background: #e2e8f0 !important;
-  color: #0f172a !important;
+  background: var(--border) !important;
+  color: var(--text) !important;
 }
 
 .login-role-tab.active {
@@ -1086,7 +1086,7 @@ img {
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 8px 16px;
   margin-bottom: 12px;
@@ -1102,7 +1102,7 @@ img {
 .auth-portal-title {
   font-size: 22px;
   font-weight: 800;
-  color: #0f172a !important;
+  color: var(--text) !important;
   font-family: 'Maven Pro', 'Plus Jakarta Sans', sans-serif;
   margin: 0 0 4px 0;
   letter-spacing: -0.3px;
@@ -1110,7 +1110,7 @@ img {
 
 .auth-portal-subtitle {
   font-size: 13px;
-  color: #64748b !important;
+  color: var(--muted) !important;
   margin: 0;
   line-height: 1.45;
 }
@@ -1166,7 +1166,7 @@ img {
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font-size: 13.5px;
-  color: #0f172a !important;
+  color: var(--text) !important;
   background: #ffffff !important;
   transition: all 0.15s ease;
   outline: none;
@@ -1191,7 +1191,7 @@ img {
   right: 12px;
   background: none;
   border: 0;
-  color: #64748b;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -1199,7 +1199,7 @@ img {
 }
 
 .auth-pwd-toggle:hover {
-  color: #0f172a;
+  color: var(--text);
 }
 
 .auth-options-row {
@@ -1303,13 +1303,13 @@ img {
 }
 
 .quick-demo-pill strong {
-  color: #0f172a;
+  color: var(--text);
 }
 
 .auth-footer-redirect {
   text-align: center;
   font-size: 13px;
-  color: #64748b !important;
+  color: var(--muted) !important;
   margin-top: 6px;
   display: flex;
   align-items: center;
@@ -1343,7 +1343,7 @@ img {
 
 .demo-accounts-table-wrap {
   overflow-x: auto;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   margin: 14px 0;
 }
@@ -1362,7 +1362,7 @@ img {
   font-weight: 800;
   color: #475569 !important;
   text-transform: uppercase;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .demo-accounts-table td {
@@ -1388,12 +1388,12 @@ img {
   font-size: 11px;
   color: #0f3569 !important;
   font-weight: 700;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .demo-profile-name {
   font-size: 11.5px;
-  color: #64748b !important;
+  color: var(--muted) !important;
 }
 
 .demo-modal-footer {
@@ -1408,8 +1408,8 @@ img {
 /* STRICT DARK MODE IMMUNITY FOR LOGIN & SIGNUP PAGES */
 [data-theme="dark"] .login-page,
 body.dark-theme .login-page {
-  background: radial-gradient(circle at 15% 15%, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
-  color: #0f172a !important;
+  background: radial-gradient(circle at 15% 15%, #f8fafc 0%, #f1f5f9 50%, var(--border) 100%) !important;
+  color: var(--text) !important;
 }
 
 [data-theme="dark"] .login-page h1,
@@ -1419,7 +1419,7 @@ body.dark-theme .login-page {
 [data-theme="dark"] .login-page .gateway-institution-title,
 [data-theme="dark"] .login-page .gateway-card-title,
 [data-theme="dark"] .login-page .auth-portal-title {
-  color: #0f172a !important;
+  color: var(--text) !important;
 }
 
 [data-theme="dark"] .login-page p,
@@ -1441,7 +1441,7 @@ body.dark-theme .login-page {
 [data-theme="dark"] .login-page .gateway-logo-wrap,
 [data-theme="dark"] .login-page .auth-card-logo-wrap {
   background: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  border-color: var(--border) !important;
 }
 
 [data-theme="dark"] .login-page input,
@@ -1454,7 +1454,7 @@ body.dark-theme .login-page textarea,
 .login-page select,
 .login-page textarea {
   background: #ffffff !important;
-  color: #0f172a !important;
+  color: var(--text) !important;
   border-color: #cbd5e1 !important;
 }
 
@@ -1466,7 +1466,7 @@ body.dark-theme .login-page input::placeholder,
 
 [data-theme="dark"] .login-page .auth-pwd-toggle,
 body.dark-theme .login-page .auth-pwd-toggle {
-  color: #64748b !important;
+  color: var(--muted) !important;
 }
 
 /* Modal styles for forgot password */
@@ -1489,7 +1489,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   max-width: 440px;
   padding: 24px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .modal-header {
@@ -1509,7 +1509,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .modal-close-btn {
   background: none;
   border: 0;
-  color: #64748b;
+  color: var(--muted);
   font-size: 20px;
   cursor: pointer;
 }
@@ -1522,7 +1522,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-desc {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.5;
   margin: 0;
 }
@@ -1578,7 +1578,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .gateway-header-signup-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(30, 64, 175, 0.35);
-  background: linear-gradient(135deg, #163d78 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--navy-2) 0%, #2563eb 100%);
 }
 
 .gateway-signup-banner {
@@ -1698,7 +1698,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 6px;
   margin: 16px 0 4px 0;
   font-size: 12.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .signup-redirect-btn {
@@ -1760,7 +1760,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #f1f5f9;
   padding: 4px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   gap: 6px;
   margin: 16px 0 18px 0;
 }
@@ -1770,7 +1770,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: transparent !important;
   padding: 9px 16px !important;
   border-radius: 9px !important;
-  color: #64748b !important;
+  color: var(--muted) !important;
   font-size: 12.5px !important;
   font-weight: 700 !important;
   display: flex !important;
@@ -1782,8 +1782,8 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .signup-role-tab:hover {
-  background: #e2e8f0 !important;
-  color: #0f172a !important;
+  background: var(--border) !important;
+  color: var(--text) !important;
 }
 
 .signup-role-tab.active {
@@ -1944,7 +1944,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   flex-wrap: wrap;
   gap: 6px;
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .signin-link-prominent {
@@ -2007,7 +2007,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .stat-card {
   position: relative;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
   display: flex;
@@ -2052,7 +2052,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .stat-label {
   font-size: 11px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
@@ -2123,7 +2123,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .card-subtitle {
   margin: 4px 0 0 0;
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .link-button {
@@ -2142,7 +2142,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
    -------------------------------------------------------------------------- */
 .attendance-gauge-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px 24px;
   display: flex;
@@ -2162,7 +2162,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .gauge-label {
   font-size: 11px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
   margin: 4px 0 8px 0;
 }
@@ -2212,7 +2212,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .month-pill:hover {
-  background: #e2e8f0;
+  background: var(--border);
 }
 
 .month-pill.active {
@@ -2255,7 +2255,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 12px 14px;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--border);
 }
 
 .kiet-data-table tbody td {
@@ -2292,7 +2292,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .progress-bar-bg {
   width: 100%;
   height: 8px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -2389,7 +2389,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .calendar-day-card {
   border-radius: 10px;
   padding: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2417,7 +2417,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .day-week {
   font-size: 10px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -2442,8 +2442,8 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .day-status-holiday .day-number { color: #7e22ce; }
 .day-status-holiday .day-status-pill { background: #f3e8ff; color: #6b21a8; }
 
-.day-status-weekend { background: #f8fafc; border-color: #e2e8f0; }
-.day-status-weekend .day-number { color: #64748b; }
+.day-status-weekend { background: #f8fafc; border-color: var(--border); }
+.day-status-weekend .day-number { color: var(--muted); }
 .day-status-weekend .day-status-pill { background: #f1f5f9; color: #475569; }
 
 /* --------------------------------------------------------------------------
@@ -2464,7 +2464,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .resume-builder-page .resume-builder-header .eyebrow {
-  color: #0284c7 !important;
+  color: var(--blue) !important;
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 1.4px;
@@ -2474,7 +2474,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .resume-builder-page .resume-builder-header h1 {
   font-size: 28px;
   font-weight: 800;
-  color: #0b2448;
+  color: var(--navy);
   margin: 0 0 6px 0;
   line-height: 1.2;
 }
@@ -2538,9 +2538,9 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .resume-builder-page .resume-global-actions .button-accent {
-  background: #0284c7 !important;
+  background: var(--blue) !important;
   color: #ffffff !important;
-  border: 1.5px solid #0284c7 !important;
+  border: 1.5px solid var(--blue) !important;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25) !important;
 }
 
@@ -2552,7 +2552,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .template-selector-bar {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px 20px;
   margin-bottom: 20px;
@@ -2573,7 +2573,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .template-selector-label .label-desc {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .template-button-group {
@@ -2707,7 +2707,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .accordion-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
@@ -2766,7 +2766,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .accordion-card.open .accordion-trigger {
   background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .accordion-trigger:hover {
@@ -2829,14 +2829,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: block;
   font-size: 13px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 }
 
 .acc-text-wrap .acc-subtitle {
   display: block;
   font-size: 10.5px;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 1px;
 }
 
@@ -2853,13 +2853,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .accordion-chevron {
   font-size: 10px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .accordion-content {
@@ -2908,14 +2908,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 12px;
-  color: #0f172a;
+  color: var(--text);
   font-family: inherit;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
 }
 
 .resume-builder-page .kiet-input:focus {
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
 }
 
@@ -2933,14 +2933,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .resume-builder-page .field-hint {
   display: block;
   font-size: 10.5px;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.45;
   margin-top: 4px;
 }
 
 .section-instruction-note {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.5;
   margin: 0 0 14px 0;
   padding: 8px 12px;
@@ -2955,7 +2955,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .proj-card-box,
 .edu-card-box {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
   margin-bottom: 12px;
@@ -2976,7 +2976,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 6px;
-  border-bottom: 1px dashed #e2e8f0;
+  border-bottom: 1px dashed var(--border);
 }
 
 .domain-index-badge {
@@ -2998,7 +2998,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   margin-top: 8px;
   padding: 8px 10px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
@@ -3008,7 +3008,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #64748b;
+  color: var(--muted);
   margin-bottom: 6px;
 }
 
@@ -3040,7 +3040,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 8px;
   margin-bottom: 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .item-index-tag {
@@ -3064,13 +3064,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .item-header-title {
   font-size: 12px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .bullets-editor {
   margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed var(--border);
 }
 
 .bullets-title-label {
@@ -3095,7 +3095,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .bullet-idx-bubble {
   font-size: 9.5px;
   font-weight: 800;
-  background: #e2e8f0;
+  background: var(--border);
   color: #334155;
   padding: 4px 6px;
   border-radius: 4px;
@@ -3161,7 +3161,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 /* LIVE RESUME PREVIEW PANE & TOOLBAR */
 .resume-preview-pane {
-  background: linear-gradient(145deg, #1e293b, #0f172a);
+  background: linear-gradient(145deg, #1e293b, var(--text));
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 16px;
@@ -3282,7 +3282,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .btn-scroll-action {
   background: transparent;
   border: 0;
-  color: #e2e8f0;
+  color: var(--border);
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 11px;
@@ -3348,7 +3348,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 800;
   min-width: 38px;
   text-align: center;
-  color: #e2e8f0;
+  color: var(--border);
 }
 
 .btn-expand-view {
@@ -3372,8 +3372,8 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-expand-view.active {
-  background: #0284c7;
-  border-color: #0284c7;
+  background: var(--blue);
+  border-color: var(--blue);
   color: #ffffff;
   box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
 }
@@ -3401,7 +3401,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .font-select-modern {
-  background: #0f172a;
+  background: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #f8fafc;
   padding: 0 10px;
@@ -3703,7 +3703,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: flex;
   gap: 16px;
   font-size: 12px;
-  color: #e2e8f0;
+  color: var(--border);
   flex-wrap: wrap;
 }
 
@@ -4071,7 +4071,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   animation: slideInToast 0.25s ease forwards;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 @keyframes slideInToast {
@@ -4160,7 +4160,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-header {
   padding: 18px 24px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -4171,7 +4171,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #1d5fd1;
+  color: var(--blue);
   text-transform: uppercase;
 }
 
@@ -4185,12 +4185,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-subtitle {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   margin: 4px 0 0 0;
 }
 
 .modal-close {
-  background: #e2e8f0;
+  background: var(--border);
   border: 0;
   width: 32px;
   height: 32px;
@@ -4207,7 +4207,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-close:hover {
   background: #cbd5e1;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .modal-body {
@@ -4218,7 +4218,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-footer {
   padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
   background: #f8fafc;
   display: flex;
   justify-content: flex-end;
@@ -4232,7 +4232,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #f8fafc;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 @media (max-width: 680px) {
@@ -4250,7 +4250,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .detail-label {
   font-size: 10px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -4342,7 +4342,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .achievement-hero .hero-actions-row .button-primary {
   background: #ffffff !important;
-  color: #0b2448 !important;
+  color: var(--navy) !important;
   border: none !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
@@ -4425,7 +4425,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .achievements-page .stat-card {
   background: var(--surface, #ffffff);
-  border: 1px solid var(--line, #e2e8f0);
+  border: 1px solid var(--line, var(--border));
   border-radius: 16px;
   padding: 18px 20px;
   display: flex;
@@ -4441,7 +4441,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .achievements-page .stat-card:hover {
   transform: translateY(-2px);
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
 }
 
@@ -4472,20 +4472,20 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: var(--muted, #64748b);
+  color: var(--muted, var(--muted));
 }
 
 .achievements-page .stat-value {
   font-size: 22px;
   font-weight: 900;
-  color: var(--navy, #0b2448);
+  color: var(--navy, var(--navy));
   line-height: 1.15;
 }
 
 .achievements-page .stat-subtext {
   font-size: 11px;
   font-weight: 600;
-  color: #0284c7;
+  color: var(--blue);
 }
 
 .achievements-page .stat-accent {
@@ -4496,7 +4496,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   width: 100%;
 }
 
-.achievements-page .stat-card.blue .stat-accent { background: #0284c7; }
+.achievements-page .stat-card.blue .stat-accent { background: var(--blue); }
 .achievements-page .stat-card.green .stat-accent { background: #16a34a; }
 .achievements-page .stat-card.purple .stat-accent { background: #8b5cf6; }
 .achievements-page .stat-card.orange .stat-accent { background: #f97316; }
@@ -4532,14 +4532,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .achievements-page .filter-pill:hover {
-  border-color: #0284c7;
-  color: var(--navy, #0b2448);
+  border-color: var(--blue);
+  color: var(--navy, var(--navy));
   background: #f8fafc;
 }
 
 .achievements-page .filter-pill.active {
-  background: #0284c7;
-  border-color: #0284c7;
+  background: var(--blue);
+  border-color: var(--blue);
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
 }
@@ -4568,7 +4568,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: flex;
   flex-direction: column;
   background: var(--surface, #ffffff);
-  border: 1px solid var(--line, #e2e8f0);
+  border: 1px solid var(--line, var(--border));
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
@@ -4578,7 +4578,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .achievement-card-v2:hover {
   transform: translateY(-3px);
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 12px 28px rgba(2, 132, 199, 0.12);
 }
 
@@ -4691,7 +4691,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
+  color: var(--border);
 }
 
 .cert-gold-star-badge {
@@ -4720,7 +4720,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.5px;
-  color: #0284c7;
+  color: var(--blue);
   background: #e0f2fe;
   padding: 2px 8px;
   border-radius: 6px;
@@ -4740,7 +4740,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .achievement-card-title {
   font-size: 15px;
   font-weight: 800;
-  color: var(--navy, #0b2448);
+  color: var(--navy, var(--navy));
   margin: 0 0 4px 0;
   line-height: 1.3;
   min-height: 38px;
@@ -4753,13 +4753,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .achievement-issuer {
   font-size: 12px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
   margin: 0 0 8px 0;
 }
 
 .achievement-desc {
   font-size: 12px;
-  color: var(--muted, #64748b);
+  color: var(--muted, var(--muted));
   line-height: 1.55;
   margin: 0 0 14px 0;
   min-height: 36px;
@@ -4926,7 +4926,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .cert-college-details small {
   display: block;
   font-size: 9px;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 2px;
 }
 
@@ -4940,7 +4940,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -4980,7 +4980,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .cert-presented-text {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   font-style: italic;
   margin: 0 0 6px 0;
 }
@@ -5013,7 +5013,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .cert-desc-lead {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   font-style: italic;
   margin: 0 0 8px 0;
 }
@@ -5045,7 +5045,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .cert-skills-chips .skills-label {
   font-size: 10px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .cert-skill-pill {
@@ -5063,7 +5063,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
   padding-top: 18px;
   margin-top: 16px;
   gap: 16px;
@@ -5089,7 +5089,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .cert-qr-meta span {
   font-size: 9px;
   font-weight: 800;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -5183,7 +5183,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .sig-org {
   font-size: 8px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 @media print {
@@ -5272,7 +5272,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hero-pill-badge.primary {
   background: rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
+  color: var(--border);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -5413,7 +5413,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   padding: 8px;
   border-radius: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
 }
 
@@ -5516,7 +5516,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 16px;
   padding: 22px 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
   display: flex;
   flex-direction: column;
@@ -5539,7 +5539,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -5576,12 +5576,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .fmc-desc {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .fmc-progress-track {
   height: 8px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 999px;
   overflow: hidden;
   margin: 4px 0;
@@ -5612,11 +5612,11 @@ body.dark-theme .login-page .auth-pwd-toggle {
   justify-content: space-between;
   font-size: 12px;
   padding-bottom: 6px;
-  border-bottom: 1px dashed #e2e8f0;
+  border-bottom: 1px dashed var(--border);
 }
 
 .acc-row span {
-  color: #64748b;
+  color: var(--muted);
 }
 
 .acc-row strong {
@@ -5625,7 +5625,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .fmc-hub-text {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.5;
   margin: 0;
 }
@@ -5674,7 +5674,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-academic-secondary:hover {
-  background: #e2e8f0;
+  background: var(--border);
 }
 
 /* 5. Fee Component Itemization Cards */
@@ -5695,7 +5695,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .section-title-lockup p {
   margin: 2px 0 0;
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .breakdown-status-tag {
@@ -5718,7 +5718,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   display: flex;
   gap: 12px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -5759,7 +5759,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .comp-info p {
   margin: 4px 0 10px;
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.4;
   flex: 1;
 }
@@ -5792,7 +5792,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .ledger-card-wrap {
   background: #ffffff;
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   padding: 20px;
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
 }
@@ -5814,7 +5814,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .ledger-card-header p {
   margin: 2px 0 0;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .btn-download-file-tag {
@@ -5830,7 +5830,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-download-file-tag:hover {
-  background: #e2e8f0;
+  background: var(--border);
 }
 
 .ledger-table-responsive {
@@ -5851,7 +5851,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   text-align: left;
 }
 
@@ -6111,7 +6111,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 18px;
   padding: 22px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
 }
 
@@ -6132,7 +6132,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .rtc-header p {
   margin: 2px 0 0;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .status-live-chip {
@@ -6190,7 +6190,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .t-step-line {
   width: 2px;
   flex: 1;
-  background: #e2e8f0;
+  background: var(--border);
   margin: 4px 0;
 }
 
@@ -6216,7 +6216,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .t-step-info p {
   margin: 0;
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .boarding-pill {
@@ -6253,7 +6253,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 16px 18px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   display: flex;
   gap: 14px;
 }
@@ -6293,7 +6293,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .sc-info p {
   margin: 0 0 8px;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .btn-call-driver {
@@ -6417,7 +6417,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 16px;
   padding: 20px 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
 }
 
@@ -6438,7 +6438,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .prog-header p {
   margin: 2px 0 0;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .prog-average {
@@ -6515,14 +6515,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .bar-credits {
   font-size: 10px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 /* Course Table Card */
 .courses-table-card {
   background: #ffffff;
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   padding: 20px;
   box-shadow: 0 4px 16px rgba(11, 30, 59, 0.04);
 }
@@ -6554,7 +6554,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .sem-tab-btn:hover {
-  background: #e2e8f0;
+  background: var(--border);
 }
 
 .sem-tab-btn.active {
@@ -6566,7 +6566,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .ctc-sub {
   margin: 6px 0 0;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .btn-download-memo {
@@ -6633,7 +6633,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border-top: 1px solid #f1f5f9;
   padding-top: 12px;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .grade-legend {
@@ -6683,7 +6683,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   flex-direction: column;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .modal-top-bar {
@@ -6691,7 +6691,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   background: #f8fafc;
 }
 
@@ -6699,7 +6699,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -6711,7 +6711,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-modal-close {
-  background: #e2e8f0;
+  background: var(--border);
   border: none;
   width: 32px;
   height: 32px;
@@ -6743,7 +6743,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   justify-content: flex-end;
   gap: 12px;
   padding: 14px 24px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
   background: #ffffff;
 }
 
@@ -6916,7 +6916,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .f-btn-primary {
   background: #f59e0b;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .f-btn-primary:hover {
@@ -6927,7 +6927,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 /* 2. Campus & Branch Selector Card */
 .faculty-selector-card {
   background: var(--surface, #ffffff);
-  border: 1px solid var(--line, #e2e8f0);
+  border: 1px solid var(--line, var(--border));
   border-radius: 14px;
   padding: 16px 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -6952,14 +6952,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .selector-title {
   font-size: 13px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .selector-hint {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 2px;
 }
 
@@ -6976,7 +6976,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 10px;
   padding: 10px 18px;
   background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -7021,7 +7021,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .campus-pill-text small {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .campus-pill-btn.active .campus-pill-text small {
@@ -7047,7 +7047,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 10px;
   padding: 8px 14px;
   background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -7070,7 +7070,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 12px;
   font-weight: 800;
   padding: 3px 7px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 5px;
   color: #334155;
   letter-spacing: 0.04em;
@@ -7094,7 +7094,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .branch-name-info small {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 /* 3. Cohort Demographic KPI Cards */
@@ -7107,7 +7107,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .cohort-kpi-card {
   background: #ffffff;
   border-radius: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   padding: 18px 20px;
   display: flex;
   align-items: flex-start;
@@ -7158,7 +7158,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .kpi-label {
   font-size: 11px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   letter-spacing: 0.06em;
   display: block;
   margin-bottom: 4px;
@@ -7174,7 +7174,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .kpi-main-val {
   font-size: 26px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -7195,7 +7195,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .kpi-breakdown {
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
   line-height: 1.45;
 }
@@ -7215,7 +7215,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--border);
   padding-bottom: 2px;
   overflow-x: auto;
 }
@@ -7232,13 +7232,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--muted);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .faculty-tab-btn:hover {
-  color: #0f172a;
+  color: var(--text);
   background: rgba(241, 245, 249, 0.5);
   border-radius: 8px 8px 0 0;
 }
@@ -7284,7 +7284,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 /* 5. Controls & Filter Bars */
 .tab-controls-bar {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px 20px;
   display: flex;
@@ -7322,7 +7322,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border: 1px solid #cbd5e1;
   background: #f8fafc;
   font-size: 13px;
-  color: #0f172a;
+  color: var(--text);
   outline: none;
   cursor: pointer;
 }
@@ -7361,7 +7361,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border: 1px solid #cbd5e1;
   background: #f8fafc;
   font-size: 13px;
-  color: #0f172a;
+  color: var(--text);
   outline: none;
 }
 
@@ -7379,7 +7379,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .team-project-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 20px;
   display: flex;
@@ -7432,7 +7432,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   align-items: center;
   gap: 6px;
   background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   font-size: 11px;
   font-weight: 600;
   color: #334155;
@@ -7451,7 +7451,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .team-project-title {
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 8px 0;
   line-height: 1.4;
 }
@@ -7466,7 +7466,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 11px;
   font-weight: 500;
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   color: #475569;
   padding: 2px 7px;
   border-radius: 4px;
@@ -7488,12 +7488,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 12px;
 }
 
-.p-label { color: #64748b; font-weight: 600; }
-.p-val { color: #0f172a; }
+.p-label { color: var(--muted); font-weight: 600; }
+.p-val { color: var(--text); }
 
 .f-progress-track {
   height: 7px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -7509,7 +7509,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: flex;
   justify-content: space-between;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 2px;
 }
 
@@ -7540,7 +7540,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .residence-ratio-badge {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   font-weight: 600;
 }
 
@@ -7607,7 +7607,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .member-name {
   font-size: 12.5px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .lead-tag {
@@ -7632,7 +7632,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .member-roll {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   font-family: monospace;
 }
 
@@ -7718,11 +7718,11 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .f-btn-secondary {
   background: #f1f5f9;
   color: #334155;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .f-btn-secondary:hover {
-  background: #e2e8f0;
+  background: var(--border);
 }
 
 .f-btn-ghost {
@@ -7780,7 +7780,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .register-table-wrapper {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
@@ -7801,7 +7801,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 11px;
   letter-spacing: 0.05em;
   padding: 12px 16px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .faculty-data-table tbody td {
@@ -7846,7 +7846,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .stu-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -7863,7 +7863,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .stu-roll {
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
   font-family: monospace;
 }
 
@@ -7905,12 +7905,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .team-pill-table small {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .role-text {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .unassigned-text {
@@ -7921,7 +7921,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .cgpa-val {
   font-size: 13.5px;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .att-val {
@@ -7968,7 +7968,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 /* 8. Pending Activity Reviews Desk */
 .reviews-header-banner {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px 24px;
   display: flex;
@@ -7981,12 +7981,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 18px;
   font-weight: 800;
   margin: 0 0 4px 0;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .reviews-header-banner p {
   font-size: 13px;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
   max-width: 720px;
 }
@@ -8010,7 +8010,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .pending-review-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -8037,14 +8037,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .review-title {
   font-size: 15px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
   margin: 4px 0;
   line-height: 1.35;
 }
 
 .review-issuer {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .points-award-pill {
@@ -8108,13 +8108,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .student-profile-mini strong {
   font-size: 13px;
-  color: #0f172a;
+  color: var(--text);
   display: block;
 }
 
 .student-profile-mini small {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .review-actions-group {
@@ -8199,13 +8199,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .shortage-count-box span {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   font-weight: 600;
 }
 
 .shortage-table-wrapper {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -8244,7 +8244,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 /* 10. Student Modal Extras */
 .modal-sgpa-table {
   margin-top: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -8258,7 +8258,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .admin-status-box {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 16px;
   display: flex;
@@ -8299,13 +8299,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .empty-state-box h3 {
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 6px 0;
 }
 
 .empty-state-box p {
   font-size: 13px;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -8448,7 +8448,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-hod-export {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: 1px solid #38bdf8;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
@@ -8474,7 +8474,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: var(--surface, #ffffff);
   border-radius: 14px;
   padding: 16px 20px;
-  border: 1px solid var(--line, #e2e8f0);
+  border: 1px solid var(--line, var(--border));
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -8515,7 +8515,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 10px;
   padding: 10px 16px;
   background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -8558,12 +8558,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .pill-name {
   font-size: 14px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .pill-sub {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .pill-check {
@@ -8577,7 +8577,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 13px;
   font-weight: 800;
   padding: 4px 8px;
-  background: #e2e8f0;
+  background: var(--border);
   color: #1e293b;
   border-radius: 6px;
 }
@@ -8595,7 +8595,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   padding: 8px 12px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
@@ -8616,7 +8616,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hod-tab-btn:hover {
   background: #f1f5f9;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .hod-tab-btn.active {
@@ -8635,7 +8635,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   padding: 2px 7px;
   border-radius: 20px;
   background: rgba(148, 163, 184, 0.18);
-  color: #64748b;
+  color: var(--muted);
 }
 
 .hod-tab-btn.active .tab-pill-badge {
@@ -8686,7 +8686,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
@@ -8696,7 +8696,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   overflow: hidden;
 }
 
-.hod-kpi-card.accent-blue { border-top: 4px solid #0284c7; }
+.hod-kpi-card.accent-blue { border-top: 4px solid var(--blue); }
 .hod-kpi-card.accent-cyan { border-top: 4px solid #06b6d4; }
 .hod-kpi-card.accent-green { border-top: 4px solid #10b981; }
 .hod-kpi-card.accent-purple { border-top: 4px solid #8b5cf6; }
@@ -8713,7 +8713,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .kpi-tag {
@@ -8739,7 +8739,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .kpi-number {
   font-size: 32px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   line-height: 1;
 }
 
@@ -8748,13 +8748,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .kpi-subtext {
   font-size: 12.5px;
-  color: #64748b;
+  color: var(--muted);
   font-weight: 500;
 }
 
 .kpi-progress-bar {
   height: 6px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -8767,7 +8767,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .kpi-footer {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -8795,7 +8795,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 20px 22px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
@@ -8812,13 +8812,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .chart-title {
   font-size: 16px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 4px 0;
 }
 
 .chart-subtitle {
   font-size: 12.5px;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -8880,7 +8880,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 12px;
   color: #475569;
   margin-top: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 /* Backlog Badges */
@@ -8898,7 +8898,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .badge-backlog-1 {
   background: #f0f9ff;
-  color: #0284c7;
+  color: var(--blue);
   border: 1px solid #bae6fd;
   font-size: 11px;
   font-weight: 700;
@@ -8949,14 +8949,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   padding: 20px 24px;
   border-radius: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-bottom: 16px;
 }
 
 .section-title {
   font-size: 19px;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 6px 0;
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
@@ -8964,7 +8964,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .section-desc {
   font-size: 13px;
-  color: #64748b;
+  color: var(--muted);
   margin: 0;
   max-width: 800px;
 }
@@ -9031,7 +9031,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .backlog-tier-card {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 14px;
   text-align: center;
@@ -9060,18 +9060,18 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .tier-count {
   font-size: 26px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   line-height: 1.1;
 }
 
 .tier-pct {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   margin-top: 4px;
 }
 
 .tier-zero.active { border-color: #10b981; }
-.tier-one.active { border-color: #0284c7; }
+.tier-one.active { border-color: var(--blue); }
 .tier-two.active { border-color: #f59e0b; }
 .tier-three.active { border-color: #f97316; }
 .tier-danger.active { border-color: #ef4444; }
@@ -9085,7 +9085,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   padding: 12px 18px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-bottom: 14px;
 }
 
@@ -9105,7 +9105,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border-radius: 8px;
   padding: 6px 12px;
   flex: 1;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .search-box input {
@@ -9114,7 +9114,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   outline: none;
   font-size: 13.5px;
   width: 100%;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .clear-search {
@@ -9145,7 +9145,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .hod-table-wrap {
   background: #ffffff;
   border-radius: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
 }
@@ -9155,14 +9155,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
   background: #fafafa;
 }
 
 .table-inner-header h3 {
   font-size: 15px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0;
 }
 
@@ -9181,7 +9181,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 12px 18px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .hod-data-table td {
@@ -9210,7 +9210,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: var(--border);
   color: #1e293b;
   font-size: 12px;
   font-weight: 800;
@@ -9221,12 +9221,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .student-name-text {
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .student-roll-text {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
   font-family: monospace;
 }
 
@@ -9249,7 +9249,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .residence-pill.day-scholar {
   background: #f0f9ff;
-  color: #0284c7;
+  color: var(--blue);
   border: 1px solid #bae6fd;
 }
 
@@ -9288,7 +9288,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .tag-drive-ineligible {
   background: #f1f5f9;
-  color: #64748b;
+  color: var(--muted);
   font-size: 11px;
   font-weight: 600;
   padding: 3px 8px;
@@ -9329,7 +9329,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .metric-eligible { border-top: 4px solid #10b981; }
@@ -9339,7 +9339,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .box-title {
   font-size: 13px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -9347,7 +9347,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .box-count {
   font-size: 34px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 8px 0;
 }
 
@@ -9362,14 +9362,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 20px 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-top: 16px;
 }
 
 .subcard-title {
   font-size: 15px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 14px 0;
 }
 
@@ -9381,7 +9381,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .company-badge-item {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
   display: flex;
@@ -9392,12 +9392,12 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .comp-name {
   font-size: 13px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .comp-role {
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .comp-stipend {
@@ -9428,7 +9428,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-size: 12.5px;
   font-weight: 600;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   color: #475569;
   cursor: pointer;
@@ -9437,7 +9437,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hub-chip-btn:hover {
   background: #f1f5f9;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .hub-chip-btn.active {
@@ -9468,7 +9468,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .kiet-hub-card {
   background: #ffffff;
   border-radius: 14px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
   cursor: pointer;
@@ -9478,7 +9478,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .kiet-hub-card:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(2, 132, 199, 0.1);
 }
@@ -9535,19 +9535,19 @@ body.dark-theme .login-page .auth-pwd-toggle {
   object-fit: contain;
   background: #f8fafc;
   padding: 2px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .hub-name {
   font-size: 14.5px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0;
 }
 
 .hub-category {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .hub-desc {
@@ -9586,11 +9586,11 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hub-enrollment-tag {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .hub-enrollment-tag strong {
-  color: #0f172a;
+  color: var(--text);
 }
 
 .btn-view-hub-members {
@@ -9616,7 +9616,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border-radius: 4px;
 }
 
-.badge-club.coding { background: #e0f2fe; color: #0284c7; }
+.badge-club.coding { background: #e0f2fe; color: var(--blue); }
 .badge-club.c4gt { background: #ccfbf1; color: #0f766e; }
 .badge-club.smartcity { background: #d1fae5; color: #047857; }
 .badge-club.ncc_nss { background: #e0e7ff; color: #4338ca; }
@@ -9644,10 +9644,10 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #ffffff;
   border-radius: 14px;
   padding: 22px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
-.day-scholars-box { border-top: 4px solid #0284c7; }
+.day-scholars-box { border-top: 4px solid var(--blue); }
 .hostelers-box { border-top: 4px solid #f59e0b; }
 
 .demo-header {
@@ -9664,13 +9664,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .demo-title {
   font-size: 16px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0;
 }
 
 .demo-sub {
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .demo-count-row {
@@ -9683,14 +9683,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .demo-big-num {
   font-size: 36px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   line-height: 1;
 }
 
 .demo-ratio {
   font-size: 14px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .demo-desc {
@@ -9753,7 +9753,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   font-weight: 800;
   font-size: 16px;
@@ -9804,7 +9804,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .modal-info-panel, .modal-clubs-panel {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px;
 }
@@ -9812,7 +9812,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .panel-title {
   font-size: 13px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
   margin: 0 0 10px 0;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -9832,24 +9832,24 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .info-label {
-  color: #64748b;
+  color: var(--muted);
 }
 
 .info-value {
-  color: #0f172a;
+  color: var(--text);
 }
 
 .modal-footer {
   padding: 14px 24px;
   background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
 
 .btn-modal-action {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   padding: 9px 16px;
@@ -9882,7 +9882,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 /* Admin Header Card */
 .admin-header-card {
-  background: linear-gradient(135deg, #0b2448 0%, #103463 50%, #0284c7 100%);
+  background: linear-gradient(135deg, var(--navy) 0%, #103463 50%, var(--blue) 100%);
   border-radius: 16px;
   padding: 24px 28px;
   color: #ffffff;
@@ -9960,7 +9960,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   transition: all 0.2s ease;
   white-space: nowrap;
   background: #ffffff;
-  color: #0b2448;
+  color: var(--navy);
   border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
@@ -9999,7 +9999,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #0284c7;
+  background: var(--blue);
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
 }
 
@@ -10034,14 +10034,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .admin-scope-pill:hover {
   background: var(--surface-hover);
-  border-color: #0284c7;
+  border-color: var(--blue);
   color: var(--navy);
 }
 
 .admin-scope-pill.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 3px 10px rgba(2, 132, 199, 0.2);
 }
 
@@ -10105,7 +10105,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .admin-tab-btn.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   box-shadow: 0 3px 10px rgba(2, 132, 199, 0.2);
 }
@@ -10173,7 +10173,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
-.admin-kpi-card.accent-sky { border-top: 4px solid #0284c7; }
+.admin-kpi-card.accent-sky { border-top: 4px solid var(--blue); }
 .admin-kpi-card.accent-emerald { border-top: 4px solid #10b981; }
 .admin-kpi-card.accent-purple { border-top: 4px solid #8b5cf6; }
 .admin-kpi-card.accent-amber { border-top: 4px solid #f59e0b; }
@@ -10280,9 +10280,9 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-chart-action:hover {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
 }
 
 .chart-footer-metrics {
@@ -10303,7 +10303,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .chip-kiet { background: rgba(51, 65, 85, 0.1); color: #334155; border: 1px solid rgba(51, 65, 85, 0.2); }
-.chip-kietplus { background: rgba(100, 116, 139, 0.1); color: #64748b; border: 1px solid rgba(100, 116, 139, 0.2); }
+.chip-kietplus { background: rgba(100, 116, 139, 0.1); color: var(--muted); border: 1px solid rgba(100, 116, 139, 0.2); }
 .chip-kiew { background: rgba(71, 85, 105, 0.1); color: #475569; border: 1px solid rgba(71, 85, 105, 0.2); }
 
 /* Campus Profiles Section */
@@ -10471,7 +10471,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-admin-action {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   padding: 10px 18px;
@@ -10520,7 +10520,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .card-1st { border-top: 4px solid #10b981; }
-.card-2nd { border-top: 4px solid #0284c7; }
+.card-2nd { border-top: 4px solid var(--blue); }
 .card-3rd { border-top: 4px solid #f59e0b; }
 .card-4th { border-top: 4px solid #8b5cf6; }
 
@@ -10761,7 +10761,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .admin-hod-card:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   background: var(--surface);
   box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12);
   transform: translateY(-2px);
@@ -10841,7 +10841,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hod-title {
   font-size: 11.5px;
-  color: #0284c7;
+  color: var(--blue);
   font-weight: 700;
   display: block;
 }
@@ -10890,7 +10890,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .admin-select:focus {
-  border-color: #0284c7;
+  border-color: var(--blue);
 }
 
 /* Data Table Card */
@@ -10964,7 +10964,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   border-radius: 4px;
 }
 
-.residence-tag.day-scholar { background: rgba(2, 132, 199, 0.12); color: #0284c7; }
+.residence-tag.day-scholar { background: rgba(2, 132, 199, 0.12); color: var(--blue); }
 .residence-tag.hosteler { background: rgba(245, 158, 11, 0.12); color: #b45309; }
 
 .campus-badge-small {
@@ -10983,7 +10983,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   padding: 2px 6px;
   border-radius: 4px;
   background: rgba(2, 132, 199, 0.12);
-  color: #0284c7;
+  color: var(--blue);
 }
 
 .category-pill {
@@ -10992,7 +10992,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   padding: 2px 6px;
   border-radius: 4px;
   background: rgba(2, 132, 199, 0.1);
-  color: #0284c7;
+  color: var(--blue);
 }
 
 .tag-live-fleet {
@@ -11016,7 +11016,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .btn-table-action {
   background: rgba(2, 132, 199, 0.08);
-  color: #0284c7;
+  color: var(--blue);
   border: 1px solid rgba(2, 132, 199, 0.2);
   font-size: 11.5px;
   font-weight: 700;
@@ -11027,7 +11027,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-table-action:hover {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
 }
 
@@ -11111,7 +11111,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .btn-view-evidence {
   font-size: 11.5px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
   text-decoration: none;
 }
 
@@ -11144,7 +11144,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .admin-modal-card .modal-header {
   padding: 18px 24px;
-  background: #0b2448;
+  background: var(--navy);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -11200,7 +11200,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .admin-modal-card .btn-modal-action {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   padding: 9px 16px;
@@ -11329,7 +11329,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-overall-primary {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   font-weight: 800;
@@ -11388,7 +11388,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: #0284c7;
+  color: var(--blue);
   display: block;
   margin-bottom: 4px;
 }
@@ -11430,7 +11430,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .campus-switcher-btn:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   background: var(--surface);
 }
 
@@ -11519,7 +11519,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .featured-campus-tag {
-  color: #0284c7;
+  color: var(--blue);
   font-size: 12.5px;
   font-weight: 700;
   display: block;
@@ -11598,9 +11598,9 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-campus-link:hover {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
 }
 
 /* 8 Innovation Hubs & Labs Grid */
@@ -11635,7 +11635,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .hub-card:hover {
   background: var(--surface);
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
   transform: translateY(-2px);
 }
@@ -11682,7 +11682,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .hub-category-tag {
   font-size: 11px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
   display: block;
   margin-bottom: 8px;
 }
@@ -11730,7 +11730,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .hub-action-btn {
   background: none;
   border: none;
-  color: #0284c7;
+  color: var(--blue);
   font-size: 11.5px;
   font-weight: 800;
   cursor: pointer;
@@ -11825,7 +11825,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .app-institutional-footer {
   padding: 18px 24px;
   text-align: center;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
   margin-top: 36px;
   background: transparent;
 }
@@ -11836,7 +11836,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   justify-content: center;
   gap: 8px;
   font-size: 11.5px;
-  color: #64748b;
+  color: var(--muted);
   font-weight: 600;
   letter-spacing: 0.2px;
 }
@@ -11878,7 +11878,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   gap: 7px;
   font-size: 11.5px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
 }
 
 .theme-toggle-content.light {
@@ -11899,7 +11899,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .profile-chip.clickable:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
   transform: translateY(-1px);
 }
@@ -11914,7 +11914,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #0284c7, #0369a1);
+  background: linear-gradient(135deg, var(--blue), #0369a1);
   color: #ffffff;
   display: grid;
   place-items: center;
@@ -11935,7 +11935,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: inline-block;
   font-size: 11.5px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
   margin-top: 3px;
 }
 
@@ -12005,7 +12005,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .profile-tag {
   background: var(--blue-soft);
-  color: #0284c7;
+  color: var(--blue);
   border: 1px solid rgba(2, 132, 199, 0.2);
   padding: 5px 10px;
   border-radius: 8px;
@@ -12116,7 +12116,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-add-project {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   font-size: 13px;
@@ -12162,14 +12162,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .project-cat-btn:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   color: var(--navy);
 }
 
 .project-cat-btn.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
 }
 
@@ -12240,7 +12240,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #0284c7;
+  color: var(--blue);
   background: var(--blue-soft);
   padding: 3px 9px;
   border-radius: 6px;
@@ -12325,7 +12325,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-project-link.github {
-  background: #0f172a;
+  background: var(--text);
   color: #ffffff;
 }
 
@@ -12335,7 +12335,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-project-link.live {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
 }
 
@@ -12407,7 +12407,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .btn-add-internship {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
   border: none;
   font-size: 13px;
@@ -12453,14 +12453,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .intern-filter-btn:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   color: var(--navy);
 }
 
 .intern-filter-btn.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
 }
 
@@ -12488,7 +12488,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .internship-card:hover {
   transform: translateY(-2px);
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 8px 24px rgba(2, 132, 199, 0.1);
 }
 
@@ -12529,7 +12529,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .intern-company-name {
   font-size: 13px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
 }
 
 .intern-top-badges {
@@ -12608,7 +12608,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   align-items: center;
   gap: 6px;
   font-size: 10.5px;
-  color: #0284c7;
+  color: var(--blue);
   letter-spacing: 0.5px;
   margin-bottom: 5px;
 }
@@ -12652,7 +12652,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .btn-view-dossier {
   background: transparent;
   border: 1px solid var(--line);
-  color: #0284c7;
+  color: var(--blue);
   font-size: 12px;
   font-weight: 800;
   padding: 6px 14px;
@@ -12663,7 +12663,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .btn-view-dossier:hover {
   background: var(--blue-soft);
-  border-color: #0284c7;
+  border-color: var(--blue);
 }
 
 /* 5. OVERALL CAMPUS CLEAN & AIRY REFINEMENTS */
@@ -12677,7 +12677,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .clickable-leader-box:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   background: var(--blue-soft);
   transform: translateY(-1px);
 }
@@ -12715,14 +12715,14 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .hubs-filter-btn:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   color: var(--navy);
 }
 
 .hubs-filter-btn.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
 }
 
 /* 6. ACTIVITIES TABS & DETAILS */
@@ -12838,21 +12838,21 @@ body.dark-theme .login-page .auth-pwd-toggle {
 }
 
 .activity-tab-btn:hover {
-  border-color: #0284c7;
+  border-color: var(--blue);
   color: var(--navy);
 }
 
 .activity-tab-btn.active {
-  background: #0284c7;
+  background: var(--blue);
   color: #ffffff;
-  border-color: #0284c7;
+  border-color: var(--blue);
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
 }
 
 .activity-issuer-chip {
   font-size: 9.5px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--muted);
   background: var(--bg);
   border: 1px solid var(--line);
   padding: 2px 7px;
@@ -12869,7 +12869,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 .skill-chip {
   font-size: 9.5px;
   font-weight: 700;
-  color: #0284c7;
+  color: var(--blue);
   background: var(--blue-soft);
   padding: 2px 7px;
   border-radius: 4px;
@@ -12878,17 +12878,17 @@ body.dark-theme .login-page .auth-pwd-toggle {
 /* Semantic Classes for Student Internships, Projects & Activities */
 .modal-subtitle {
   font-size: 11px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .intern-duration-lbl {
-  color: #0284c7;
+  color: var(--blue);
   font-weight: 700;
 }
 
 .intern-dossier-sub {
   font-size: 11px;
-  color: #0284c7;
+  color: var(--blue);
   font-weight: 800;
 }
 
@@ -12900,13 +12900,13 @@ body.dark-theme .login-page .auth-pwd-toggle {
   background: #f8fafc;
   padding: 14px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-bottom: 14px;
 }
 
 .intern-deliverables-title {
   font-size: 12px;
-  color: #0f172a;
+  color: var(--text);
   display: block;
   margin-bottom: 6px;
 }
@@ -12942,7 +12942,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
 
 .activity-manage-link {
   font-size: 11px;
-  color: var(--primary, #0284c7);
+  color: var(--primary, var(--blue));
   font-weight: 800;
   text-decoration: none;
 }
@@ -12952,7 +12952,7 @@ body.dark-theme .login-page .auth-pwd-toggle {
   display: inline-block;
   font-size: 11.5px;
   font-weight: 800;
-  color: var(--primary, #0284c7);
+  color: var(--primary, var(--blue));
   text-decoration: none;
 }
 
@@ -15309,7 +15309,7 @@ select {
   font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.05em;
-  color: #64748b;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
@@ -15320,7 +15320,7 @@ select {
   gap: 10px;
   padding: 10px 16px;
   background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--border);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
