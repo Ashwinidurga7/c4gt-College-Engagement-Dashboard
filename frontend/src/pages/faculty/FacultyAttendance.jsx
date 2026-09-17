@@ -167,23 +167,20 @@ export default function FacultyAttendance() {
 
   return (
     <div className="student-dashboard faculty-view">
-      {/* Page Header */}
-      <div className="page-title-row">
-        <div>
-          <div className="eyebrow">
-            <span>KIET FACULTY PORTAL</span>
-            <span className="bullet-sep">•</span>
-            <span>ACADEMIC ATTENDANCE REGISTER</span>
-          </div>
-          <h1>Student Attendance Management</h1>
-          <p>
-            Monitor and record 12-month working-days attendance for all sections across KIET, KIET+, and KIET Women's campuses.
-            Track Day Scholars vs. Hostelers and Capstone Teams.
+      {/* 1. Clean Institutional Header */}
+      <div className="faculty-hero-banner" style={{ marginBottom: 20 }}>
+        <div className="faculty-header-meta">
+          <span className="faculty-governance-tag">👨‍🏫 FACULTY • ATTENDANCE COMMAND</span>
+          <h1 className="faculty-title maven-black">
+            Student Attendance Management
+          </h1>
+          <p className="faculty-subtitle">
+            Monitor and record 12-month working-days attendance across KIET campuses. Track Day Scholars vs. Hostelers and Capstone Teams.
           </p>
         </div>
-        <div className="faculty-actions-top">
-          <button type="button" className="button button-primary" onClick={handleMarkAllPresent}>
-            Mark Section Present Today
+        <div className="faculty-hero-actions">
+          <button type="button" className="btn-faculty-broadcast" onClick={handleMarkAllPresent}>
+            <span>✓ Mark Section Present Today</span>
           </button>
         </div>
       </div>
@@ -296,7 +293,7 @@ export default function FacultyAttendance() {
       <section className="surface-card faculty-register">
         <div className="card-header-flex">
           <div>
-            <h2 className="card-title">Class Attendance Register</h2>
+            <h2 className="card-title maven-black">Class Attendance Register</h2>
             <p className="card-subtitle">
               Click "View 12-Mo. Sheet" on any student to inspect or adjust monthly working days and present days.
             </p>
@@ -513,7 +510,7 @@ function Metric({ label, value, tone = 'blue' }) {
   return (
     <div className={`faculty-metric metric-tone-${tone}`}>
       <span className="metric-label">{label}</span>
-      <strong className="metric-value">{value}</strong>
+      <strong className="metric-value maven-black">{value}</strong>
     </div>
   )
 }

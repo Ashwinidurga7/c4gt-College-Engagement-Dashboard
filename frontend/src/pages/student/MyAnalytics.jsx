@@ -36,7 +36,7 @@ export default function MyAnalytics(){
       <section className="space-hero analytics-hero">
         <div className="space-hero-copy">
           <span className="space-eyebrow">MY SPACE · INSIGHTS</span>
-          <h1>My Analytics</h1>
+          <h1 className="maven-black">My Analytics</h1>
           <p>See how your participation is building over time, what categories you explore most, and where your verified progress stands.</p>
           <div className="space-hero-tags"><span>Participation</span><span>Progress</span><span>Trends</span></div>
         </div>
@@ -44,24 +44,18 @@ export default function MyAnalytics(){
       </section>
 
       <section className="space-stat-grid">
-        <div className="space-stat"><span>Engagement Score</span><strong>{engagementScore}</strong><small>Based on your current activity mix</small></div>
-        <div className="space-stat"><span>Verified</span><strong>{verified}</strong><small>Completed and approved</small></div>
-        <div className="space-stat"><span>Pending</span><strong>{pending}</strong><small>Still under review</small></div>
-        <div className="space-stat"><span>Categories</span><strong>{byCategory.length}</strong><small>Areas you have explored</small></div>
+        <div className="space-stat"><span>Engagement Score</span><strong className="maven-black">{engagementScore}</strong><small>Based on your current activity mix</small></div>
+        <div className="space-stat"><span>Verified</span><strong className="maven-black">{verified}</strong><small>Completed and approved</small></div>
+        <div className="space-stat"><span>Pending</span><strong className="maven-black">{pending}</strong><small>Still under review</small></div>
+        <div className="space-stat"><span>Categories</span><strong className="maven-black">{byCategory.length}</strong><small>Areas you have explored</small></div>
       </section>
 
       <section className="analytics-grid-v2">
-        <article className="analytics-card-v2 wide"><div className="analytics-head"><div><span>ACTIVITY MIX</span><h3>Activities by category</h3></div><strong>{my.length} total</strong></div><div className="chart-box"><ResponsiveContainer width="100%" height={260}><BarChart data={byCategory}><CartesianGrid stroke="#e8eef7" strokeDasharray="4 4"/><XAxis dataKey="name" tick={{fontSize:11}}/><YAxis allowDecimals={false} tick={{fontSize:11}}/><Tooltip/><Bar dataKey="value" fill="#2458d3" radius={[8,8,0,0]}/></BarChart></ResponsiveContainer></div></article>
+        <article className="analytics-card-v2 wide"><div className="analytics-head"><div><span>ACTIVITY MIX</span><h3 className="maven-black">Activities by category</h3></div><strong className="maven-black">{my.length} total</strong></div><div className="chart-box"><ResponsiveContainer width="100%" height={260}><BarChart data={byCategory}><CartesianGrid stroke="#e8eef7" strokeDasharray="4 4"/><XAxis dataKey="name" tick={{fontSize:11}}/><YAxis allowDecimals={false} tick={{fontSize:11}}/><Tooltip/><Bar dataKey="value" fill="#2458d3" radius={[8,8,0,0]}/></BarChart></ResponsiveContainer></div></article>
 
-        <article className="analytics-card-v2"><div className="analytics-head"><div><span>STATUS</span><h3>Verification split</h3></div></div><div className="chart-box compact"><ResponsiveContainer width="100%" height={240}><PieChart><Pie data={[{name:'Verified',value:verified},{name:'Pending',value:pending}]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={55} outerRadius={88} paddingAngle={4}>{[verified,pending].map((_,i)=><Cell key={i} fill={COLORS[i]} />)}</Pie><Tooltip/></PieChart></ResponsiveContainer><div className="donut-legend"><span><i style={{background:COLORS[0]}} />Verified</span><span><i style={{background:COLORS[1]}} />Pending</span></div></div></article>
+        <article className="analytics-card-v2"><div className="analytics-head"><div><span>STATUS</span><h3 className="maven-black">Verification split</h3></div></div><div className="chart-box compact"><ResponsiveContainer width="100%" height={240}><PieChart><Pie data={[{name:'Verified',value:verified},{name:'Pending',value:pending}]} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={55} outerRadius={88} paddingAngle={4}>{[verified,pending].map((_,i)=><Cell key={i} fill={COLORS[i]} />)}</Pie><Tooltip/></PieChart></ResponsiveContainer><div className="donut-legend"><span><i style={{background:COLORS[0]}} />Verified</span><span><i style={{background:COLORS[1]}} />Pending</span></div></div></article>
 
-        <article className="analytics-card-v2"><div className="analytics-head"><div><span>PROGRESS</span><h3>Participation trend</h3></div><strong>{engagementScore}/100</strong></div><div className="chart-box"><ResponsiveContainer width="100%" height={230}><LineChart data={participationTrend}><CartesianGrid stroke="#e8eef7" strokeDasharray="4 4"/><XAxis dataKey="label" tick={{fontSize:11}}/><YAxis allowDecimals={false} tick={{fontSize:11}}/><Tooltip/><Line type="monotone" dataKey="value" stroke="#7356d8" strokeWidth={3} dot={{r:4}} activeDot={{r:6}}/></LineChart></ResponsiveContainer></div></article>
-      </section>
-
-      <section className="analytics-story-grid">
-        <div className="analytics-story"><img src={KIET.robotics} alt="KIET robotics and student learning" /><div><span>KIET LEARNING CULTURE</span><h3>From campus participation to practical skill</h3><p>KIET’s public site highlights AI, robotics, workshops and student-led communities — the same areas reflected in the engagement model.</p></div></div>
-        <div className="analytics-story"><img src={KIET.students} alt="KIET student innovation group" /><div><span>STUDENT COMMUNITIES</span><h3>More than a number</h3><p>Use your analytics to see which activities you enjoy most and where you can add the next meaningful milestone.</p></div></div>
-        <div className="analytics-story"><img src={KIET.clubs} alt="KIET student speaking activity" /><div><span>COMMUNITY</span><h3>Balance tech and leadership</h3><p>KIET features technical clubs, public speaking, leadership and sports alongside innovation-focused communities.</p></div></div>
+        <article className="analytics-card-v2"><div className="analytics-head"><div><span>PROGRESS</span><h3 className="maven-black">Participation trend</h3></div><strong className="maven-black">{engagementScore}/100</strong></div><div className="chart-box"><ResponsiveContainer width="100%" height={230}><LineChart data={participationTrend}><CartesianGrid stroke="#e8eef7" strokeDasharray="4 4"/><XAxis dataKey="label" tick={{fontSize:11}}/><YAxis allowDecimals={false} tick={{fontSize:11}}/><Tooltip/><Line type="monotone" dataKey="value" stroke="#7356d8" strokeWidth={3} dot={{r:4}} activeDot={{r:6}}/></LineChart></ResponsiveContainer></div></article>
       </section>
     </div>
   )

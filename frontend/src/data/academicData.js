@@ -163,13 +163,16 @@ export const demoStudent = {
     status: 'Active',
     type: 'Industrial / AICTE Internship',
   },
-  toastmastersMember: true,
-  roboticsMember: true,
+  codingMember: true,
+  c4gtMember: true,
   smartCityMember: true,
-  kiotAttended: true,
+  nccNssMember: false,
+  toastmastersMember: true,
+  sportsMember: false,
   hackathonAttended: true,
-  hubMember: true,
-  clubs: ['Toastmasters', 'KIET Robotics Lab', 'Smart City Lab', 'KIOT', 'Hackathons', 'Innovation Hub'],
+  roboticsMember: true,
+  cyberSecurityMember: true,
+  clubs: ['Google Coding Club', 'C4GT club', 'Smart City Lab', 'Toastmasters', 'Hackathons', 'Robotics', 'Cyber Security'],
 }
 
 const firstNames = [
@@ -202,94 +205,139 @@ export const internshipCompanies = [
 
 export const kietHubsMeta = [
   {
-    id: 'toastmasters',
-    name: 'KIET Toastmasters Club',
-    shortName: 'Toastmasters',
-    badge: 'International Chapter',
-    category: 'Communication & Leadership',
-    description: 'Chartered Toastmasters International chapter (Club #06541290) empowering engineering scholars in public speaking, impromptu speech crafting, and executive leadership.',
-    image: '/images/kiet/toastmasterslogo.jpg',
-    coverImage: '/images/kiet/aboutus_club2.jpg',
-    facultyLead: 'Prof. M. S. R. Prasad (Dean & HOD)',
-    meetingTime: 'Every Saturday 3:00 PM • Central Seminar Hall',
-    color: '#004165',
-    accentBg: '#e6f0f7',
-    icon: 'mic',
+    id: 'coding',
+    name: 'Google Coding Club',
+    shortName: 'Google Coding Club',
+    badge: 'Technical & AI',
+    category: 'Competitive Programming & Google Technologies Cell',
+    description: 'High-intensity algorithm sprint cell training engineers across LeetCode, Codeforces, Google Code Jam, HackerRank, and ICPC Collegiate programming contests.',
+    image: '/images/kiet/aboutus_club1.jpg',
+    coverImage: '/images/kiet/aboutus_hackathon.jpg',
+    facultyLead: 'Dr. G. Murali (Directorate Lead)',
+    meetingTime: 'Daily 9:00 PM • Turing Computer Labs 3 & 4',
+    color: '#0284c7',
+    accentBg: '#e0f2fe',
+    icon: 'terminal',
   },
   {
-    id: 'robotics',
-    name: 'KIET Robotics & Automation Lab',
-    shortName: 'Robotics Lab',
-    badge: 'Center of Excellence',
-    category: 'Robotics & Embedded Systems',
-    description: 'Premier robotics research lab equipped with 6-DOF industrial robotic arms, ROS-enabled autonomous rovers, hexacopter drone platforms, and machine vision telemetry.',
-    image: '/images/kiet/roboticslogo.jpg',
-    coverImage: '/images/kiet/aboutus_club1.jpg',
-    facultyLead: 'Dr. K. V. Ramana',
-    meetingTime: 'Mon - Fri 4:00 PM • Lab Block II, Robotics Bay',
-    color: '#d97706',
-    accentBg: '#fef3c7',
-    icon: 'cpu',
+    id: 'c4gt',
+    name: 'C4GT club',
+    shortName: 'C4GT club',
+    badge: 'Technical & AI',
+    category: 'Digital Public Goods & GovTech Open Source Chapter',
+    description: 'Dedicated open-source public tech cell contributing directly to national Digital Public Infrastructure (DPI), GovTech open repositories, and Samagra Open Source fellowships.',
+    image: '/images/kiet/aboutus_kiet.jpg',
+    coverImage: '/images/kiet/aboutus_ttl.jpg',
+    facultyLead: 'Dr. P. Suresh (Dean of Tech)',
+    meetingTime: 'Wed & Fri 4:00 PM • Digital Governance Lab 2',
+    color: '#0d9488',
+    accentBg: '#ccfbf1',
+    icon: 'code',
   },
   {
     id: 'smartcity',
-    name: 'KIET Smart City Lab',
+    name: 'Smart City Lab',
     shortName: 'Smart City Lab',
-    badge: 'IoT Center of Excellence',
-    category: 'Urban IoT & Sensor Networks',
-    description: 'Flagship research node deploying LoRaWAN and edge IoT sensor clusters across Korangi, Kakinada and Yanam for smart streetlighting, flood early warnings, and solar telemetry.',
-    image: '/images/kiet/smartcitylogo.jpg',
+    badge: 'Technical & AI',
+    category: 'Municipal Telemetry, IoT & Embedded Systems COE',
+    description: 'Applied municipal research center deploying low-power LoRaWAN sensor networks, real-time coastal weather telemetry, and automated utility monitors for Kakinada Smart City.',
+    image: '/images/kiet/aboutus_kiet.jpg',
     coverImage: '/images/kiet/aboutus_kiet.jpg',
-    facultyLead: 'Dr. Ch. Srinivas',
-    meetingTime: 'Tue & Thu 3:30 PM • IoT Innovation Center',
-    color: '#059669',
+    facultyLead: 'Dr. Ch. Rambabu (Director)',
+    meetingTime: 'Tue & Thu 3:30 PM • Data Labs Wing, Room 102',
+    color: '#10b981',
     accentBg: '#d1fae5',
     icon: 'activity',
   },
   {
-    id: 'kiot',
-    name: 'KIOT — K-IoT & Industrial Tour',
-    shortName: 'KIOT Immersion',
-    badge: 'Industry Immersion',
-    category: 'Experiential Learning & Industrial Visits',
-    description: 'Flagship KIET K-IoT initiative integrating intensive hands-on IoT hardware bootcamps, sensor fabrications, and curated industrial visits to tech clusters.',
-    image: '/images/kiet/aboutus_kiot.png',
-    coverImage: '/images/kiet/aboutus_kiot.png',
-    facultyLead: 'Industry Relations & Tech Dean',
-    meetingTime: 'Cohort Immersion Cycles & Semester Tours',
-    color: '#2563eb',
-    accentBg: '#dbeafe',
-    icon: 'compass',
+    id: 'ncc_nss',
+    name: 'NCC And Nss',
+    shortName: 'NCC And Nss',
+    badge: 'Societies & Outreach',
+    category: 'Discipline, National Service & Community Outreach',
+    description: 'Paramilitary discipline and social service cell conducting annual training camps, coastal afforestation drives, mega blood donation camps, and disaster relief across Kakinada district.',
+    image: '/images/kiet/aboutus_club4.jpg',
+    coverImage: '/images/kiet/aboutus_kiew.jpg',
+    facultyLead: 'Lt. K. Ramesh (Associate NCC Officer)',
+    meetingTime: 'Sat & Sun Morning • NCC Parade Ground',
+    color: '#4f46e5',
+    accentBg: '#e0e7ff',
+    icon: 'flag',
+  },
+  {
+    id: 'toastmasters',
+    name: 'Toastmasters',
+    shortName: 'Toastmasters',
+    badge: 'Societies & Outreach',
+    category: 'Public Speaking, Oratory & Executive Leadership',
+    description: 'Chartered institutional club training aspiring engineers in impromptu speaking, parliamentary debate, boardroom communication, and corporate negotiation.',
+    image: '/images/kiet/aboutus_club2.jpg',
+    coverImage: '/images/kiet/aboutus_club2.jpg',
+    facultyLead: 'Dr. K. Vijaya Lakshmi (Soft Skills Lead)',
+    meetingTime: 'Every Saturday 3:00 PM • Seminar Hall 2',
+    color: '#0ea5e9',
+    accentBg: '#e6f0f7',
+    icon: 'mic',
+  },
+  {
+    id: 'sports',
+    name: 'Kiet sports and athaletics council(kpl)',
+    shortName: 'KPL Sports Council',
+    badge: 'Societies & Outreach',
+    category: 'Inter-Campus Tournaments & Athletic Fitness Council',
+    description: 'Active sports board managing the annual KIET Premier League (KPL Day-Night cricket tournament), floodlit basketball & volleyball courts, and inter-university athletic meets.',
+    image: '/images/kiet/aboutus_club4.jpg',
+    coverImage: '/images/kiet/aboutus_club4.jpg',
+    facultyLead: 'Capt. R. Jagadeesh (Sports Secretary)',
+    meetingTime: 'Daily 6:00 AM & 4:30 PM • Central Sports Complex',
+    color: '#16a34a',
+    accentBg: '#dcfce7',
+    icon: 'award',
   },
   {
     id: 'hackathons',
-    name: 'KIET Hackathons & Codeathons Cell',
+    name: 'Hackathons',
     shortName: 'Hackathons',
-    badge: 'Competitive Innovation',
-    category: 'Competitions & Hackathons',
-    description: 'High-intensity competitive coding, Smart India Hackathon (SIH) teams, AP Innovation Society challenges, and national 36-hour hackathons.',
+    badge: 'Innovation & Competitions',
+    category: 'National Innovation Challenges & SIH Innovation Desk',
+    description: 'Specialized university committee mentoring squads for Smart India Hackathon (SIH), UNESCO India-Africa, AICTE Manthan, and national 48-hour hackathons.',
     image: '/images/kiet/aboutus_hackathon.jpg',
     coverImage: '/images/kiet/aboutus_hackathon.jpg',
-    facultyLead: 'Prof. P. Suresh',
-    meetingTime: 'Weekly Code Sprints & Hack Weekends',
-    color: '#7c3aed',
+    facultyLead: 'Dr. P. V. Suresh (Hackathon Mentor)',
+    meetingTime: 'Weekly Code Sprints • Innovation Tower 4th Floor',
+    color: '#8b5cf6',
     accentBg: '#ede9fe',
     icon: 'zap',
   },
   {
-    id: 'innovation_hub',
-    name: 'KIET Innovation & Incubation Hub',
-    shortName: 'Innovation Hub',
-    badge: 'Startup & Patent Cell',
-    category: 'Incubation & Entrepreneurship',
-    description: 'Autonomous incubator providing prototyping grants, patent filing support, seed funding access, and mentorship from Silicon Valley and JNTUK alumni.',
+    id: 'robotics',
+    name: 'Robotics',
+    shortName: 'Robotics',
+    badge: 'Technical & AI',
+    category: 'KIET Autonomous Systems & Robotics Club',
+    description: 'Advanced industrial robotics testbed at KIET designing ROS 2 autonomous exploration rovers, quadcopter inspection drones, LiDAR-equipped warehouse AGVs, and multi-axis robotic arms.',
     image: '/images/kiet/aboutus_club1.jpg',
-    coverImage: '/images/kiet/aboutus_kiek.jpg',
-    facultyLead: 'Head of Innovation & R&D',
-    meetingTime: 'Daily Open Incubator Coworking',
-    color: '#dc2626',
+    coverImage: '/images/kiet/aboutus_club1.jpg',
+    facultyLead: 'Dr. V. Subrahmanyam (Head of Robotics)',
+    meetingTime: 'Mon - Fri 4:00 PM • R&D Block I, Ground Floor',
+    color: '#ef4444',
     accentBg: '#fee2e2',
-    icon: 'award',
+    icon: 'cpu',
+  },
+  {
+    id: 'cybersecurity',
+    name: 'Cyber Security',
+    shortName: 'Cyber Security',
+    badge: 'Technical & AI',
+    category: 'KIET Cyber Defense, Ethical Hacking & Forensics COE',
+    description: 'Premier cybersecurity research & defense cell at KIET specializing in vulnerability assessment, penetration testing (VAPT), digital forensics, malware reverse-engineering, and national CTF challenges.',
+    image: '/images/kiet/aboutus_ttl.jpg',
+    coverImage: '/images/kiet/aboutus_kiet.jpg',
+    facultyLead: 'Prof. K. Satyanarayana (CISO & Forensics Lead)',
+    meetingTime: 'Tue & Thu 4:00 PM • Threat Intelligence Lab 3rd Floor',
+    color: '#0284c7',
+    accentBg: '#e0f2fe',
+    icon: 'shield',
   },
 ]
 
@@ -394,21 +442,27 @@ function generateAllStudents() {
         status: 'Active',
       } : null
 
-      // KIET Official Hubs & Clubs
+      // KIET Official Hubs & Clubs from Admin Portal
+      const codingMember = (i % 3 === 0 || i % 7 === 0)
+      const c4gtMember = (i % 5 === 0 || i % 8 === 0)
+      const smartCityMember = (i % 6 === 0 || i % 11 === 0)
+      const nccNssMember = (i % 7 === 0 || i % 13 === 0)
       const toastmastersMember = (i % 5 === 0 || i % 9 === 0)
+      const sportsMember = (i % 4 === 0 || i % 10 === 0)
+      const hackathonAttended = (i % 5 === 0 || i % 12 === 0)
       const roboticsMember = (i % 6 === 0 || i % 8 === 0 || (branch === 'AIDS' && i % 4 === 0))
-      const smartCityMember = (i % 7 === 0 || i % 10 === 0)
-      const kiotAttended = (i % 4 === 0 || i % 9 === 0)
-      const hackathonAttended = (i % 5 === 0 || i % 7 === 0 || i % 12 === 0)
-      const hubMember = (i % 6 === 0 || i % 11 === 0)
+      const cyberSecurityMember = (i % 5 === 0 || branch === 'CSC' || i % 9 === 0)
 
       const clubs = []
-      if (toastmastersMember) clubs.push('Toastmasters')
-      if (roboticsMember) clubs.push('KIET Robotics Lab')
+      if (codingMember) clubs.push('Google Coding Club')
+      if (c4gtMember) clubs.push('C4GT club')
       if (smartCityMember) clubs.push('Smart City Lab')
-      if (kiotAttended) clubs.push('KIOT')
+      if (nccNssMember) clubs.push('NCC And Nss')
+      if (toastmastersMember) clubs.push('Toastmasters')
+      if (sportsMember) clubs.push('Kiet sports and athaletics council(kpl)')
       if (hackathonAttended) clubs.push('Hackathons')
-      if (hubMember) clubs.push('Innovation Hub')
+      if (roboticsMember) clubs.push('Robotics')
+      if (cyberSecurityMember) clubs.push('Cyber Security')
 
       const totalFee = 98000
       const paidFee = (i % 5 === 0) ? 68000 : 98000
@@ -439,12 +493,15 @@ function generateAllStudents() {
         backlogStatus: activeBacklogs === 0 ? 'Zero Backlogs (All Clear)' : `${activeBacklogs} Backlog${activeBacklogs > 1 ? 's' : ''}`,
         driveEligible,
         internship,
-        toastmastersMember,
-        roboticsMember,
+        codingMember,
+        c4gtMember,
         smartCityMember,
-        kiotAttended,
+        nccNssMember,
+        toastmastersMember,
+        sportsMember,
         hackathonAttended,
-        hubMember,
+        roboticsMember,
+        cyberSecurityMember,
         clubs,
         fees: {
           total: totalFee,
@@ -470,11 +527,11 @@ function generateAllStudents() {
         },
         results: [
           { semester: 'I', sgpa: (7.6 + (i % 12) / 10).toFixed(2), credits: 21.5, status: 'Pass', backlogs: 0 },
-          { semester: 'II', sgpa: (7.8 + (i % 10) / 10).toFixed(2), credits: 21.5, status: activeBacklogs >= 1 ? 'Backlog (1)' : 'Pass', backlogs: activeBacklogs >= 1 ? 1 : 0 },
-          { semester: 'III', sgpa: (8.0 + (i % 8) / 10).toFixed(2), credits: 22.0, status: activeBacklogs >= 2 ? 'Backlog (1)' : 'Pass', backlogs: activeBacklogs >= 2 ? 1 : 0 },
-          { semester: 'IV', sgpa: (8.1 + (i % 7) / 10).toFixed(2), credits: 22.0, status: activeBacklogs >= 3 ? `Backlog (${activeBacklogs - 2})` : 'Pass', backlogs: Math.max(0, activeBacklogs - 2) },
+          { semester: 'II', sgpa: (7.8 + (i % 10) / 10).toFixed(2), credits: 21.5, status: 'Pass', backlogs: 0 },
+          { semester: 'III', sgpa: (7.9 + (i % 8) / 10).toFixed(2), credits: 22.0, status: 'Pass', backlogs: activeBacklogs > 1 ? 1 : 0 },
+          { semester: 'IV', sgpa: (8.1 + (i % 9) / 10).toFixed(2), credits: 22.0, status: 'Pass', backlogs: activeBacklogs > 0 ? activeBacklogs : 0 },
         ],
-        cgpa: cgpaVal,
+        cgpa: Number(cgpaVal),
       })
     }
   })
@@ -503,12 +560,15 @@ export function getDepartmentStats(campus = 'KIET', branch = 'AIDS') {
 
   const inInternships = cohort.filter(s => s.internship !== null)
 
-  const toastmasters = cohort.filter(s => s.toastmastersMember)
-  const robotics = cohort.filter(s => s.roboticsMember)
+  const coding = cohort.filter(s => s.codingMember)
+  const c4gt = cohort.filter(s => s.c4gtMember)
   const smartCity = cohort.filter(s => s.smartCityMember)
-  const kiot = cohort.filter(s => s.kiotAttended)
+  const nccNss = cohort.filter(s => s.nccNssMember)
+  const toastmasters = cohort.filter(s => s.toastmastersMember)
+  const sports = cohort.filter(s => s.sportsMember)
   const hackathons = cohort.filter(s => s.hackathonAttended)
-  const hub = cohort.filter(s => s.hubMember)
+  const robotics = cohort.filter(s => s.roboticsMember)
+  const cyberSecurity = cohort.filter(s => s.cyberSecurityMember)
 
   const avgAttendance = total > 0 ? Number((cohort.reduce((acc, s) => acc + s.attendance, 0) / total).toFixed(1)) : 0
   const avgCgpa = total > 0 ? Number((cohort.reduce((acc, s) => acc + Number(s.cgpa || 0), 0) / total).toFixed(2)) : 0
@@ -531,16 +591,21 @@ export function getDepartmentStats(campus = 'KIET', branch = 'AIDS') {
     driveEligibleRatio: total > 0 ? Number(((driveEligible.length / total) * 100).toFixed(1)) : 0,
     driveIneligibleCount: driveIneligible.length,
     inInternshipsCount: inInternships.length,
-    toastmastersCount: toastmasters.length,
-    roboticsCount: robotics.length,
+    codingCount: coding.length,
+    c4gtCount: c4gt.length,
     smartCityCount: smartCity.length,
-    kiotCount: kiot.length,
+    nccNssCount: nccNss.length,
+    toastmastersCount: toastmasters.length,
+    sportsCount: sports.length,
     hackathonsCount: hackathons.length,
-    hubCount: hub.length,
+    roboticsCount: robotics.length,
+    cyberSecurityCount: cyberSecurity.length,
     avgAttendance,
     avgCgpa,
   }
 }
+
+export const getCohortStats = getDepartmentStats
 
 // Assemble Class Teams for KIET AIDS (Teams 1 to 14 • 5 Members each)
 export const capstoneTeams = classTeamsMeta.map((meta) => {

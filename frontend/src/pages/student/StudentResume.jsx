@@ -339,7 +339,7 @@ export default function StudentResume() {
             <span className="bullet-sep">•</span>
             <span>PROFESSIONAL RESUME BUILDER</span>
           </div>
-          <h1>Resume Studio</h1>
+          <h1 className="maven-black">Resume Studio</h1>
           <p>
             Standardized on the high-impact template of <strong>Durga Prasad (KIET CSE)</strong>. Choose between 6 templates with 100% data preservation.
           </p>
@@ -391,7 +391,7 @@ export default function StudentResume() {
               <div className="eph-title-group">
                 <span className="eph-icon">⚡</span>
                 <div>
-                  <h3>Resume Studio Editor</h3>
+                  <h3 className="maven-black">Resume Studio Editor</h3>
                   <p>Real-time sync to live slide canvas • 100% data preservation</p>
                 </div>
               </div>
@@ -980,7 +980,7 @@ export default function StudentResume() {
             <div className="preview-toolbar-top-row">
               <div className="preview-slide-indicator">
                 <span className="live-pulse-dot" />
-                <strong>Resume Slide Canvas</strong>
+                <strong className="maven-black">Resume Slide Canvas</strong>
                 <span className="slide-badge-spec">A4 • 210 × 297 mm</span>
                 <span className="slide-badge-template">{selectedTemplate.toUpperCase()}</span>
               </div>

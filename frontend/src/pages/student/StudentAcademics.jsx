@@ -493,9 +493,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
         <div className="academic-hero-glow" />
         <div className="academic-hero-content">
           <div className="academic-hero-tags">
-            <span className="hero-pill-badge primary">KIET STUDENT ERP • JNTUK</span>
-            <span className="hero-pill-badge secondary">AY 2025–2026</span>
-            <span className="hero-pill-badge success">● OFFICIAL STUDENT RECORD</span>
+            <span className="hero-pill-badge primary">🎓 KIET STUDENT ERP • AY 2025–26</span>
           </div>
 
           <div className="academic-hero-main">
@@ -504,7 +502,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
               <div className="seal-dot" />
             </div>
             <div className="hero-text-wrap">
-              <h1 className="academic-student-name">{student.name}</h1>
+              <h1 className="academic-student-name maven-black">{student.name}</h1>
               <div className="academic-student-sub">
                 <span className="roll-tag">{student.rollNumber}</span>
                 <span className="sep">•</span>
@@ -521,17 +519,17 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
         <div className="academic-hero-stats">
           <div className="hero-stat-box">
             <span className="hsb-label">CUMULATIVE CGPA</span>
-            <strong className="hsb-value">{student.cgpa}</strong>
+            <strong className="hsb-value maven-black">{student.cgpa}</strong>
             <small className="hsb-note">JNTUK Stream</small>
           </div>
           <div className="hero-stat-box">
             <span className="hsb-label">12-MO ATTENDANCE</span>
-            <strong className="hsb-value">{attendanceStats.percentage}%</strong>
+            <strong className="hsb-value maven-black">{attendanceStats.percentage}%</strong>
             <small className="hsb-note text-green">Exam Eligible (&gt;75%)</small>
           </div>
           <div className="hero-stat-box">
             <span className="hsb-label">TUITION BALANCE</span>
-            <strong className="hsb-value text-green">₹0.00</strong>
+            <strong className="hsb-value maven-black text-green">₹0.00</strong>
             <small className="hsb-note text-green">All Dues Cleared</small>
           </div>
         </div>
@@ -580,7 +578,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
                 <span className="fmc-label">ANNUAL PRESCRIBED FEE</span>
                 <span className="fmc-badge success">PAID IN FULL</span>
               </div>
-              <div className="fmc-amount">₹{student.fees.total.toLocaleString('en-IN')}</div>
+              <div className="fmc-amount maven-black">₹{student.fees.total.toLocaleString('en-IN')}</div>
               <div className="fmc-desc">AY 2025–26 Total Prescribed Tuition &amp; Exam Fee</div>
               <div className="fmc-progress-track">
                 <div className="fmc-progress-bar" style={{ width: '100%' }} />
@@ -952,7 +950,7 @@ export default function StudentAcademics({ initialTab = 'fees' }) {
             <div className="rhm-left">
               <span className="rhm-eyebrow">JNTUK SEMESTER EVALUATION</span>
               <div className="rhm-cgpa-row">
-                <span className="cgpa-number">{student.cgpa}</span>
+                <span className="cgpa-number maven-black">{student.cgpa}</span>
                 <div className="cgpa-meta">
                   <span className="cgpa-scale">/ 10.0 CGPA</span>
                   <span className="cgpa-rank">FIRST CLASS WITH DISTINCTION • TOP 5% RANK</span>

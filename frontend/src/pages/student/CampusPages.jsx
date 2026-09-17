@@ -145,81 +145,81 @@ const DATA = {
   clubs: {
     eyebrow: 'KIET CAMPUS · COMMUNITIES',
     title: 'Clubs, Societies & Communities',
-    subtitle: 'Discover official student chapters across competitive coding, robotics, public speaking, sports, IEEE, and cultural arts.',
+    subtitle: 'Discover official student chapters across competitive coding, robotics, public speaking, sports, and technical cells.',
     hero: KIET.campus1,
     label: 'Connect • Participate • Grow',
     items: [
       {
-        title: 'Google Coding Club & CP Arena',
-        category: 'TECHNICAL',
-        description: 'Structured competitive programming community solving LeetCode, Codeforces, and ICPC collegiate contests.',
-        image: KIET.microsoft,
-        badge: '420 CODERS',
-        details: 'Daily 9:00 PM sprints, weekly contest ratings, and senior mentorship.',
-      },
-      {
-        title: 'KIET Robotics & Autonomous Lab',
-        category: 'INNOVATION',
-        description: 'Hands-on student engineering community building rovers, drones, and competing in IIT Bombay e-Yantra.',
-        image: KIET.robotics,
-        badge: 'ROBOTICS',
-        details: 'Weekly workshops on ROS 2, OpenCV computer vision, and embedded microcontrollers.',
-      },
-      {
-        title: 'Toastmasters International (KIET Chapter)',
-        category: 'LEADERSHIP',
-        description: 'Chartered public-speaking club #7124930 building executive confidence, table topics, and parliamentary debate.',
-        image: KIET.toastmasters,
-        badge: 'PRESIDENT DISTINCTION',
-        details: 'Weekly Saturday afternoon meetings at the Seminar Hall with certified speech evaluations.',
-      },
-      {
-        title: 'Google Developer Student Club (GDSC)',
-        category: 'GOOGLE TECH',
-        description: 'Official Google Developers campus chapter leading workshops on Android, Flutter, Cloud, and Solution Challenge.',
+        title: 'Google Coding Club',
+        category: 'TECHNICAL & AI',
+        description: 'High-intensity algorithm sprint cell training engineers across LeetCode, Codeforces, Google Code Jam, HackerRank, and ICPC Collegiate programming contests.',
         image: KIET.bootcamp,
-        badge: '520 MEMBERS',
-        details: 'Global Solution Challenge hackathons and Google Cloud Study Jams.',
+        badge: '450 CODERS',
+        details: 'Daily 9:00 PM Code Sprints, 3,200+ problems solved, Turing Computer Labs 3 & 4. Google Developers & GitHub Campus Experts partner.',
       },
       {
-        title: 'IEEE Student Branch & WIE',
-        category: 'PROFESSIONAL',
-        description: 'International technical chapter driving IEEE Xplore publications, research symposiums, and Women in Engineering.',
+        title: 'C4GT club',
+        category: 'TECHNICAL & AI',
+        description: 'Dedicated open-source public tech cell contributing directly to national Digital Public Infrastructure (DPI), GovTech open repositories, and Samagra Open Source fellowships.',
+        image: KIET.campus2,
+        badge: '55 DPG REPOS',
+        details: 'Samagra GovTech Network, 24 open PRs merged, Digital Governance Lab 2 at KIET+.',
+      },
+      {
+        title: 'Smart City Lab',
+        category: 'TECHNICAL & AI',
+        description: 'Applied municipal research center deploying low-power LoRaWAN sensor networks, real-time coastal weather telemetry, and automated utility monitors for Kakinada Smart City.',
         image: KIET.research,
-        badge: 'IEEE #STB9921',
-        details: 'Access to IEEE journals, international conferences, and technical workshops.',
+        badge: '16 LIVE SENSORS',
+        details: '50+ LoRaWAN Nodes, Keysight Digital Analyzers, Data Labs Wing Room 102. Collaborating with Kakinada Smart City Corporation.',
       },
       {
-        title: 'Computer Society of India (CSI Chapter)',
-        category: 'COMPUTING',
-        description: 'Institutional branch organizing state-level technical symposiums, cyber defense audits, and coding marathons.',
-        image: KIET.leaders,
-        badge: 'CSI CHAPTER',
-        details: 'Annual Tech-Fest and industrial seminars with leading IT directors.',
-      },
-      {
-        title: 'KIET Sports & Athletics Council (KPL)',
-        category: 'SPORTS',
-        description: 'Cricket KPL league, basketball, volleyball, morning athletics conditioning, and inter-university tournaments.',
-        image: KIET.sportsClub,
-        badge: '24 TEAMS',
-        details: 'Standard turf ground, floodlit volleyball courts, and annual athletic meets.',
-      },
-      {
-        title: 'KALA Cultural, Arts & Literary Society',
-        category: 'CULTURE & ARTS',
-        description: 'Vibrant cultural council covering classical music, dance troupes, drama, theater, and photography exhibitions.',
-        image: KIET.club3,
-        badge: 'ARTS & MUSIC',
-        details: 'Organizers of the annual SANSKRITI mega festival and youth talent stages.',
-      },
-      {
-        title: 'NCC Army Wing & NSS Youth Cell',
-        category: 'SERVICE',
-        description: 'Paramilitary discipline, blood donation drives, coastal cleanups, and Republic Day ceremonial parade contingents.',
+        title: 'NCC And Nss',
+        category: 'SOCIETIES & OUTREACH',
+        description: 'Paramilitary discipline and social service cell conducting annual training camps, coastal afforestation drives, mega blood donation camps, and disaster relief across Kakinada district.',
         image: KIET.campus3,
-        badge: 'NCC & NSS',
-        details: '3(A) R&R COY NCC unit with ' + 'B' + ' and ' + 'C' + ' certificate training.',
+        badge: '160 CADETS • 350 NSS',
+        details: '3(A) R&R COY NCC Kakinada & NSS JNTUK, NCC Parade Ground & Field Office. Annual mega blood donation drive with 850+ units.',
+      },
+      {
+        title: 'Toastmasters',
+        category: 'SOCIETIES & OUTREACH',
+        description: 'Chartered institutional club training aspiring engineers in impromptu speaking, parliamentary debate, boardroom communication, and corporate negotiation.',
+        image: KIET.toastmasters,
+        badge: 'CLUB #7124930',
+        details: 'President’s Distinguished Club Recognition, District 98 Toastmasters International. Weekly Saturday afternoon sessions.',
+      },
+      {
+        title: 'Kiet sports and athaletics council(kpl)',
+        category: 'SOCIETIES & OUTREACH',
+        description: 'Active sports board managing the annual KIET Premier League (KPL Day-Night cricket tournament), floodlit basketball & volleyball courts, and inter-university athletic meets.',
+        image: KIET.sports,
+        badge: '28 TEAMS • KPL CUP',
+        details: 'Standard Turf Cricket Ground, 400m Track, Floodlit Courts, 720+ student athletes competing for Chancellor Rolling Trophy.',
+      },
+      {
+        title: 'Hackathons',
+        category: 'INNOVATION & COMPETITIONS',
+        description: 'Specialized university committee mentoring squads for Smart India Hackathon (SIH), UNESCO India-Africa, AICTE Manthan, and national 48-hour hackathons.',
+        image: KIET.hackathon,
+        badge: '28 MAJOR WINS',
+        details: '₹18.5 Lakhs prize money won, SIH Grand Finale prep, Innovation Tower 4th Floor at KIET+.',
+      },
+      {
+        title: 'Robotics',
+        category: 'TECHNICAL & AI',
+        description: 'Advanced industrial robotics testbed at KIET designing ROS 2 autonomous exploration rovers, quadcopter inspection drones, LiDAR-equipped warehouse AGVs, and multi-axis robotic arms.',
+        image: KIET.robotics,
+        badge: 'ROS 2 & ROVERS',
+        details: 'e-Yantra IIT Bombay & RoboCon trials live. Equipped with Nvidia Jetson AGX Orin, 3D prototype printers, and Velodyne LiDAR.',
+      },
+      {
+        title: 'Cyber Security',
+        category: 'TECHNICAL & AI',
+        description: 'Premier cybersecurity research & defense cell at KIET specializing in vulnerability assessment, penetration testing (VAPT), digital forensics, malware reverse-engineering, and national CTF challenges.',
+        image: KIET.microsoft,
+        badge: 'TOP 50 CTF',
+        details: 'Zero-Trust Network Architecture, OWASP Top 10 Sandbox, Threat Intelligence Lab 3rd Floor at KIET+.',
       },
     ],
   },
@@ -250,7 +250,7 @@ export default function CampusPages({ type }) {
         <div className="campus-hero-glow" />
         <div className="campus-hero-content">
           <span className="campus-pill">{page.eyebrow}</span>
-          <h1>{page.title}</h1>
+          <h1 className="maven-black">{page.title}</h1>
           <p>{page.subtitle}</p>
           <div className="campus-hero-meta">
             <i />
@@ -267,11 +267,11 @@ export default function CampusPages({ type }) {
       <section className="campus-content-header campus-content-header-v2">
         <div>
           <span className="campus-kicker">CAMPUS ECOSYSTEM</span>
-          <h2>Explore {page.title}</h2>
+          <h2 className="maven-black">Explore {page.title}</h2>
           <p>Verified student clubs, innovation centers, and campus activities at KIET.</p>
         </div>
         <div className="campus-count">
-          <strong>{String(page.items.length).padStart(2, '0')}</strong>
+          <strong className="maven-black">{String(page.items.length).padStart(2, '0')}</strong>
           <span>
             ACTIVE
             <br />
@@ -308,7 +308,7 @@ export default function CampusPages({ type }) {
             </div>
             <div className="campus-card-body">
               <div className="campus-card-line" />
-              <h3>{item.title}</h3>
+              <h3 className="maven-black">{item.title}</h3>
               <p>{item.description}</p>
               <button
                 className="campus-view-button"
@@ -329,7 +329,7 @@ export default function CampusPages({ type }) {
       <section className="campus-bottom-banner campus-bottom-banner-v2">
         <div>
           <span className="campus-kicker">LIFE AT KIET</span>
-          <h3>Learn beyond the classroom.</h3>
+          <h3 className="maven-black">Learn beyond the classroom.</h3>
           <p>
             Academics matter. So do practical engineering projects, open-source communities, hackathons, and corporate internships.
           </p>
@@ -353,7 +353,7 @@ export default function CampusPages({ type }) {
           <div className="admin-modal-card" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h3 className="modal-title">{selectedItem.title}</h3>
+                <h3 className="modal-title maven-black">{selectedItem.title}</h3>
                 <span className="hub-modal-header-badge">
                   {selectedItem.category} • {selectedItem.badge || 'Active Community'}
                 </span>

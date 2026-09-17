@@ -65,17 +65,25 @@ export default function FacultyStudents() {
 
   return (
     <div className="student-dashboard faculty-view">
-      <div className="page-title-row">
-        <div>
-          <span className="eyebrow dark-eyebrow">FACULTY • STUDENT REGISTER</span>
-          <h1>Students & Academic Overview</h1>
-          <p>
+      {/* 1. Clean Institutional Header */}
+      <div className="faculty-hero-banner" style={{ marginBottom: 20 }}>
+        <div className="faculty-header-meta">
+          <span className="faculty-governance-tag">👨‍🏫 FACULTY • STUDENT DIRECTORY</span>
+          <h1 className="faculty-title maven-black">
+            Students &amp; Academic Overview
+          </h1>
+          <p className="faculty-subtitle">
             Comprehensive student directory with campus, branch, section, residence status (Day Scholar vs. Hosteler), and Capstone Team tracking.
           </p>
         </div>
-        <div className="faculty-count">
-          <strong>{filtered.length}</strong>
-          <span>students shown</span>
+        <div className="faculty-hero-actions">
+          <div className="overall-kpi-chip" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <span className="chip-icon">🎓</span>
+            <div>
+              <span className="chip-val maven-black" style={{ color: '#fff' }}>{filtered.length} Students</span>
+              <span className="chip-lbl" style={{ color: '#dbeafe' }}>Active Directory</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -183,7 +191,7 @@ export default function FacultyStudents() {
       <section className="surface-card faculty-register">
         <div className="register-head">
           <div>
-            <h2>Class Register & Capstone Allocation</h2>
+            <h2 className="maven-black">Class Register &amp; Capstone Allocation</h2>
             <p>180 Cohort Students across 3 sections with live residence and project assignments.</p>
           </div>
           <span className="live-pill">● LIVE REGISTER</span>
@@ -315,7 +323,7 @@ function Metric({ label, value }) {
   return (
     <div className="faculty-metric">
       <span>{label}</span>
-      <strong>{value}</strong>
+      <strong className="maven-black">{value}</strong>
     </div>
   )
 }

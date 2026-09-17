@@ -88,6 +88,44 @@ export function AuthProvider({ children }) {
 
     const valLower = value.toLowerCase()
 
+    // 0. Attempt live Backend Authentication (port 5001)
+    try {
+      const apiRes = await fetch('http://localhost:5001/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: value, password: pass, role: role.toLowerCase() }),
+      })
+      if (apiRes.ok) {
+        const resData = await apiRes.json()
+        if (resData.success && resData.data) {
+          const bUser = resData.data
+          const formattedRole = bUser.role
+            ? (bUser.role.toUpperCase() === 'HOD' ? 'HOD' : bUser.role.charAt(0).toUpperCase() + bUser.role.slice(1).toLowerCase())
+            : role
+          const userAccount = {
+            id: bUser._id || bUser.id,
+            name: bUser.name,
+            email: bUser.email,
+            role: formattedRole,
+            college: bUser.college || `Kakinada Institute of Engineering & Technology (${bUser.campus || 'KIET'})`,
+            campus: bUser.campus || bUser.college || 'KIET',
+            department: bUser.department?.name || bUser.department || 'Computer Science & Engineering',
+            branch: bUser.branch || (typeof bUser.department === 'string' ? bUser.department : bUser.department?.code),
+            rollNumber: bUser.rollNumber,
+            year: bUser.year || '3rd Year',
+            semester: bUser.semester || 'VI Semester',
+            section: bUser.section || 'A',
+            token: bUser.token,
+            emailVerified: true,
+          }
+          setUser(userAccount)
+          return { ok: true, user: userAccount }
+        }
+      }
+    } catch (netErr) {
+      // Backend offline or unreachable; fall through to institutional mock logic seamlessly
+    }
+
     if (role === 'Student') {
       // 1. Check registered users in local storage first
       const registeredStudents = loadUsers().filter(
@@ -259,6 +297,27 @@ export function AuthProvider({ children }) {
 
     users.push(newUser)
     saveUsers(users)
+
+    // Attempt live backend registration (Atlas sync)
+    try {
+      fetch('http://localhost:5001/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: n,
+          email: e,
+          password: p,
+          role: r.toLowerCase(),
+          college: campus,
+          department: r === 'Faculty' ? department : branchName,
+          rollNumber: formattedRoll || undefined,
+          facultyId: facultyId ? String(facultyId).trim().toUpperCase() : undefined,
+          year: r === 'Student' ? year : undefined,
+          section: r === 'Student' ? section : undefined,
+        }),
+      }).catch(() => {})
+    } catch {}
+
     setUser(newUser)
     return { ok: true, user: newUser }
   }, [])

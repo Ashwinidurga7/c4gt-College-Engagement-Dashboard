@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate, Link, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/Toast'
 import { campuses, branchesByCampus, years, sections } from '../data/academicData'
@@ -26,6 +26,25 @@ export default function SignUp() {
   const { showToast } = useToast()
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Strictly isolate SignUp page to clean, modern, high-contrast light mode
+  useEffect(() => {
+    const prevTheme = document.documentElement.getAttribute('data-theme')
+    document.documentElement.setAttribute('data-theme', 'light')
+    document.body.setAttribute('data-theme', 'light')
+    document.documentElement.classList.remove('dark-theme')
+    document.body.classList.remove('dark-theme')
+
+    return () => {
+      const saved = localStorage.getItem('kiet_theme_mode') || prevTheme || 'light'
+      document.documentElement.setAttribute('data-theme', saved)
+      document.body.setAttribute('data-theme', saved)
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark-theme')
+        document.body.classList.add('dark-theme')
+      }
+    }
+  }, [])
 
   const initialRole = location.state?.role || 'Student'
   const [role, setRole] = useState(initialRole)
@@ -54,23 +73,6 @@ export default function SignUp() {
   // Form states
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
-  // Calculate password strength
-  function getPasswordStrength(pass) {
-    if (!pass) return { score: 0, label: '', color: '#cbd5e1' }
-    let score = 0
-    if (pass.length >= 6) score += 1
-    if (pass.length >= 8) score += 1
-    if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score += 1
-    if (/[0-9]/.test(pass) || /[^A-Za-z0-9]/.test(pass)) score += 1
-
-    if (score <= 1) return { score: 1, label: 'Weak', color: '#ef4444' }
-    if (score === 2) return { score: 2, label: 'Fair', color: '#f59e0b' }
-    if (score === 3) return { score: 3, label: 'Good', color: '#0ea5e9' }
-    return { score: 4, label: 'Strong', color: '#10b981' }
-  }
-
-  const pwStrength = getPasswordStrength(password)
 
   // Available branches based on selected campus
   const availableBranches = branchesByCampus[campus] || branchesByCampus['KIET']
@@ -224,498 +226,358 @@ export default function SignUp() {
 
   return (
     <div className="login-page institutional-portal">
-      <div className="portal-auth-container signup-container">
-        {/* Top Return / Breadcrumb Bar */}
-        <div className="portal-auth-nav">
-          <button
-            type="button"
-            className="back-gateway-btn"
-            onClick={() => navigate('/')}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      <div className="portal-auth-container">
+        <div className="auth-center-shell signup-center-shell">
+          {/* Top Return / Navigation Row */}
+          <div className="auth-card-top-nav">
+            <button
+              type="button"
+              className="back-gateway-btn"
+              onClick={() => navigate('/')}
             >
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            <span>Back to Sign In</span>
-          </button>
-
-          <div className="portal-session-status">
-            <span className="status-dot" />
-            <span>COLLEGE ENGAGEMENT DASHBOARD • REGISTRATION PORTAL</span>
-          </div>
-        </div>
-
-        {/* Split Shell Registration Container */}
-        <main className="login-shell auth-split-shell signup-shell">
-          {/* Left Panel: Institutional Credentials & Benefits */}
-          <section className="login-brand auth-info-panel signup-info-panel">
-            <div className="brand-top-block">
-              <div className="kiet-logo-badge">
-                <img
-                  src="/images/kiet-logo.png"
-                  alt="KIET Logo"
-                  className="kiet-official-logo"
-                />
-              </div>
-
-              <div className="kiet-institution-block">
-                <div className="gateway-brand-top-row" style={{ marginBottom: '4px' }}>
-                  <span className="kiet-abbr-tag">KIET GROUP OF INSTITUTIONS</span>
-                  <span className="gateway-project-pill sm">College-Engagement-Dashboard</span>
-                </div>
-                <h2 className="kiet-institution-name">
-                  Create Institutional Account
-                </h2>
-                <p className="kiet-location">
-                  Kakinada Institute of Engineering & Technology • <span className="location-pin">📍</span> Korangi
-                </p>
-              </div>
-            </div>
-
-            {/* Registration Benefits & Summary */}
-            <div className="auth-role-summary-card">
-              <div className="role-summary-head">
-                <span className="role-avatar-circle">
-                  {role === 'Student' ? '🎓' : '👩‍🏫'}
-                </span>
-                <div>
-                  <span className="role-sub-pill">
-                    {role === 'Student' ? 'Undergraduate & Degree ERP' : 'Academic Instruction'}
-                  </span>
-                  <h3 className="role-header-title">
-                    {role === 'Student' ? 'Student Enrollment' : 'Faculty Onboarding'}
-                  </h3>
-                </div>
-              </div>
-              <p className="role-summary-desc">
-                {role === 'Student'
-                  ? 'Register your student credentials to automatically sync your 12-month attendance, semester SGPA results, fee clearance, and verified digital portfolio.'
-                  : 'Register your faculty institutional profile to submit lecture attendance, mentor students, and review pending co-curricular activity submissions.'}
-              </p>
-
-              <div className="role-guidelines-box">
-                <strong>Portal Capabilities:</strong>
-                <ul>
-                  {role === 'Student' ? (
-                    <>
-                      <li>Instant digital portfolio & automated resume generator.</li>
-                      <li>Live attendance ledger with monthly breakdown.</li>
-                      <li>Semester marksheet, SGPA credits & fee payment records.</li>
-                      <li>Co-curricular activity submission with faculty verification.</li>
-                    </>
-                  ) : (
-                    <>
-                      <li>Submit hourly lecture attendance records.</li>
-                      <li>Review & approve student co-curricular submissions.</li>
-                      <li>Track branch-wide student performance metrics.</li>
-                      <li>Official institutional mentor communication channel.</li>
-                    </>
-                  )}
-                </ul>
-              </div>
-            </div>
-
-            <div className="brand-security-seal">
               <svg
-                width="14"
-                height="14"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
               </svg>
-              <span>256-Bit SSL Encrypted Campus ERP • Affiliated to JNTUK Kakinada • ISO 9001:2015</span>
-            </div>
-          </section>
+              <span>Back to Sign In</span>
+            </button>
 
-          {/* Right Panel: Official Registration Form */}
-          <section className="login-panel auth-form-panel signup-form-panel">
-            <div className="login-head">
-              <div className="signup-header-top">
-                <div
-                  className="portal-badge"
-                  style={{ color: '#1e40af', borderColor: '#dbeafe', background: '#eff6ff' }}
-                >
-                  <span className="portal-live-dot" style={{ background: '#1e40af' }} />
-                  <span>NEW ACCOUNT REGISTRATION</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handlePrefillDemo}
-                  className="prefill-demo-badge-btn"
-                  title="Click to automatically fill demo data for quick evaluation"
-                >
-                  <span>⚡ Pre-fill Demo {role}</span>
-                </button>
+            <span className="auth-institution-tag">KIET Kakinada</span>
+          </div>
+
+          {/* Role Toggle Selector */}
+          <div className="signup-role-tabs">
+            <button
+              type="button"
+              className={`signup-role-tab ${role === 'Student' ? 'active' : ''}`}
+              onClick={() => handleRoleChange('Student')}
+            >
+              <span className="tab-icon">🎓</span>
+              <span>Student Registration</span>
+            </button>
+            <button
+              type="button"
+              className={`signup-role-tab ${role === 'Faculty' ? 'active' : ''}`}
+              onClick={() => handleRoleChange('Faculty')}
+            >
+              <span className="tab-icon">👩‍🏫</span>
+              <span>Faculty Registration</span>
+            </button>
+          </div>
+
+          {/* Card Content Header */}
+          <div className="auth-card-header">
+            <div className="auth-card-logo-wrap">
+              <img src="/images/kiet-logo.png" alt="KIET Official" className="auth-card-logo" />
+            </div>
+            <h2 className="auth-portal-title">
+              {role === 'Student' ? 'Student Portal Registration' : 'Faculty Portal Registration'}
+            </h2>
+            <p className="auth-portal-subtitle">
+              {role === 'Student'
+                ? 'Enroll your University Roll Number to access attendance & academic records.'
+                : 'Register your faculty profile for lecture attendance and academic instruction.'}
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="auth-form-body">
+            <div className="form-grid-two-col">
+              {/* Full Name */}
+              <div className="auth-input-group">
+                <label className="auth-label">Full Legal Name *</label>
+                <input
+                  type="text"
+                  className="auth-input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={role === 'Student' ? 'e.g. G. Sai Vamsi' : 'e.g. Dr. K. V. Ramana'}
+                  autoComplete="name"
+                  required
+                />
               </div>
 
-              <h2>Enroll in Campus Portal</h2>
-              <p>Select your designation and fill in your official details to create your dashboard account.</p>
-
-              {/* Role Toggle Selector */}
-              <div className="signup-role-tabs">
-                <button
-                  type="button"
-                  className={`signup-role-tab ${role === 'Student' ? 'active' : ''}`}
-                  onClick={() => handleRoleChange('Student')}
-                >
-                  <span className="tab-icon">🎓</span>
-                  <span>Student Portal</span>
-                </button>
-                <button
-                  type="button"
-                  className={`signup-role-tab ${role === 'Faculty' ? 'active' : ''}`}
-                  onClick={() => handleRoleChange('Faculty')}
-                >
-                  <span className="tab-icon">👩‍🏫</span>
-                  <span>Faculty Portal</span>
-                </button>
+              {/* Institutional Email */}
+              <div className="auth-input-group">
+                <label className="auth-label">Official College Email *</label>
+                <input
+                  type="email"
+                  className="auth-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={role === 'Student' ? 'student@kiet.edu' : 'faculty@kiet.edu'}
+                  autoComplete="email"
+                  required
+                />
               </div>
-            </div>
 
-            <form onSubmit={handleSubmit} className="signup-form">
-              <div className="form-grid-two-col">
-                {/* Full Name */}
-                <div className="input-field-group">
-                  <label className="field-label">
-                    <span>Full Legal Name</span>
-                    <span className="required-star">*</span>
-                  </label>
+              {/* Role Specific Identifier: Roll No or Faculty ID */}
+              {role === 'Student' ? (
+                <div className="auth-input-group">
+                  <label className="auth-label">University Roll Number (10-Digit) *</label>
                   <input
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder={role === 'Student' ? 'e.g. G. Sai Vamsi' : 'e.g. Dr. K. V. Ramana'}
-                    autoComplete="name"
+                    className="auth-input"
+                    value={rollNumber}
+                    onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
+                    placeholder="e.g. 23JN1A4533"
+                    maxLength={10}
                     required
                   />
                 </div>
-
-                {/* Institutional Email */}
-                <div className="input-field-group">
-                  <label className="field-label">
-                    <span>Institutional / Official Email</span>
-                    <span className="required-star">*</span>
-                  </label>
+              ) : (
+                <div className="auth-input-group">
+                  <label className="auth-label">Faculty ID / Employee Code *</label>
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={role === 'Student' ? 'student@kiet.edu' : 'faculty@kiet.edu'}
-                    autoComplete="email"
+                    type="text"
+                    className="auth-input"
+                    value={facultyId}
+                    onChange={(e) => setFacultyId(e.target.value.toUpperCase())}
+                    placeholder="e.g. FAC-2024-09"
                     required
                   />
                 </div>
+              )}
 
-                {/* Role Specific Identifier: Roll No or Faculty ID */}
-                {role === 'Student' ? (
-                  <div className="input-field-group">
-                    <label className="field-label">
-                      <span>University Roll Number (10-Digit)</span>
-                      <span className="required-star">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={rollNumber}
-                      onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
-                      placeholder="e.g. 23JN1A4533"
-                      maxLength={10}
-                      required
-                    />
-                  </div>
-                ) : (
-                  <div className="input-field-group">
-                    <label className="field-label">
-                      <span>Faculty ID / Employee Code</span>
-                      <span className="required-star">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={facultyId}
-                      onChange={(e) => setFacultyId(e.target.value.toUpperCase())}
-                      placeholder="e.g. FAC-2024-09"
-                      required
-                    />
-                  </div>
-                )}
+              {/* Campus Selector */}
+              <div className="auth-input-group">
+                <label className="auth-label">Campus Unit *</label>
+                <select
+                  className="auth-input"
+                  value={campus}
+                  onChange={(e) => {
+                    setCampus(e.target.value)
+                    const list = branchesByCampus[e.target.value] || []
+                    if (list.length > 0 && !list.some((b) => b.code === branch)) {
+                      setBranch(list[0].code)
+                    }
+                  }}
+                >
+                  {campuses.map((c) => (
+                    <option key={c} value={c}>
+                      {c} Campus
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                {/* Campus Selector */}
-                <div className="input-field-group">
-                  <label className="field-label">
-                    <span>KIET Campus Unit</span>
-                    <span className="required-star">*</span>
-                  </label>
+              {/* Branch / Department Selector */}
+              {role === 'Student' ? (
+                <div className="auth-input-group">
+                  <label className="auth-label">Academic Branch *</label>
                   <select
-                    value={campus}
-                    onChange={(e) => {
-                      setCampus(e.target.value)
-                      const list = branchesByCampus[e.target.value] || []
-                      if (list.length > 0 && !list.some((b) => b.code === branch)) {
-                        setBranch(list[0].code)
-                      }
-                    }}
+                    className="auth-input"
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
                   >
-                    {campuses.map((c) => (
-                      <option key={c} value={c}>
-                        {c} Campus
+                    {availableBranches.map((b) => (
+                      <option key={b.code} value={b.code}>
+                        {b.code} — {b.name}
                       </option>
                     ))}
                   </select>
                 </div>
-
-                {/* Branch / Department Selector */}
-                {role === 'Student' ? (
-                  <div className="input-field-group">
-                    <label className="field-label">
-                      <span>Academic Branch</span>
-                      <span className="required-star">*</span>
-                    </label>
-                    <select
-                      value={branch}
-                      onChange={(e) => setBranch(e.target.value)}
-                    >
-                      {availableBranches.map((b) => (
-                        <option key={b.code} value={b.code}>
-                          {b.code} — {b.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                ) : (
-                  <div className="input-field-group">
-                    <label className="field-label">
-                      <span>Department</span>
-                      <span className="required-star">*</span>
-                    </label>
-                    <select
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)}
-                    >
-                      {facultyDepartments.map((d) => (
-                        <option key={d} value={d}>
-                          {d}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* Student: Year & Section / Faculty: Designation */}
-                {role === 'Student' ? (
-                  <div className="form-sub-grid">
-                    <div className="input-field-group">
-                      <label className="field-label">
-                        <span>Year</span>
-                        <span className="required-star">*</span>
-                      </label>
-                      <select value={year} onChange={(e) => setYear(e.target.value)}>
-                        {years.map((y) => (
-                          <option key={y} value={y}>
-                            {y}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="input-field-group">
-                      <label className="field-label">
-                        <span>Section</span>
-                        <span className="required-star">*</span>
-                      </label>
-                      <select value={section} onChange={(e) => setSection(e.target.value)}>
-                        {sections.map((s) => (
-                          <option key={s} value={s}>
-                            Sec {s}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="input-field-group">
-                    <label className="field-label">
-                      <span>Academic Designation</span>
-                      <span className="required-star">*</span>
-                    </label>
-                    <select
-                      value={designation}
-                      onChange={(e) => setDesignation(e.target.value)}
-                    >
-                      {facultyDesignations.map((des) => (
-                        <option key={des} value={des}>
-                          {des}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* Password Input */}
-                <div className="input-field-group">
-                  <div className="input-label-row">
-                    <span className="field-label">
-                      <span>Create Portal Password</span>
-                      <span className="required-star">*</span>
-                    </span>
-                  </div>
-                  <div className="password-box">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Minimum 6 characters"
-                      autoComplete="new-password"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="password-toggle-btn"
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? 'Hide' : 'Show'}
-                    </button>
-                  </div>
-                  {password && (
-                    <div className="password-strength-container">
-                      <div className="strength-bars">
-                        {[1, 2, 3, 4].map((step) => (
-                          <div
-                            key={step}
-                            className="strength-bar-seg"
-                            style={{
-                              background:
-                                pwStrength.score >= step ? pwStrength.color : '#e2e8f0',
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <span className="strength-text" style={{ color: pwStrength.color }}>
-                        {pwStrength.label}
-                      </span>
-                    </div>
-                  )}
+              ) : (
+                <div className="auth-input-group">
+                  <label className="auth-label">Department *</label>
+                  <select
+                    className="auth-input"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                  >
+                    {facultyDepartments.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+              )}
 
-                {/* Confirm Password Input */}
-                <div className="input-field-group">
-                  <div className="input-label-row">
-                    <span className="field-label">
-                      <span>Confirm Portal Password</span>
-                      <span className="required-star">*</span>
-                    </span>
+              {/* Student: Year & Section / Faculty: Designation */}
+              {role === 'Student' ? (
+                <div className="auth-input-group">
+                  <label className="auth-label">Year & Section *</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <select className="auth-input" value={year} onChange={(e) => setYear(e.target.value)}>
+                      {years.map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                    <select className="auth-input" value={section} onChange={(e) => setSection(e.target.value)}>
+                      {sections.map((s) => (
+                        <option key={s} value={s}>
+                          Sec {s}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <div className="password-box">
-                    <input
-                      type={showConfirm ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Re-enter password"
-                      autoComplete="new-password"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirm(!showConfirm)}
-                      className="password-toggle-btn"
-                      aria-label={showConfirm ? 'Hide password' : 'Show password'}
-                    >
-                      {showConfirm ? 'Hide' : 'Show'}
-                    </button>
-                  </div>
-                  {confirmPassword && password !== confirmPassword && (
-                    <span className="field-hint-error">Passwords do not match</span>
-                  )}
                 </div>
-              </div>
+              ) : (
+                <div className="auth-input-group">
+                  <label className="auth-label">Academic Designation *</label>
+                  <select
+                    className="auth-input"
+                    value={designation}
+                    onChange={(e) => setDesignation(e.target.value)}
+                  >
+                    {facultyDesignations.map((des) => (
+                      <option key={des} value={des}>
+                        {des}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
-              {/* Honor Code Checkbox */}
-              <div className="signup-terms-row">
-                <label className="remember-label terms-label">
+              {/* Password Input */}
+              <div className="auth-input-group">
+                <label className="auth-label">Create Password *</label>
+                <div className="auth-input-wrap password-wrap">
                   <input
-                    type="checkbox"
-                    checked={agreeHonor}
-                    onChange={(e) => setAgreeHonor(e.target.checked)}
+                    type={showPassword ? 'text' : 'password'}
+                    className="auth-input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    autoComplete="new-password"
+                    required
                   />
-                  <span>
-                    I certify that my academic information is authentic and agree to adhere to the{' '}
-                    <strong>KIET Institutional Honor Code & IT Policy</strong>.
-                  </span>
-                </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="auth-pwd-toggle"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
 
-              {/* Error Box */}
-              {error && (
-                <div className="login-error">
+              {/* Confirm Password Input */}
+              <div className="auth-input-group">
+                <label className="auth-label">Confirm Password *</label>
+                <div className="auth-input-wrap password-wrap">
+                  <input
+                    type={showConfirm ? 'text' : 'password'}
+                    className="auth-input"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter password"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    className="auth-pwd-toggle"
+                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirm ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Honor Code Checkbox */}
+            <div className="auth-options-row">
+              <label className="remember-label">
+                <input
+                  type="checkbox"
+                  checked={agreeHonor}
+                  onChange={(e) => setAgreeHonor(e.target.checked)}
+                />
+                <span>
+                  I certify my details are authentic and agree to the <strong>KIET Honor Code</strong>.
+                </span>
+              </label>
+            </div>
+
+            {/* Error Box */}
+            {error && (
+              <div className="login-error">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="auth-submit-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                <span>Registering account…</span>
+              ) : (
+                <>
+                  <span>Create {role} Account & Enter Dashboard</span>
                   <svg
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
                   </svg>
-                  <span>{error}</span>
-                </div>
+                </>
               )}
+            </button>
 
-              {/* Submit Button */}
+            {/* One-Click Quick Demo Pre-fill */}
+            <div className="auth-quick-demo">
               <button
-                type="submit"
-                className="login-submit signup-submit-btn"
-                disabled={loading}
+                type="button"
+                className="quick-demo-pill"
+                onClick={handlePrefillDemo}
               >
-                {loading ? (
-                  <span className="login-spinner">Registering account…</span>
-                ) : (
-                  <>
-                    <span>Create {role} Account & Enter Dashboard</span>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  </>
-                )}
+                <span className="quick-demo-icon">⚡</span>
+                <span>Pre-fill Demo {role} Profile</span>
               </button>
+            </div>
 
-              {/* Footer navigation */}
-              <div className="login-footer-help signup-footer-help">
-                <span>Already have an institutional account?</span>
-                <Link to="/" className="signin-link-prominent">
-                  Sign In to Portal →
-                </Link>
-              </div>
-            </form>
-          </section>
-        </main>
+            {/* Footer navigation */}
+            <div className="auth-footer-redirect">
+              <span>Already have an institutional account?</span>
+              <button
+                type="button"
+                className="auth-link-btn"
+                onClick={() => navigate('/')}
+              >
+                Sign In to Portal →
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

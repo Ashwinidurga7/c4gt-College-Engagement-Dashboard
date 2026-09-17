@@ -21,18 +21,21 @@ import {
 } from '../../data/academicData'
 import { useToast } from '../../components/ui/Toast'
 
-// Color palettes for rich visual charts
+// Two subtle, un-highlighted neutral tones across all graphs
+const GRAPH_TONE_1 = '#334155' // Deep Slate / Charcoal
+const GRAPH_TONE_2 = '#64748b' // Muted Steel / Slate
+
 const RESIDENCE_COLORS = {
-  'Day Scholar': '#0284c7', // Sky Blue
-  'Hosteler': '#f59e0b',   // Amber Gold
+  'Day Scholar': GRAPH_TONE_1,
+  'Hosteler': GRAPH_TONE_2,
 }
 
 const BACKLOG_COLORS = {
-  'Zero Backlogs': '#10b981', // Emerald Green
-  '1 Backlog': '#0ea5e9',     // Sky Blue
-  '2 Backlogs': '#f59e0b',    // Amber
-  '3 Backlogs': '#f97316',    // Orange
-  '4+ Backlogs': '#ef4444',   // Rose Red
+  'Zero Backlogs': GRAPH_TONE_1,
+  '1 Backlog': GRAPH_TONE_2,
+  '2 Backlogs': GRAPH_TONE_1,
+  '3 Backlogs': GRAPH_TONE_2,
+  '4+ Backlogs': GRAPH_TONE_1,
 }
 
 export default function HodDashboard({ defaultTab = 'overview' }) {
@@ -125,12 +128,15 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
       if (residenceFilter !== 'ALL' && s.residence !== residenceFilter) return false
       // Hub / Club
       if (activeHubFilter !== 'ALL') {
-        if (activeHubFilter === 'toastmasters' && !s.toastmastersMember) return false
-        if (activeHubFilter === 'robotics' && !s.roboticsMember) return false
+        if (activeHubFilter === 'coding' && !s.codingMember) return false
+        if (activeHubFilter === 'c4gt' && !s.c4gtMember) return false
         if (activeHubFilter === 'smartcity' && !s.smartCityMember) return false
-        if (activeHubFilter === 'kiot' && !s.kiotAttended) return false
+        if (activeHubFilter === 'ncc_nss' && !s.nccNssMember) return false
+        if (activeHubFilter === 'toastmasters' && !s.toastmastersMember) return false
+        if (activeHubFilter === 'sports' && !s.sportsMember) return false
         if (activeHubFilter === 'hackathons' && !s.hackathonAttended) return false
-        if (activeHubFilter === 'innovation_hub' && !s.hubMember) return false
+        if (activeHubFilter === 'robotics' && !s.roboticsMember) return false
+        if (activeHubFilter === 'cybersecurity' && !s.cyberSecurityMember) return false
       }
       return true
     })
@@ -153,19 +159,22 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
   // Chart 3: Placement Drive Readiness Data
   const driveReadinessData = useMemo(() => [
-    { name: 'Drive Eligible', count: stats.driveEligibleCount, fill: '#10b981' },
-    { name: 'Active Interns', count: stats.inInternshipsCount, fill: '#3b82f6' },
-    { name: 'Needs Clearance', count: stats.driveIneligibleCount, fill: '#f43f5e' },
+    { name: 'Drive Eligible', count: stats.driveEligibleCount, fill: GRAPH_TONE_1 },
+    { name: 'Active Interns', count: stats.inInternshipsCount, fill: GRAPH_TONE_2 },
+    { name: 'Needs Clearance', count: stats.driveIneligibleCount, fill: GRAPH_TONE_1 },
   ], [stats])
 
   // Chart 4: Clubs & Hubs Enrollment Data
   const clubsBarData = useMemo(() => [
-    { name: 'Toastmasters', count: stats.toastmastersCount, fill: '#004165' },
-    { name: 'Robotics Lab', count: stats.roboticsCount, fill: '#d97706' },
-    { name: 'Smart City', count: stats.smartCityCount, fill: '#059669' },
-    { name: 'KIOT Tour', count: stats.kiotCount, fill: '#2563eb' },
-    { name: 'Hackathons', count: stats.hackathonsCount, fill: '#7c3aed' },
-    { name: 'Innovation Hub', count: stats.hubCount, fill: '#dc2626' },
+    { name: 'Coding Club', count: stats.codingCount, fill: GRAPH_TONE_1 },
+    { name: 'C4GT Club', count: stats.c4gtCount, fill: GRAPH_TONE_2 },
+    { name: 'Smart City', count: stats.smartCityCount, fill: GRAPH_TONE_1 },
+    { name: 'NCC / NSS', count: stats.nccNssCount, fill: GRAPH_TONE_2 },
+    { name: 'Toastmasters', count: stats.toastmastersCount, fill: GRAPH_TONE_1 },
+    { name: 'KPL Sports', count: stats.sportsCount, fill: GRAPH_TONE_2 },
+    { name: 'Hackathons', count: stats.hackathonsCount, fill: GRAPH_TONE_1 },
+    { name: 'Robotics', count: stats.roboticsCount, fill: GRAPH_TONE_2 },
+    { name: 'Cyber Sec', count: stats.cyberSecurityCount, fill: GRAPH_TONE_1 },
   ], [stats])
 
   // CSV Export helper
@@ -216,56 +225,42 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
   return (
     <div className="hod-analytics-container">
-      {/* 1. Top Executive Banner */}
+      {/* 1. Clean Institutional Header */}
       <div className="hod-header-card">
         <div className="hod-header-meta">
-          <div className="hod-badge-row">
-            <span className="hod-campus-tag">KIET GROUP OF INSTITUTIONS • AUTONOMOUS</span>
-            <span className="hod-affiliation-tag">AFFILIATED TO JNTUK • NAAC 'A' GRADE</span>
-            <span className="hod-session-tag">AY 2025–26 • V SEMESTER</span>
-          </div>
-          <h1 className="hod-portal-title">
-            Department Head Analytics &amp; Student Insights Portal
+          <span className="hod-governance-tag">🎓 DEPARTMENT ACADEMIC COMMAND</span>
+          <h1 className="hod-portal-title maven-black">
+            Department Head Analytics &amp; Student Insights
           </h1>
           <p className="hod-portal-subtitle">
-            Executive cockpit for <strong>Prof. M. S. R. Prasad</strong> (Head of Department &amp; Academic Dean).
-            Real-time tracking of demographics, backlog spectrums, placement drive readiness, industrial internships, and official KIET Korangi innovation hubs.
+            Executive cockpit for <strong>Prof. M. S. R. Prasad</strong> (HOD &amp; Academic Dean) overseeing cohort performance, backlogs, placements, and innovation hubs.
           </p>
         </div>
 
         <div className="hod-header-actions">
           <button className="btn-hod-export" onClick={handleExportCSV}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Export Cohort CSV
-          </button>
-          <button
-            className="btn-hod-refresh"
-            onClick={() => addToast('Synchronized latest academic & activity logs with Autonomous ERP.', 'info')}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M23 4v6h-6" />
-              <path d="M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-            </svg>
-            Sync ERP
+            <span>Export Cohort CSV</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Institutional Selectors: Multi-Campus & Branch */}
+      {/* 2. Compact, Balanced Multi-Campus & Branch Scope Selectors */}
       <div className="hod-selectors-card">
         {/* Campus Selection */}
         <div className="hod-selector-group">
-          <label className="hod-selector-label">
-            <span className="step-num">Step 1</span> Select Institutional Campus:
-          </label>
+          <div className="hod-selector-header">
+            <span className="scope-indicator-dot" />
+            <span className="scope-title">INSTITUTIONAL CAMPUS:</span>
+          </div>
           <div className="hod-pills-row">
             {campuses.map((c) => {
               const isActive = selectedCampus === c
+              const campusTotal = students.filter((s) => s.campus === c).length
               return (
                 <button
                   key={c}
@@ -274,13 +269,8 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   onClick={() => handleCampusSelect(c)}
                 >
                   <span className="pill-dot" />
-                  <div className="pill-text-wrap">
-                    <span className="pill-name">{c}</span>
-                    <span className="pill-sub">
-                      {c === 'KIET' ? 'Main Autonomous Campus' : c === 'KIET+' ? 'Advanced Tech Studies' : "Women's Engg College"}
-                    </span>
-                  </div>
-                  {isActive && <span className="pill-check">✓</span>}
+                  <span className="pill-name">{c}</span>
+                  <span className="pill-count">{campusTotal}</span>
                 </button>
               )
             })}
@@ -288,14 +278,17 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         </div>
 
         {/* Branch Selection */}
-        <div className="hod-selector-group" style={{ marginTop: '16px' }}>
-          <label className="hod-selector-label">
-            <span className="step-num">Step 2</span> Select Engineering Branch:
-          </label>
+        <div className="hod-selector-group">
+          <div className="hod-selector-header">
+            <span className="scope-indicator-dot" style={{ backgroundColor: '#10b981' }} />
+            <span className="scope-title">DEPARTMENT BRANCH:</span>
+          </div>
           <div className="hod-pills-row">
             {availableBranches.map((b) => {
               const isActive = selectedBranch === b.code
-              const branchCount = students.filter(s => s.campus === selectedCampus && s.branch === b.code).length
+              const branchCount = students.filter(
+                (s) => s.campus === selectedCampus && s.branch === b.code
+              ).length
               return (
                 <button
                   key={b.code}
@@ -304,10 +297,8 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   onClick={() => setSelectedBranch(b.code)}
                 >
                   <span className="branch-code-badge">{b.code}</span>
-                  <div className="pill-text-wrap">
-                    <span className="pill-name">{b.name}</span>
-                    <span className="pill-sub">{branchCount} Enrolled Students</span>
-                  </div>
+                  <span className="pill-name">{b.name}</span>
+                  <span className="pill-count">{branchCount}</span>
                 </button>
               )
             })}
@@ -315,39 +306,35 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         </div>
       </div>
 
-      {/* 3. Slide / Tab Navigation */}
+      {/* 3. Streamlined Slide Tabs Navigation */}
       <div className="hod-tabs-bar">
         <button
           className={`hod-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => handleTabChange('overview')}
         >
           <span className="tab-icon">📊</span>
-          <span className="tab-title">Executive Dashboard</span>
-          <span className="tab-pill-badge">{stats.total} Cohort</span>
+          <span className="tab-title">Overview</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'academics' ? 'active' : ''}`}
           onClick={() => handleTabChange('academics')}
         >
           <span className="tab-icon">📚</span>
-          <span className="tab-title">Academics &amp; Backlogs (0, 1, 2, 3, 4+)</span>
-          <span className="tab-pill-badge text-green">{stats.zeroBacklogsCount} Clear</span>
+          <span className="tab-title">Academics &amp; Backlogs</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'placements' ? 'active' : ''}`}
           onClick={() => handleTabChange('placements')}
         >
           <span className="tab-icon">💼</span>
-          <span className="tab-title">Placements &amp; Internships</span>
-          <span className="tab-pill-badge">{stats.driveEligibleCount} Eligible</span>
+          <span className="tab-title">Placements</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'activities' ? 'active' : ''}`}
           onClick={() => handleTabChange('activities')}
         >
           <span className="tab-icon">🚀</span>
-          <span className="tab-title">Clubs, Hubs &amp; KIOT</span>
-          <span className="tab-pill-badge">6 KIET Hubs</span>
+          <span className="tab-title">Clubs &amp; Hubs</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'demographics' ? 'active' : ''}`}
@@ -355,7 +342,6 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         >
           <span className="tab-icon">🚌</span>
           <span className="tab-title">Demographics &amp; Transit</span>
-          <span className="tab-pill-badge">{stats.dayScholarsCount} Bus / {stats.hostelersCount} Host</span>
         </button>
       </div>
 
@@ -370,7 +356,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">{selectedCampus} • {selectedBranch}</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number">{stats.total}</span>
+                <span className="kpi-number maven-black">{stats.total}</span>
                 <span className="kpi-subtext">Students Registered</span>
               </div>
               <div className="kpi-footer">
@@ -386,7 +372,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">12 Bus Routes</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number">{stats.dayScholarsCount} <small style={{fontSize: 16, color: '#64748b'}}>/ {stats.hostelersCount}</small></span>
+                <span className="kpi-number maven-black">{stats.dayScholarsCount} <small style={{fontSize: 16, color: '#64748b'}}>/ {stats.hostelersCount}</small></span>
                 <span className="kpi-subtext">Day Scholars vs Hostelers</span>
               </div>
               <div className="kpi-progress-bar">
@@ -404,7 +390,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag status-clear">Clean Record</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number text-green">{stats.zeroBacklogsCount}</span>
+                <span className="kpi-number maven-black text-green">{stats.zeroBacklogsCount}</span>
                 <span className="kpi-subtext">{stats.zeroBacklogsRatio}% of Cohort</span>
               </div>
               <div className="kpi-progress-bar">
@@ -421,7 +407,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 <span className="kpi-tag">≥7.0 CGPA &amp; 0 BL</span>
               </div>
               <div className="kpi-value-row">
-                <span className="kpi-number text-purple">{stats.driveEligibleCount}</span>
+                <span className="kpi-number maven-black text-purple">{stats.driveEligibleCount}</span>
                 <span className="kpi-subtext">{stats.driveEligibleRatio}% Campus Ready</span>
               </div>
               <div className="kpi-footer">
@@ -436,7 +422,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
             <div className="hod-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Day Scholars vs. Hostelers Distribution</h3>
+                  <h3 className="chart-title maven-black">Day Scholars vs. Hostelers Distribution</h3>
                   <p className="chart-subtitle">Logistical residence split and transport allocation</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('demographics')}>
@@ -483,8 +469,8 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
             <div className="hod-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Backlog Distribution (0, 1, 2, 3, 4+)</h3>
-                  <p className="chart-subtitle">Academic health and remediation breakdown across semesters</p>
+                  <h3 className="chart-title maven-black">Backlog Distribution (0, 1, 2, 3, 4+)</h3>
+                  <p className="chart-subtitle">Academic health and remediation requirements</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('academics')}>
                   Inspect Backlogs →
@@ -520,8 +506,8 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
             <div className="hod-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">Placement Drive Eligibility &amp; Internships</h3>
-                  <p className="chart-subtitle">JNTUK Criteria: CGPA ≥ 7.0, 0 Active Backlogs, Attendance ≥ 75%</p>
+                  <h3 className="chart-title maven-black">Placement Drive Readiness &amp; Internships</h3>
+                  <p className="chart-subtitle">Eligibility metrics for tier-1 IT &amp; Core recruitment</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('placements')}>
                   View Candidate List →
@@ -553,8 +539,8 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
             <div className="hod-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <h3 className="chart-title">KIET Korangi Hubs, Clubs &amp; KIOT</h3>
-                  <p className="chart-subtitle">Student enrollment in official co-curricular centers of excellence</p>
+                  <h3 className="chart-title maven-black">KIET Korangi Hubs, Clubs &amp; KIOT</h3>
+                  <p className="chart-subtitle">Active student participation across innovation modules</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('activities')}>
                   Explore Hubs →
@@ -578,7 +564,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 </ResponsiveContainer>
               </div>
               <div className="chart-note-bar">
-                🎯 Official data from KIET Korangi website (Toastmasters Club, Robotics Lab, Smart City, KIOT, Hackathons).
+                🎯 Official data from KIET Multi-Campus Governance (Google Coding Club, C4GT, Smart City Lab, NCC &amp; NSS, Toastmasters, KPL Sports, Hackathons, Robotics, Cyber Security).
               </div>
             </div>
           </div>
@@ -590,7 +576,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         <div className="hod-tab-content fade-in">
           <div className="hod-section-header">
             <div>
-              <h2 className="section-title">Backlog Analysis &amp; Academic Health Audit</h2>
+              <h2 className="section-title maven-black">Backlog Analysis &amp; Academic Health Audit</h2>
               <p className="section-desc">
                 Review students with <strong>Zero Backlogs (All Clear)</strong>, <strong>1, 2, 3, and 4+ Backlogs</strong>.
                 Click on any tier below to instantly filter the student roster.
@@ -613,7 +599,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('ALL')}
             >
               <div className="tier-header">All Students</div>
-              <div className="tier-count">{stats.total}</div>
+              <div className="tier-count maven-black">{stats.total}</div>
               <div className="tier-pct">100% of Cohort</div>
             </button>
 
@@ -622,7 +608,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('0')}
             >
               <div className="tier-header">Zero Backlogs (All Clear)</div>
-              <div className="tier-count text-green">{stats.zeroBacklogsCount}</div>
+              <div className="tier-count maven-black text-green">{stats.zeroBacklogsCount}</div>
               <div className="tier-pct">{stats.zeroBacklogsRatio}% of Cohort</div>
             </button>
 
@@ -631,7 +617,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('1')}
             >
               <div className="tier-header">1 Backlog</div>
-              <div className="tier-count text-blue">{stats.backlogs1Count}</div>
+              <div className="tier-count maven-black text-blue">{stats.backlogs1Count}</div>
               <div className="tier-pct">{((stats.backlogs1Count / stats.total) * 100).toFixed(1)}% of Cohort</div>
             </button>
 
@@ -640,7 +626,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('2')}
             >
               <div className="tier-header">2 Backlogs</div>
-              <div className="tier-count text-amber">{stats.backlogs2Count}</div>
+              <div className="tier-count maven-black text-amber">{stats.backlogs2Count}</div>
               <div className="tier-pct">{((stats.backlogs2Count / stats.total) * 100).toFixed(1)}% of Cohort</div>
             </button>
 
@@ -649,7 +635,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('3')}
             >
               <div className="tier-header">3 Backlogs</div>
-              <div className="tier-count text-orange">{stats.backlogs3Count}</div>
+              <div className="tier-count maven-black text-orange">{stats.backlogs3Count}</div>
               <div className="tier-pct">{((stats.backlogs3Count / stats.total) * 100).toFixed(1)}% of Cohort</div>
             </button>
 
@@ -658,7 +644,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               onClick={() => setBacklogFilter('4+')}
             >
               <div className="tier-header">4+ Backlogs</div>
-              <div className="tier-count text-red">{stats.backlogs4PlusCount}</div>
+              <div className="tier-count maven-black text-red">{stats.backlogs4PlusCount}</div>
               <div className="tier-pct">{((stats.backlogs4PlusCount / stats.total) * 100).toFixed(1)}% (Action Required)</div>
             </button>
           </div>
@@ -804,7 +790,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         <div className="hod-tab-content fade-in">
           <div className="hod-section-header">
             <div>
-              <h2 className="section-title">Campus Placement Drive Eligibility &amp; Active Internships</h2>
+              <h2 className="section-title maven-black">Campus Placement Drive Eligibility &amp; Active Internships</h2>
               <p className="section-desc">
                 Recruitment eligibility matrix verified against JNTUK Autonomous accreditation guidelines.
                 Includes active industrial interns across TCS, AWS, Infosys, and AP Innovation Society.
@@ -824,7 +810,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           <div className="placements-kpi-row">
             <div className="placement-metric-box metric-eligible">
               <div className="box-title">Recruitment Drive Cleared</div>
-              <div className="box-count">{stats.driveEligibleCount}</div>
+              <div className="box-count maven-black">{stats.driveEligibleCount}</div>
               <div className="box-sub">
                 Students meeting <strong>CGPA ≥ 7.0</strong>, <strong>0 active backlogs</strong>, and <strong>≥ 75% attendance</strong>.
               </div>
@@ -832,7 +818,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
             <div className="placement-metric-box metric-interns">
               <div className="box-title">Active Industrial Interns</div>
-              <div className="box-count">{stats.inInternshipsCount}</div>
+              <div className="box-count maven-black">{stats.inInternshipsCount}</div>
               <div className="box-sub">
                 Undergoing 6-month live industry projects across cloud, AI, and IoT centers.
               </div>
@@ -840,7 +826,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
             <div className="placement-metric-box metric-remedial">
               <div className="box-title">Remedial Improvement Pool</div>
-              <div className="box-count">{stats.driveIneligibleCount}</div>
+              <div className="box-count maven-black">{stats.driveIneligibleCount}</div>
               <div className="box-sub">
                 Short of criteria due to backlogs or attendance. Enrolled in special condonation batches.
               </div>
@@ -849,7 +835,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
           {/* Internships Showcase */}
           <div className="internship-companies-card">
-            <h3 className="subcard-title">Active Industrial Internship Partners</h3>
+            <h3 className="subcard-title maven-black">Active Industrial Internship Partners</h3>
             <div className="company-badges-grid">
               <div className="company-badge-item">
                 <span className="comp-name">Tata Consultancy Services</span>
@@ -882,7 +868,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           {/* Drive Eligible Students Roster */}
           <div className="hod-table-wrap" style={{ marginTop: 20 }}>
             <div className="table-inner-header">
-              <h3>Drive Eligible Candidates Roster ({stats.driveEligibleCount} Students)</h3>
+              <h3 className="maven-black">Drive Eligible Candidates Roster ({stats.driveEligibleCount} Students)</h3>
               <span className="text-muted">Cleared for upcoming Tier-1 On-Campus Placement Drives</span>
             </div>
             <table className="hod-data-table">
@@ -934,7 +920,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         <div className="hod-tab-content fade-in">
           <div className="hod-section-header">
             <div>
-              <h2 className="section-title">KIET Korangi Official Hubs, Clubs &amp; KIOT Immersion</h2>
+              <h2 className="section-title maven-black">KIET Korangi Official Hubs, Clubs &amp; KIOT Immersion</h2>
               <p className="section-desc">
                 Live co-curricular engagement synchronized from the official KIET Korangi &amp; Yanam portal.
                 Select any hub below to inspect enrolled students, meeting schedules, and faculty leads.
@@ -966,12 +952,15 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
             {kietHubsMeta.map((hub) => {
               // Count members in this branch
               const memberCount = cohort.filter((s) => {
-                if (hub.id === 'toastmasters') return s.toastmastersMember
-                if (hub.id === 'robotics') return s.roboticsMember
+                if (hub.id === 'coding') return s.codingMember
+                if (hub.id === 'c4gt') return s.c4gtMember
                 if (hub.id === 'smartcity') return s.smartCityMember
-                if (hub.id === 'kiot') return s.kiotAttended
+                if (hub.id === 'ncc_nss') return s.nccNssMember
+                if (hub.id === 'toastmasters') return s.toastmastersMember
+                if (hub.id === 'sports') return s.sportsMember
                 if (hub.id === 'hackathons') return s.hackathonAttended
-                if (hub.id === 'innovation_hub') return s.hubMember
+                if (hub.id === 'robotics') return s.roboticsMember
+                if (hub.id === 'cybersecurity') return s.cyberSecurityMember
                 return false
               }).length
 
@@ -994,7 +983,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                     <div className="hub-logo-row">
                       <img src={hub.image} alt={hub.shortName} className="hub-thumbnail-img" />
                       <div>
-                        <h4 className="hub-name">{hub.name}</h4>
+                        <h4 className="hub-name maven-black">{hub.name}</h4>
                         <span className="hub-category">{hub.category}</span>
                       </div>
                     </div>
@@ -1029,7 +1018,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           {/* Enrolled Students for Selected Hub */}
           <div className="hod-table-wrap" style={{ marginTop: 24 }}>
             <div className="table-inner-header">
-              <h3>
+              <h3 className="maven-black">
                 {activeHubFilter === 'ALL'
                   ? 'All Co-Curricular & Hub Participants'
                   : `${kietHubsMeta.find(h => h.id === activeHubFilter)?.name || 'Hub'} Student Roster`}
@@ -1059,12 +1048,27 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                     <td>Sec {s.section}</td>
                     <td>
                       <div className="clubs-badges-row">
-                        {s.toastmastersMember && <span className="badge-club toastmasters">Toastmasters</span>}
-                        {s.roboticsMember && <span className="badge-club robotics">Robotics Lab</span>}
-                        {s.smartCityMember && <span className="badge-club smartcity">Smart City</span>}
-                        {s.kiotAttended && <span className="badge-club kiot">KIOT Tour</span>}
-                        {s.hackathonAttended && <span className="badge-club hackathons">Hackathons</span>}
-                        {s.hubMember && <span className="badge-club hub">Innovation Hub</span>}
+                        {s.clubs && s.clubs.length > 0 ? (
+                          s.clubs.map((c, cIdx) => {
+                            let badgeClass = 'default'
+                            if (c.includes('Coding')) badgeClass = 'coding'
+                            else if (c.includes('C4GT')) badgeClass = 'c4gt'
+                            else if (c.includes('Smart City')) badgeClass = 'smartcity'
+                            else if (c.includes('NCC') || c.includes('Nss')) badgeClass = 'ncc_nss'
+                            else if (c.includes('Toastmasters')) badgeClass = 'toastmasters'
+                            else if (c.includes('sports') || c.includes('kpl')) badgeClass = 'sports'
+                            else if (c.includes('Hackathon')) badgeClass = 'hackathons'
+                            else if (c.includes('Robotics')) badgeClass = 'robotics'
+                            else if (c.includes('Cyber')) badgeClass = 'cybersecurity'
+                            return (
+                              <span key={cIdx} className={`badge-club ${badgeClass}`}>
+                                {c}
+                              </span>
+                            )
+                          })
+                        ) : (
+                          <span className="text-muted" style={{ fontSize: 11 }}>No clubs</span>
+                        )}
                       </div>
                     </td>
                     <td><strong>{s.cgpa}</strong></td>
@@ -1087,7 +1091,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
         <div className="hod-tab-content fade-in">
           <div className="hod-section-header">
             <div>
-              <h2 className="section-title">Demographics, Residence &amp; Transit Logistics</h2>
+              <h2 className="section-title maven-black">Demographics, Residence &amp; Transit Logistics</h2>
               <p className="section-desc">
                 Monitoring <strong>{stats.dayScholarsCount} Day Scholars</strong> across 12 college bus routes and <strong>{stats.hostelersCount} Hostelers</strong> across campus residential blocks.
               </p>
@@ -1108,12 +1112,12 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               <div className="demo-header">
                 <span className="demo-icon">🚌</span>
                 <div>
-                  <h3 className="demo-title">Day Scholars Fleet</h3>
+                  <h3 className="demo-title maven-black">Day Scholars Fleet</h3>
                   <span className="demo-sub">Kakinada • Yanam • Samalkota • Draksharamam</span>
                 </div>
               </div>
               <div className="demo-count-row">
-                <span className="demo-big-num">{stats.dayScholarsCount}</span>
+                <span className="demo-big-num maven-black">{stats.dayScholarsCount}</span>
                 <span className="demo-ratio">({stats.dayScholarsRatio}% of Cohort)</span>
               </div>
               <p className="demo-desc">
@@ -1125,14 +1129,14 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               <div className="demo-header">
                 <span className="demo-icon">🏢</span>
                 <div>
-                  <h3 className="demo-title">Campus Residential Hostelers</h3>
+                  <h3 className="demo-title maven-black">Campus Residential Hostelers</h3>
                   <span className="demo-sub">
                     {selectedCampus === "KIET Women's" ? 'Sarada Girls Hostel (Blocks A & B)' : 'Godavari Boys Hostel (Blocks A & B)'}
                   </span>
                 </div>
               </div>
               <div className="demo-count-row">
-                <span className="demo-big-num">{stats.hostelersCount}</span>
+                <span className="demo-big-num maven-black">{stats.hostelersCount}</span>
                 <span className="demo-ratio">({stats.hostelersRatio}% of Cohort)</span>
               </div>
               <p className="demo-desc">
@@ -1144,7 +1148,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           {/* 12 Bus Routes Distribution */}
           <div className="hod-table-wrap" style={{ marginTop: 24 }}>
             <div className="table-inner-header">
-              <h3>Day Scholar Bus Route Distribution (12 Routes)</h3>
+              <h3 className="maven-black">Day Scholar Bus Route Distribution (12 Routes)</h3>
               <span className="text-muted">Direct connectivity across East Godavari &amp; Puducherry (Yanam)</span>
             </div>
             <table className="hod-data-table">
@@ -1198,7 +1202,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   {selectedStudent.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </div>
                 <div>
-                  <h3 className="modal-name">{selectedStudent.name}</h3>
+                  <h3 className="modal-name maven-black">{selectedStudent.name}</h3>
                   <div className="modal-roll-campus">
                     <span>{selectedStudent.rollNumber}</span> • <span>{selectedStudent.campus}</span> • <span>{selectedStudent.branch}</span>
                   </div>
@@ -1211,7 +1215,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               <div className="modal-grid-two">
                 {/* Academic Highlights */}
                 <div className="modal-info-panel">
-                  <h4 className="panel-title">Academic &amp; Backlog Profile</h4>
+                  <h4 className="panel-title maven-black">Academic &amp; Backlog Profile</h4>
                   <div className="info-row">
                     <span className="info-label">Active Backlogs:</span>
                     <span className="info-value">
@@ -1248,7 +1252,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
                 {/* Residence & Transit */}
                 <div className="modal-info-panel">
-                  <h4 className="panel-title">Residence &amp; Logistics</h4>
+                  <h4 className="panel-title maven-black">Residence &amp; Logistics</h4>
                   <div className="info-row">
                     <span className="info-label">Residence Type:</span>
                     <span className="info-value">
@@ -1288,16 +1292,28 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
               </div>
 
               {/* Clubs & Hubs Enrollment */}
-              <div className="modal-clubs-panel" style={{ marginTop: 16 }}>
-                <h4 className="panel-title">KIET Hubs &amp; Clubs Participations</h4>
+              <div className="modal-full-panel">
+                <h4 className="panel-title maven-black">KIET Hubs &amp; Clubs Participations</h4>
                 <div className="clubs-badges-row">
-                  {selectedStudent.toastmastersMember && <span className="badge-club toastmasters">Toastmasters International</span>}
-                  {selectedStudent.roboticsMember && <span className="badge-club robotics">KIET Robotics Lab</span>}
-                  {selectedStudent.smartCityMember && <span className="badge-club smartcity">KIET Smart City Lab</span>}
-                  {selectedStudent.kiotAttended && <span className="badge-club kiot">KIOT Immersion Tour</span>}
-                  {selectedStudent.hackathonAttended && <span className="badge-club hackathons">Hackathons Cell</span>}
-                  {selectedStudent.hubMember && <span className="badge-club hub">Innovation &amp; Incubation Hub</span>}
-                  {(!selectedStudent.clubs || selectedStudent.clubs.length === 0) && (
+                  {selectedStudent.clubs && selectedStudent.clubs.length > 0 ? (
+                    selectedStudent.clubs.map((c, cIdx) => {
+                      let badgeClass = 'default'
+                      if (c.includes('Coding')) badgeClass = 'coding'
+                      else if (c.includes('C4GT')) badgeClass = 'c4gt'
+                      else if (c.includes('Smart City')) badgeClass = 'smartcity'
+                      else if (c.includes('NCC') || c.includes('Nss')) badgeClass = 'ncc_nss'
+                      else if (c.includes('Toastmasters')) badgeClass = 'toastmasters'
+                      else if (c.includes('sports') || c.includes('kpl')) badgeClass = 'sports'
+                      else if (c.includes('Hackathon')) badgeClass = 'hackathons'
+                      else if (c.includes('Robotics')) badgeClass = 'robotics'
+                      else if (c.includes('Cyber')) badgeClass = 'cybersecurity'
+                      return (
+                        <span key={cIdx} className={`badge-club ${badgeClass}`}>
+                          {c}
+                        </span>
+                      )
+                    })
+                  ) : (
                     <span className="text-muted">No co-curricular hub registrations.</span>
                   )}
                 </div>

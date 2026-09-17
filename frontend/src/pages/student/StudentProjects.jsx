@@ -162,19 +162,19 @@ export default function StudentProjects() {
           <div className="projects-hero-badge">
             ⚡ CODE &amp; INNOVATION REPOSITORIES • KIET PORTFOLIO
           </div>
-          <h1>Technical Projects &amp; Deployments</h1>
+          <h1 className="maven-black">Technical Projects &amp; Deployments</h1>
           <p>
             Showcase your software architectures, open-source repositories, AI/ML models, and deployed cloud web applications with direct links for recruiters.
           </p>
           <div className="projects-hero-kpis">
             <div className="kpi-tag">
-              <strong>{projects.length}</strong> <span>Projects Logged</span>
+              <strong className="maven-black">{projects.length}</strong> <span>Projects Logged</span>
             </div>
             <div className="kpi-tag">
-              <strong>{projects.filter(p => p.deployedUrl).length}</strong> <span>Live Deployed</span>
+              <strong className="maven-black">{projects.filter(p => p.deployedUrl).length}</strong> <span>Live Deployed</span>
             </div>
             <div className="kpi-tag">
-              <strong>{projects.filter(p => p.githubUrl).length}</strong> <span>Public Repos</span>
+              <strong className="maven-black">{projects.filter(p => p.githubUrl).length}</strong> <span>Public Repos</span>
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function StudentProjects() {
                   ● {proj.status}
                 </span>
               </div>
-              <h3 className="project-card-title">{proj.title}</h3>
+              <h3 className="project-card-title maven-black">{proj.title}</h3>
               <p className="project-card-intro">{proj.intro}</p>
             </div>
 
@@ -305,7 +305,7 @@ export default function StudentProjects() {
                 <span style={{ fontSize: 24 }}>🚀</span>
                 <div>
                   <h3 className="modal-title">Publish New Project</h3>
-                  <span style={{ fontSize: 11, color: '#64748b' }}>
+                  <span className="modal-subtitle">
                     Add your repository and deployment to your verified portfolio
                   </span>
                 </div>

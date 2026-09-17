@@ -211,23 +211,23 @@ export default function StudentInternships() {
           <div className="internships-hero-badge">
             🏢 CAREER &amp; INDUSTRY APPRENTICESHIPS • KIET ENGAGEMENT
           </div>
-          <h1>Industry Internships &amp; Practical Training</h1>
+          <h1 className="maven-black">Industry Internships &amp; Practical Training</h1>
           <p>
             Track your corporate internships, research fellowships, and government technical apprenticeships. 
             Review work modes (Remote vs. Offline), start and completion dates, and verifiable domain foundations.
           </p>
           <div className="internships-hero-stats">
             <div className="kpi-tag">
-              <strong>{internships.length}</strong> <span>Total Internships</span>
+              <strong className="maven-black">{internships.length}</strong> <span>Total Internships</span>
             </div>
             <div className="kpi-tag">
-              <strong>{internships.filter(i => i.mode === 'Remote').length}</strong> <span>Remote Cohorts</span>
+              <strong className="maven-black">{internships.filter(i => i.mode === 'Remote').length}</strong> <span>Remote Cohorts</span>
             </div>
             <div className="kpi-tag">
-              <strong>{internships.filter(i => i.mode === 'Offline').length}</strong> <span>Offline / On-Site</span>
+              <strong className="maven-black">{internships.filter(i => i.mode === 'Offline').length}</strong> <span>Offline / On-Site</span>
             </div>
             <div className="kpi-tag">
-              <strong>{internships.filter(i => i.status === 'Verified').length}</strong> <span>Verified Records</span>
+              <strong className="maven-black">{internships.filter(i => i.status === 'Verified').length}</strong> <span>Verified Records</span>
             </div>
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function StudentInternships() {
                   {intern.mode === 'Remote' ? '🌐' : intern.mode === 'Offline' ? '🏢' : '🔄'}
                 </span>
                 <div>
-                  <h3 className="intern-role-title">{intern.role}</h3>
+                  <h3 className="intern-role-title maven-black">{intern.role}</h3>
                   <span className="intern-company-name">{intern.company}</span>
                 </div>
               </div>
@@ -290,7 +290,7 @@ export default function StudentInternships() {
               <div className="meta-cell">
                 <span className="meta-lbl">TENURE &amp; DATES</span>
                 <strong>{intern.startDate} — {intern.endDate}</strong>
-                <small style={{ color: '#0284c7', fontWeight: 700 }}>({intern.duration})</small>
+                <small className="intern-duration-lbl">({intern.duration})</small>
               </div>
               <div className="meta-cell">
                 <span className="meta-lbl">STIPEND / GRANT</span>
@@ -350,7 +350,7 @@ export default function StudentInternships() {
                 <span style={{ fontSize: 24 }}>💼</span>
                 <div>
                   <h3 className="modal-title">Record New Internship</h3>
-                  <span style={{ fontSize: 11, color: '#64748b' }}>
+                  <span className="modal-subtitle">
                     Capture role, organization, work mode, dates, and core technical basis
                   </span>
                 </div>
@@ -522,7 +522,7 @@ export default function StudentInternships() {
                 <span style={{ fontSize: 28 }}>📜</span>
                 <div>
                   <h3 className="modal-title">{viewDossierModal.role}</h3>
-                  <span style={{ fontSize: 11, color: '#0284c7', fontWeight: 800 }}>
+                  <span className="intern-dossier-sub">
                     {viewDossierModal.company} • {viewDossierModal.duration}
                   </span>
                 </div>
@@ -548,7 +548,7 @@ export default function StudentInternships() {
                 </div>
                 <div className="meta-cell">
                   <span className="meta-lbl">CREDENTIAL ID</span>
-                  <strong style={{ color: '#7c3aed' }}>{viewDossierModal.credentialId}</strong>
+                  <strong className="intern-cred-id-val">{viewDossierModal.credentialId}</strong>
                 </div>
               </div>
 
@@ -560,23 +560,23 @@ export default function StudentInternships() {
                 <p className="basis-text">{viewDossierModal.technicalBasis}</p>
               </div>
 
-              <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #e2e8f0', marginBottom: 14 }}>
-                <strong style={{ fontSize: 12, color: '#0f172a', display: 'block', marginBottom: 6 }}>
+              <div className="intern-deliverables-box">
+                <strong className="intern-deliverables-title">
                   Verified Internship Deliverables:
                 </strong>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: '#334155', lineHeight: 1.6 }}>
+                <ul className="intern-deliverables-list">
                   {viewDossierModal.deliverables?.map((d, i) => (
                     <li key={i}>{d}</li>
                   ))}
                 </ul>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#ecfdf5', borderRadius: 10, border: '1px solid #a7f3d0' }}>
+              <div className="intern-verify-banner">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span>🛡️</span>
                   <div>
-                    <strong style={{ fontSize: 12, color: '#065f46', display: 'block' }}>Verified by Department Industry Cell</strong>
-                    <small style={{ color: '#047857', fontSize: 10 }}>Assigned Mentor: {viewDossierModal.mentor}</small>
+                    <strong className="intern-verify-title">Verified by Department Industry Cell</strong>
+                    <small className="intern-verify-sub">Assigned Mentor: {viewDossierModal.mentor}</small>
                   </div>
                 </div>
                 <Seal status="Verified" />

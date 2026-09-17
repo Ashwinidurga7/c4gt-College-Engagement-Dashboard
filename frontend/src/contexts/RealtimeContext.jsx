@@ -11,7 +11,7 @@ export function RealtimeProvider({ children, url }){
   const esRef = useRef(null)
 
   useEffect(()=>{
-    const endpoint = url || (import.meta.env.VITE_REALTIME_URL || 'http://localhost:4000/events')
+    const endpoint = url || (import.meta.env.VITE_REALTIME_URL || 'http://localhost:5001/api/realtime/events')
     const es = new EventSource(endpoint)
     esRef.current = es
 
@@ -25,8 +25,7 @@ export function RealtimeProvider({ children, url }){
     }
 
     es.onerror = (err) => {
-      console.warn('Realtime connection error', err)
-      // EventSource will auto-reconnect; we could implement backoff here
+      // EventSource will auto-reconnect gracefully
     }
 
     return ()=>{
@@ -35,12 +34,12 @@ export function RealtimeProvider({ children, url }){
     }
   },[url])
 
-  // optimistic local emit (does not persist unless you POST to backend)
+  // optimistic local emit (posts to backend realtime stream)
   function emitLocal(event){
     const item = { ...event, id: event.id || `local-${Date.now()}`, _local: true, ts: new Date().toISOString() }
     setEvents(prev => [item, ...prev].slice(0,200))
-    // attempt to POST to server if available
-    const endpoint = (import.meta.env.VITE_REALTIME_EMIT_URL || 'http://localhost:4000/emit')
+    // attempt to POST to backend server
+    const endpoint = (import.meta.env.VITE_REALTIME_EMIT_URL || 'http://localhost:5001/api/realtime/emit')
     fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)}).catch(()=>{})
     return item
   }
