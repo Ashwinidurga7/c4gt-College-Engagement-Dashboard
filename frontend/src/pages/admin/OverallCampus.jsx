@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { campusProfiles } from '../../data/adminData'
 import { useToast } from '../../components/ui/Toast'
 import ProfileModal from '../../components/ui/ProfileModal'
+import Icon from '../../components/ui/Icon'
 
 // All 14 Official KIET Ecosystem Innovation Hubs, Labs & Professional Societies
 // Official KIET Ecosystem Innovation Hubs, Labs & Student Societies
@@ -13,7 +14,7 @@ export const ecosystemHubs = [
     name: 'Google Coding Club',
     title: 'Competitive Programming & Google Technologies Cell',
     category: 'Technical & AI',
-    icon: '💻',
+    icon: 'laptop',
     accentColor: '#0284c7',
     summary: 'High-intensity algorithm sprint cell training engineers across LeetCode, Codeforces, Google Code Jam, HackerRank, and ICPC Collegiate programming contests.',
     metrics: {
@@ -39,7 +40,7 @@ export const ecosystemHubs = [
     name: 'C4GT club',
     title: 'Digital Public Goods & GovTech Open Source Chapter',
     category: 'Technical & AI',
-    icon: '🏛️',
+    icon: 'institution',
     accentColor: '#0d9488',
     summary: 'Dedicated open-source public tech cell contributing directly to national Digital Public Infrastructure (DPI), GovTech open repositories, and Samagra Open Source fellowships.',
     metrics: {
@@ -64,7 +65,7 @@ export const ecosystemHubs = [
     name: 'Smart City Lab',
     title: 'Municipal Telemetry, IoT & Embedded Systems COE',
     category: 'Technical & AI',
-    icon: '🌐',
+    icon: 'globe',
     accentColor: '#10b981',
     summary: 'Applied municipal research center deploying low-power LoRaWAN sensor networks, real-time coastal weather telemetry, and automated utility monitors for Kakinada Smart City.',
     metrics: {
@@ -90,7 +91,7 @@ export const ecosystemHubs = [
     name: 'NCC And Nss',
     title: 'Discipline, National Service & Community Outreach',
     category: 'Societies & Outreach',
-    icon: '🎖️',
+    icon: 'award',
     accentColor: '#4f46e5',
     summary: 'Paramilitary discipline and social service cell conducting annual training camps, coastal afforestation drives, mega blood donation camps, and disaster relief across Kakinada district.',
     metrics: {
@@ -115,7 +116,7 @@ export const ecosystemHubs = [
     name: 'Toastmasters',
     title: 'Public Speaking, Oratory & Executive Leadership (Club #7124930)',
     category: 'Societies & Outreach',
-    icon: '🎙️',
+    icon: 'megaphone',
     accentColor: '#0ea5e9',
     summary: 'Chartered institutional club training aspiring engineers in impromptu speaking, parliamentary debate, boardroom communication, and corporate negotiation.',
     metrics: {
@@ -141,7 +142,7 @@ export const ecosystemHubs = [
     name: 'Kiet sports and athaletics council(kpl)',
     title: 'Inter-Campus Tournaments & Athletic Fitness Council',
     category: 'Societies & Outreach',
-    icon: '🏏',
+    icon: 'trophy',
     accentColor: '#16a34a',
     summary: 'Active sports board managing the annual KIET Premier League (KPL Day-Night cricket tournament), floodlit basketball & volleyball courts, and inter-university athletic meets.',
     metrics: {
@@ -166,7 +167,7 @@ export const ecosystemHubs = [
     name: 'Hackathons',
     title: 'National Innovation Challenges & SIH Innovation Desk',
     category: 'Innovation & Competitions',
-    icon: '🏆',
+    icon: 'trophy',
     accentColor: '#8b5cf6',
     summary: 'Specialized university committee mentoring squads for Smart India Hackathon (SIH), UNESCO India-Africa, AICTE Manthan, and national 48-hour hackathons.',
     metrics: {
@@ -192,7 +193,7 @@ export const ecosystemHubs = [
     name: 'Robotics',
     title: 'KIET Autonomous Systems & Robotics Club',
     category: 'Technical & AI',
-    icon: '🤖',
+    icon: 'target',
     accentColor: '#ef4444',
     summary: 'Advanced industrial robotics testbed at KIET designing ROS 2 autonomous exploration rovers, quadcopter inspection drones, LiDAR-equipped warehouse AGVs, and multi-axis robotic arms.',
     metrics: {
@@ -218,7 +219,7 @@ export const ecosystemHubs = [
     name: 'Cyber Security',
     title: 'KIET Cyber Defense, Ethical Hacking & Forensics COE',
     category: 'Technical & AI',
-    icon: '🛡️',
+    icon: 'shield',
     accentColor: '#0284c7',
     summary: 'Premier cybersecurity research & defense cell at KIET specializing in vulnerability assessment, penetration testing (VAPT), digital forensics, malware reverse-engineering, and national CTF challenges.',
     metrics: {
@@ -290,7 +291,7 @@ export default function OverallCampus() {
       {/* 1. Streamlined, Airy Executive Hero Header */}
       <section className="overall-hero-card">
         <div className="overall-hero-badge">
-          🏛️ KIET GROUP OF INSTITUTIONS • AUTONOMOUS GOVERNANCE NETWORK
+          <Icon name="institution" /> KIET GROUP OF INSTITUTIONS • AUTONOMOUS GOVERNANCE NETWORK
         </div>
         <h1 className="overall-hero-title maven-black">
           Group Ecosystem &amp; Multi-Campus Governance
@@ -305,35 +306,35 @@ export default function OverallCampus() {
         {/* Streamlined KPI Bar */}
         <div className="overall-kpi-bar">
           <div className="overall-kpi-chip">
-            <span className="chip-icon">🏫</span>
+            <span className="chip-icon"><Icon name="school" /></span>
             <div>
               <span className="chip-val maven-black">3 Campuses</span>
               <span className="chip-lbl">72 Total Acres • Korangi</span>
             </div>
           </div>
           <div className="overall-kpi-chip">
-            <span className="chip-icon">🎓</span>
+            <span className="chip-icon"><Icon name="student" /></span>
             <div>
               <span className="chip-val maven-black">4,330 Scholars</span>
               <span className="chip-lbl">1st to Final Year Batches</span>
             </div>
           </div>
           <div className="overall-kpi-chip">
-            <span className="chip-icon">🔬</span>
+            <span className="chip-icon"><Icon name="flask" /></span>
             <div>
               <span className="chip-val maven-black">9 Hubs &amp; Labs</span>
               <span className="chip-lbl">Robotics, Cyber, Coding &amp; C4GT</span>
             </div>
           </div>
           <div className="overall-kpi-chip">
-            <span className="chip-icon">💼</span>
+            <span className="chip-icon"><Icon name="briefcase" /></span>
             <div>
               <span className="chip-val maven-black">86.7% Placed</span>
               <span className="chip-lbl">Top: ₹31.50 LPA (AWS)</span>
             </div>
           </div>
           <div className="overall-kpi-chip">
-            <span className="chip-icon">🚌</span>
+            <span className="chip-icon"><Icon name="bus" /></span>
             <div>
               <span className="chip-val maven-black">24 Fleet Buses</span>
               <span className="chip-lbl">100% GPS Telemetry</span>
@@ -344,10 +345,10 @@ export default function OverallCampus() {
         {/* Action Controls */}
         <div className="overall-hero-actions">
           <button className="btn-overall-primary" onClick={() => navigate('/admin')}>
-            📊 Open Central Governance Dashboard →
+            <Icon name="chart" /> Open Central Governance Dashboard <Icon name="arrow-right" />
           </button>
           <button className="btn-overall-secondary" onClick={handleDownloadDossier}>
-            📑 Group Accreditation Dossier
+            <Icon name="document" /> Group Accreditation Dossier
           </button>
         </div>
       </section>
@@ -406,7 +407,7 @@ export default function OverallCampus() {
               <h3 className="maven-black">{activeCampus.name}</h3>
               <span className="featured-campus-tag">{activeCampus.tag}</span>
               <p className="featured-campus-meta">
-                📍 {activeCampus.location} • <strong>{activeCampus.campusArea}</strong> • {activeCampus.accreditation}
+                <Icon name="location" /> {activeCampus.location} • <strong>{activeCampus.campusArea}</strong> • {activeCampus.accreditation}
               </p>
             </div>
 
@@ -426,7 +427,7 @@ export default function OverallCampus() {
                 title="Click to inspect Director profile dossier"
               >
                 <span className="leader-role-label">Director &amp; Principal (Click to View)</span>
-                <strong>👤 {activeCampus.director} ↗</strong>
+                <strong><Icon name="user" /> {activeCampus.director} <Icon name="trending-up" /></strong>
               </div>
 
               <div
@@ -443,7 +444,7 @@ export default function OverallCampus() {
                 title="Click to inspect Dean profile dossier"
               >
                 <span className="leader-role-label">Academic Dean (Click to View)</span>
-                <strong>🎓 {activeCampus.dean} ↗</strong>
+                <strong><Icon name="student" /> {activeCampus.dean} <Icon name="trending-up" /></strong>
               </div>
             </div>
 
@@ -468,13 +469,13 @@ export default function OverallCampus() {
 
             <div className="featured-actions-row">
               <button className="btn-campus-link" onClick={() => navigate('/admin/students')}>
-                👥 View Student Cohorts →
+                <Icon name="users" /> View Student Cohorts <Icon name="arrow-right" />
               </button>
               <button className="btn-campus-link" onClick={() => navigate('/admin/faculty')}>
-                🎓 View Campus Faculty Roster →
+                <Icon name="student" /> View Campus Faculty Roster <Icon name="arrow-right" />
               </button>
               <button className="btn-campus-link" onClick={() => navigate('/admin/placements')}>
-                💼 View Placement Drives →
+                <Icon name="briefcase" /> View Placement Drives <Icon name="arrow-right" />
               </button>
             </div>
           </div>
@@ -517,10 +518,10 @@ export default function OverallCampus() {
                     className="hub-icon-frame"
                     style={{ backgroundColor: `${hub.accentColor}15`, color: hub.accentColor }}
                   >
-                    {hub.icon}
+                    <Icon name={hub.icon} size={20} />
                   </div>
                   <span className="hub-status-pill">
-                    ● {hub.status}
+                    <Icon name="dot" /> {hub.status}
                   </span>
                 </div>
 
@@ -537,9 +538,9 @@ export default function OverallCampus() {
               </div>
 
               <div className="hub-card-footer">
-                <span className="hub-coord-name">👤 {hub.coordinator}</span>
+                <span className="hub-coord-name"><Icon name="user" /> {hub.coordinator}</span>
                 <button className="hub-action-btn">
-                  Inspect Dossier →
+                  Inspect Dossier <Icon name="arrow-right" />
                 </button>
               </div>
             </div>
@@ -553,7 +554,7 @@ export default function OverallCampus() {
           <div className="admin-modal-card" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 28 }}>{selectedHubModal.icon}</span>
+                <span><Icon name={selectedHubModal.icon} size={28} /></span>
                 <div>
                   <h3 className="modal-title maven-black">{selectedHubModal.name}</h3>
                   <span className="hub-modal-header-badge">
@@ -562,7 +563,7 @@ export default function OverallCampus() {
                 </div>
               </div>
               <button className="btn-modal-close" onClick={() => setSelectedHubModal(null)}>
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -587,19 +588,19 @@ export default function OverallCampus() {
                   style={{ cursor: 'pointer' }}
                 >
                   <span className="box-lbl">Supervising Coordinator (Click to View)</span>
-                  <strong style={{ color: '#0284c7' }}>👤 {selectedHubModal.coordinator} ↗</strong>
+                  <strong style={{ color: '#0284c7' }}><Icon name="user" /> {selectedHubModal.coordinator} <Icon name="trending-up" /></strong>
                 </div>
                 <div className="hub-modal-info-box">
                   <span className="box-lbl">Operational Headquarters</span>
-                  <strong>📍 {selectedHubModal.location}</strong>
+                  <strong><Icon name="location" /> {selectedHubModal.location}</strong>
                 </div>
                 <div className="hub-modal-info-box">
                   <span className="box-lbl">Current Engagement</span>
-                  <strong style={{ color: '#059669' }}>⚡ {selectedHubModal.metrics.primary}</strong>
+                  <strong style={{ color: '#059669' }}><Icon name="bolt" /> {selectedHubModal.metrics.primary}</strong>
                 </div>
                 <div className="hub-modal-info-box">
                   <span className="box-lbl">Milestones &amp; Records</span>
-                  <strong style={{ color: '#0284c7' }}>🏅 {selectedHubModal.metrics.secondary}</strong>
+                  <strong style={{ color: '#0284c7' }}><Icon name="award" /> {selectedHubModal.metrics.secondary}</strong>
                 </div>
               </div>
 

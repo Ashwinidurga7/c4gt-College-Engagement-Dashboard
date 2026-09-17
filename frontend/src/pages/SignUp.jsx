@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/Toast'
 import { campuses, branchesByCampus, years, sections } from '../data/academicData'
+import Icon from '../components/ui/Icon'
 
 const facultyDepartments = [
   'Artificial Intelligence & Data Science',
@@ -261,7 +262,7 @@ export default function SignUp() {
               className={`signup-role-tab ${role === 'Student' ? 'active' : ''}`}
               onClick={() => handleRoleChange('Student')}
             >
-              <span className="tab-icon">🎓</span>
+              <span className="tab-icon"><Icon name="student" /></span>
               <span>Student Registration</span>
             </button>
             <button
@@ -269,7 +270,7 @@ export default function SignUp() {
               className={`signup-role-tab ${role === 'Faculty' ? 'active' : ''}`}
               onClick={() => handleRoleChange('Faculty')}
             >
-              <span className="tab-icon">👩‍🏫</span>
+              <span className="tab-icon"><Icon name="faculty" /></span>
               <span>Faculty Registration</span>
             </button>
           </div>
@@ -560,7 +561,7 @@ export default function SignUp() {
                 className="quick-demo-pill"
                 onClick={handlePrefillDemo}
               >
-                <span className="quick-demo-icon">⚡</span>
+                <span className="quick-demo-icon"><Icon name="bolt" /></span>
                 <span>Pre-fill Demo {role} Profile</span>
               </button>
             </div>
@@ -573,7 +574,7 @@ export default function SignUp() {
                 className="auth-link-btn"
                 onClick={() => navigate('/')}
               >
-                Sign In to Portal →
+                Sign In to Portal <Icon name="arrow-right" />
               </button>
             </div>
           </form>

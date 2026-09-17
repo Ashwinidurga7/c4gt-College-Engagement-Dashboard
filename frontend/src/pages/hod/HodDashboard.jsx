@@ -20,6 +20,7 @@ import {
   getDepartmentStats,
 } from '../../data/academicData'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 // Two subtle, un-highlighted neutral tones across all graphs
 const GRAPH_TONE_1 = '#334155' // Deep Slate / Charcoal
@@ -228,7 +229,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
       {/* 1. Clean Institutional Header */}
       <div className="hod-header-card">
         <div className="hod-header-meta">
-          <span className="hod-governance-tag">🎓 DEPARTMENT ACADEMIC COMMAND</span>
+          <span className="hod-governance-tag"><Icon name="student" /> DEPARTMENT ACADEMIC COMMAND</span>
           <h1 className="hod-portal-title maven-black">
             Department Head Analytics &amp; Student Insights
           </h1>
@@ -312,35 +313,35 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           className={`hod-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => handleTabChange('overview')}
         >
-          <span className="tab-icon">📊</span>
+          <span className="tab-icon"><Icon name="chart" /></span>
           <span className="tab-title">Overview</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'academics' ? 'active' : ''}`}
           onClick={() => handleTabChange('academics')}
         >
-          <span className="tab-icon">📚</span>
+          <span className="tab-icon"><Icon name="books" /></span>
           <span className="tab-title">Academics &amp; Backlogs</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'placements' ? 'active' : ''}`}
           onClick={() => handleTabChange('placements')}
         >
-          <span className="tab-icon">💼</span>
+          <span className="tab-icon"><Icon name="briefcase" /></span>
           <span className="tab-title">Placements</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'activities' ? 'active' : ''}`}
           onClick={() => handleTabChange('activities')}
         >
-          <span className="tab-icon">🚀</span>
+          <span className="tab-icon"><Icon name="trending-up" /></span>
           <span className="tab-title">Clubs &amp; Hubs</span>
         </button>
         <button
           className={`hod-tab-btn ${activeTab === 'demographics' ? 'active' : ''}`}
           onClick={() => handleTabChange('demographics')}
         >
-          <span className="tab-icon">🚌</span>
+          <span className="tab-icon"><Icon name="bus" /></span>
           <span className="tab-title">Demographics &amp; Transit</span>
         </button>
       </div>
@@ -426,7 +427,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Logistical residence split and transport allocation</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('demographics')}>
-                  View Transit Details →
+                  View Transit Details <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -473,7 +474,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Academic health and remediation requirements</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('academics')}>
-                  Inspect Backlogs →
+                  Inspect Backlogs <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -510,7 +511,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Eligibility metrics for tier-1 IT &amp; Core recruitment</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('placements')}>
-                  View Candidate List →
+                  View Candidate List <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -531,7 +532,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 </ResponsiveContainer>
               </div>
               <div className="chart-note-bar">
-                ⚡ <strong>{stats.driveEligibleCount}</strong> candidates are cleared for incoming tier-1 software &amp; core recruitment drives.
+                <Icon name="bolt" /> <strong>{stats.driveEligibleCount}</strong> candidates are cleared for incoming tier-1 software &amp; core recruitment drives.
               </div>
             </div>
 
@@ -543,7 +544,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   <p className="chart-subtitle">Active student participation across innovation modules</p>
                 </div>
                 <button className="btn-chart-action" onClick={() => handleTabChange('activities')}>
-                  Explore Hubs →
+                  Explore Hubs <Icon name="arrow-right" />
                 </button>
               </div>
               <div className="chart-body" style={{ height: 260 }}>
@@ -564,7 +565,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                 </ResponsiveContainer>
               </div>
               <div className="chart-note-bar">
-                🎯 Official data from KIET Multi-Campus Governance (Google Coding Club, C4GT, Smart City Lab, NCC &amp; NSS, Toastmasters, KPL Sports, Hackathons, Robotics, Cyber Security).
+                <Icon name="target" /> Official data from KIET Multi-Campus Governance (Google Coding Club, C4GT, Smart City Lab, NCC &amp; NSS, Toastmasters, KPL Sports, Hackathons, Robotics, Cyber Security).
               </div>
             </div>
           </div>
@@ -737,7 +738,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                       </td>
                       <td>
                         {s.activeBacklogs === 0 ? (
-                          <span className="badge-backlog-zero">✓ Zero Backlogs</span>
+                          <span className="badge-backlog-zero"><Icon name="check" /> Zero Backlogs</span>
                         ) : s.activeBacklogs === 1 ? (
                           <span className="badge-backlog-1">1 Backlog</span>
                         ) : s.activeBacklogs === 2 ? (
@@ -760,7 +761,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                       </td>
                       <td>
                         {s.driveEligible ? (
-                          <span className="tag-drive-eligible">✓ Eligible</span>
+                          <span className="tag-drive-eligible"><Icon name="check" /> Eligible</span>
                         ) : (
                           <span className="tag-drive-ineligible">Ineligible</span>
                         )}
@@ -773,7 +774,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                             setSelectedStudent(s)
                           }}
                         >
-                          Details →
+                          Details <Icon name="arrow-right" />
                         </button>
                       </td>
                     </tr>
@@ -898,14 +899,14 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                       <td>
                         {s.internship ? (
                           <span className="intern-pill">
-                            🏢 {s.internship.company}
+                            <Icon name="building" /> {s.internship.company}
                           </span>
                         ) : (
                           <span className="text-muted">Drive Ready</span>
                         )}
                       </td>
                       <td>
-                        <span className="tag-drive-eligible">✓ Cleared for Drives</span>
+                        <span className="tag-drive-eligible"><Icon name="check" /> Cleared for Drives</span>
                       </td>
                     </tr>
                   ))}
@@ -992,11 +993,11 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
                     <div className="hub-meta-list">
                       <div className="hub-meta-item">
-                        <span className="meta-icon">👨‍🏫</span>
+                        <span className="meta-icon"><Icon name="faculty" /></span>
                         <span>Lead: <strong>{hub.facultyLead}</strong></span>
                       </div>
                       <div className="hub-meta-item">
-                        <span className="meta-icon">⏰</span>
+                        <span className="meta-icon"><Icon name="clock" /></span>
                         <span>Schedule: <strong>{hub.meetingTime}</strong></span>
                       </div>
                     </div>
@@ -1006,7 +1007,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                         <strong>{memberCount}</strong> {selectedBranch} Students Enrolled
                       </span>
                       <button className="btn-view-hub-members">
-                        {isSelected ? 'Viewing Roster ✓' : 'Filter Roster →'}
+                        {isSelected ? 'Viewing Roster' : 'Filter Roster'}
                       </button>
                     </div>
                   </div>
@@ -1075,7 +1076,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                     <td>{s.attendance}%</td>
                     <td>
                       <button className="btn-table-view" onClick={(e) => { e.stopPropagation(); setSelectedStudent(s); }}>
-                        Profile →
+                        Profile <Icon name="arrow-right" />
                       </button>
                     </td>
                   </tr>
@@ -1110,7 +1111,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
           <div className="demographics-kpi-grid">
             <div className="demographic-card day-scholars-box">
               <div className="demo-header">
-                <span className="demo-icon">🚌</span>
+                <span className="demo-icon"><Icon name="bus" /></span>
                 <div>
                   <h3 className="demo-title maven-black">Day Scholars Fleet</h3>
                   <span className="demo-sub">Kakinada • Yanam • Samalkota • Draksharamam</span>
@@ -1127,7 +1128,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
 
             <div className="demographic-card hostelers-box">
               <div className="demo-header">
-                <span className="demo-icon">🏢</span>
+                <span className="demo-icon"><Icon name="building" /></span>
                 <div>
                   <h3 className="demo-title maven-black">Campus Residential Hostelers</h3>
                   <span className="demo-sub">
@@ -1208,7 +1209,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                   </div>
                 </div>
               </div>
-              <button className="btn-modal-close" onClick={() => setSelectedStudent(null)}>✕</button>
+              <button className="btn-modal-close" onClick={() => setSelectedStudent(null)}><Icon name="close" /></button>
             </div>
 
             <div className="modal-body">
@@ -1220,7 +1221,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                     <span className="info-label">Active Backlogs:</span>
                     <span className="info-value">
                       {selectedStudent.activeBacklogs === 0 ? (
-                        <span className="badge-backlog-zero">✓ Zero Backlogs (All Clear)</span>
+                        <span className="badge-backlog-zero"><Icon name="check" /> Zero Backlogs (All Clear)</span>
                       ) : (
                         <span className="badge-backlog-danger">{selectedStudent.activeBacklogs} Active Backlogs</span>
                       )}
@@ -1238,7 +1239,7 @@ export default function HodDashboard({ defaultTab = 'overview' }) {
                     <span className="info-label">Placement Drive Cleared:</span>
                     <span className="info-value">
                       {selectedStudent.driveEligible ? (
-                        <span className="tag-drive-eligible">✓ Eligible</span>
+                        <span className="tag-drive-eligible"><Icon name="check" /> Eligible</span>
                       ) : (
                         <span className="tag-drive-ineligible">Ineligible (Remedial Required)</span>
                       )}

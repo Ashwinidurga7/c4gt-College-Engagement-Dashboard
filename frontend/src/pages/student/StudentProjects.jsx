@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 const DEFAULT_PROJECTS = [
   {
@@ -160,7 +161,7 @@ export default function StudentProjects() {
       <section className="projects-hero-card">
         <div className="projects-hero-copy">
           <div className="projects-hero-badge">
-            ⚡ CODE &amp; INNOVATION REPOSITORIES • KIET PORTFOLIO
+            <Icon name="bolt" /> CODE &amp; INNOVATION REPOSITORIES • KIET PORTFOLIO
           </div>
           <h1 className="maven-black">Technical Projects &amp; Deployments</h1>
           <p>
@@ -213,7 +214,7 @@ export default function StudentProjects() {
           />
           {searchQuery && (
             <button className="search-clear-btn" onClick={() => setSearchQuery('')}>
-              ✕
+              <Icon name="close" />
             </button>
           )}
         </div>
@@ -227,7 +228,7 @@ export default function StudentProjects() {
               <div className="project-header-top">
                 <span className="project-category-badge">{proj.category}</span>
                 <span className={`project-status-badge ${proj.deployedUrl ? 'deployed' : 'repo'}`}>
-                  ● {proj.status}
+                  <Icon name="dot" /> {proj.status}
                 </span>
               </div>
               <h3 className="project-card-title maven-black">{proj.title}</h3>
@@ -272,7 +273,7 @@ export default function StudentProjects() {
                       <polyline points="15 3 21 3 21 9" />
                       <line x1="10" y1="14" x2="21" y2="3" />
                     </svg>
-                    <span>Live Demo ↗</span>
+                    <span>Live Demo <Icon name="trending-up" /></span>
                   </a>
                 ) : (
                   <span className="no-deploy-tag">No Live Deploy</span>
@@ -286,7 +287,7 @@ export default function StudentProjects() {
 
         {filteredProjects.length === 0 && (
           <div className="projects-empty-card">
-            <span style={{ fontSize: 36 }}>💻</span>
+            <span style={{ fontSize: 36 }}><Icon name="laptop" /></span>
             <h4>No projects found</h4>
             <p>Try clearing your search query or submit a new project repository to get started.</p>
             <button className="btn-add-project" onClick={() => setShowAddModal(true)}>
@@ -302,7 +303,7 @@ export default function StudentProjects() {
           <div className="admin-modal-card project-form-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 24 }}>🚀</span>
+                <span style={{ fontSize: 24 }}><Icon name="trending-up" /></span>
                 <div>
                   <h3 className="modal-title">Publish New Project</h3>
                   <span className="modal-subtitle">
@@ -311,7 +312,7 @@ export default function StudentProjects() {
                 </div>
               </div>
               <button className="btn-modal-close" onClick={() => setShowAddModal(false)}>
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 

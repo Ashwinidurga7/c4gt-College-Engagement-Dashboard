@@ -11,6 +11,7 @@ import {
   capstoneTeams,
 } from '../../data/academicData'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 export default function FacultyAttendance() {
   const { showToast } = useToast()
@@ -170,7 +171,7 @@ export default function FacultyAttendance() {
       {/* 1. Clean Institutional Header */}
       <div className="faculty-hero-banner" style={{ marginBottom: 20 }}>
         <div className="faculty-header-meta">
-          <span className="faculty-governance-tag">👨‍🏫 FACULTY • ATTENDANCE COMMAND</span>
+          <span className="faculty-governance-tag"><Icon name="faculty" /> FACULTY • ATTENDANCE COMMAND</span>
           <h1 className="faculty-title maven-black">
             Student Attendance Management
           </h1>
@@ -180,7 +181,7 @@ export default function FacultyAttendance() {
         </div>
         <div className="faculty-hero-actions">
           <button type="button" className="btn-faculty-broadcast" onClick={handleMarkAllPresent}>
-            <span>✓ Mark Section Present Today</span>
+            <span><Icon name="check" /> Mark Section Present Today</span>
           </button>
         </div>
       </div>
@@ -248,7 +249,7 @@ export default function FacultyAttendance() {
               <option>All Residence</option>
               {residenceTypes.map((r) => (
                 <option key={r} value={r}>
-                  {r === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                  {r === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                 </option>
               ))}
             </select>
@@ -341,7 +342,7 @@ export default function FacultyAttendance() {
                           s.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'
                         }`}
                       >
-                        {s.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                        {s.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                       </span>
                     </td>
                     <td>
@@ -405,7 +406,7 @@ export default function FacultyAttendance() {
                 className="modal-close"
                 onClick={() => setActiveModalStudent(null)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 

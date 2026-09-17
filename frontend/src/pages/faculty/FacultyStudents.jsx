@@ -8,6 +8,7 @@ import {
   residenceTypes,
   capstoneTeams,
 } from '../../data/academicData'
+import Icon from '../../components/ui/Icon'
 
 export default function FacultyStudents() {
   const [campus, setCampus] = useState('All Campuses')
@@ -68,7 +69,7 @@ export default function FacultyStudents() {
       {/* 1. Clean Institutional Header */}
       <div className="faculty-hero-banner" style={{ marginBottom: 20 }}>
         <div className="faculty-header-meta">
-          <span className="faculty-governance-tag">👨‍🏫 FACULTY • STUDENT DIRECTORY</span>
+          <span className="faculty-governance-tag"><Icon name="faculty" /> FACULTY • STUDENT DIRECTORY</span>
           <h1 className="faculty-title maven-black">
             Students &amp; Academic Overview
           </h1>
@@ -78,7 +79,7 @@ export default function FacultyStudents() {
         </div>
         <div className="faculty-hero-actions">
           <div className="overall-kpi-chip" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <span className="chip-icon">🎓</span>
+            <span className="chip-icon"><Icon name="student" /></span>
             <div>
               <span className="chip-val maven-black" style={{ color: '#fff' }}>{filtered.length} Students</span>
               <span className="chip-lbl" style={{ color: '#dbeafe' }}>Active Directory</span>
@@ -143,7 +144,7 @@ export default function FacultyStudents() {
               <option>All Residence</option>
               {residenceTypes.map((r) => (
                 <option key={r} value={r}>
-                  {r === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                  {r === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                 </option>
               ))}
             </select>
@@ -194,7 +195,7 @@ export default function FacultyStudents() {
             <h2 className="maven-black">Class Register &amp; Capstone Allocation</h2>
             <p>180 Cohort Students across 3 sections with live residence and project assignments.</p>
           </div>
-          <span className="live-pill">● LIVE REGISTER</span>
+          <span className="live-pill"><Icon name="dot" /> LIVE REGISTER</span>
         </div>
 
         <div className="student-table">
@@ -229,7 +230,7 @@ export default function FacultyStudents() {
                     s.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'
                   }`}
                 >
-                  {s.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                  {s.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                 </span>
               </span>
               <span>
@@ -245,7 +246,7 @@ export default function FacultyStudents() {
               <span className={s.attendance >= 75 ? 'status-good' : 'status-low'}>
                 {s.attendance}%
               </span>
-              <span className="view-link">View →</span>
+              <span className="view-link">View <Icon name="arrow-right" /></span>
             </button>
           ))}
 
@@ -278,8 +279,8 @@ export default function FacultyStudents() {
                 label="Residence"
                 value={
                   selected.residence === 'Hosteler'
-                    ? `🏢 Hosteler (${selected.hostelBlock || 'Godavari Hostel'})`
-                    : `🚌 Day Scholar (${selected.busRoute || 'Bus Route 03'})`
+                    ? `Hosteler (${selected.hostelBlock || 'Godavari Hostel'})`
+                    : `Day Scholar (${selected.busRoute || 'Bus Route 03'})`
                 }
               />
               <Detail

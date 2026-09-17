@@ -13,6 +13,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
 import Tilt from '../../components/ui/Tilt'
+import Icon from '../../components/ui/Icon'
 
 const departmentData = [
   { department: 'CSE', students: 820 },
@@ -111,7 +112,7 @@ export default function StudentDashboard() {
               margin: 0,
             }}
           >
-            Good Morning, {user?.name || 'Student'} 👋
+            Good Morning, {user?.name || 'Student'} 
           </h2>
 
           <div className="muted" style={{ marginTop: 6 }}>
@@ -120,7 +121,7 @@ export default function StudentDashboard() {
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          <button className="btn btn-ghost">🔔 Notifications</button>
+          <button className="btn btn-ghost"><Icon name="bell" /> Notifications</button>
           <button className="btn btn-primary">Profile</button>
         </div>
       </div>
@@ -137,25 +138,25 @@ export default function StudentDashboard() {
         <StatCard
           label="Total Students"
           value="4,280"
-          icon="👨‍🎓"
+          icon="user"
         />
 
         <StatCard
           label="Active Staff"
           value="186"
-          icon="👩‍🏫"
+          icon="faculty"
         />
 
         <StatCard
           label="Today's Activities"
           value={campusActivities.length}
-          icon="📅"
+          icon="calendar"
         />
 
         <StatCard
           label="My Verified Activities"
           value={verifiedActivities.length}
-          icon="✅"
+          icon="check-circle"
         />
       </div>
 
@@ -215,7 +216,7 @@ export default function StudentDashboard() {
                   >
                     <div>
                       <div style={{ fontWeight: 700 }}>
-                        📢 {item.title}
+                        <Icon name="megaphone" /> {item.title}
                       </div>
 
                       <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
@@ -378,8 +379,8 @@ export default function StudentDashboard() {
                       fontSize: 12,
                     }}
                   >
-                    <span>📅 {activity.date}</span>
-                    <span>👥 {activity.participants}</span>
+                    <span><Icon name="calendar" /> {activity.date}</span>
+                    <span><Icon name="users" /> {activity.participants}</span>
                   </div>
 
                   <button

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../components/ui/Toast'
+import Icon from '../../components/ui/Icon'
 
 // Durga Prasad Reference Data (Extracted accurately from Durga_Prasad_Resume.pdf)
 export const initialDurgaPrasadResume = {
@@ -347,13 +348,13 @@ export default function StudentResume() {
 
         <div className="resume-global-actions">
           <button type="button" className="button button-light" onClick={handleResetToStandard}>
-            ↺ Reset to Durga Prasad Sample
+            <Icon name="refresh" /> Reset to Durga Prasad Sample
           </button>
           <button type="button" className="button button-primary" onClick={handleSave}>
-            💾 Save Resume
+            <Icon name="save" /> Save Resume
           </button>
           <button type="button" className="button button-accent" onClick={handlePrint}>
-            🖨️ Print / Download PDF
+            <Icon name="printer" /> Print / Download PDF
           </button>
         </div>
       </div>
@@ -389,13 +390,13 @@ export default function StudentResume() {
           <div className="resume-editor-pane">
             <div className="editor-pane-header">
               <div className="eph-title-group">
-                <span className="eph-icon">⚡</span>
+                <span className="eph-icon"><Icon name="bolt" /></span>
                 <div>
                   <h3 className="maven-black">Resume Studio Editor</h3>
                   <p>Real-time sync to live slide canvas • 100% data preservation</p>
                 </div>
               </div>
-              <span className="editor-status-badge">● Live Synced</span>
+              <span className="editor-status-badge"><Icon name="dot" /> Live Synced</span>
             </div>
 
             {/* 1. Personal & Contact Info Accordion */}
@@ -406,7 +407,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'contact' ? '' : 'contact')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge blue">👤</span>
+                  <span className="acc-icon-badge blue"><Icon name="user" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Personal &amp; Contact Details</span>
                     <span className="acc-subtitle">Full legal name, contact handles &amp; portfolio links</span>
@@ -414,7 +415,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">7 Fields</span>
-                  <span className="accordion-chevron">{activeAccordion === 'contact' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'contact' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -422,7 +423,7 @@ export default function StudentResume() {
                 <div className="accordion-content">
                   <div className="form-group">
                     <label>
-                      <span className="field-icon">👤</span> Full Legal Name
+                      <span className="field-icon"><Icon name="user" /></span> Full Legal Name
                     </label>
                     <input
                       type="text"
@@ -435,7 +436,7 @@ export default function StudentResume() {
 
                   <div className="form-group">
                     <label>
-                      <span className="field-icon">💼</span> Target Job Title / Specialization
+                      <span className="field-icon"><Icon name="briefcase" /></span> Target Job Title / Specialization
                     </label>
                     <input
                       type="text"
@@ -449,7 +450,7 @@ export default function StudentResume() {
                   <div className="form-row-two">
                     <div className="form-group">
                       <label>
-                        <span className="field-icon">✉️</span> Institutional Email
+                        <span className="field-icon"><Icon name="mail" /></span> Institutional Email
                       </label>
                       <input
                         type="email"
@@ -460,7 +461,7 @@ export default function StudentResume() {
                     </div>
                     <div className="form-group">
                       <label>
-                        <span className="field-icon">📞</span> Contact Number
+                        <span className="field-icon"><Icon name="phone" /></span> Contact Number
                       </label>
                       <input
                         type="text"
@@ -473,7 +474,7 @@ export default function StudentResume() {
 
                   <div className="form-group">
                     <label>
-                      <span className="field-icon">📍</span> Location (City, State)
+                      <span className="field-icon"><Icon name="location" /></span> Location (City, State)
                     </label>
                     <input
                       type="text"
@@ -486,7 +487,7 @@ export default function StudentResume() {
                   <div className="form-row-two">
                     <div className="form-group">
                       <label>
-                        <span className="field-icon">🔗</span> LinkedIn Profile Handle
+                        <span className="field-icon"><Icon name="link" /></span> LinkedIn Profile Handle
                       </label>
                       <input
                         type="text"
@@ -497,7 +498,7 @@ export default function StudentResume() {
                     </div>
                     <div className="form-group">
                       <label>
-                        <span className="field-icon">🐙</span> GitHub Profile Handle
+                        <span className="field-icon"><Icon name="link" /></span> GitHub Profile Handle
                       </label>
                       <input
                         type="text"
@@ -519,7 +520,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'summary' ? '' : 'summary')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge purple">📝</span>
+                  <span className="acc-icon-badge purple"><Icon name="document" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Professional Executive Summary</span>
                     <span className="acc-subtitle">Primary engineering focus, core stack &amp; metrics</span>
@@ -527,7 +528,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">380+ DSA Metric</span>
-                  <span className="accordion-chevron">{activeAccordion === 'summary' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'summary' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -557,7 +558,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'skills' ? '' : 'skills')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge amber">⚡</span>
+                  <span className="acc-icon-badge amber"><Icon name="bolt" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Technical Skills Portfolio</span>
                     <span className="acc-subtitle">Structured across 6 core computer science domains</span>
@@ -565,7 +566,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">{resumeData.skills.length} Domains</span>
-                  <span className="accordion-chevron">{activeAccordion === 'skills' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'skills' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -575,12 +576,12 @@ export default function StudentResume() {
                     Customize your technical stack categories. Technologies typed below will instantly render as verified skills on the live resume slide.
                   </p>
                   {resumeData.skills.map((skill, idx) => {
-                    const domainIcons = ['💻', '🎨', '⚙️', '🗄️', '🛠️', '🧠']
+                    const domainIcons = ['laptop', 'palette', 'wrench', 'document', 'wrench', 'target']
                     return (
                       <div key={idx} className="nested-item-box skill-domain-box">
                         <div className="domain-card-head">
                           <span className="domain-index-badge">
-                            {domainIcons[idx] || '⚡'} Domain #{idx + 1}
+                            <Icon name={domainIcons[idx] || 'bolt'} /> Domain #{idx + 1}
                           </span>
                           <span className="domain-active-label">{skill.category}</span>
                         </div>
@@ -634,7 +635,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'experience' ? '' : 'experience')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge emerald">💼</span>
+                  <span className="acc-icon-badge emerald"><Icon name="briefcase" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Work Experience &amp; Internships</span>
                     <span className="acc-subtitle">Industrial engagements, client projects &amp; student roles</span>
@@ -642,7 +643,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">{resumeData.experience.length} Roles</span>
-                  <span className="accordion-chevron">{activeAccordion === 'experience' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'experience' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -678,7 +679,7 @@ export default function StudentResume() {
 
                       <div className="form-row-two">
                         <div className="form-group">
-                          <label>📍 Work Location</label>
+                          <label><Icon name="location" /> Work Location</label>
                           <input
                             type="text"
                             value={exp.location}
@@ -687,7 +688,7 @@ export default function StudentResume() {
                           />
                         </div>
                         <div className="form-group">
-                          <label>📅 Tenure / Period</label>
+                          <label><Icon name="calendar" /> Tenure / Period</label>
                           <input
                             type="text"
                             value={exp.period}
@@ -715,7 +716,7 @@ export default function StudentResume() {
                                 onClick={() => handleDeleteExpBullet(expIdx, bIdx)}
                                 title="Remove bullet point"
                               >
-                                ✕
+                                <Icon name="close" />
                               </button>
                             )}
                           </div>
@@ -742,7 +743,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'projects' ? '' : 'projects')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge rose">🚀</span>
+                  <span className="acc-icon-badge rose"><Icon name="trending-up" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Technical Projects</span>
                     <span className="acc-subtitle">Full stack, distributed systems &amp; software architecture</span>
@@ -750,7 +751,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">{resumeData.projects.length} Projects</span>
-                  <span className="accordion-chevron">{activeAccordion === 'projects' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'projects' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -784,7 +785,7 @@ export default function StudentResume() {
                           />
                         </div>
                         <div className="form-group">
-                          <label>📅 Duration / Timeline</label>
+                          <label><Icon name="calendar" /> Duration / Timeline</label>
                           <input
                             type="text"
                             value={proj.period}
@@ -826,7 +827,7 @@ export default function StudentResume() {
                                 onClick={() => handleDeleteProjectBullet(pIdx, bIdx)}
                                 title="Remove highlight bullet"
                               >
-                                ✕
+                                <Icon name="close" />
                               </button>
                             )}
                           </div>
@@ -846,7 +847,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'education' ? '' : 'education')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge indigo">🎓</span>
+                  <span className="acc-icon-badge indigo"><Icon name="student" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Education History</span>
                     <span className="acc-subtitle">B.Tech degrees, Intermediate &amp; Secondary schooling</span>
@@ -854,7 +855,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">{resumeData.education.length} Degrees</span>
-                  <span className="accordion-chevron">{activeAccordion === 'education' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'education' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -892,7 +893,7 @@ export default function StudentResume() {
 
                         <div className="form-row-two">
                           <div className="form-group">
-                            <label>🎯 CGPA / Percentage Score</label>
+                            <label><Icon name="target" /> CGPA / Percentage Score</label>
                             <input
                               type="text"
                               value={edu.score}
@@ -901,7 +902,7 @@ export default function StudentResume() {
                             />
                           </div>
                           <div className="form-group">
-                            <label>📅 Graduation Years</label>
+                            <label><Icon name="calendar" /> Graduation Years</label>
                             <input
                               type="text"
                               value={edu.period}
@@ -925,7 +926,7 @@ export default function StudentResume() {
                 onClick={() => setActiveAccordion(activeAccordion === 'achievements' ? '' : 'achievements')}
               >
                 <div className="acc-trigger-left">
-                  <span className="acc-icon-badge gold">🏆</span>
+                  <span className="acc-icon-badge gold"><Icon name="trophy" /></span>
                   <div className="acc-text-wrap">
                     <span className="acc-title">Honors, Achievements &amp; Certifications</span>
                     <span className="acc-subtitle">LeetCode streaks, AWS credentials &amp; hackathon wins</span>
@@ -933,7 +934,7 @@ export default function StudentResume() {
                 </div>
                 <div className="acc-trigger-right">
                   <span className="acc-count-pill">{resumeData.achievements.length} Credentials</span>
-                  <span className="accordion-chevron">{activeAccordion === 'achievements' ? '▲' : '▼'}</span>
+                  <span className="accordion-chevron">{activeAccordion === 'achievements' ? <Icon name="chevron-up" /> : <Icon name="chevron-down" />}</span>
                 </div>
               </button>
 
@@ -941,7 +942,7 @@ export default function StudentResume() {
                 <div className="accordion-content">
                   {resumeData.achievements.map((ach, achIdx) => (
                     <div key={achIdx} className="bullet-row-advanced" style={{ marginBottom: '10px' }}>
-                      <span className="bullet-idx-bubble gold">★ #{achIdx + 1}</span>
+                      <span className="bullet-idx-bubble gold"><Icon name="star" /> #{achIdx + 1}</span>
                       <textarea
                         rows="2"
                         value={ach}
@@ -955,7 +956,7 @@ export default function StudentResume() {
                           onClick={() => handleDeleteAchievement(achIdx)}
                           title="Remove achievement"
                         >
-                          ✕
+                          <Icon name="close" />
                         </button>
                       )}
                     </div>
@@ -994,7 +995,7 @@ export default function StudentResume() {
                     onClick={handleScrollTop}
                     title="Scroll to Top of Resume"
                   >
-                    ⬆ Top
+                    <Icon name="upload" /> Top
                   </button>
                   <button
                     type="button"
@@ -1002,7 +1003,7 @@ export default function StudentResume() {
                     onClick={handleScrollBottom}
                     title="Scroll to Bottom of Resume"
                   >
-                    ⬇ Bottom
+                    <Icon name="chevron-down" /> Bottom
                   </button>
                   <button
                     type="button"
@@ -1010,7 +1011,7 @@ export default function StudentResume() {
                     onClick={handleFitWidth}
                     title="Auto-Fit Page to Canvas Width"
                   >
-                    📄 Fit Width
+                    <Icon name="document" /> Fit Width
                   </button>
                 </div>
 
@@ -1050,7 +1051,7 @@ export default function StudentResume() {
                   onClick={() => setIsExpandedView(!isExpandedView)}
                   title={isExpandedView ? 'Restore Editor' : 'Expand Full Slide View'}
                 >
-                  {isExpandedView ? '⊡ Split View' : '⛶ Full Slide'}
+                  {isExpandedView ? '⊡ Split View' : 'Full Slide'}
                 </button>
               </div>
             </div>
@@ -1058,7 +1059,7 @@ export default function StudentResume() {
             {/* Dynamic Typography, Density & Color Palette Bar */}
             <div className="preview-style-bar">
               <div className="style-option-group">
-                <span className="style-label">🔤 Typography:</span>
+                <span className="style-label"><Icon name="document" /> Typography:</span>
                 <select
                   value={selectedFont}
                   onChange={(e) => {
@@ -1076,7 +1077,7 @@ export default function StudentResume() {
               </div>
 
               <div className="style-option-group">
-                <span className="style-label">📏 Line Spacing:</span>
+                <span className="style-label"><Icon name="document" /> Line Spacing:</span>
                 <div className="density-toggle-group">
                   {DENSITIES.map((d) => (
                     <button
@@ -1092,7 +1093,7 @@ export default function StudentResume() {
               </div>
 
               <div className="style-option-group">
-                <span className="style-label">🎨 Palette:</span>
+                <span className="style-label"><Icon name="palette" /> Palette:</span>
                 <div className="color-swatches-group">
                   {ACCENT_COLORS.map((c) => (
                     <button
@@ -1257,9 +1258,9 @@ export default function StudentResume() {
                       <h1>{resumeData.fullName}</h1>
                       <div className="modern-subtitle">{resumeData.jobTitle}</div>
                       <div className="modern-contact-flex">
-                        <span>✉ {resumeData.email}</span>
-                        <span>☎ {resumeData.phone}</span>
-                        <span>📍 {resumeData.location}</span>
+                        <span><Icon name="mail" /> {resumeData.email}</span>
+                        <span><Icon name="phone" /> {resumeData.phone}</span>
+                        <span><Icon name="location" /> {resumeData.location}</span>
                       </div>
                     </div>
 
@@ -1524,9 +1525,9 @@ export default function StudentResume() {
                       <h1 className="creative-title">{resumeData.fullName}</h1>
                       <div className="creative-tagline">{resumeData.jobTitle}</div>
                       <div className="creative-pills">
-                        <span>✉ {resumeData.email}</span>
-                        <span>☎ {resumeData.phone}</span>
-                        <span>🌐 {resumeData.portfolio}</span>
+                        <span><Icon name="mail" /> {resumeData.email}</span>
+                        <span><Icon name="phone" /> {resumeData.phone}</span>
+                        <span><Icon name="globe" /> {resumeData.portfolio}</span>
                       </div>
                     </div>
 

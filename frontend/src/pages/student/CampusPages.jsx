@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ProfileModal from '../../components/ui/ProfileModal'
+import Icon from '../../components/ui/Icon'
 
 const KIET = {
   campus1: '/images/kiet/aboutus_kiet.jpg',
@@ -359,7 +360,7 @@ export default function CampusPages({ type }) {
                 </span>
               </div>
               <button className="btn-modal-close" onClick={() => setSelectedItem(null)}>
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 

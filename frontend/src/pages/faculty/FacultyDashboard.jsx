@@ -10,6 +10,7 @@ import {
   classTeamsMeta,
   capstoneTeams,
 } from '../../data/academicData'
+import Icon from '../../components/ui/Icon'
 
 export default function FacultyDashboard() {
   const { user } = useAuth()
@@ -223,7 +224,7 @@ export default function FacultyDashboard() {
       {/* 1. Clean Institutional Header */}
       <div className="faculty-hero-banner">
         <div className="faculty-header-meta">
-          <span className="faculty-governance-tag">👨‍🏫 FACULTY ACADEMIC WORKSPACE</span>
+          <span className="faculty-governance-tag"><Icon name="faculty" /> FACULTY ACADEMIC WORKSPACE</span>
           <h1 className="faculty-title maven-black">
             Faculty Overview &amp; Cohort Management
           </h1>
@@ -250,7 +251,7 @@ export default function FacultyDashboard() {
               }
             }}
           >
-            <span>📢 Broadcast</span>
+            <span><Icon name="megaphone" /> Broadcast</span>
           </button>
         </div>
       </div>
@@ -320,7 +321,7 @@ export default function FacultyDashboard() {
       <section className="cohort-metrics-grid">
         {/* Total Students Card */}
         <div className="cohort-kpi-card card-blue">
-          <div className="kpi-icon-box">👥</div>
+          <div className="kpi-icon-box"><Icon name="users" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">TOTAL COHORT STUDENTS</span>
             <div className="kpi-value-row">
@@ -335,7 +336,7 @@ export default function FacultyDashboard() {
 
         {/* Day Scholars Card */}
         <div className="cohort-kpi-card card-teal">
-          <div className="kpi-icon-box">🚌</div>
+          <div className="kpi-icon-box"><Icon name="bus" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">DAY SCHOLARS</span>
             <div className="kpi-value-row">
@@ -352,7 +353,7 @@ export default function FacultyDashboard() {
 
         {/* Hostelers Card */}
         <div className="cohort-kpi-card card-purple">
-          <div className="kpi-icon-box">🏢</div>
+          <div className="kpi-icon-box"><Icon name="building" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">HOSTELERS</span>
             <div className="kpi-value-row">
@@ -369,7 +370,7 @@ export default function FacultyDashboard() {
 
         {/* Class Teams Card */}
         <div className="cohort-kpi-card card-amber">
-          <div className="kpi-icon-box">👥</div>
+          <div className="kpi-icon-box"><Icon name="users" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">CLASS TEAMS (1 TO {cohortMetrics.teamsCount})</span>
             <div className="kpi-value-row">
@@ -384,7 +385,7 @@ export default function FacultyDashboard() {
 
         {/* Class Attendance Card */}
         <div className="cohort-kpi-card card-emerald">
-          <div className="kpi-icon-box">📊</div>
+          <div className="kpi-icon-box"><Icon name="chart" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">CLASS AVG ATTENDANCE</span>
             <div className="kpi-value-row">
@@ -399,7 +400,7 @@ export default function FacultyDashboard() {
 
         {/* Pending Activity Approvals Card */}
         <div className="cohort-kpi-card card-rose">
-          <div className="kpi-icon-box">⚡</div>
+          <div className="kpi-icon-box"><Icon name="bolt" /></div>
           <div className="kpi-info-box">
             <span className="kpi-label">PENDING APPROVALS</span>
             <div className="kpi-value-row">
@@ -421,7 +422,7 @@ export default function FacultyDashboard() {
             className={`faculty-tab-btn ${activeTab === 'teams' ? 'active' : ''}`}
             onClick={() => setActiveTab('teams')}
           >
-            <span className="tab-icon">👥</span>
+            <span className="tab-icon"><Icon name="users" /></span>
             <span className="tab-title">Class Teams</span>
             <span className="tab-count-pill">{currentTeams.length} Teams</span>
           </button>
@@ -431,7 +432,7 @@ export default function FacultyDashboard() {
             className={`faculty-tab-btn ${activeTab === 'roster' ? 'active' : ''}`}
             onClick={() => setActiveTab('roster')}
           >
-            <span className="tab-icon">📋</span>
+            <span className="tab-icon"><Icon name="clipboard" /></span>
             <span className="tab-title">Class Register</span>
             <span className="tab-count-pill">{cohortMetrics.total} Students</span>
           </button>
@@ -441,7 +442,7 @@ export default function FacultyDashboard() {
             className={`faculty-tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
             onClick={() => setActiveTab('reviews')}
           >
-            <span className="tab-icon">⚡</span>
+            <span className="tab-icon"><Icon name="bolt" /></span>
             <span className="tab-title">Pending Submissions</span>
             {pendingActivities.length > 0 && (
               <span className="tab-alert-pill">{pendingActivities.length}</span>
@@ -453,7 +454,7 @@ export default function FacultyDashboard() {
             className={`faculty-tab-btn ${activeTab === 'shortage' ? 'active' : ''}`}
             onClick={() => setActiveTab('shortage')}
           >
-            <span className="tab-icon">⚠️</span>
+            <span className="tab-icon"><Icon name="alert" /></span>
             <span className="tab-title">Shortage Watchlist</span>
             {cohortMetrics.shortageCount > 0 && (
               <span className="tab-warning-pill">{cohortMetrics.shortageCount}</span>
@@ -495,7 +496,7 @@ export default function FacultyDashboard() {
 
               <div className="controls-right">
                 <div className="f-search-wrap">
-                  <span className="search-icon">🔍</span>
+                  <span className="search-icon"><Icon name="search" /></span>
                   <input
                     type="text"
                     value={searchQuery}
@@ -517,7 +518,7 @@ export default function FacultyDashboard() {
                       <span className="team-sec-tag">Section {team.section}</span>
                     </div>
                     <div className="residence-ratio-badge">
-                      🚌 {team.dayScholarCount} Day Scholars • 🏢 {team.hostelerCount} Hostelers
+                      <Icon name="bus" /> {team.dayScholarCount} Day Scholars • <Icon name="building" /> {team.hostelerCount} Hostelers
                     </div>
                   </div>
 
@@ -541,7 +542,7 @@ export default function FacultyDashboard() {
                         Team Roster ({team.members.length} Members)
                       </span>
                       <span className="residence-ratio-badge">
-                        🚌 {team.dayScholarCount} Day Scholars • 🏢 {team.hostelerCount} Hostelers
+                        <Icon name="bus" /> {team.dayScholarCount} Day Scholars • <Icon name="building" /> {team.hostelerCount} Hostelers
                       </span>
                     </div>
 
@@ -581,7 +582,7 @@ export default function FacultyDashboard() {
                                   m.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'
                                 }`}
                               >
-                                {m.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                                {m.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                               </span>
                             </div>
 
@@ -629,7 +630,7 @@ export default function FacultyDashboard() {
 
               {!filteredTeams.length && (
                 <div className="empty-state-box">
-                  <span className="empty-icon">🔍</span>
+                  <span className="empty-icon"><Icon name="search" /></span>
                   <h3>No Capstone Teams match the criteria</h3>
                   <p>Try resetting the search query or residence filter.</p>
                 </div>
@@ -692,7 +693,7 @@ export default function FacultyDashboard() {
 
               <div className="controls-right">
                 <div className="f-search-wrap">
-                  <span className="search-icon">🔍</span>
+                  <span className="search-icon"><Icon name="search" /></span>
                   <input
                     type="text"
                     value={searchQuery}
@@ -712,13 +713,13 @@ export default function FacultyDashboard() {
               </span>
               <div className="roster-counts-chips">
                 <span className="chip-dayscholar">
-                  🚌 {filteredRegister.filter((s) => s.residence === 'Day Scholar').length} Day Scholars
+                  <Icon name="bus" /> {filteredRegister.filter((s) => s.residence === 'Day Scholar').length} Day Scholars
                 </span>
                 <span className="chip-hosteler">
-                  🏢 {filteredRegister.filter((s) => s.residence === 'Hosteler').length} Hostelers
+                  <Icon name="building" /> {filteredRegister.filter((s) => s.residence === 'Hosteler').length} Hostelers
                 </span>
                 <span className="chip-eligible">
-                  ✓ {filteredRegister.filter((s) => s.attendance >= 75).length} Eligible
+                  <Icon name="check" /> {filteredRegister.filter((s) => s.attendance >= 75).length} Eligible
                 </span>
               </div>
             </div>
@@ -772,7 +773,7 @@ export default function FacultyDashboard() {
                               student.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'
                             }`}
                           >
-                            {student.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                            {student.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                           </span>
                         </td>
 
@@ -815,7 +816,7 @@ export default function FacultyDashboard() {
                             className="btn-table-inspect"
                             onClick={() => setSelectedStudent(student)}
                           >
-                            Inspect Profile →
+                            Inspect Profile <Icon name="arrow-right" />
                           </button>
                         </td>
                       </tr>
@@ -903,7 +904,7 @@ export default function FacultyDashboard() {
                         className="btn-review-approve"
                         onClick={() => handleApprove(act.id, act.title, act.studentName || act.user)}
                       >
-                        ✓ Verify & Approve
+                        <Icon name="check" /> Verify & Approve
                       </button>
                     </div>
                   </div>
@@ -912,7 +913,7 @@ export default function FacultyDashboard() {
 
               {!pendingActivities.length && (
                 <div className="empty-state-box">
-                  <span className="empty-icon">🎉</span>
+                  <span className="empty-icon"></span>
                   <h3>All student submissions have been reviewed!</h3>
                   <p>New submissions from student portfolios will appear here for verification.</p>
                 </div>
@@ -974,7 +975,7 @@ export default function FacultyDashboard() {
                               stu.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'
                             }`}
                           >
-                            {stu.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                            {stu.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                           </span>
                         </td>
 
@@ -996,7 +997,7 @@ export default function FacultyDashboard() {
                             className="btn-sms-alert"
                             onClick={() => handleSendNotice(stu)}
                           >
-                            📱 Send Parent SMS Notice
+                            <Icon name="phone" /> Send Parent SMS Notice
                           </button>
                         </td>
 
@@ -1006,7 +1007,7 @@ export default function FacultyDashboard() {
                             className="btn-table-inspect"
                             onClick={() => setSelectedStudent(stu)}
                           >
-                            View Record →
+                            View Record <Icon name="arrow-right" />
                           </button>
                         </td>
                       </tr>
@@ -1044,7 +1045,7 @@ export default function FacultyDashboard() {
                 className="modal-close"
                 onClick={() => setSelectedStudent(null)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -1054,7 +1055,7 @@ export default function FacultyDashboard() {
                 <div className="modal-stat-card">
                   <span>Residence Category</span>
                   <strong className={selectedStudent.residence === 'Hosteler' ? 'text-purple' : 'text-teal'}>
-                    {selectedStudent.residence === 'Hosteler' ? '🏢 On-Campus Hosteler' : '🚌 Day Scholar (Bus)'}
+                    {selectedStudent.residence === 'Hosteler' ? 'On-Campus Hosteler' : 'Day Scholar (Bus)'}
                   </strong>
                   <small>
                     {selectedStudent.residence === 'Hosteler'
@@ -1166,7 +1167,7 @@ export default function FacultyDashboard() {
                 className="modal-close"
                 onClick={() => setSelectedTeamModal(null)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
 
@@ -1200,7 +1201,7 @@ export default function FacultyDashboard() {
                       <span>{m.rollNumber} • Sec {m.section}</span>
                     </div>
                     <span className={`residence-pill ${m.residence === 'Hosteler' ? 'hosteler' : 'dayscholar'}`}>
-                      {m.residence === 'Hosteler' ? '🏢 Hosteler' : '🚌 Day Scholar'}
+                      {m.residence === 'Hosteler' ? 'Hosteler' : 'Day Scholar'}
                     </span>
                     <span className="m-cgpa">CGPA: {m.cgpa}</span>
                     <span className="m-att">Att: {m.attendance}%</span>
@@ -1233,7 +1234,7 @@ export default function FacultyDashboard() {
                 className="modal-close"
                 onClick={() => setRejectItem(null)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
             <div className="modal-body">

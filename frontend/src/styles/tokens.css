@@ -96,6 +96,14 @@
   background: var(--bg);
 }
 
+/* Inline icons replace the emoji glyphs these slots used to hold: keep them
+   optically centred on the text baseline and inheriting the text colour. */
+.icon{display:inline-block;vertical-align:-0.135em;flex:none;color:inherit}
+button .icon,a .icon,.tab-icon .icon,.field-icon .icon,.quick-emoji .icon,
+.partner-logo .icon,.acc-icon-badge .icon,.scope-pill-icon .icon{vertical-align:middle}
+:where(.tab-icon,.field-icon,.quick-emoji,.partner-logo,.scope-pill-icon,
+  .acc-icon-badge,.accordion-chevron,.achieve-bullet,.eph-icon,.cert-drop-icon)
+  {display:inline-flex;align-items:center;justify-content:center;line-height:0}
 *{box-sizing:border-box}
 html,body,#root{margin:0;min-height:100%;min-width:100%;background:var(--bg)}
 body{font-family:var(--font-sans);color:var(--text);-webkit-font-smoothing:antialiased}
