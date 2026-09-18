@@ -88,9 +88,10 @@ export function AuthProvider({ children }) {
 
     const valLower = value.toLowerCase()
 
-    // 0. Attempt live Backend Authentication (port 5001)
+    // 0. Attempt live Backend Authentication (port 5000)
     try {
-      const apiRes = await fetch('http://localhost:5001/api/auth/login', {
+      const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api'
+      const apiRes = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: value, password: pass, role: role.toLowerCase() }),
@@ -121,6 +122,10 @@ export function AuthProvider({ children }) {
           setUser(userAccount)
           return { ok: true, user: userAccount }
         }
+      } else {
+        // Backend actively rejected the credentials (e.g. 401 Unauthorized)
+        const errData = await apiRes.json().catch(() => ({}))
+        return { ok: false, error: errData.message || 'Invalid roll number / email or password' }
       }
     } catch (netErr) {
       // Backend offline or unreachable; fall through to institutional mock logic seamlessly
@@ -271,7 +276,89 @@ export function AuthProvider({ children }) {
     }
 
     const formattedRoll = String(rollNumber || '').trim().toUpperCase()
-    const monthlyAtt = typeof generateMonthlyAttendance === 'function' ? generateMonthlyAttendance(1) : []
+
+    // 1. Await live Backend Registration directly to MongoDB Atlas
+    try {
+      const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api'
+      const apiRes = await fetch(`${apiBase}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: n,
+          email: e,
+          password: p,
+          role: r.toLowerCase(),
+          college: campus,
+          department: r === 'Faculty' ? department : (branchName || department),
+          branch: r === 'Student' ? branch : undefined,
+          rollNumber: formattedRoll || undefined,
+          facultyId: facultyId ? String(facultyId).trim().toUpperCase() : undefined,
+          designation: r === 'Faculty' ? designation : undefined,
+          year: r === 'Student' ? year : undefined,
+          section: r === 'Student' ? section : undefined,
+        }),
+      })
+
+      const resData = await apiRes.json().catch(() => ({}))
+
+      if (!apiRes.ok) {
+        return { ok: false, error: resData.message || 'Registration failed on server' }
+      }
+
+      if (resData.success && resData.data) {
+        const bUser = resData.data
+        const formattedRole = bUser.role
+          ? (bUser.role.toUpperCase() === 'HOD' ? 'HOD' : bUser.role.charAt(0).toUpperCase() + bUser.role.slice(1).toLowerCase())
+          : r
+
+        const userAccount = {
+          id: bUser._id || bUser.id,
+          name: bUser.name,
+          email: bUser.email,
+          role: formattedRole,
+          college: bUser.college || `Kakinada Institute of Engineering & Technology (${campus})`,
+          campus: campus,
+          department: bUser.department?.name || bUser.department || (r === 'Faculty' ? department : branchName),
+          branch: bUser.branch || (r === 'Student' ? branch : department),
+          branchName: r === 'Student' ? branchName : department,
+          rollNumber: bUser.rollNumber || formattedRoll,
+          facultyId: r === 'Faculty' ? String(facultyId).trim().toUpperCase() : undefined,
+          year: bUser.year || (r === 'Student' ? year : undefined),
+          semester: r === 'Student' ? semester : undefined,
+          section: bUser.section || (r === 'Student' ? section : undefined),
+          token: bUser.token,
+          approvalStatus: bUser.approvalStatus || 'approved',
+          emailVerified: true,
+          createdAt: new Date().toISOString(),
+        }
+
+        // Cache in local storage for offline continuity
+        try {
+          const users = loadUsers().filter(
+            (u) => String(u.email || '').toLowerCase() !== e && (!formattedRoll || String(u.rollNumber || '').toLowerCase() !== formattedRoll.toLowerCase())
+          )
+          users.push(userAccount)
+          saveUsers(users)
+        } catch {}
+
+        setUser(userAccount)
+        return { ok: true, user: userAccount }
+      }
+    } catch (netErr) {
+      console.warn('Backend unavailable during registration, saving locally:', netErr)
+    }
+
+    // 2. Offline fallback if backend cannot be reached
+    const fallbackUsers = loadUsers()
+    if (fallbackUsers.some((u) => String(u.email || '').toLowerCase() === e)) {
+      return { ok: false, error: 'This email address is already registered. Please sign in.' }
+    }
+    if (
+      r === 'Student' &&
+      fallbackUsers.some((u) => String(u.rollNumber || '').toLowerCase() === formattedRoll.toLowerCase())
+    ) {
+      return { ok: false, error: 'This University Roll Number is already registered.' }
+    }
 
     const newUser = {
       id: `u_${Date.now()}`,
@@ -290,34 +377,12 @@ export function AuthProvider({ children }) {
       year: r === 'Student' ? year : undefined,
       semester: r === 'Student' ? semester : undefined,
       section: r === 'Student' ? section : undefined,
-      monthlyAttendance: monthlyAtt,
       emailVerified: true,
       createdAt: new Date().toISOString(),
     }
 
-    users.push(newUser)
-    saveUsers(users)
-
-    // Attempt live backend registration (Atlas sync)
-    try {
-      fetch('http://localhost:5001/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: n,
-          email: e,
-          password: p,
-          role: r.toLowerCase(),
-          college: campus,
-          department: r === 'Faculty' ? department : branchName,
-          rollNumber: formattedRoll || undefined,
-          facultyId: facultyId ? String(facultyId).trim().toUpperCase() : undefined,
-          year: r === 'Student' ? year : undefined,
-          section: r === 'Student' ? section : undefined,
-        }),
-      }).catch(() => {})
-    } catch {}
-
+    fallbackUsers.push(newUser)
+    saveUsers(fallbackUsers)
     setUser(newUser)
     return { ok: true, user: newUser }
   }, [])

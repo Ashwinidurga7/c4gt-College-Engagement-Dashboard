@@ -11,7 +11,7 @@ export function RealtimeProvider({ children, url }){
   const esRef = useRef(null)
 
   useEffect(()=>{
-    const endpoint = url || (import.meta.env.VITE_REALTIME_URL || 'http://localhost:5001/api/realtime/events')
+    const endpoint = url || (import.meta.env.VITE_REALTIME_URL || 'http://localhost:5000/api/realtime/events')
     const es = new EventSource(endpoint)
     esRef.current = es
 
@@ -39,7 +39,7 @@ export function RealtimeProvider({ children, url }){
     const item = { ...event, id: event.id || `local-${Date.now()}`, _local: true, ts: new Date().toISOString() }
     setEvents(prev => [item, ...prev].slice(0,200))
     // attempt to POST to backend server
-    const endpoint = (import.meta.env.VITE_REALTIME_EMIT_URL || 'http://localhost:5001/api/realtime/emit')
+    const endpoint = (import.meta.env.VITE_REALTIME_EMIT_URL || 'http://localhost:5000/api/realtime/emit')
     fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)}).catch(()=>{})
     return item
   }

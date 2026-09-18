@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ResponsiveContainer,
@@ -17,7 +17,7 @@ import {
 } from 'recharts'
 import { useAuth } from '../../contexts/AuthContext'
 import { useData } from '../../contexts/DataContext'
-import { getStudentByRoll, calcAttendanceStats } from '../../data/academicData'
+import { getStudentByRoll, calcAttendanceStats, generateMonthlyAttendance } from '../../data/academicData'
 import Icon from '../../components/ui/Icon'
 
 const announcements = [
@@ -122,11 +122,88 @@ const pieColors = ['#0f3569', '#2458d3', '#10b981', '#f59e0b', '#8b5cf6']
 export default function StudentDashboard() {
   const { user } = useAuth()
   const { activities: myActivitiesData = [] } = useData()
+  const [studentDb, setStudentDb] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  // Find detailed student record
-  const student = useMemo(() => {
-    return getStudentByRoll(user?.rollNumber || user?.email || '23JN1A4533')
+  // Fetch live student profile from MongoDB Atlas backend
+  useEffect(() => {
+    let isMounted = true
+    async function loadStudentProfile() {
+      if (!user) return
+      setLoading(true)
+      try {
+        const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api'
+        const headers = user?.token ? { Authorization: `Bearer ${user.token}` } : {}
+        const res = await fetch(`${apiBase}/students/me`, { headers })
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success && json.data && isMounted) {
+            setStudentDb(json.data)
+            return
+          }
+        }
+      } catch (err) {
+        console.warn('StudentDashboard: could not fetch student from DB, falling back to local data', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+    loadStudentProfile()
+    return () => {
+      isMounted = false
+    }
   }, [user])
+
+  // Detailed student record merging DB record with authenticated user and academicData
+  const student = useMemo(() => {
+    const local = getStudentByRoll(user?.rollNumber || user?.email || '')
+    if (studentDb) {
+      const deptName = typeof studentDb.department === 'object'
+        ? (studentDb.department?.name || studentDb.department?.code)
+        : studentDb.department
+      const branchName = studentDb.branch ||
+        (typeof studentDb.department === 'object' ? studentDb.department?.code : studentDb.department) ||
+        user?.branch ||
+        local?.branch ||
+        'CSE'
+
+      return {
+        ...local,
+        ...studentDb,
+        name: studentDb.name || studentDb.user?.name || user?.name || local?.name || 'Student',
+        rollNumber: studentDb.rollNumber || studentDb.user?.rollNumber || user?.rollNumber || local?.rollNumber || '',
+        department: deptName || user?.department || local?.department || 'Computer Science & Engineering',
+        branch: branchName,
+        year: studentDb.year || user?.year || local?.year || '1st Year',
+        section: studentDb.section || user?.section || local?.section || 'A',
+        cgpa: studentDb.cgpa !== undefined && studentDb.cgpa !== null && studentDb.cgpa !== ''
+          ? studentDb.cgpa
+          : (local?.cgpa || user?.cgpa || '8.5'),
+        campus: studentDb.campus || studentDb.college || user?.campus || user?.college || local?.campus || 'KIET',
+        monthlyAttendance: (studentDb.monthlyAttendance && studentDb.monthlyAttendance.length > 0)
+          ? studentDb.monthlyAttendance
+          : (local?.monthlyAttendance || generateMonthlyAttendance(2)),
+        results: (studentDb.results && studentDb.results.length > 0) ? studentDb.results : (local?.results || []),
+        fees: studentDb.fees || local?.fees,
+        transport: studentDb.transport || local?.transport,
+      }
+    }
+    if (local) return local
+    return {
+      name: user?.name || 'Student',
+      rollNumber: user?.rollNumber || '',
+      email: user?.email || '',
+      department: user?.department || 'Computer Science & Engineering',
+      branch: user?.branch || 'CSE',
+      year: user?.year || '1st Year',
+      section: user?.section || 'A',
+      cgpa: user?.cgpa || '8.5',
+      campus: user?.campus || user?.college || 'KIET',
+      college: user?.college || 'KIET',
+      monthlyAttendance: generateMonthlyAttendance(2),
+      results: [],
+    }
+  }, [studentDb, user])
 
   const attendanceStats = useMemo(() => {
     return calcAttendanceStats(student?.monthlyAttendance || [])
@@ -176,20 +253,20 @@ export default function StudentDashboard() {
             <span>{student?.branch || 'CSE'}</span>
           </div>
           <h1 className="maven-black">
-            {greeting}, <span>{student?.name || user?.name || 'Student'}</span> 
+            {greeting}, <span>{student?.name || user?.name || 'Student'}</span>
           </h1>
           <p>
             Welcome to your unified academic portal. Track real-time attendance, fee clearances, bus passes, semester SGPA, and co-curricular achievements.
           </p>
           <div className="welcome-meta-pills">
             <span className="meta-pill">
-              <strong>Roll No:</strong> {student?.rollNumber || '23JN1A4533'}
+              <strong>Roll No:</strong> {student?.rollNumber || user?.rollNumber || '—'}
             </span>
             <span className="meta-pill">
-              <strong>Year & Sec:</strong> {student?.year || '2nd Year'} - Sec {student?.section || 'A'}
+              <strong>Year & Sec:</strong> {student?.year || user?.year || '1st Year'} - Sec {student?.section || user?.section || 'A'}
             </span>
             <span className="meta-pill">
-              <strong>CGPA:</strong> {student?.cgpa || '8.65'}
+              <strong>CGPA:</strong> {student?.cgpa !== undefined && student?.cgpa !== null && student?.cgpa !== '' ? student?.cgpa : (user?.cgpa || '8.5')}
             </span>
           </div>
           <div className="welcome-actions">

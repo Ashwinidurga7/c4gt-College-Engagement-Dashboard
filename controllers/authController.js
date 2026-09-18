@@ -46,7 +46,7 @@ const resolveDepartment = async (department) => {
 // @access  Public
 const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role, college, department, year, academicYear, assignedYears, section } = req.body;
+    const { name, email, password, role, college, department, year, academicYear, assignedYears, section, rollNumber, branch } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide name, email, and password' });
@@ -91,10 +91,32 @@ const registerUser = async (req, res, next) => {
       email,
       password,
       role: userRole,
+      rollNumber: rollNumber ? String(rollNumber).trim().toUpperCase() : undefined,
+      department: department || undefined,
+      branch: branch || undefined,
+      year: year || academicYear || undefined,
+      section: section || undefined,
       college: userCollege,
       approvalStatus: isFaculty ? 'pending' : 'approved',
       isActive: isFaculty ? false : true,
     });
+
+    if (userRole === 'student') {
+      try {
+        await Student.create({
+          user: user._id,
+          name: user.name,
+          rollNumber: rollNumber ? String(rollNumber).trim().toUpperCase() : undefined,
+          college: userCollege,
+          department: department || 'Computer Science & Engineering',
+          branch: branch || (typeof department === 'string' ? department : 'CSE'),
+          year: year || academicYear || '3rd Year',
+          section: section || 'A',
+        });
+      } catch (stErr) {
+        console.warn('Student profile creation notice:', stErr.message);
+      }
+    }
 
     let facultyProfile = null;
     if (isFaculty) {
@@ -128,13 +150,18 @@ const registerUser = async (req, res, next) => {
         : 'Registration successful',
       data: {
         _id: user._id,
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         college: user.college,
+        rollNumber: user.rollNumber,
+        department: user.department || (isFaculty ? deptObj : undefined),
+        branch: user.branch,
+        year: user.year,
+        section: user.section,
         approvalStatus: user.approvalStatus,
         isActive: user.isActive,
-        department: isFaculty ? deptObj : undefined,
         assignedYears: isFaculty ? yearsList : undefined,
         token: generateToken(user._id),
       },
@@ -357,17 +384,6 @@ const loginUser = async (req, res, next) => {
     }
     if (!user) {
       user = await User.findOne({ rollNumber: email }).select('+password');
-    }
-    if (!user && req.body.role) {
-      const roleMatches = await User.find({ role: req.body.role.toLowerCase() }).select('+password');
-      if (roleMatches && roleMatches.length > 0) {
-        for (const u of roleMatches) {
-          if (await u.matchPassword(password)) {
-            user = u;
-            break;
-          }
-        }
-      }
     }
 
     if (!user) {
