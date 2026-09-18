@@ -8,7 +8,7 @@ const cards = [
   ['Attendance', '12-Month working-days attendance & daily calendar', '/student/attendance', '01'],
   ['Academic updates', 'Fee accounts, bus pass logistics and exam results', '/student/academics', '02'],
   ['My activities', 'Internships, technical events and campus participation', '/student/activities', '03'],
-  ['Resume Studio', 'Edit Durga Prasad template & preview 6 styles', '/student/resume', '04'],
+  ['Resume Studio', 'Interactive resume builder & preview 6 styles', '/student/resume', '04'],
   ['Achievements', 'Verified credentials, certificates and merit points', '/student/achievements', '05'],
   ['Analytics', 'Track your comprehensive college journey', '/student/analytics', '06'],
 ]

@@ -3,20 +3,20 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../components/ui/Toast'
 import Icon from '../../components/ui/Icon'
 
-// Durga Prasad Reference Data (Extracted accurately from Durga_Prasad_Resume.pdf)
-export const initialDurgaPrasadResume = {
-  fullName: 'Peddapalli Satya Venkata Siva Durga Prasad',
+// Sample Resume Reference Data
+export const initialSampleResume = {
+  fullName: 'Alex Johnson',
   jobTitle: 'Full Stack Developer / Software Engineer',
-  email: 'durga.peddapalli@kiet.edu',
-  phone: '+91 94943 00874',
-  location: 'Korangi, Kakinada, Andhra Pradesh',
-  linkedin: 'linkedin.com/in/durga-prasad-kiet',
-  github: 'github.com/durga-prasad',
-  portfolio: 'https://durga-portfolio.kiet.edu',
+  email: 'alex.johnson@example.com',
+  phone: '+91 98765 43210',
+  location: 'Hyderabad, Telangana, India',
+  linkedin: 'linkedin.com/in/alex-johnson-dev',
+  github: 'github.com/alex-johnson',
+  portfolio: 'https://alexjohnson.dev',
   summary:
-    'Dedicated and detail-oriented B.Tech Computer Science student at KIET with demonstrated expertise in Full Stack Development, MERN stack, and Cloud Services. Passionate about engineering high-performance RESTful APIs, scalable database architectures, and intuitive user experiences. Proven problem-solving capabilities with 380+ LeetCode problems solved and active contributions to collegiate innovation initiatives.',
+    'Dedicated and detail-oriented Computer Science & Engineering student with demonstrated expertise in Full Stack Development, MERN stack, and Cloud Services. Passionate about engineering high-performance RESTful APIs, scalable database architectures, and intuitive user experiences. Proven problem-solving capabilities with 350+ LeetCode problems solved and active contributions to collegiate innovation initiatives.',
   skills: [
-    { category: 'Programming Languages', items: 'Java, JavaScript (ES6+), Python, C, SQL' },
+    { category: 'Programming Languages', items: 'Java, JavaScript (ES6+), Python, C++, SQL' },
     { category: 'Frontend Development', items: 'React.js, Next.js, Redux Toolkit, HTML5, CSS3, Tailwind CSS, Bootstrap' },
     { category: 'Backend & APIs', items: 'Node.js, Express.js, RESTful Architecture, JWT Authentication, Microservices' },
     { category: 'Databases & Storage', items: 'MongoDB, PostgreSQL, MySQL, Redis' },
@@ -27,7 +27,7 @@ export const initialDurgaPrasadResume = {
     {
       id: 'exp-1',
       role: 'Full Stack Developer Intern',
-      organization: 'Innov2Grow Technologies',
+      organization: 'TechForward Solutions',
       location: 'Hyderabad / Remote',
       period: 'Jun 2025 – Aug 2025',
       bullets: [
@@ -40,13 +40,13 @@ export const initialDurgaPrasadResume = {
     {
       id: 'exp-2',
       role: 'Core Student Developer',
-      organization: 'KIET Open Source & Tech Innovation Hub',
-      location: 'Kakinada, AP',
+      organization: 'Campus Open Source & Tech Hub',
+      location: 'Campus City, State',
       period: 'Jan 2025 – May 2025',
       bullets: [
-        'Contributed to the development of the unified KIET student engagement portal serving 2,000+ active campus learners.',
-        'Developed reusable UI components and modular design tokens, decreasing codebase redundancy across 5 internal sub-projects.',
-        'Spearheaded the technical onboarding of 40+ junior developers in version control and modern React development best practices.',
+        'Contributed to the development of a unified student engagement portal serving 2,000+ active campus learners.',
+        'Developed reusable UI components and modular design tokens, decreasing codebase redundancy across internal sub-projects.',
+        'Spearheaded the technical onboarding of junior developers in version control and modern React development best practices.',
       ],
     },
   ],
@@ -68,7 +68,7 @@ export const initialDurgaPrasadResume = {
       techStack: 'React.js, WebSockets, PostgreSQL, Tailwind CSS, Docker',
       period: 'Oct 2024 – Dec 2024',
       bullets: [
-        'Architected a Trello-inspired project dashboard featuring real-time drag-and-drop Kanban boards via WebSockets.',
+        'Architected a project dashboard featuring real-time drag-and-drop Kanban boards via WebSockets.',
         'Designed normalized PostgreSQL relational schema with foreign key constraints, triggers, and automated audit logging.',
         'Containerized entire application using Docker Compose for seamless local and cloud development environments.',
       ],
@@ -78,38 +78,40 @@ export const initialDurgaPrasadResume = {
     {
       id: 'edu-1',
       degree: 'B.Tech in Computer Science & Engineering',
-      institution: 'Kakinada Institute of Engineering & Technology (KIET)',
-      location: 'Korangi, Kakinada, AP',
+      institution: 'Institute of Engineering & Technology',
+      location: 'Campus City, State',
       period: '2023 – 2027',
-      score: 'CGPA: 8.65 / 10.0',
+      score: 'CGPA: 8.75 / 10.0',
     },
     {
       id: 'edu-2',
       degree: 'Board of Intermediate Education (MPC)',
-      institution: 'Sri Chaitanya Junior College',
-      location: 'Kakinada, AP',
+      institution: 'Model Junior College',
+      location: 'City, State',
       period: '2021 – 2023',
       score: 'Percentage: 94.2%',
     },
     {
       id: 'edu-3',
       degree: 'Secondary School Certificate (SSC)',
-      institution: 'Z.P. High School',
-      location: 'Andhra Pradesh',
+      institution: 'State Model High School',
+      location: 'City, State',
       period: '2020 – 2021',
       score: 'GPA: 9.8 / 10.0',
     },
   ],
   achievements: [
-    'LeetCode: 380+ algorithmic problems solved with 50+ days active streak (Top 15% global ranking).',
-    '1st Prize Winner — Smart KIET Annual Hackathon 2025 (AI & Smart Campus Solutions track).',
+    'LeetCode: 350+ algorithmic problems solved with 50+ days active streak (Top 15% global ranking).',
+    '1st Prize Winner — Annual Smart Campus Hackathon 2025 (AI & Smart Solutions track).',
     'AWS Certified Cloud Practitioner (CLF-C02) credential earned in 2025.',
-    'Lead Coordinator for Google Coding Club (KIET Chapter), mentoring 100+ students in competitive DSA.',
+    'Lead Coordinator for Campus Coding Club, mentoring 100+ students in competitive DSA.',
   ],
 }
 
+export const initialDurgaPrasadResume = initialSampleResume
+
 const TEMPLATES = [
-  { id: 'professional', name: 'Professional (Durga Prasad)', tone: 'Standard executive layout' },
+  { id: 'professional', name: 'Professional Standard', tone: 'Standard executive layout' },
   { id: 'modern', name: 'Modern Split', tone: 'Navy header with sleek accent bar' },
   { id: 'minimal', name: 'Clean Minimal', tone: 'High-contrast typography focus' },
   { id: 'classic', name: 'Academic Classic', tone: 'Traditional serif typography' },
@@ -206,12 +208,12 @@ export default function StudentResume() {
     }
   }
 
-  // Reset to Durga Prasad standard
+  // Reset to sample standard
   const handleResetToStandard = () => {
-    if (window.confirm('Reset all resume sections to standard KIET Durga Prasad template?')) {
-      setResumeData(initialDurgaPrasadResume)
-      localStorage.setItem(storageKey, JSON.stringify(initialDurgaPrasadResume))
-      showInfo('Reset to KIET Standard Template.')
+    if (window.confirm('Reset all resume sections to standard sample template?')) {
+      setResumeData(initialSampleResume)
+      localStorage.setItem(storageKey, JSON.stringify(initialSampleResume))
+      showInfo('Reset to Standard Sample Template.')
     }
   }
 
@@ -342,13 +344,13 @@ export default function StudentResume() {
           </div>
           <h1 className="maven-black">Resume Studio</h1>
           <p>
-            Standardized on the high-impact template of <strong>Durga Prasad (KIET CSE)</strong>. Choose between 6 templates with 100% data preservation.
+            Standardized on a high-impact professional template. Choose between 6 templates with 100% data preservation.
           </p>
         </div>
 
         <div className="resume-global-actions">
           <button type="button" className="button button-light" onClick={handleResetToStandard}>
-            <Icon name="refresh" /> Reset to Durga Prasad Sample
+            <Icon name="refresh" /> Reset to Sample Resume
           </button>
           <button type="button" className="button button-primary" onClick={handleSave}>
             <Icon name="save" /> Save Resume
@@ -430,7 +432,7 @@ export default function StudentResume() {
                       value={resumeData.fullName}
                       onChange={(e) => handleFieldChange('fullName', e.target.value)}
                       className="kiet-input"
-                      placeholder="e.g. Durga Prasad"
+                      placeholder="e.g. Alex Johnson"
                     />
                   </div>
 
@@ -1140,7 +1142,7 @@ export default function StudentResume() {
                   '--resume-accent': selectedColorObj.hex,
                 }}
               >
-                {/* 1. PROFESSIONAL TEMPLATE (Durga Prasad Reference) */}
+                {/* 1. PROFESSIONAL TEMPLATE (Standard Sample Reference) */}
                 {selectedTemplate === 'professional' && (
                   <div className="tmpl-professional">
                     {/* Header */}
