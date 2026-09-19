@@ -17,7 +17,14 @@ function page(loader, name) {
  * Real pages replace PlaceholderPage phase by phase through this map, keyed "role/path".
  * Anything not listed renders the placeholder for its nav item.
  */
-const PAGES = {}
+const PAGES = {
+  'student/dashboard': page(() => import('@/features/student/StudentDashboardPage'), 'StudentDashboardPage'),
+  'student/profile': page(() => import('@/features/student/ProfilePage'), 'ProfilePage'),
+  'student/academic': page(() => import('@/features/student/AcademicPage'), 'AcademicPage'),
+  'student/courses': page(() => import('@/features/student/CoursesPage'), 'CoursesPage'),
+  'student/attendance': page(() => import('@/features/student/AttendancePage'), 'AttendancePage'),
+  'student/academic-report': page(() => import('@/features/student/AcademicReportPage'), 'AcademicReportPage'),
+}
 
 function statusRoute(path, variant) {
   return {

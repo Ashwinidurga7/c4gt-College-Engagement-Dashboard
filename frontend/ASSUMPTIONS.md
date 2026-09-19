@@ -82,3 +82,26 @@ All values live in `src/styles/tokens.css`; components use only token-backed Tai
 - **React 18 and shadcn/ui**: the shadcn CLI (v4) generates React 19-style components that take `ref` as a prop. For React 18, the generated components in `src/components/ui/` were wrapped in `React.forwardRef`; without this, form registration and Radix `asChild` triggers break and React logs warnings. Re-apply this after adding new shadcn components.
 - The shadcn CLI also added an unrelated npm package named `cn` and rewrote imports to it; that was reverted to the standard `@/lib/utils` helper.
 - Vite 8 builds with Rolldown; vendor libraries are split into long-lived chunks and pages are lazy-loaded per route.
+
+## Phase 1: Student core
+
+### Endpoints used
+`GET /api/students/dashboard`, `profile`, `academic`, `courses`, `attendance`, `academic-report`, `upcoming-events`, and `PUT /api/students/profile`. Response shapes are unconfirmed, so every one goes through an adapter in `services/studentAdapters.js` that accepts common field-name variants (`_id`/`id`, `rollNumber`/`rollNo`, `conducted`/`total`, `attended`/`present`, and so on) and derives anything missing:
+- **Attendance**: if the API returns only class records, the subject, monthly and overall totals are computed from them (`lib/attendanceSummary.js`).
+- **Academic report**: SGPA and CGPA are computed from course credits and grade points when not supplied.
+- **Dashboard**: stats are read from `stats.*` or from the top level; activities from `recentActivities`/`activities`; announcements from `announcements`/`notices`/`updates`.
+
+### Decisions
+- **Editable profile fields**: mobile, guardian name, guardian mobile, address and bio. Identity and academic fields are read-only ("managed by the college office"). Mobile numbers must be 10-digit Indian numbers starting with 6–9. **Confirm which fields `PUT profile` accepts.**
+- **Grading scale**: R23-style: O (90+) = 10, A+ = 9, A = 8, B+ = 7, B = 6, C = 5, F (below 40) = 0. Marks are internal (out of 30) plus external (out of 70).
+- **Low attendance** is below 75%. The alert names each subject below the line and how many consecutive classes would bring it back to 75%.
+- **Courses list**: search (`search`), filter (`type`), sort (`sortBy`, `order`) and paging (`page`, `limit`) are sent as query parameters. If the API returns a bare array instead of a paginated object, the list is filtered and paged locally, since a student's course list is small.
+- **Campus updates** on the dashboard come from the dashboard response (announcements), not from personal notifications; notifications arrive in Phase 2.
+- **Programme length**: 8 semesters and 160 credits (mock value, shown as "of 160 required").
+- **Motion**: skeletons are static (no pulse) and chart animations are off, per the motion rule. The only moving elements are button spinners during a submit, kept as essential feedback.
+- **Charts** are hidden from screen readers and replaced by a text summary of the same numbers. The donut is plain SVG (`ProgressRing`); bar charts use Recharts with token colours.
+
+### Mock data
+- The demo student is B. Ashwini Durga, CSE 3rd year, section A, R23, semester 5. Mock "today" is 19 Sep 2026.
+- Attendance comes from about 145 seeded class records (1 Jul – 18 Sep 2026, Monday–Saturday, excluding holidays). Every total on the dashboard, attendance page and alert is derived from those records, so they always agree.
+- Semester 1–4 results use seeded marks; grades, SGPA, CGPA, credits earned and backlogs are all derived from them.

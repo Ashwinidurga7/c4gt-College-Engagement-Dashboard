@@ -1,14 +1,7 @@
 import { Check } from 'lucide-react'
 import { ROLE_LIST, ROLE_META } from '@/lib/roles'
+import { TONE_CLASSES } from '@/lib/tones'
 import { cn } from '@/lib/utils'
-
-const TONE_CLASSES = {
-  blue: 'bg-tone-blue text-tone-blue-fg',
-  green: 'bg-tone-green text-tone-green-fg',
-  purple: 'bg-tone-purple text-tone-purple-fg',
-  teal: 'bg-tone-teal text-tone-teal-fg',
-  orange: 'bg-tone-orange text-tone-orange-fg',
-}
 
 /** Radio group of the five portals, styled after the "Access for" row in the reference. */
 export function PortalSelector({ register, name = 'portal' }) {
