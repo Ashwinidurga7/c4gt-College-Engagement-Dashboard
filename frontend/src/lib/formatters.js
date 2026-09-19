@@ -74,3 +74,11 @@ export function formatMonth(value) {
   const date = /^\d{4}-\d{2}$/.test(value) ? new Date(`${value}-01T00:00:00`) : new Date(value)
   return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
 }
+
+/** "14:00" → "2:00 pm" */
+export function formatTime(value) {
+  if (!value) return null
+  const [hours, minutes] = String(value).split(':').map(Number)
+  if (!Number.isFinite(hours)) return String(value)
+  return new Date(2000, 0, 1, hours, minutes || 0).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
+}

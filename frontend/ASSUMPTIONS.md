@@ -105,3 +105,28 @@ All values live in `src/styles/tokens.css`; components use only token-backed Tai
 - The demo student is B. Ashwini Durga, CSE 3rd year, section A, R23, semester 5. Mock "today" is 19 Sep 2026.
 - Attendance comes from about 145 seeded class records (1 Jul – 18 Sep 2026, Monday–Saturday, excluding holidays). Every total on the dashboard, attendance page and alert is derived from those records, so they always agree.
 - Semester 1–4 results use seeded marks; grades, SGPA, CGPA, credits earned and backlogs are all derived from them.
+
+## Phase 2: Portfolio and campus
+
+### Endpoints used
+Certifications (`/api/certifications`, full CRUD), certificates (`/api/certificates`: list, upload, delete), projects (`/api/projects`, full CRUD), internships (`/api/internships`: list, add, delete), resumes (`/api/resumes`: list, upload, `PATCH /:id/primary`, delete), `GET /api/students/achievements` and `/activities`, clubs (`GET /api/clubs`, `/:id`), events (`GET /api/events`, `/:id`), notifications (`GET /api/notifications`, `/unread`, `PUT /:id/read`, `PUT /read-all`). Lists are read from `items`, `docs`, `results` or `data`, or from a named key (`certifications`, `projects`, `clubs`, `events`, `notifications`, …), or from a bare array.
+
+### Decisions to confirm against Postman
+- **Upload field names**: certificates are sent as multipart with the file in `certificate`, resumes in `resume`. Other certificate fields: `title`, `category`, `issuedBy`, `date`. Limits enforced in the UI: 5 MB; PDF/JPG/PNG for certificates, PDF for resumes.
+- **Field names** the forms send: certification `name, issuer, issueDate, expiryDate, credentialId, credentialUrl`; project `title, description, techStack[], status (ongoing|completed), startDate, endDate, repoUrl, liveUrl`; internship `company, role, mode (Onsite|Remote|Hybrid), startDate, endDate, stipend (₹ per month), description`. The adapters also read common alternatives (`issuingOrganization`, `githubUrl`, `companyName`, `position`, …).
+- **Certificate verification** status is read from `status`/`verificationStatus` (`pending|verified|rejected`) or from a boolean `isVerified`. `PUT /:id/verify` is wired in the service for Phase 3.
+- **Project review**: if the API returns `approvalStatus`, it is shown as a second badge ("Review pending" or "Approved").
+- **Query parameters**: clubs `status=active`, `college`, `category`, `search`; events `when=upcoming|past`, `category`, `college`, `clubId`, `search`; notifications `unread=true`; plus `page`/`limit` everywhere. If the API ignores these and returns a plain array, the list is filtered locally as a fallback.
+- **Unread count**: `/notifications/unread` may return a number, `{ count }` or the unread list. The bell polls it every 60 seconds and on any notification change.
+- **Club and event categories** are fixed option lists (`lib/campus.js`) until the API exposes them.
+
+### Behaviour
+- Portfolio tabs live at `/student/portfolio?tab=…`, so each tab has a shareable URL. Radix Tabs provides arrow-key navigation.
+- Deletes always go through a confirmation dialog. Deleting the primary resume warns the user to choose another.
+- Internships cannot be edited (no `PUT` endpoint), and the add dialog says so.
+- **Club detail** is at `/student/clubs/:clubId`. "Join club" is shown disabled with a Preview note because no join endpoint exists (plan conflict 8).
+- Club hero banners are flat navy, not gradients (plan conflict 5).
+- Opening a notification's link marks it as read.
+
+### Mock data
+Eight clubs (seven active, one inactive) across the three colleges; eight events (six upcoming, two past); eleven notifications (three unread); portfolio records for the demo student. Mock uploads use browser object URLs, so "View" works until the page reloads.

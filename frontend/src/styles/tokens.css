@@ -82,6 +82,9 @@
   /* Overlay */
   --overlay: rgba(15, 23, 42, 0.45);
 
+  /* Unread-count pill: white text stays above 4.5:1 in both themes */
+  --count-badge-bg: #c02120;
+
   /* The logo artwork needs a light backing on dark surfaces in both themes */
   --logo-chip-bg: #ffffff;
 
@@ -167,6 +170,7 @@
   --chart-5: #5eead4;
 
   --overlay: rgba(2, 6, 15, 0.7);
+  --count-badge-bg: #c7302e;
 
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-raised: 0 8px 24px rgba(0, 0, 0, 0.45);

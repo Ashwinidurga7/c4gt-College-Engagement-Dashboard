@@ -1,16 +1,10 @@
 import { Clock, MapPin } from 'lucide-react'
 import { CollegeBadge } from '@/components/common/CollegeBadge'
+import { formatTime } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 
 const dayFormatter = new Intl.DateTimeFormat('en-IN', { day: '2-digit' })
 const monthFormatter = new Intl.DateTimeFormat('en-IN', { month: 'short' })
-
-function formatTime(value) {
-  if (!value) return null
-  const [hours, minutes] = value.split(':').map(Number)
-  const date = new Date(2000, 0, 1, hours, minutes)
-  return date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
-}
 
 /** Compact event row with a calendar date tile, as in the reference's upcoming events. */
 export function EventCard({ event, action, className }) {
@@ -18,7 +12,7 @@ export function EventCard({ event, action, className }) {
   const time = [formatTime(event.startTime), formatTime(event.endTime)].filter(Boolean).join(' – ')
 
   return (
-    <article className={cn('flex items-start gap-4', className)}>
+    <article className={cn('flex flex-wrap items-start gap-4', className)}>
       {date && (
         <time
           dateTime={event.date}
@@ -28,7 +22,7 @@ export function EventCard({ event, action, className }) {
           <span className="text-xs font-semibold uppercase">{monthFormatter.format(date)}</span>
         </time>
       )}
-      <div className="min-w-0 flex-1">
+      <div className="min-w-48 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-sm font-semibold">{event.title}</h3>
           <CollegeBadge college={event.college} />
@@ -47,7 +41,7 @@ export function EventCard({ event, action, className }) {
           )}
         </div>
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="shrink-0 max-sm:w-full max-sm:pl-18 [&>*]:max-sm:w-full">{action}</div>}
     </article>
   )
 }

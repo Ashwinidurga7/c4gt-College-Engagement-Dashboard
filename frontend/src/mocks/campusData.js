@@ -9,6 +9,8 @@ export const clubMemberships = [
 export const campusEvents = [
   {
     _id: 'ev-webdev-workshop',
+    clubId: 'club-c4gt',
+    description: 'Hands-on session on React and REST APIs. Bring a laptop with Node.js installed; you will build and deploy a mini project.',
     title: 'Web Development Workshop',
     organizer: 'C4GT',
     category: 'Workshop',
@@ -20,6 +22,8 @@ export const campusEvents = [
   },
   {
     _id: 'ev-c4gt-hackathon',
+    clubId: 'club-c4gt',
+    description: 'A 12-hour hackathon on campus problems. Teams of up to four; mentors from industry will judge the final demos.',
     title: 'C4GT Hackathon 2026',
     organizer: 'C4GT',
     category: 'Hackathon',
@@ -31,6 +35,8 @@ export const campusEvents = [
   },
   {
     _id: 'ev-open-source-drive',
+    clubId: 'club-gcc',
+    description: 'Make your first open-source contribution with guidance from GDSC leads. Beginner-friendly issues will be shared on the day.',
     title: 'Open Source Contribution Drive',
     organizer: 'Google Developer Student Clubs',
     category: 'Drive',
@@ -42,6 +48,8 @@ export const campusEvents = [
   },
   {
     _id: 'ev-tech-talk-scaling',
+    clubId: 'club-c4gt',
+    description: 'An alumnus working on large-scale systems explains caching, queues and database scaling with real examples.',
     title: 'Tech Talk: Building Scalable Web Apps',
     organizer: 'C4GT',
     category: 'Tech Talk',
@@ -53,6 +61,8 @@ export const campusEvents = [
   },
   {
     _id: 'ev-cricket-intercollege',
+    clubId: null,
+    description: 'Inter-college T20 tournament between KIET, KIET+ and KIEW. Spectators are welcome; team registrations close on 10 October.',
     title: 'Inter-College Cricket Tournament',
     organizer: 'Sports Committee',
     category: 'Sports',
@@ -64,6 +74,8 @@ export const campusEvents = [
   },
   {
     _id: 'ev-nss-plantation',
+    clubId: 'club-nss',
+    description: 'Plantation drive around the campus and Gandhi Nagar. Volunteers receive NSS service hours.',
     title: 'NSS Tree Plantation Drive',
     organizer: 'National Service Scheme',
     category: 'Social Service',
@@ -72,6 +84,32 @@ export const campusEvents = [
     endTime: '10:30',
     venue: 'College Grounds',
     college: 'KIET',
+  },
+  {
+    _id: 'ev-robotics-expo',
+    clubId: 'club-robotics',
+    description: 'Robotics Club project expo with line followers, drones and a pick-and-place arm.',
+    title: 'Robotics Project Expo',
+    organizer: 'Robotics Club',
+    category: 'Workshop',
+    date: '2026-08-22',
+    startTime: '10:00',
+    endTime: '16:00',
+    venue: 'KIET+ Main Hall',
+    college: 'KIET+',
+  },
+  {
+    _id: 'ev-cultural-fest',
+    clubId: 'club-kalakshetra',
+    description: 'Annual inter-college cultural fest with dance, music and drama competitions.',
+    title: 'Kalakshetra Cultural Fest',
+    organizer: 'Kalakshetra',
+    category: 'Cultural',
+    date: '2026-10-24',
+    startTime: '09:30',
+    endTime: '20:00',
+    venue: 'KIEW Open Air Theatre',
+    college: 'KIEW',
   },
 ]
 

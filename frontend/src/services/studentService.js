@@ -1,5 +1,6 @@
 import { env } from '@/lib/env'
 import { toListParams, toPage } from '@/lib/listQuery'
+import { achievementsMock, activitiesMock } from '@/mocks/portfolioMock'
 import { studentMock } from '@/mocks/studentMock'
 import { apiClient } from '@/services/apiClient'
 import {
@@ -13,6 +14,7 @@ import {
   toProfilePayload,
 } from '@/services/studentAdapters'
 import { toList } from '@/services/adapterUtils'
+import { toAchievement, toPortfolioActivity } from '@/services/portfolioAdapters'
 
 function get(path, params) {
   return apiClient.get(`/students/${path}`, { params })
@@ -48,6 +50,16 @@ export const studentService = {
 
   async academicReport() {
     return toAcademicReport(env.useMock ? await studentMock.academicReport() : await get('academic-report'))
+  },
+
+  async achievements(query = {}) {
+    const raw = env.useMock ? await achievementsMock.list(query) : await get('achievements', toListParams(query))
+    return toPage(raw?.achievements ?? raw, query, toAchievement, { searchKeys: ['title', 'category'] })
+  },
+
+  async activities(query = {}) {
+    const raw = env.useMock ? await activitiesMock.list(query) : await get('activities', toListParams(query))
+    return toPage(raw?.activities ?? raw, query, toPortfolioActivity, { searchKeys: ['title', 'type', 'organizer'] })
   },
 
   async upcomingEvents() {

@@ -1,6 +1,7 @@
 import {
   CircleAlert,
   CircleCheck,
+  CircleDashed,
   CircleDot,
   CircleX,
   Clock,
@@ -35,7 +36,7 @@ const STATUSES = {
   pass: { label: 'Pass', tone: 'success', icon: CircleCheck },
   fail: { label: 'Fail', tone: 'danger', icon: CircleX },
   low: { label: 'Low', tone: 'warning', icon: TriangleAlert },
-  ongoing: { label: 'Ongoing', tone: 'warning', icon: Clock },
+  ongoing: { label: 'Ongoing', tone: 'info', icon: CircleDashed },
   completed: { label: 'Completed', tone: 'success', icon: CircleCheck },
 }
 

@@ -97,6 +97,7 @@
   --color-login-glow: var(--login-glow);
   --color-overlay: var(--overlay);
   --color-logo-chip: var(--logo-chip-bg);
+  --color-count-badge: var(--count-badge-bg);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);

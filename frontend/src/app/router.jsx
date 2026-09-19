@@ -24,6 +24,15 @@ const PAGES = {
   'student/courses': page(() => import('@/features/student/CoursesPage'), 'CoursesPage'),
   'student/attendance': page(() => import('@/features/student/AttendancePage'), 'AttendancePage'),
   'student/academic-report': page(() => import('@/features/student/AcademicReportPage'), 'AcademicReportPage'),
+  'student/portfolio': page(() => import('@/features/student/PortfolioPage'), 'PortfolioPage'),
+  'student/clubs': page(() => import('@/features/clubs/ClubsPage'), 'ClubsPage'),
+  'student/events': page(() => import('@/features/events/EventsPage'), 'EventsPage'),
+  'student/notifications': page(() => import('@/features/notifications/NotificationsPage'), 'NotificationsPage'),
+}
+
+/** Detail routes below a nav item, e.g. a single club. */
+const DETAIL_ROUTES = {
+  student: [{ path: 'clubs/:clubId', lazy: page(() => import('@/features/clubs/ClubDetailPage'), 'ClubDetailPage') }],
 }
 
 function statusRoute(path, variant) {
@@ -50,6 +59,7 @@ function roleRoutes(role) {
         const lazy = PAGES[`${role}/${item.path}`]
         return lazy ? { path: item.path, lazy } : { path: item.path, element: <PlaceholderPage item={item} /> }
       }),
+      ...(DETAIL_ROUTES[role] ?? []),
       statusRoute('*', 'notFound'),
     ],
   }

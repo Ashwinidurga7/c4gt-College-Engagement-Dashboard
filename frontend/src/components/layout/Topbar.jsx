@@ -1,8 +1,8 @@
-import { Bell, Menu } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Menu } from 'lucide-react'
 import { BrandLogo } from '@/components/common/BrandLogo'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 import { GlobalSearch } from '@/components/layout/GlobalSearch'
+import { NotificationBell } from '@/components/layout/NotificationBell'
 import { ProfileMenu } from '@/components/layout/ProfileMenu'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
@@ -30,13 +30,7 @@ export function Topbar({ onOpenDrawer }) {
 
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
-          {hasNotifications && (
-            <Button asChild variant="ghost" size="icon-lg" className="text-brand">
-              <Link to={`/${user.role}/notifications`} aria-label="Notifications">
-                <Bell className="size-5" strokeWidth={1.75} />
-              </Link>
-            </Button>
-          )}
+          {hasNotifications && <NotificationBell role={user.role} />}
           <ProfileMenu />
         </div>
       </div>

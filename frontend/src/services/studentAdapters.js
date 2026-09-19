@@ -70,6 +70,8 @@ export function toEvent(raw) {
     endTime: raw.endTime ?? null,
     venue: pick(raw.venue, raw.location),
     college: raw.college ?? null,
+    description: pick(raw.description, ''),
+    clubId: pick(raw.clubId, raw.club?._id, typeof raw.club === 'string' ? raw.club : null),
   }
 }
 

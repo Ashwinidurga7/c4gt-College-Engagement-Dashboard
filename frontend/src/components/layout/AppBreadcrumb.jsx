@@ -17,6 +17,7 @@ export function AppBreadcrumb() {
   const { pathname } = useLocation()
   const current = findNavItem(user.role, pathname)
   const onDashboard = current?.path === 'dashboard'
+  const isDetail = pathname.split('/').filter(Boolean).length > 2
 
   return (
     <Breadcrumb className="mb-5">
@@ -33,7 +34,21 @@ export function AppBreadcrumb() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{current.label}</BreadcrumbPage>
+              {isDetail ? (
+                <BreadcrumbLink asChild>
+                  <Link to={`/${user.role}/${current.path}`}>{current.label}</Link>
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>{current.label}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </>
+        )}
+        {current && isDetail && (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Details</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
