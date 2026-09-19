@@ -1,0 +1,175 @@
+/*
+ * KIET Portal design tokens.
+ * The only file in the app that may contain raw color values.
+ * Light palette on :root, dark palette on [data-theme="dark"].
+ */
+
+:root {
+  /* Brand */
+  --kiet-blue: #1b4594;
+  --kiet-navy: #0f2557;
+  --kiet-red: #df2927;
+
+  /* Surfaces */
+  --canvas: #f3f6fb;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f1f5fa;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-input: #8391a8;
+
+  /* Text */
+  --text-heading: #0f2557;
+  --text-body: #1e293b;
+  --text-muted: #64748b;
+  --text-link: #1d58c7;
+  --text-on-primary: #ffffff;
+
+  /* Actions */
+  --action-primary: #1d58c7;
+  --action-primary-hover: #1b4594;
+  --focus-ring: #1d58c7;
+
+  /* Status */
+  --status-success: #16a34a;
+  --status-success-text: #15803d;
+  --status-success-bg: #e8f7ee;
+  --status-warning: #d97706;
+  --status-warning-text: #b45309;
+  --status-warning-bg: #fdf3e2;
+  --status-danger: #df2927;
+  --status-danger-text: #c02120;
+  --status-danger-bg: #fdecec;
+  --status-info-text: #1d58c7;
+  --status-info-bg: #e9f0fc;
+
+  /* Tinted tiles (icon chips, role tiles) */
+  --tone-blue-bg: #e9f0fc;
+  --tone-blue-fg: #1d58c7;
+  --tone-green-bg: #e6f6ef;
+  --tone-green-fg: #15803d;
+  --tone-purple-bg: #efeafd;
+  --tone-purple-fg: #6d3fd1;
+  --tone-orange-bg: #fdf0e3;
+  --tone-orange-fg: #b4500a;
+  --tone-teal-bg: #e3f5f4;
+  --tone-teal-fg: #0f766e;
+
+  /* Sidebar */
+  --sidebar-bg: #0f2557;
+  --sidebar-text: #dbe4f5;
+  --sidebar-text-strong: #ffffff;
+  --sidebar-text-muted: #93a4c7;
+  --sidebar-active-bg: #1d58c7;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: #183271;
+  --sidebar-border: #1c3570;
+
+  /* Login decoration (the two permitted gradients live on the login page) */
+  --curve-back: #bcd2f5;
+  --curve-front-start: #8fb2ef;
+  --curve-front-end: #3f76d6;
+  --login-glow: #e7effb;
+
+  /* Charts */
+  --chart-1: #1d58c7;
+  --chart-2: #16a34a;
+  --chart-3: #d97706;
+  --chart-4: #6d3fd1;
+  --chart-5: #0f766e;
+
+  /* Overlay */
+  --overlay: rgba(15, 23, 42, 0.45);
+
+  /* The logo artwork needs a light backing on dark surfaces in both themes */
+  --logo-chip-bg: #ffffff;
+
+  /* Shape and elevation */
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-raised: 0 8px 24px rgba(15, 37, 87, 0.1);
+
+  /* Type */
+  --font-brand: "Maven Pro", system-ui, sans-serif;
+
+  /* Motion */
+  --duration-fast: 150ms;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --kiet-blue: #7fa8f5;
+  --kiet-navy: #dbe6ff;
+  --kiet-red: #f26b69;
+
+  --canvas: #0b1220;
+  --surface: #121b2e;
+  --surface-raised: #17223a;
+  --surface-sunken: #0f1727;
+  --border-subtle: #22304b;
+  --border-strong: #334463;
+  --border-input: #5a6d90;
+
+  --text-heading: #e3ebfd;
+  --text-body: #d6deeb;
+  --text-muted: #94a3b8;
+  --text-link: #8cb4ff;
+  --text-on-primary: #ffffff;
+
+  --action-primary: #2f63cf;
+  --action-primary-hover: #3b70dc;
+  --focus-ring: #8cb4ff;
+
+  --status-success: #34d399;
+  --status-success-text: #6ee7a8;
+  --status-success-bg: #0f2e22;
+  --status-warning: #f5a524;
+  --status-warning-text: #fbbf5a;
+  --status-warning-bg: #33250d;
+  --status-danger: #f26b69;
+  --status-danger-text: #fb8f8d;
+  --status-danger-bg: #3a1618;
+  --status-info-text: #8cb4ff;
+  --status-info-bg: #16284a;
+
+  --tone-blue-bg: #16284a;
+  --tone-blue-fg: #8cb4ff;
+  --tone-green-bg: #0f2e22;
+  --tone-green-fg: #6ee7a8;
+  --tone-purple-bg: #251b45;
+  --tone-purple-fg: #b9a2f7;
+  --tone-orange-bg: #33220f;
+  --tone-orange-fg: #fbb26a;
+  --tone-teal-bg: #0e2d2c;
+  --tone-teal-fg: #5eead4;
+
+  --sidebar-bg: #0a1224;
+  --sidebar-text: #c9d4ea;
+  --sidebar-text-strong: #f4f7fd;
+  --sidebar-text-muted: #8190b0;
+  --sidebar-active-bg: #2f63cf;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: #152241;
+  --sidebar-border: #1a2742;
+
+  --curve-back: #16284a;
+  --curve-front-start: #1d3a73;
+  --curve-front-end: #2f63cf;
+  --login-glow: #0f1a31;
+
+  --chart-1: #8cb4ff;
+  --chart-2: #34d399;
+  --chart-3: #f5a524;
+  --chart-4: #b9a2f7;
+  --chart-5: #5eead4;
+
+  --overlay: rgba(2, 6, 15, 0.7);
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-raised: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
