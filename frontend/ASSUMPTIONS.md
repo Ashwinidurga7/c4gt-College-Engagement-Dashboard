@@ -189,3 +189,26 @@ Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for
 
 ### Mock data
 The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, club changes) persist in memory until a full page reload.
+
+## Phase 6: Preview modules
+
+All ten mock-only modules go through `services/previewService.js` to `mocks/preview/`, **regardless of `VITE_USE_MOCK`**. Each shows a Preview badge in the sidebar and page header, plus a sample-data note at the foot of the page. When an endpoint ships, only the service function changes.
+
+| Module | Roles | Notes |
+| --- | --- | --- |
+| Timetable | all | Monday–Saturday; rows 09:00, 10:00, 11:00, 12:00, Lunch, 02:00, 03:00, 04:00. Students and CTPOs see their section, faculty see their own teaching schedule, HOD and admin choose a section. |
+| Exam schedule | student, admin | Mid-term I, 6–10 October 2026. Students see their department and year; admin filters by department and year. |
+| Fees | student, admin | Admin: Total, Collected, Pending and Overdue in ₹, all summed from the same payment records as the table (verified to add up). Student: own items, dues and receipts; "Pay online" disabled. |
+| Departments | admin | HOD, faculty, CTPO and student counts plus averages, derived from the directory and roster. |
+| Course catalog | HOD (own department), admin | R23. Semesters 1–2 are common to all departments; CSE carries semesters 3–6 in this preview. |
+| Reports | HOD (own department), admin | Attendance summary, critical attendance list (below 65%), results analysis, and fee collection (admin only). Generated in the browser with a CSV download. |
+| Settings | all | Theme applies immediately. Notification preferences are stored per user in this browser. Admin also edits the institution calendar. |
+| Bus pass | student | Digital pass with route stops. No QR code is drawn, to avoid a fake scannable code. |
+| Facilities | student, faculty | Open/closed is computed from the current time and each facility's hours. |
+| Take attendance | faculty | Pick a class from your timetable and a date; everyone starts present, tap to mark absent, then submit. Sessions stay in the preview and do not update student records. |
+
+### Timetable conflicts
+- **Detect conflicts** (HOD, admin, CTPO) finds any faculty member or room booked twice in the same slot **across all sections**. It highlights the clashing cells (red border plus warning icon plus screen-reader text) and lists them.
+- **Resolve** picks the class to move (the one in the section being viewed) and suggests the nearest slot where the section, the faculty member and the room are all free: the same day first (closest hour), then the following days. The move happens only after the confirmation dialog, and conflicts are re-evaluated immediately.
+- The seeded week has exactly three deliberate clashes: Mrs. K. Sirisha on Monday 11:00 (3A and 2A), Mr. Ch. Ravi Kumar on Tuesday 10:00 (3A and 3B), and Lab 2 on Thursday 02:00 (3A and 2A).
+- Lunch is shown as 12:50 – 1:50 pm (assumed from 50-minute periods).

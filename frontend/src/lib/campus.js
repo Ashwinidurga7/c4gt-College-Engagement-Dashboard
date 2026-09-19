@@ -8,3 +8,5 @@ export const EVENT_WINDOWS = [
   { value: 'past', label: 'Past' },
   { value: '', label: 'All' },
 ]
+
+export const FACILITY_CATEGORIES = ['Academic', 'Health', 'Food', 'Sports', 'Administration', 'Residential']

@@ -49,6 +49,20 @@ const PAGES = {
   'ctpo/academic-report': page(() => import('@/features/ctpo/SectionReportPage'), 'SectionReportPage'),
 }
 
+/** Preview modules (mock-only), shared by every role whose navigation lists them. */
+const PREVIEW_PAGES = {
+  timetable: page(() => import('@/features/timetable/TimetablePage'), 'TimetablePage'),
+  exams: page(() => import('@/features/exams/ExamsPage'), 'ExamsPage'),
+  fees: page(() => import('@/features/fees/FeesPage'), 'FeesPage'),
+  'bus-pass': page(() => import('@/features/busPass/BusPassPage'), 'BusPassPage'),
+  facilities: page(() => import('@/features/facilities/FacilitiesPage'), 'FacilitiesPage'),
+  settings: page(() => import('@/features/settings/SettingsPage'), 'SettingsPage'),
+  'lecture-attendance': page(() => import('@/features/lectureAttendance/TakeAttendancePage'), 'TakeAttendancePage'),
+  courses: page(() => import('@/features/courses/CourseCatalogPage'), 'CourseCatalogPage'),
+  reports: page(() => import('@/features/reports/ReportsPage'), 'ReportsPage'),
+  departments: page(() => import('@/features/departments/DepartmentsPage'), 'DepartmentsPage'),
+}
+
 /** Detail routes below a nav item, e.g. a single club. */
 const clubDetail = { path: 'clubs/:clubId', lazy: page(() => import('@/features/clubs/ClubDetailPage'), 'ClubDetailPage') }
 const DETAIL_ROUTES = {
@@ -77,7 +91,7 @@ function roleRoutes(role) {
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       ...navItemsFor(role).map((item) => {
-        const lazy = PAGES[`${role}/${item.path}`]
+        const lazy = PAGES[`${role}/${item.path}`] ?? (item.preview ? PREVIEW_PAGES[item.path] : undefined)
         return lazy ? { path: item.path, lazy } : { path: item.path, element: <PlaceholderPage item={item} /> }
       }),
       ...(DETAIL_ROUTES[role] ?? []),

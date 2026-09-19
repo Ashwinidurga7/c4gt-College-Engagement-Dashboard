@@ -35,19 +35,18 @@ export function ThemeProvider({ children }) {
     return () => media.removeEventListener('change', onChange)
   }, [])
 
-  const toggleTheme = useCallback(() => {
-    setTheme((current) => {
-      const next = current === 'dark' ? 'light' : 'dark'
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next)
-      } catch {
-        // Storage can be unavailable in private windows; the choice still applies for this visit.
-      }
-      return next
-    })
+  const chooseTheme = useCallback((next) => {
+    setTheme(next)
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next)
+    } catch {
+      // Storage can be unavailable in private windows; the choice still applies for this visit.
+    }
   }, [])
 
-  const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme])
+  const toggleTheme = useCallback(() => chooseTheme(theme === 'dark' ? 'light' : 'dark'), [chooseTheme, theme])
+
+  const value = useMemo(() => ({ theme, toggleTheme, setTheme: chooseTheme }), [theme, toggleTheme, chooseTheme])
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
