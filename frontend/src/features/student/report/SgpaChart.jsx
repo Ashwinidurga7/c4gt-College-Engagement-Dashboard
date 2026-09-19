@@ -10,7 +10,7 @@ export function SgpaChart({ semesters, title = 'SGPA by semester', description =
   return (
     <ChartCard title={title} description={description} icon={TrendingUp} summary={summary} className={className}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 24, right: 8, left: -20, bottom: 0 }}>
+        <BarChart accessibilityLayer={false} data={data} margin={{ top: 24, right: 8, left: -20, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartTheme.grid} />
           <XAxis dataKey="label" tick={chartTheme.tick} axisLine={false} tickLine={false} />
           <YAxis domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} tick={chartTheme.tick} axisLine={false} tickLine={false} />

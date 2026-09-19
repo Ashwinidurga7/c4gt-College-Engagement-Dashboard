@@ -8,7 +8,7 @@ export function Skeleton({ className, style }) {
   return <span aria-hidden style={style} className={cn('bg-muted block rounded-md', className)} />
 }
 
-export function LoadingRegion({ label = 'Loading', className, children }) {
+function LoadingRegion({ label = 'Loading', className, children }) {
   return (
     <div role="status" aria-live="polite" aria-busy="true" className={className}>
       <span className="sr-only">{label}</span>
@@ -17,7 +17,7 @@ export function LoadingRegion({ label = 'Loading', className, children }) {
   )
 }
 
-export function StatCardSkeleton() {
+function StatCardSkeleton() {
   return (
     <div className="bg-card shadow-soft flex items-center gap-4 rounded-xl border p-5">
       <Skeleton className="size-12 rounded-full" />

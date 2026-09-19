@@ -17,7 +17,7 @@ export function classesNeeded(attended, conducted, threshold = LOW_ATTENDANCE_TH
 }
 
 /** R23-style grading: total marks out of 100 to letter grade and grade points. */
-export const GRADE_SCALE = [
+const GRADE_SCALE = [
   { min: 90, grade: 'O', points: 10 },
   { min: 80, grade: 'A+', points: 9 },
   { min: 70, grade: 'A', points: 8 },
@@ -29,10 +29,6 @@ export const GRADE_SCALE = [
 
 export function gradeFor(total) {
   return GRADE_SCALE.find((step) => total >= step.min)
-}
-
-export function gradePointsFor(grade) {
-  return GRADE_SCALE.find((step) => step.grade === grade)?.points ?? 0
 }
 
 /** Credit-weighted grade point average, rounded to two decimals. */

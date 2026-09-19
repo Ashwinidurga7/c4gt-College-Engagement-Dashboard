@@ -19,7 +19,7 @@ export function SubjectAttendanceChart({ subjects, className }) {
       className={className}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={subjects} layout="vertical" margin={{ top: 4, right: 48, left: 8, bottom: 0 }}>
+        <BarChart accessibilityLayer={false} data={subjects} layout="vertical" margin={{ top: 4, right: 48, left: 8, bottom: 0 }}>
           <CartesianGrid horizontal={false} stroke={chartTheme.grid} />
           <XAxis type="number" domain={[0, 100]} unit="%" tick={chartTheme.tick} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="subject" width={116} tick={chartTheme.tick} axisLine={false} tickLine={false} />

@@ -32,7 +32,7 @@ All values live in `src/styles/tokens.css`; components use only token-backed Tai
 | Canvas `--canvas` | `#f3f6fb` | `#0b1220` | Images (light blue-white) instead of the plan's mint `#f0f7f5`; the plan allows "mint or light-blue" |
 | Action blue `--action-primary` | `#1d58c7` | `#2f63cf` | Images: buttons and the active nav item are a brighter blue than `#1b4594`. White text on it is 6.4:1 (light) and 5.5:1 (dark) |
 | Sidebar `--sidebar-bg` | `#0f2557` | `#0a1224` | Images (navy sidebar) |
-| Border / muted / success / warning | `#e2e8f0` / `#64748b` / `#16a34a` / `#d97706` | Dark equivalents | Plan |
+| Border / muted / success / warning | `#e2e8f0` / `#55657a` / `#16a34a` / `#d97706` | Dark equivalents | Plan; muted text darkened from `#64748b` in Phase 7 (see below) |
 | Input border `--border-input` | `#8391a8` | `#5a6d90` | Chosen for about 3:1 contrast against the card, so field outlines meet WCAG 1.4.11 |
 | Card radius / control radius | 12px / 8px | same | Plan |
 | Font | Maven Pro (Google Fonts), system-ui fallback | | Plan |
@@ -58,13 +58,13 @@ All values live in `src/styles/tokens.css`; components use only token-backed Tai
 - **Session restore**: a 401/403 from `/api/auth/me` clears the token. A network failure keeps it and shows a retry screen, so a backend restart does not log everyone out.
 - **Forgot password**: a dialog tells the user to contact their college admin office (no endpoint exists).
 - **Global search** searches the pages available to the signed-in role and jumps to the match. Content search needs endpoints and is out of scope.
-- **Notification bell** appears for roles with a Notifications page (student, faculty). Its unread count arrives in Phase 2.
+- **Notification bell** appears for roles with a Notifications page (student, faculty) and shows the unread count.
 - **Favicon**: one KIET monogram favicon for the whole app. Page titles are set per route (`{Page} · KIET Portal`).
 - **Campus photo** is shown on the login page at `lg` and wider only; smaller screens prioritise the form.
 
 ## Mock mode
 
-- `VITE_USE_MOCK=true` routes auth (and later every service) to `src/mocks/`. Demo accounts use the password `Kiet@2026`, which is mock-only and never sent to a real API:
+- `VITE_USE_MOCK=true` routes every service to `src/mocks/`. Demo accounts use the password `Kiet@2026`, which is mock-only and never sent to a real API:
   - Student `ashwini.durga@kiet.edu`, Faculty `ramesh.varma@kiet.edu`, HOD `hod.cse@kiet.edu`, CTPO `srinivasa.rao@kiet.edu`, Admin `admin@kiet.edu`.
 - Mock mode shows a "Demo accounts" helper under the login form that fills in the credentials.
 - Mock registrations live in memory until the page reloads.
@@ -212,3 +212,23 @@ All ten mock-only modules go through `services/previewService.js` to `mocks/prev
 - **Resolve** picks the class to move (the one in the section being viewed) and suggests the nearest slot where the section, the faculty member and the room are all free: the same day first (closest hour), then the following days. The move happens only after the confirmation dialog, and conflicts are re-evaluated immediately.
 - The seeded week has exactly three deliberate clashes: Mrs. K. Sirisha on Monday 11:00 (3A and 2A), Mr. Ch. Ravi Kumar on Tuesday 10:00 (3A and 3B), and Lab 2 on Thursday 02:00 (3A and 2A).
 - Lunch is shown as 12:50 – 1:50 pm (assumed from 50-minute periods).
+
+## Phase 7: Polish
+
+### Accessibility
+- **Focus return**: dialogs opened from state (confirmations, form modals) return focus to the control that opened them (`hooks/useReturnFocus.js`). If that control no longer exists, for example after its row was deleted, focus moves to the main region.
+- **Scrollable tables**: wide tables and the timetable are focusable, labelled regions, so keyboard users can scroll them (WCAG 2.1.1).
+- **Charts**: Recharts' keyboard layer is turned off, because charts are hidden from screen readers and a focusable element inside hidden content is announced as nothing. The text summary beside each chart carries the same numbers.
+- **Contrast**: muted text is `#55657a` (was `#64748b`) and success text `#137333` (was `#15803d`), so small text on the tinted canvas and on tone tiles stays above 4.5:1.
+
+### Responsive and dark-mode audit
+Every role route (52 in total) was loaded at 375px, 768px and 1280px in both light and dark themes, in mock mode. Each load was checked for page-level horizontal scrolling, error screens, unexpected redirects and the applied theme. Every token in `tokens.css` has a dark value, and no component uses a hardcoded colour.
+
+### Empty and error states
+Every data view goes through `QueryView` or `DataTable`, which render the shared loading, error (with retry) and empty states. Two gaps were closed: the bus pass page shows "No bus pass on record" when the student has none, and the timetable shows an empty state for a faculty member with no classes or a section with no timetable, instead of an empty grid. The notification bell and the faculty year filter fall back silently (count 0, all years) when their request fails, because neither is the main content of the page.
+
+### Clean-up
+- Removed unused shadcn components (`alert`, `badge`, `card`, `select`, `separator`, `skeleton`, `tooltip`) and the Phase 0 `PlaceholderPage`, which no route uses any more.
+- Helpers and constants used only inside their own file are no longer exported.
+- The router throws a named error at start-up if a navigation item has no registered page, so the sidebar and the routes cannot drift apart.
+- "Join club" is wrapped in `RoleGate` (students only) instead of a prop passed through the hero.

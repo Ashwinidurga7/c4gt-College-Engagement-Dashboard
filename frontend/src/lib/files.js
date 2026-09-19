@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 
 export function formatFileSize(bytes) {
   if (!Number.isFinite(bytes)) return '—'

@@ -5,7 +5,7 @@ import { toClub } from '@/services/campusAdapters'
 import { createResourceService } from '@/services/resourceService'
 
 /** Only fields the admin edits are sent; focus areas arrive as a comma-separated string. */
-export function toClubPayload(values) {
+function toClubPayload(values) {
   return {
     name: values.name.trim(),
     fullName: values.fullName.trim(),

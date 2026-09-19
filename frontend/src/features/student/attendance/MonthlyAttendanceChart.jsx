@@ -21,7 +21,7 @@ export function MonthlyAttendanceChart({ monthly }) {
   return (
     <ChartCard title="Monthly attendance" description={`Dashed line marks the ${LOW_ATTENDANCE_THRESHOLD}% requirement.`} icon={BarChart3} summary={summary}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+        <BarChart accessibilityLayer={false} data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartTheme.grid} />
           <XAxis dataKey="label" tick={chartTheme.tick} axisLine={false} tickLine={false} />
           <YAxis domain={[0, 100]} tick={chartTheme.tick} axisLine={false} tickLine={false} unit="%" />

@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useReturnFocus } from '@/hooks/useReturnFocus'
 
 /**
  * Dialog wrapping a form. Focus is trapped and Escape closes it (Radix Dialog).
@@ -26,9 +27,10 @@ export function FormModal({
   size = 'sm:max-w-lg',
   children,
 }) {
+  const returnFocus = useReturnFocus(open)
   return (
     <Dialog open={open} onOpenChange={(next) => !isSubmitting && onOpenChange(next)}>
-      <DialogContent className={`max-h-[90dvh] overflow-y-auto ${size}`}>
+      <DialogContent className={`max-h-[90dvh] overflow-y-auto ${size}`} onCloseAutoFocus={returnFocus}>
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
           <DialogHeader>
             <DialogTitle className="text-heading text-lg">{title}</DialogTitle>

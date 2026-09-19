@@ -36,7 +36,7 @@ export function TimetableGrid({ entries, conflictIds = new Set(), showSection = 
   const byCell = new Map(entries.map((entry) => [cellKey(entry.day, entry.slot), entry]))
 
   return (
-    <div className="bg-card shadow-soft relative overflow-x-auto rounded-xl border">
+    <div tabIndex={0} role="region" aria-label={caption} className="bg-card shadow-soft relative overflow-x-auto rounded-xl border">
       <table className="w-full min-w-[920px] table-fixed border-collapse text-sm">
         <caption className="sr-only">{caption}</caption>
         <colgroup>

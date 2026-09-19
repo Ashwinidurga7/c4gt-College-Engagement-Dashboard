@@ -48,7 +48,12 @@ export function BusPassPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Digital bus pass" description="Show this pass when you board the college bus." icon={BusFront} preview />
-      <QueryView query={query} skeleton={<ListSkeleton rows={4} />}>
+      <QueryView
+        query={query}
+        skeleton={<ListSkeleton rows={4} />}
+        isEmpty={(pass) => !pass}
+        empty={{ icon: BusFront, title: 'No bus pass on record', description: 'Apply for college transport at the transport office to get a digital pass.' }}
+      >
         {(pass) => (
           <div className="grid gap-6 lg:grid-cols-2">
             <PassCard pass={pass} />

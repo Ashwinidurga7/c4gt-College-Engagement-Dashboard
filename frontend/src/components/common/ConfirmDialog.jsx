@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useReturnFocus } from '@/hooks/useReturnFocus'
 import { cn } from '@/lib/utils'
 
 /**
@@ -27,11 +28,12 @@ export function ConfirmDialog({
   onConfirm,
   children,
 }) {
+  const returnFocus = useReturnFocus(open)
   const danger = tone === 'danger'
 
   return (
     <Dialog open={open} onOpenChange={(next) => !isPending && onOpenChange(next)}>
-      <DialogContent role="alertdialog" className="sm:max-w-md" showCloseButton={false}>
+      <DialogContent role="alertdialog" className="sm:max-w-md" showCloseButton={false} onCloseAutoFocus={returnFocus}>
         <DialogHeader>
           <span
             className={cn(

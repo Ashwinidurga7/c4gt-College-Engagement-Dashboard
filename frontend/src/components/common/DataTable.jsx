@@ -55,7 +55,8 @@ export function DataTable({
   else if (!rows?.length) body = <EmptyState title={emptyTitle} description={emptyDescription} />
   else {
     body = (
-      <div className={cn('relative overflow-x-auto', isFetching && 'opacity-70')}>
+      // Focusable so keyboard users can scroll wide tables (WCAG 2.1.1).
+      <div tabIndex={0} role="region" aria-label={caption ?? 'Table'} className={cn('relative overflow-x-auto', isFetching && 'opacity-70')}>
         <table style={{ minWidth }} className="w-full border-collapse text-sm">
           {caption && <caption className="sr-only">{caption}</caption>}
           <thead className="bg-sunken text-heading">

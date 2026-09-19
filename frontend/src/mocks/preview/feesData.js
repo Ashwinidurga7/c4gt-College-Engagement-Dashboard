@@ -4,7 +4,7 @@ import { randomInt, seededRandom } from '@/mocks/seededRandom'
 /** Semester tuition per college (half of the annual fee). */
 const SEMESTER_TUITION = { KIET: 35000, 'KIET+': 30000, KIEW: 27500 }
 const METHODS = ['UPI', 'Net Banking', 'Debit Card', 'Demand Draft', 'Cash']
-export const FEE_DUE_DATE = '2026-09-30'
+const FEE_DUE_DATE = '2026-09-30'
 const EARLY_DUE_DATE = '2026-08-31'
 
 /**

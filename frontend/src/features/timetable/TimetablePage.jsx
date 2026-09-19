@@ -2,6 +2,7 @@ import { CalendarClock, ScanSearch } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PreviewNotice } from '@/components/common/PreviewNotice'
+import { EmptyState } from '@/components/common/EmptyState'
 import { QueryView } from '@/components/common/QueryView'
 import { TableSkeleton } from '@/components/common/Skeleton'
 import { Button } from '@/components/ui/button'
@@ -74,7 +75,16 @@ export function TimetablePage() {
               </div>
             )}
             {canManage && checked && <ConflictPanel conflicts={conflicts} entries={entries} preferredSection={view === 'mine' ? undefined : view} />}
-            <TimetableGrid entries={visible} conflictIds={conflictIds} showSection={view === 'mine'} caption={view === 'mine' ? 'My teaching schedule' : `Timetable for ${sectionLabel}`} />
+            {visible.length ? (
+              <TimetableGrid entries={visible} conflictIds={conflictIds} showSection={view === 'mine'} caption={view === 'mine' ? 'My teaching schedule' : `Timetable for ${sectionLabel}`} />
+            ) : (
+              <EmptyState
+                icon={CalendarClock}
+                className="bg-card rounded-xl border"
+                title={view === 'mine' ? 'No classes assigned to you' : 'No classes scheduled'}
+                description={view === 'mine' ? 'Your teaching schedule appears here once the department assigns your classes.' : 'This section has no timetable yet.'}
+              />
+            )}
           </>
         )}
       </QueryView>

@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 import { FullPageLoader } from '@/components/common/FullPageStatus'
 import { GuestRoute } from '@/components/common/GuestRoute'
-import { PlaceholderPage } from '@/components/common/PlaceholderPage'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 import { RootRedirect } from '@/components/common/RootRedirect'
 import { AppShell } from '@/components/layout/AppShell'
@@ -13,10 +12,7 @@ function page(loader, name) {
   return async () => ({ Component: (await loader())[name] })
 }
 
-/**
- * Real pages replace PlaceholderPage phase by phase through this map, keyed "role/path".
- * Anything not listed renders the placeholder for its nav item.
- */
+/** Role pages keyed "role/path"; every navigation item resolves here or in PREVIEW_PAGES. */
 const PAGES = {
   'student/dashboard': page(() => import('@/features/student/StudentDashboardPage'), 'StudentDashboardPage'),
   'student/profile': page(() => import('@/features/student/ProfilePage'), 'ProfilePage'),
@@ -92,7 +88,8 @@ function roleRoutes(role) {
       { index: true, element: <Navigate to="dashboard" replace /> },
       ...navItemsFor(role).map((item) => {
         const lazy = PAGES[`${role}/${item.path}`] ?? (item.preview ? PREVIEW_PAGES[item.path] : undefined)
-        return lazy ? { path: item.path, lazy } : { path: item.path, element: <PlaceholderPage item={item} /> }
+        if (!lazy) throw new Error(`No page registered for /${role}/${item.path}`)
+        return { path: item.path, lazy }
       }),
       ...(DETAIL_ROUTES[role] ?? []),
       statusRoute('*', 'notFound'),

@@ -10,7 +10,7 @@ import { toPendingRegistration } from '@/services/rosterAdapters'
 /** Admin approves faculty and HOD registrations; the path segment differs per role. */
 const APPROVAL_PATHS = { faculty: 'faculty', hod: 'hods' }
 
-export function toDirectoryUser(raw = {}) {
+function toDirectoryUser(raw = {}) {
   return {
     id: toId(raw),
     name: pick(raw.name, 'User'),

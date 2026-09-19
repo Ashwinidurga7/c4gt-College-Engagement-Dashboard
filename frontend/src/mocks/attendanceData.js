@@ -35,5 +35,3 @@ function buildRecords() {
 
 /** Every class held this semester, newest first. All attendance totals are derived from this list. */
 export const attendanceRecords = buildRecords()
-
-export const attendanceSubjects = SCHEDULE.map(({ code, subject }) => ({ code, subject }))

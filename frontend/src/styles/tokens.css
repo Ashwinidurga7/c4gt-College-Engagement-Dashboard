@@ -22,7 +22,7 @@
   /* Text */
   --text-heading: #0f2557;
   --text-body: #1e293b;
-  --text-muted: #64748b;
+  --text-muted: #55657a;
   --text-link: #1d58c7;
   --text-on-primary: #ffffff;
 
@@ -33,7 +33,7 @@
 
   /* Status */
   --status-success: #16a34a;
-  --status-success-text: #15803d;
+  --status-success-text: #137333;
   --status-success-bg: #e8f7ee;
   --status-warning: #d97706;
   --status-warning-text: #b45309;
@@ -48,7 +48,7 @@
   --tone-blue-bg: #e9f0fc;
   --tone-blue-fg: #1d58c7;
   --tone-green-bg: #e6f6ef;
-  --tone-green-fg: #15803d;
+  --tone-green-fg: #137333;
   --tone-purple-bg: #efeafd;
   --tone-purple-fg: #6d3fd1;
   --tone-orange-bg: #fdf0e3;

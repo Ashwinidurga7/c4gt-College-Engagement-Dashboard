@@ -4,7 +4,7 @@ import { mockLogin, mockMe, mockRegister } from '@/mocks/authMock'
 import { apiClient, ApiError } from '@/services/apiClient'
 
 /** Maps any backend user shape to the one the UI consumes. */
-export function toUser(raw) {
+function toUser(raw) {
   const source = raw?.user ?? raw
   if (!source || typeof source !== 'object') return null
   return {

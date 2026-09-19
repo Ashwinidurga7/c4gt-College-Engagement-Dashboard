@@ -4,6 +4,7 @@ import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { DetailList } from '@/components/common/DetailList'
 import { PreviewBadge } from '@/components/common/PreviewBadge'
 import { QueryView } from '@/components/common/QueryView'
+import { RoleGate } from '@/components/common/RoleGate'
 import { SectionCard } from '@/components/common/SectionCard'
 import { Skeleton, StatGridSkeleton } from '@/components/common/Skeleton'
 import { StatCard } from '@/components/common/StatCard'
@@ -18,10 +19,10 @@ import { formatNumber } from '@/lib/formatters'
 
 const SOCIAL_LABELS = { instagram: 'Instagram', linkedin: 'LinkedIn', whatsapp: 'WhatsApp community', website: 'Website' }
 
-function ClubHero({ club, showJoin }) {
+function ClubHero({ club }) {
   return (
     <section aria-label={club.name} className="bg-nav text-nav-strong border-nav-border flex flex-col gap-5 rounded-xl border p-6 sm:flex-row sm:items-center">
-      <ClubLogo club={club} className="bg-logo-chip size-20 shrink-0 text-2xl" />
+      <ClubLogo club={club} className="size-20 shrink-0 text-2xl" />
       <div className="min-w-0 flex-1">
         <h1 className="text-nav-strong text-2xl font-bold sm:text-3xl">{club.name}</h1>
         {club.fullName && club.fullName !== club.name && <p className="text-nav-text">{club.fullName}</p>}
@@ -32,7 +33,7 @@ function ClubHero({ club, showJoin }) {
           <StatusBadge status={club.status} />
         </div>
       </div>
-      {showJoin && (
+      <RoleGate allow={['student']}>
       <div className="flex flex-col items-start gap-1.5 sm:items-end">
         <Button size="lg" disabled aria-describedby="join-note">
           Join club
@@ -41,7 +42,7 @@ function ClubHero({ club, showJoin }) {
           <PreviewBadge compact /> Joining online is not available yet
         </p>
       </div>
-      )}
+      </RoleGate>
     </section>
   )
 }
@@ -68,7 +69,7 @@ export function ClubDetailPage() {
       >
         {(club) => (
           <>
-            <ClubHero club={club} showJoin={user.role === 'student'} />
+            <ClubHero club={club} />
             <section aria-label="Club statistics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <StatCard label="Members" value={formatNumber(club.membersCount)} icon={Users} tone="blue" />
               <StatCard label="Projects" value={formatNumber(club.stats.projects)} icon={FolderKanban} tone="green" />

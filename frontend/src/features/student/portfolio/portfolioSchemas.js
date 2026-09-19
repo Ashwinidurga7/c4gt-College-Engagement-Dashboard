@@ -39,7 +39,7 @@ export const certificateSchema = z.object({
   file: fileSchema(CERTIFICATE_TYPES, 'Upload a PDF, JPG or PNG file.'),
 })
 
-export const PROJECT_STATUSES = ['ongoing', 'completed']
+const PROJECT_STATUSES = ['ongoing', 'completed']
 
 export const projectSchema = z
   .object({

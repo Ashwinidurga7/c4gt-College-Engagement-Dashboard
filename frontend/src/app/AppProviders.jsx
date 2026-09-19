@@ -3,17 +3,14 @@ import { AuthProvider } from '@/app/AuthProvider'
 import { queryClient } from '@/app/queryClient'
 import { ThemeProvider } from '@/app/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
-import { TooltipProvider } from '@/components/ui/tooltip'
 
 export function AppProviders({ children }) {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <TooltipProvider delayDuration={300}>
-            {children}
-            <Toaster position="bottom-right" richColors closeButton />
-          </TooltipProvider>
+          {children}
+          <Toaster position="bottom-right" richColors closeButton />
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>

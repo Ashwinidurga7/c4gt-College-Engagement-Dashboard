@@ -1,7 +1,7 @@
 import { LOW_ATTENDANCE_THRESHOLD, percentage } from '@/lib/academics'
 
 /** Attendance bands used by CTPO/HOD charts; the 75% line splits "at risk" from "on track". */
-export const ATTENDANCE_BANDS = [
+const ATTENDANCE_BANDS = [
   { key: 'critical', label: 'Below 65%', short: '<65%', min: 0, max: 65, tone: 'danger' },
   { key: 'low', label: '65–75%', short: '65–75', min: 65, max: LOW_ATTENDANCE_THRESHOLD, tone: 'warning' },
   { key: 'good', label: '75–85%', short: '75–85', min: LOW_ATTENDANCE_THRESHOLD, max: 85, tone: 'primary' },
@@ -9,7 +9,7 @@ export const ATTENDANCE_BANDS = [
 ]
 
 /** CGPA bands aligned with the grade scale (O, A+, A, B+, B and below). */
-export const GRADE_BANDS = [
+const GRADE_BANDS = [
   { key: 'o', label: '9 and above', short: '9+', grade: 'O', min: 9, max: 11 },
   { key: 'aplus', label: '8 – 8.99', short: '8–9', grade: 'A+', min: 8, max: 9 },
   { key: 'a', label: '7 – 7.99', short: '7–8', grade: 'A', min: 7, max: 8 },

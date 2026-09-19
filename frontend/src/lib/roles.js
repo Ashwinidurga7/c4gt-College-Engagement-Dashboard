@@ -1,6 +1,6 @@
 import { ClipboardList, GraduationCap, ShieldCheck, UserRoundCog, Users } from 'lucide-react'
 
-export const ROLES = {
+const ROLES = {
   STUDENT: 'student',
   FACULTY: 'faculty',
   HOD: 'hod',

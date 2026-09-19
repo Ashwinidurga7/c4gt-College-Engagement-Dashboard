@@ -40,7 +40,7 @@ export function toProfilePayload(values) {
   }
 }
 
-export function toActivity(raw) {
+function toActivity(raw) {
   return {
     id: toId(raw),
     type: pick(raw.type, raw.category, 'general'),
@@ -49,7 +49,7 @@ export function toActivity(raw) {
   }
 }
 
-export function toAnnouncement(raw) {
+function toAnnouncement(raw) {
   return {
     id: toId(raw),
     title: pick(raw.title, 'Announcement'),
