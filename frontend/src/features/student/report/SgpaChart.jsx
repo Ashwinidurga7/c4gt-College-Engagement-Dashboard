@@ -3,12 +3,12 @@ import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, 
 import { ChartCard } from '@/components/common/ChartCard'
 import { chartTheme } from '@/lib/chartTheme'
 
-export function SgpaChart({ semesters, className }) {
-  const data = semesters.map((entry) => ({ label: `Sem ${entry.semester}`, sgpa: entry.sgpa }))
-  const summary = `SGPA by semester: ${data.map((entry) => `${entry.label} ${entry.sgpa.toFixed(2)}`).join(', ')}.`
+export function SgpaChart({ semesters, title = 'SGPA by semester', description = 'Semester grade point average on a 10-point scale.', className }) {
+  const data = semesters.filter((entry) => entry.sgpa != null).map((entry) => ({ label: `Sem ${entry.semester}`, sgpa: entry.sgpa }))
+  const summary = `${title}: ${data.map((entry) => `${entry.label} ${entry.sgpa.toFixed(2)}`).join(', ')}.`
 
   return (
-    <ChartCard title="SGPA by semester" description="Semester grade point average on a 10-point scale." icon={TrendingUp} summary={summary} className={className}>
+    <ChartCard title={title} description={description} icon={TrendingUp} summary={summary} className={className}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 24, right: 8, left: -20, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke={chartTheme.grid} />

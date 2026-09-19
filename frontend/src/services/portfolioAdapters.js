@@ -39,7 +39,14 @@ export function toCertificate(raw = {}) {
     fileName: pick(raw.fileName, raw.originalName, raw.file?.name),
     verifiedBy: nameOf(raw.verifiedBy),
     remarks: pick(raw.remarks, raw.comment),
-    student: raw.student ? { name: nameOf(raw.student), rollNumber: raw.student?.rollNumber ?? null } : null,
+    student: raw.student
+      ? {
+          name: nameOf(raw.student),
+          rollNumber: raw.student?.rollNumber ?? null,
+          year: toNumber(raw.student?.year),
+          section: raw.student?.section ?? null,
+        }
+      : null,
   }
 }
 

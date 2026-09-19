@@ -3,7 +3,7 @@ import { pastSemesterCourses } from '@/mocks/studentProfileData'
 import { randomInt, seededRandom } from '@/mocks/seededRandom'
 
 /** Month each completed semester's results were published. */
-const PUBLISHED_ON = { 1: '2024-03-08', 2: '2024-08-02', 3: '2025-03-12', 4: '2025-08-06' }
+const PUBLISHED_ON = { 1: '2025-03-08', 2: '2025-08-02', 3: '2026-03-12', 4: '2026-08-06' }
 
 function buildResults() {
   const random = seededRandom(534)

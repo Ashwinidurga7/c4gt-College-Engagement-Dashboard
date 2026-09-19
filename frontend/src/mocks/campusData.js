@@ -3,7 +3,7 @@
 export const clubMemberships = [
   { clubId: 'club-c4gt', name: 'C4GT', college: 'KIET', role: 'Member', joinedOn: '2026-09-15' },
   { clubId: 'club-gcc', name: 'Google Developer Student Clubs', college: 'KIET', role: 'Member', joinedOn: '2025-08-20' },
-  { clubId: 'club-nss', name: 'National Service Scheme', college: 'KIET', role: 'Volunteer', joinedOn: '2024-01-10' },
+  { clubId: 'club-nss', name: 'National Service Scheme', college: 'KIET', role: 'Volunteer', joinedOn: '2025-01-10' },
 ]
 
 export const campusEvents = [
@@ -117,7 +117,7 @@ export const recentActivities = [
   { _id: 'act-1', type: 'club', title: 'You have been added to the C4GT club', date: '2026-09-15T10:20:00+05:30' },
   { _id: 'act-2', type: 'project', title: 'Your project "Smart Traffic System" has been approved', date: '2026-09-12T16:05:00+05:30' },
   { _id: 'act-3', type: 'event', title: 'NSS Tree Plantation Drive registration completed', date: '2026-09-02T09:40:00+05:30' },
-  { _id: 'act-4', type: 'result', title: 'Semester 4 results are available', date: '2025-08-06T18:00:00+05:30' },
+  { _id: 'act-4', type: 'result', title: 'Semester 4 results are available', date: '2026-08-06T18:00:00+05:30' },
 ]
 
 export const campusAnnouncements = [

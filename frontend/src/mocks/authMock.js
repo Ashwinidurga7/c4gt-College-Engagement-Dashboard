@@ -1,3 +1,4 @@
+import { tokenStorage } from '@/lib/tokenStorage'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 
 /** Shared demo password for every mock account. Mock mode only; never used against the real API. */
@@ -11,7 +12,7 @@ const users = [
     role: 'student',
     college: 'KIET',
     department: 'CSE',
-    rollNumber: '23JN1A0534',
+    rollNumber: '24JN1A0534',
     year: 3,
     section: 'A',
     approvalStatus: 'approved',
@@ -74,6 +75,13 @@ export function mockLogin({ email, password }) {
     return mockError('Your account is awaiting approval.', 403)
   }
   return mockResponse({ user: publicUser(user), token: `${TOKEN_PREFIX}${user._id}` })
+}
+
+/** The signed-in mock user, used by other mocks to scope data by role. */
+export function currentMockUser() {
+  const token = tokenStorage.get()
+  const user = users.find((entry) => `${TOKEN_PREFIX}${entry._id}` === token)
+  return user ? publicUser(user) : null
 }
 
 export function mockMe(token) {

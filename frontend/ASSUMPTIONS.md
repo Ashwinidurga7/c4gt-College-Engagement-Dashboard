@@ -130,3 +130,23 @@ Certifications (`/api/certifications`, full CRUD), certificates (`/api/certifica
 
 ### Mock data
 Eight clubs (seven active, one inactive) across the three colleges; eight events (six upcoming, two past); eleven notifications (three unread); portfolio records for the demo student. Mock uploads use browser object URLs, so "View" works until the page reloads.
+
+## Phase 3: Faculty and CTPO
+
+### Endpoints used
+`GET /api/faculty/me`, `GET /api/students` (roster, scoped by the backend to the caller), `GET /api/certificates` with `status` filter plus `PUT /api/certificates/:id/verify`, and `GET /api/ctpo/dashboard`, `/students`, `/attendance`, `/academic-report`.
+
+### Decisions to confirm against Postman
+- **Verify body**: `PUT /certificates/:id/verify` is sent `{ status: 'verified' | 'rejected', remarks }`. Rejecting requires a reason (at least 5 characters). If the backend only supports verifying, the Reject button can be removed in one place (`CertificateQueuePage`).
+- **Roster query parameters**: `search`, `year`, `section`, `attendanceBelow=75`, `sortBy`/`order`, `page`/`limit`. Student fields read: `name, rollNumber, email, college, department, year, section, attendancePercentage, cgpa, sgpas[], backlogs, subjects[]` (with common alternatives).
+- **CTPO analytics**: the adapter (`toCohortAnalytics`) accepts summary figures (`summary.total/averageAttendance/averageCgpa/lowAttendance`), band counts, subject averages, SGPA trend, top performers and low-attendance lists from the API. Anything missing is derived from the `students` array, so a response carrying only students still renders every chart.
+- **Faculty dashboard counts** come from paginated totals (`pageSize=1`) of scoped roster and certificate queries, so the numbers are always backend-scoped and never counted on the client.
+
+### Behaviour
+- Roster rows open a read-only student summary (attendance ring, CGPA, subject attendance where provided); no extra request is made.
+- CTPO section attendance and academic report pages sort and filter the section's students locally. A section is small (tens of students), and those endpoints return the whole section.
+- Attendance and CGPA bands: below 65 / 65–75 / 75–85 / 85+ %, and 9+ / 8–9 / 7–8 / 6–7 / below 6. Bars carry their counts as labels, so colour is not the only cue.
+- "Take Attendance" (formerly "Lecture Attendance") remains a Phase 6 preview module.
+
+### Mock data
+A seeded roster of 984 students (KIET, KIET+ and KIEW; every offered department; years 1–4; sections A and B). KIET CSE year 3 sections have 20 students each and carry subject-level attendance on the same timetable as the demo student. The demo student's own record uses her real attendance and results, so she matches across the student, faculty and CTPO views. Mock scoping mirrors the backend: faculty see KIET CSE years 2–3, the CTPO sees KIET CSE 3-A, the HOD sees KIET CSE, and the admin sees everyone. Faculty certificate queue: 14 generated uploads plus the demo student's own.

@@ -28,6 +28,14 @@ const PAGES = {
   'student/clubs': page(() => import('@/features/clubs/ClubsPage'), 'ClubsPage'),
   'student/events': page(() => import('@/features/events/EventsPage'), 'EventsPage'),
   'student/notifications': page(() => import('@/features/notifications/NotificationsPage'), 'NotificationsPage'),
+  'faculty/dashboard': page(() => import('@/features/faculty/FacultyDashboardPage'), 'FacultyDashboardPage'),
+  'faculty/students': page(() => import('@/features/faculty/FacultyStudentsPage'), 'FacultyStudentsPage'),
+  'faculty/certificates': page(() => import('@/features/faculty/CertificateQueuePage'), 'CertificateQueuePage'),
+  'faculty/notifications': page(() => import('@/features/notifications/NotificationsPage'), 'NotificationsPage'),
+  'ctpo/dashboard': page(() => import('@/features/ctpo/ClassDashboardPage'), 'ClassDashboardPage'),
+  'ctpo/students': page(() => import('@/features/ctpo/SectionStudentsPage'), 'SectionStudentsPage'),
+  'ctpo/attendance': page(() => import('@/features/ctpo/SectionAttendancePage'), 'SectionAttendancePage'),
+  'ctpo/academic-report': page(() => import('@/features/ctpo/SectionReportPage'), 'SectionReportPage'),
 }
 
 /** Detail routes below a nav item, e.g. a single club. */

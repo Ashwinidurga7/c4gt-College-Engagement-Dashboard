@@ -83,7 +83,7 @@ export const NAVIGATION = {
       items: [
         { path: 'students', label: 'Student Roster', icon: Users, phase: 3 },
         { path: 'certificates', label: 'Certificate Queue', icon: FileCheck2, phase: 3 },
-        { path: 'lecture-attendance', label: 'Lecture Attendance', icon: ClipboardCheck, phase: 6, preview: true },
+        { path: 'lecture-attendance', label: 'Take Attendance', icon: ClipboardCheck, phase: 6, preview: true },
         { path: 'timetable', label: 'Timetable', icon: CalendarClock, phase: 6, preview: true },
       ],
     },

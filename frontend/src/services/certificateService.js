@@ -1,4 +1,5 @@
 import { env } from '@/lib/env'
+import { currentMockUser } from '@/mocks/authMock'
 import { certificatesMock } from '@/mocks/portfolioMock'
 import { apiClient } from '@/services/apiClient'
 import { toCertificate } from '@/services/portfolioAdapters'
@@ -31,9 +32,10 @@ export const certificateService = {
     return toCertificate(await apiClient.post('/certificates', toFormData(fields, file, 'certificate')))
   },
 
-  async verify(id, decision = {}) {
+  /** `decision` is `{ status: 'verified' | 'rejected', remarks }`; see ASSUMPTIONS.md for the body shape. */
+  async verify(id, decision = { status: 'verified' }) {
     const data = env.useMock
-      ? await certificatesMock.update(id, { status: decision.status ?? 'verified', remarks: decision.remarks ?? null })
+      ? await certificatesMock.update(id, { status: decision.status, remarks: decision.remarks ?? null, verifiedBy: currentMockUser()?.name ?? null })
       : await apiClient.put(`/certificates/${id}/verify`, decision)
     return toCertificate(data)
   },

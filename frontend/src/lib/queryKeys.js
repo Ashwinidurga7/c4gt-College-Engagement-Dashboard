@@ -19,4 +19,13 @@ export const queryKeys = {
   event: (role, id) => [role, 'event', id],
   notifications: (role, query) => (query === undefined ? [role, 'notifications'] : [role, 'notifications', query]),
   unreadCount: (role) => [role, 'notifications', 'unread'],
+  roster: (role, query) => (query === undefined ? [role, 'roster'] : [role, 'roster', query]),
+  certificateQueue: (role, query) => (query === undefined ? [role, 'certificate-queue'] : [role, 'certificate-queue', query]),
+  facultyMe: ['faculty', 'me'],
+  ctpo: {
+    dashboard: ['ctpo', 'dashboard'],
+    students: (query) => ['ctpo', 'students', query],
+    attendance: ['ctpo', 'attendance'],
+    academicReport: ['ctpo', 'academic-report'],
+  },
 }
