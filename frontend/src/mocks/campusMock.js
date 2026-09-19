@@ -5,11 +5,17 @@ import { createMockCollection } from '@/mocks/mockStore'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { notificationsData } from '@/mocks/notificationsData'
 
-export const clubsMock = createMockCollection(clubsData, {
+const clubs = createMockCollection(clubsData, {
   prefix: 'club',
   searchKeys: ['name', 'fullName', 'tagline', 'category'],
   defaultSort: { key: 'name', direction: 'asc' },
 })
+
+/** New clubs start active with no members, as the admin creates them. */
+export const clubsMock = {
+  ...clubs,
+  create: (data) => clubs.create({ status: 'active', membersCount: 0, stats: { projects: 0, workshops: 0, hackathons: 0 }, socials: {}, ...data }),
+}
 
 /** Events filter by `when` (upcoming/past), category, college and club. */
 export const eventsMock = {

@@ -168,3 +168,24 @@ A seeded roster of 984 students (KIET, KIET+ and KIEW; every offered department;
 
 ### Mock data
 Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for KIET ECE (not visible to the CSE HOD), two faculty and one HOD (for the admin in Phase 5). Approved accounts can sign in with `Kiet@2026`; rejected ones see "Your registration was not approved". Accounts created on the registration page join the same queues.
+
+## Phase 5: Admin
+
+### Endpoints used
+`GET /api/admin/dashboard`, `/users`, `/hods/pending`, `/faculty/pending`, `/pending`; clubs `POST /api/clubs`, `PUT /:id`, `DELETE /:id`, `PUT /:id/activate`, `PUT /:id/deactivate`; `GET /api/events`; certificate verification through `PUT /api/certificates/:id/verify`.
+
+### Decisions to confirm against Postman
+- **Approval mutations** (the plan only says "approval mutations for HODs and Faculty"): assumed `PUT /api/admin/hods/:id/approve|reject` and `PUT /api/admin/faculty/:id/approve|reject` with no body. The paths live in one map (`APPROVAL_PATHS` in `adminService.js`).
+- **`GET /api/admin/pending`** is treated as the institution-wide verification queue (certificates awaiting verification), read from `certificates`, `pending` or a bare array. Verifying uses the certificate verify endpoint, as for faculty. If `/admin/pending` instead means pending *registrations*, the Verifications page can switch to `GET /api/certificates?status=pending`.
+- **Dashboard fields** are read from `totals`/`stats` or the top level: `students, faculty, hods, ctpos, activeClubs, upcomingEvents, pendingApprovals, pendingVerifications`, plus optional `byCollege` and `recentRegistrations` arrays.
+- **Users list parameters**: `search`, `role`, `college`, `approvalStatus`, `sortBy`/`order`, `page`/`limit`. Status is shown as Active, Pending or Rejected.
+- **Club payload**: `name, fullName, tagline, category, college, coordinator, email, founded, description, focusAreas[]`. Activation uses the dedicated `activate`/`deactivate` endpoints; `PATCH /:id/status` is not used.
+
+### Behaviour
+- Admin approves faculty and HOD registrations (tabs, with the tab in the URL). CTPO approvals stay with the HOD.
+- Deactivating a club hides it from students without deleting it; deleting is permanent. Both are confirmed, and the dialogs explain the difference.
+- "Join club" is shown only to students. The admin can open any club's detail page from the clubs table.
+- The Events page is shared with students; the admin sees the same filters.
+
+### Mock data
+The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, club changes) persist in memory until a full page reload.

@@ -32,6 +32,12 @@ const PAGES = {
   'faculty/students': page(() => import('@/features/faculty/FacultyStudentsPage'), 'FacultyStudentsPage'),
   'faculty/certificates': page(() => import('@/features/faculty/CertificateQueuePage'), 'CertificateQueuePage'),
   'faculty/notifications': page(() => import('@/features/notifications/NotificationsPage'), 'NotificationsPage'),
+  'admin/dashboard': page(() => import('@/features/admin/AdminDashboardPage'), 'AdminDashboardPage'),
+  'admin/users': page(() => import('@/features/admin/AdminUsersPage'), 'AdminUsersPage'),
+  'admin/approvals': page(() => import('@/features/admin/ApprovalsPage'), 'ApprovalsPage'),
+  'admin/verifications': page(() => import('@/features/admin/VerificationsPage'), 'VerificationsPage'),
+  'admin/clubs': page(() => import('@/features/admin/AdminClubsPage'), 'AdminClubsPage'),
+  'admin/events': page(() => import('@/features/events/EventsPage'), 'EventsPage'),
   'hod/dashboard': page(() => import('@/features/hod/HodDashboardPage'), 'HodDashboardPage'),
   'hod/students': page(() => import('@/features/hod/HodStudentsPage'), 'HodStudentsPage'),
   'hod/attendance': page(() => import('@/features/hod/AttendanceAnalyticsPage'), 'AttendanceAnalyticsPage'),
@@ -44,8 +50,10 @@ const PAGES = {
 }
 
 /** Detail routes below a nav item, e.g. a single club. */
+const clubDetail = { path: 'clubs/:clubId', lazy: page(() => import('@/features/clubs/ClubDetailPage'), 'ClubDetailPage') }
 const DETAIL_ROUTES = {
-  student: [{ path: 'clubs/:clubId', lazy: page(() => import('@/features/clubs/ClubDetailPage'), 'ClubDetailPage') }],
+  student: [clubDetail],
+  admin: [clubDetail],
 }
 
 function statusRoute(path, variant) {

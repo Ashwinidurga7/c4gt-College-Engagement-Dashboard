@@ -124,3 +124,8 @@ export function setApproval(id, approvalStatus) {
   user.approvalStatus = approvalStatus
   return mockResponse(publicUser(user))
 }
+
+/** Every account known to the mock (staff and applicants), without passwords. */
+export function allAccounts() {
+  return users.map(publicUser)
+}

@@ -50,17 +50,27 @@ const COLUMNS = [
   { key: 'status', header: 'Status', cell: (row) => <StatusBadge status={row.status} /> },
 ]
 
-export function CertificateQueuePage() {
-  useDocumentTitle('Certificate Queue')
+/**
+ * Certificate review table. Faculty use their scoped queue; the admin passes the
+ * institution-wide hooks.
+ */
+export function CertificateQueuePage({
+  title = 'Certificate verification',
+  description = 'Review certificates uploaded by students in your scope.',
+  documentTitle = 'Certificate Queue',
+  useQueue = useCertificateQueue,
+  useVerify = useVerifyCertificate,
+}) {
+  useDocumentTitle(documentTitle)
   const list = useListQuery({ initialFilters: { status: 'pending' }, initialSort: { key: 'date', direction: 'desc' } })
-  const query = useCertificateQueue(list.query)
-  const verify = useVerifyCertificate()
+  const query = useQueue(list.query)
+  const verify = useVerify()
   const [review, setReview] = useState(null)
   const data = query.data
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Certificate verification" description="Review certificates uploaded by students in your scope." icon={FileCheck2} />
+      <PageHeader title={title} description={description} icon={FileCheck2} />
       <FilterChips label="Status" options={STATUS_OPTIONS} value={list.filters.status} onChange={(value) => list.setFilter('status', value)} />
       <DataTable
         caption="Certificates"

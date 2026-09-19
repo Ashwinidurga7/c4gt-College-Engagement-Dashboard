@@ -18,7 +18,7 @@ import { formatNumber } from '@/lib/formatters'
 
 const SOCIAL_LABELS = { instagram: 'Instagram', linkedin: 'LinkedIn', whatsapp: 'WhatsApp community', website: 'Website' }
 
-function ClubHero({ club }) {
+function ClubHero({ club, showJoin }) {
   return (
     <section aria-label={club.name} className="bg-nav text-nav-strong border-nav-border flex flex-col gap-5 rounded-xl border p-6 sm:flex-row sm:items-center">
       <ClubLogo club={club} className="bg-logo-chip size-20 shrink-0 text-2xl" />
@@ -32,6 +32,7 @@ function ClubHero({ club }) {
           <StatusBadge status={club.status} />
         </div>
       </div>
+      {showJoin && (
       <div className="flex flex-col items-start gap-1.5 sm:items-end">
         <Button size="lg" disabled aria-describedby="join-note">
           Join club
@@ -40,6 +41,7 @@ function ClubHero({ club }) {
           <PreviewBadge compact /> Joining online is not available yet
         </p>
       </div>
+      )}
     </section>
   )
 }
@@ -66,7 +68,7 @@ export function ClubDetailPage() {
       >
         {(club) => (
           <>
-            <ClubHero club={club} />
+            <ClubHero club={club} showJoin={user.role === 'student'} />
             <section aria-label="Club statistics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <StatCard label="Members" value={formatNumber(club.membersCount)} icon={Users} tone="blue" />
               <StatCard label="Projects" value={formatNumber(club.stats.projects)} icon={FolderKanban} tone="green" />
