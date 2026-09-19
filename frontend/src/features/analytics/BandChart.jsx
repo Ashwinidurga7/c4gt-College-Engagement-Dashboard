@@ -13,9 +13,9 @@ const TONE_FILLS = {
  * Student counts per band (attendance ranges, CGPA ranges). Each bar carries its count as a
  * label, so colour is never the only cue.
  */
-export function BandChart({ title, description, icon, bands, xLabel = (band) => band.label, unit = 'students', className }) {
-  const data = bands.map((band) => ({ label: xLabel(band), count: band.count, fill: TONE_FILLS[band.tone] ?? chartTheme.colors.primary }))
-  const summary = `${title}: ${data.map((entry) => `${entry.label} ${entry.count} ${unit}`).join(', ')}.`
+export function BandChart({ title, description, icon, bands, unit = 'students', className }) {
+  const data = bands.map((band) => ({ label: band.short ?? band.label, full: band.label, count: band.count, fill: TONE_FILLS[band.tone] ?? chartTheme.colors.primary }))
+  const summary = `${title}: ${data.map((entry) => `${entry.full} ${entry.count} ${unit}`).join(', ')}.`
 
   return (
     <ChartCard title={title} description={description} icon={icon} summary={summary} className={className}>
@@ -24,7 +24,7 @@ export function BandChart({ title, description, icon, bands, xLabel = (band) => 
           <CartesianGrid vertical={false} stroke={chartTheme.grid} />
           <XAxis dataKey="label" tick={chartTheme.tick} axisLine={false} tickLine={false} interval={0} />
           <YAxis allowDecimals={false} tick={chartTheme.tick} axisLine={false} tickLine={false} />
-          <Tooltip {...chartTheme.tooltip} formatter={(value) => [value, 'Students']} />
+          <Tooltip {...chartTheme.tooltip} labelFormatter={(_, payload) => payload?.[0]?.payload.full} formatter={(value) => [value, 'Students']} />
           <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={56} isAnimationActive={false}>
             {data.map((entry) => (
               <Cell key={entry.label} fill={entry.fill} />

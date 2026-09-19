@@ -12,7 +12,7 @@ export function AppProviders({ children }) {
         <AuthProvider>
           <TooltipProvider delayDuration={300}>
             {children}
-            <Toaster position="top-right" richColors closeButton />
+            <Toaster position="bottom-right" richColors closeButton />
           </TooltipProvider>
         </AuthProvider>
       </QueryClientProvider>

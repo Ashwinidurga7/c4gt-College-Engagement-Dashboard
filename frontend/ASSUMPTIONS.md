@@ -150,3 +150,21 @@ Eight clubs (seven active, one inactive) across the three colleges; eight events
 
 ### Mock data
 A seeded roster of 984 students (KIET, KIET+ and KIEW; every offered department; years 1–4; sections A and B). KIET CSE year 3 sections have 20 students each and carry subject-level attendance on the same timetable as the demo student. The demo student's own record uses her real attendance and results, so she matches across the student, faculty and CTPO views. Mock scoping mirrors the backend: faculty see KIET CSE years 2–3, the CTPO sees KIET CSE 3-A, the HOD sees KIET CSE, and the admin sees everyone. Faculty certificate queue: 14 generated uploads plus the demo student's own.
+
+## Phase 4: HOD
+
+### Endpoints used
+`GET /api/hod/dashboard`, `/students`, `/attendance`, `/academic-report`, `/ctpos/pending`, and `PUT /api/hod/ctpos/:id/approve` and `/reject` (no request body).
+
+### Decisions to confirm against Postman
+- **Department analytics** (`toDepartmentAnalytics`) reads optional `byYear` and `bySection` arrays (`year, section, total, averageAttendance, averageCgpa, lowAttendance, withBacklogs`) and a `pendingCtpos` count. If the groups are missing but a `students` array is present, they are derived from it.
+- **Pending CTPO records** are read as users (`name, email, college, department, year, section, createdAt`), from a bare array or from `ctpos`/`items`.
+
+### Behaviour
+- Approve and reject both go through a confirmation dialog stating what the decision means (can sign in to which portal and scope, or cannot sign in).
+- The HOD dashboard shows a callout with the number of pending CTPO registrations and a link to the queue.
+- Section bars on charts are labelled `3A` (year and section). The description explains this, tooltips and screen-reader summaries use the full label, and value labels are hidden when there are more than six bars because the table below lists every value.
+- Toasts appear at the bottom-right so they never cover the account menu or notification bell.
+
+### Mock data
+Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for KIET ECE (not visible to the CSE HOD), two faculty and one HOD (for the admin in Phase 5). Approved accounts can sign in with `Kiet@2026`; rejected ones see "Your registration was not approved". Accounts created on the registration page join the same queues.

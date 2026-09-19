@@ -2,19 +2,19 @@ import { LOW_ATTENDANCE_THRESHOLD, percentage } from '@/lib/academics'
 
 /** Attendance bands used by CTPO/HOD charts; the 75% line splits "at risk" from "on track". */
 export const ATTENDANCE_BANDS = [
-  { key: 'critical', label: 'Below 65%', min: 0, max: 65, tone: 'danger' },
-  { key: 'low', label: '65–75%', min: 65, max: LOW_ATTENDANCE_THRESHOLD, tone: 'warning' },
-  { key: 'good', label: '75–85%', min: LOW_ATTENDANCE_THRESHOLD, max: 85, tone: 'primary' },
-  { key: 'excellent', label: '85% and above', min: 85, max: 101, tone: 'success' },
+  { key: 'critical', label: 'Below 65%', short: '<65%', min: 0, max: 65, tone: 'danger' },
+  { key: 'low', label: '65–75%', short: '65–75', min: 65, max: LOW_ATTENDANCE_THRESHOLD, tone: 'warning' },
+  { key: 'good', label: '75–85%', short: '75–85', min: LOW_ATTENDANCE_THRESHOLD, max: 85, tone: 'primary' },
+  { key: 'excellent', label: '85% and above', short: '85%+', min: 85, max: 101, tone: 'success' },
 ]
 
 /** CGPA bands aligned with the grade scale (O, A+, A, B+, B and below). */
 export const GRADE_BANDS = [
-  { key: 'o', label: '9 and above', grade: 'O', min: 9, max: 11 },
-  { key: 'aplus', label: '8 – 8.99', grade: 'A+', min: 8, max: 9 },
-  { key: 'a', label: '7 – 7.99', grade: 'A', min: 7, max: 8 },
-  { key: 'bplus', label: '6 – 6.99', grade: 'B+', min: 6, max: 7 },
-  { key: 'below', label: 'Below 6', grade: 'B and below', min: 0, max: 6 },
+  { key: 'o', label: '9 and above', short: '9+', grade: 'O', min: 9, max: 11 },
+  { key: 'aplus', label: '8 – 8.99', short: '8–9', grade: 'A+', min: 8, max: 9 },
+  { key: 'a', label: '7 – 7.99', short: '7–8', grade: 'A', min: 7, max: 8 },
+  { key: 'bplus', label: '6 – 6.99', short: '6–7', grade: 'B+', min: 6, max: 7 },
+  { key: 'below', label: 'Below 6', short: '<6', grade: 'B and below', min: 0, max: 6 },
 ]
 
 function average(values) {
@@ -73,4 +73,25 @@ export function sgpaTrend(students) {
 export function topBy(students, key, count = 5, direction = 'desc') {
   const factor = direction === 'desc' ? -1 : 1
   return [...students].filter((student) => Number.isFinite(student[key])).sort((a, b) => (a[key] - b[key]) * factor).slice(0, count)
+}
+
+/**
+ * Per-group summaries, e.g. by year or by year and section.
+ * Returns `[{ key, label, year, section, ...summarizeStudents }]` sorted by the key fields.
+ */
+export function groupStudents(students, fields) {
+  const groups = new Map()
+  students.forEach((student) => {
+    const key = fields.map((field) => student[field]).join('-')
+    if (!groups.has(key)) groups.set(key, { key, fields: Object.fromEntries(fields.map((field) => [field, student[field]])), members: [] })
+    groups.get(key).members.push(student)
+  })
+  return [...groups.values()]
+    .sort((a, b) => a.key.localeCompare(b.key, 'en-IN', { numeric: true }))
+    .map(({ key, fields: values, members }) => ({
+      key,
+      ...values,
+      label: [values.year && `Year ${values.year}`, values.section].filter(Boolean).join(' · '),
+      ...summarizeStudents(members),
+    }))
 }

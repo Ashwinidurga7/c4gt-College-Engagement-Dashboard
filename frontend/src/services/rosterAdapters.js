@@ -1,5 +1,5 @@
 import { percentage } from '@/lib/academics'
-import { attendanceBands, gradeBands, sgpaTrend, subjectAverages, summarizeStudents, topBy } from '@/lib/analytics'
+import { attendanceBands, gradeBands, groupStudents, sgpaTrend, subjectAverages, summarizeStudents, topBy } from '@/lib/analytics'
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
 
 export function toRosterStudent(raw = {}) {
@@ -80,5 +80,49 @@ export function toCohortAnalytics(raw = {}) {
     topPerformers: raw.topPerformers ? toList(raw.topPerformers).map(toRosterStudent) : topBy(students, 'cgpa', 5),
     students,
     coordinator: nameOf(raw.ctpo ?? raw.coordinator),
+  }
+}
+
+function toGroup(raw = {}) {
+  return {
+    key: pick(raw.key, [raw.year, raw.section].filter(Boolean).join('-')),
+    year: toNumber(raw.year),
+    section: raw.section ?? null,
+    label: pick(raw.label, [raw.year && `Year ${raw.year}`, raw.section].filter(Boolean).join(' · ')),
+    total: toNumber(pick(raw.total, raw.students, raw.count), 0),
+    averageAttendance: toNumber(pick(raw.averageAttendance, raw.avgAttendance)),
+    averageCgpa: toNumber(pick(raw.averageCgpa, raw.avgCgpa)),
+    lowAttendance: toNumber(pick(raw.lowAttendance, raw.lowAttendanceCount), 0),
+    withBacklogs: toNumber(raw.withBacklogs, 0),
+  }
+}
+
+/** Department analytics for the HOD: cohort figures plus per-year and per-section groups. */
+export function toDepartmentAnalytics(raw = {}) {
+  const cohort = toCohortAnalytics(raw)
+  return {
+    ...cohort,
+    department: raw.department ?? null,
+    byYear: toList(raw.byYear).length ? toList(raw.byYear).map(toGroup) : groupStudents(cohort.students, ['year']),
+    bySection: toList(raw.bySection).length ? toList(raw.bySection).map(toGroup) : groupStudents(cohort.students, ['year', 'section']),
+    pendingCtpos: toNumber(pick(raw.pendingCtpos, raw.pendingCtpoCount), 0),
+  }
+}
+
+/** A registration awaiting approval (CTPO, faculty or HOD). */
+export function toPendingRegistration(raw = {}) {
+  const user = raw.user ?? {}
+  return {
+    id: toId(raw, user._id),
+    name: pick(raw.name, user.name, 'Applicant'),
+    email: pick(raw.email, user.email),
+    role: pick(raw.role, user.role),
+    college: raw.college ?? null,
+    department: raw.department ?? null,
+    year: toNumber(raw.year),
+    section: raw.section ?? null,
+    academicYear: raw.academicYear ?? null,
+    assignedYears: toList(raw.assignedYears).map((value) => toNumber(value)).filter(Boolean),
+    requestedAt: pick(raw.createdAt, raw.requestedAt),
   }
 }

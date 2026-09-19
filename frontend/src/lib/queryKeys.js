@@ -22,6 +22,14 @@ export const queryKeys = {
   roster: (role, query) => (query === undefined ? [role, 'roster'] : [role, 'roster', query]),
   certificateQueue: (role, query) => (query === undefined ? [role, 'certificate-queue'] : [role, 'certificate-queue', query]),
   facultyMe: ['faculty', 'me'],
+  hod: {
+    all: ['hod'],
+    dashboard: ['hod', 'dashboard'],
+    students: (query) => ['hod', 'students', query],
+    attendance: ['hod', 'attendance'],
+    academicReport: ['hod', 'academic-report'],
+    pendingCtpos: ['hod', 'ctpos', 'pending'],
+  },
   ctpo: {
     dashboard: ['ctpo', 'dashboard'],
     students: (query) => ['ctpo', 'students', query],
