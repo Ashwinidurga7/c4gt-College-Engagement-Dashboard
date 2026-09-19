@@ -10,8 +10,8 @@ Decisions made where the implementation plan, the reference images and the avail
 | `refDashboard.png` | Not supplied under that name. The attendance screen (`docs/references/refDashboard.png`) is the most detailed dashboard reference | Used as the dashboard reference; `refScreens1.png`, `refScreens2.png` and `refClubPage.png` are supporting references |
 | `src/styles/tokens.css` from PR #21 | Not available | Tokens built from the plan's fallback values, adjusted to the reference images (below) |
 | `college-management.postman_collection.json`, Swagger `/api-docs` | Not available (no backend in this workspace) | Request/response shapes are guessed defensively in service adapters and **must be confirmed** (see "Backend contracts") |
-| `/public/kietlogo.png` | Missing | `BrandLogo` renders a neutral text wordmark; drop the file in `public/` and it is used automatically |
-| `/public/campus.jpg` | Missing | `CampusImage` renders a neutral placeholder; drop the file in `public/` and it is used automatically |
+| `/public/kietlogo.png` | Missing at Phase 0; supplied after Phase 7 (see "Brand assets") | `BrandLogo` renders a neutral text wordmark if the file fails to load |
+| `/public/campus.jpg` | Missing at Phase 0; supplied after Phase 7 (see "Brand assets") | `CampusImage` renders a neutral placeholder if the file fails to load |
 | Existing `/frontend` folder and repository | Not available | A new git repository was initialised on branch `feat/frontend-rewrite` with the app in `frontend/` |
 
 ## Reference image descriptions
@@ -232,3 +232,8 @@ Every data view goes through `QueryView` or `DataTable`, which render the shared
 - Helpers and constants used only inside their own file are no longer exported.
 - The router throws a named error at start-up if a navigation item has no registered page, so the sidebar and the routes cannot drift apart.
 - "Join club" is wrapped in `RoleGate` (students only) instead of a prop passed through the hero.
+
+## Brand assets
+
+- **Logo**: supplied as a transparent WebP (808×309). Converted to `public/kietlogo.png` with the empty transparent margin trimmed (622×297), so the logo fills its box at every size. Its "GROUP OF INSTITUTIONS" lettering is dark grey, so the logo sits on a white chip on navy surfaces (sidebar, bus pass) and everywhere in the dark theme.
+- **Campus photo**: supplied as a 335×597 portrait JPEG and used unchanged as `public/campus.jpg`. The login panel crops it to fill (the "KIET" sign stays in view) and fades it in from the left. At 1280px the panel scales it about 1.6×, so it looks slightly soft on large screens; a larger original (at least 900px wide) would fix that. The photo carries a photographer's watermark; confirm it may be used, or supply an unmarked image.

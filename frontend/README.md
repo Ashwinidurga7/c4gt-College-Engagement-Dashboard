@@ -65,7 +65,7 @@ Changes made in mock mode (registrations, approvals, uploads, club edits) are ke
 
 ```
 frontend/
-├─ public/                  favicon; place kietlogo.png and campus.jpg here
+├─ public/                  favicon, KIET logo (kietlogo.png), campus photo (campus.jpg)
 ├─ ASSUMPTIONS.md           decisions log and backend contracts to confirm
 └─ src/
    ├─ main.jsx              entry point
@@ -94,7 +94,7 @@ frontend/
 
 ## Brand assets
 
-Place `kietlogo.png` and `campus.jpg` in `public/`. Until then, a neutral text wordmark and a campus placeholder are shown.
+The KIET logo (`public/kietlogo.png`) and the campus photo on the login page (`public/campus.jpg`) are served from `public/`. To change them, replace the files and keep the names. If either file fails to load, a neutral text wordmark or campus placeholder is shown instead.
 
 ## Accessibility and responsiveness
 

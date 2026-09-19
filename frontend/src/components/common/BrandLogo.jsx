@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 const LOGO_SRC = '/kietlogo.png'
 
 /**
- * KIET logo from /public/kietlogo.png. Until the asset is supplied it renders a neutral
+ * KIET logo from /public/kietlogo.png. If the file fails to load it renders a neutral
  * wordmark so layouts keep their final proportions.
  */
 export function BrandLogo({ onDark = false, className }) {
@@ -36,7 +36,14 @@ export function BrandLogo({ onDark = false, className }) {
   }
 
   return (
-    <span className={cn('inline-flex', onDark && 'bg-logo-chip rounded-lg px-2 py-1', className)}>
+    <span
+      className={cn(
+        'inline-flex',
+        // The logo's grey lettering needs a white chip on navy surfaces and in the dark theme.
+        onDark ? 'bg-logo-chip rounded-lg px-2 py-1' : 'dark:bg-logo-chip dark:rounded-lg dark:px-2 dark:py-1',
+        className,
+      )}
+    >
       <img
         src={LOGO_SRC}
         alt="KIET Group of Institutions logo"

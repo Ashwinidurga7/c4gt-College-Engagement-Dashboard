@@ -13,15 +13,15 @@ export function SidebarContent({ onNavigate }) {
 
   return (
     <div className="bg-nav flex h-full flex-col">
-      {/* In the drawer, leave room for the close button on the right */}
-      <div className={cn('border-nav-border flex items-center gap-3 border-b px-5 py-5', onNavigate && 'pr-14')}>
+      {/* Same height as the topbar so their bottom borders form one line. In the drawer, leave room for the close button. */}
+      <div className={cn('border-nav-border box-content flex h-16 shrink-0 items-center gap-3 border-b px-5', onNavigate && 'pr-14')}>
         <Link
           to={dashboardPath(user.role)}
           onClick={onNavigate}
           aria-label="Go to dashboard"
           className="focus-visible:outline-nav-strong rounded-md"
         >
-          <BrandLogo onDark className="text-xl" />
+          <BrandLogo onDark className="text-lg" />
         </Link>
         <span className="text-nav-muted ml-auto rounded-full border border-current px-2 py-0.5 text-[11px] font-semibold tracking-wide uppercase">
           {roleLabel(user.role)}

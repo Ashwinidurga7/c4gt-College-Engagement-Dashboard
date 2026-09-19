@@ -4,9 +4,32 @@ import { AppBreadcrumb } from '@/components/layout/AppBreadcrumb'
 import { MobileDrawer } from '@/components/layout/MobileDrawer'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
+import { cn } from '@/lib/utils'
+
+const SIDEBAR_KEY = 'kiet.sidebar'
+
+function readSidebarOpen() {
+  try {
+    return window.localStorage.getItem(SIDEBAR_KEY) !== 'closed'
+  } catch {
+    return true
+  }
+}
 
 export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  // Desktop only: the sidebar can be hidden to give pages the full width.
+  const [sidebarOpen, setSidebarOpen] = useState(readSidebarOpen)
+
+  function toggleSidebar() {
+    const next = !sidebarOpen
+    setSidebarOpen(next)
+    try {
+      window.localStorage.setItem(SIDEBAR_KEY, next ? 'open' : 'closed')
+    } catch {
+      // Not remembered in private mode; the toggle still works for this visit.
+    }
+  }
 
   return (
     <div className="bg-canvas min-h-dvh">
@@ -16,11 +39,11 @@ export function AppShell() {
       >
         Skip to main content
       </a>
-      <Sidebar />
+      <Sidebar open={sidebarOpen} />
       <MobileDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
 
-      <div className="flex min-h-dvh min-w-0 flex-col lg:pl-64">
-        <Topbar onOpenDrawer={() => setDrawerOpen(true)} />
+      <div className={cn('flex min-h-dvh min-w-0 flex-col', sidebarOpen && 'lg:pl-64')}>
+        <Topbar onOpenDrawer={() => setDrawerOpen(true)} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
         <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl min-w-0 flex-1 px-4 py-6 outline-none sm:px-6 lg:px-8">
           <AppBreadcrumb />
           <Outlet />

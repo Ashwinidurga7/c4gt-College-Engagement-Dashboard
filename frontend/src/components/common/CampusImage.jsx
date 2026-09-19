@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 const CAMPUS_SRC = '/campus.jpg'
 
-/** Campus photograph from /public/campus.jpg with a neutral placeholder until it is supplied. */
+/** Campus photograph from /public/campus.jpg with a neutral placeholder if it fails to load. */
 export function CampusImage({ className }) {
   const [failed, setFailed] = useState(false)
 
