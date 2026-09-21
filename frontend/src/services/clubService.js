@@ -11,7 +11,6 @@ function toClubPayload(values) {
     fullName: values.fullName.trim(),
     tagline: values.tagline.trim(),
     category: values.category,
-    college: values.college,
     coordinator: values.coordinator.trim(),
     email: values.email.trim(),
     founded: values.founded === '' ? null : Number(values.founded),

@@ -1,6 +1,5 @@
 import { ArrowRight, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { ClubLogo } from '@/features/clubs/ClubLogo'
 import { formatNumber } from '@/lib/formatters'
@@ -15,7 +14,6 @@ export function ClubCard({ club, to }) {
       </div>
       {club.tagline && <p className="text-body text-sm">{club.tagline}</p>}
       <div className="flex flex-wrap justify-center gap-1.5">
-        <CollegeBadge college={club.college} />
         {club.category && <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold">{club.category}</span>}
         {club.status !== 'active' && <StatusBadge status={club.status} />}
       </div>

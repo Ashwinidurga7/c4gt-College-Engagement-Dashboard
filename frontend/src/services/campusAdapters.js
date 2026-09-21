@@ -8,7 +8,6 @@ export function toClub(raw = {}) {
     fullName: pick(raw.fullName, raw.name),
     tagline: pick(raw.tagline, raw.motto),
     category: raw.category ?? null,
-    college: raw.college ?? null,
     status: String(status).toLowerCase(),
     membersCount: toNumber(pick(raw.membersCount, raw.memberCount, raw.members?.length)),
     founded: toNumber(raw.founded),

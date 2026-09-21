@@ -8,7 +8,6 @@ import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { clubDefaults, clubSchema } from '@/features/admin/clubSchema'
 import { useCreateClub, useUpdateClub } from '@/hooks/useAdmin'
 import { CLUB_CATEGORIES } from '@/lib/campus'
-import { COLLEGES } from '@/lib/colleges'
 import { fieldProps } from '@/lib/fieldProps'
 
 const inputClass = 'bg-card h-11'
@@ -65,7 +64,6 @@ export function ClubFormModal({ club, open, onOpenChange }) {
           <Input className={inputClass} {...fieldProps('club-tagline', errors.tagline)} {...register('tagline')} />
         </FormField>
         <Select id="club-category" label="Category" error={errors.category} options={CLUB_CATEGORIES} placeholder="Select category" registration={register('category')} />
-        <Select id="club-college" label="College" error={errors.college} options={COLLEGES} placeholder="Select college" registration={register('college')} />
         <FormField id="club-coordinator" label="Faculty coordinator" error={errors.coordinator?.message}>
           <Input className={inputClass} {...fieldProps('club-coordinator', errors.coordinator)} {...register('coordinator')} />
         </FormField>
