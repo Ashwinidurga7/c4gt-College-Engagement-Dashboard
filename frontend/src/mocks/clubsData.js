@@ -3,20 +3,59 @@ export const clubsData = [
   {
     _id: 'club-c4gt',
     name: 'C4GT',
-    fullName: 'Code for a Greater Tomorrow',
+    fullName: 'Code for Good Tech',
     tagline: 'Build · Innovate · Create',
     category: 'Technical',
+    logoUrl: '/clubs/c4gt.png',
     status: 'active',
     membersCount: 250,
     founded: 2022,
     coordinator: 'Mr. Ch. Ravi Kumar',
     president: 'P. Sai Teja',
     email: 'c4gt@kiet.edu',
+    website: 'https://www.codeforgovtech.in/',
     description:
-      'The coding and technology club of KIET, where innovation meets action. We bring together learners, developers and problem-solvers to build meaningful projects and work on real-world challenges.',
+      'The C4GT Hub at KIET is this campus’s chapter of Code for Good Tech, the open-source ecosystem initiative that connects student developers with organisations building Digital Public Goods. The programme is anchored by the Raj Reddy Center for Technology and Society at IIIT Hyderabad, which runs it on a hub-and-spoke model with partner colleges as regional spokes. KIET joined as a spoke in 2023 under a three-year longitudinal pilot, training students in AI and machine learning, full-stack development and open-source practice, and putting them on real-world problems.',
     focusAreas: ['Hackathons', 'Workshops', 'Projects', 'Tech Talks', 'Open Source', 'Community'],
-    stats: { projects: 12, workshops: 8, hackathons: 5 },
-    socials: { instagram: 'https://instagram.com/c4gt_kiet', linkedin: 'https://linkedin.com/company/c4gt-kiet' },
+    photos: [
+      { url: '/clubs/c4gt/team.jpg', caption: 'The C4GT Hub team with faculty at a campus ceremony' },
+      { url: '/clubs/c4gt/session-hall.jpg', caption: 'A member presenting to a full seminar hall' },
+      { url: '/clubs/c4gt/session-speaker.jpg', caption: 'A speaker addressing students at a club session' },
+      { url: '/clubs/c4gt/session-audience.jpg', caption: 'Members at a C4GT Hub session' },
+      { url: '/clubs/c4gt/seminar.jpg', caption: 'A seminar in progress on campus' },
+      { url: '/clubs/c4gt/certificates.jpg', caption: 'Members with their programme certificates' },
+      { url: '/clubs/c4gt/dpg-dialogues.jpg', caption: 'C4GT at DPG Dialogues, India International Centre, New Delhi' },
+      { url: '/clubs/c4gt/c4gt-feature.jpg', caption: 'Code for Good Tech featured by IIIT Hyderabad' },
+    ],
+    // Figures from IIIT Hyderabad's writeup of the three-year KIET pilot; confirm before publishing.
+    stats: { projects: 12, workshops: 8, hackathons: 5, placements: 60, internships: 38 },
+    highlights: [
+      {
+        id: 'dmp',
+        category: 'Programme',
+        title: 'Dedicated Mentoring Program (DMP)',
+        description:
+          'The flagship track. Selected contributors spend three months on an open-source Digital Public Good with one-to-one mentoring from a domain expert, and receive a stipend on completion.',
+      },
+      {
+        id: 'hubs',
+        category: 'Programme',
+        title: 'C4GT Hubs',
+        description:
+          'The college engagement pathway KIET takes part in, aimed at Tier-2 and Tier-3 engineering institutions and women’s colleges, with IIIT Hyderabad as the anchor hub.',
+      },
+      {
+        id: 'badal',
+        category: 'Programme',
+        title: 'C4GT Badal',
+        description: 'The community-sourcing platform that brings corporate teams into the same open-source projects.',
+      },
+    ],
+    socials: {
+      instagram: { url: 'https://instagram.com/c4gt_kiet', label: '@c4gt_kiet' },
+      linkedin: { url: 'https://linkedin.com/company/c4gt-kiet', label: 'C4GT - KIET' },
+      whatsapp: { url: 'https://whatsapp.com/channel/0029VadjV9a5K3zXVQlbLS1f', label: 'Follow the C4GT channel' },
+    },
   },
   {
     _id: 'club-gcc',
