@@ -1,248 +1,191 @@
-@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+/*
+ * KIET Portal design tokens.
+ * The only file in the app that may contain raw color values.
+ * Light palette on :root, dark palette on [data-theme="dark"].
+ */
 
-:root, [data-theme="light"] {
-  --font-sans: 'Maven Pro', Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-heading: 'Maven Pro', sans-serif;
-
-  /* Brand — sampled from the KIET Group of Institutions mark */
+:root {
+  /* Brand */
   --kiet-blue: #1b4594;
+  --kiet-navy: #0f2557;
   --kiet-red: #df2927;
 
-  /* Primary scale, built from --kiet-blue */
-  --navy: #12305f;
-  --navy-2: #1b4594;
-  --blue: #2456b5;
-  --blue-hover: #1b4594;
-  --blue-soft: #eaf0fb;
-
-  /* Neutrals — mint canvas + white cards, per the reference layout */
-  --bg: #dae8e9;
-  --paper: #dae8e9;
+  /* Surfaces */
+  --canvas: #f3f6fb;
   --surface: #ffffff;
-  --card-bg: #ffffff;
-  --white: #ffffff;
-  --surface-hover: #f3f9f9;
-  --line: #d9e6e7;
-  --border: #d9e6e7;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f1f5fa;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-input: #8391a8;
 
   /* Text */
-  --text: #10243f;
-  --text-primary: #10243f;
-  --ink: #10243f;
-  --muted: #5c7389;
+  --text-heading: #0f2557;
+  --text-body: #1e293b;
+  --text-muted: #55657a;
+  --text-link: #1d58c7;
+  --text-on-primary: #ffffff;
 
-  /* Semantic status */
-  --green: #0f7a5f;
-  --orange: #c07512;
-  --red: #df2927;
-  --purple: #5a4fa3;
-  --success: #0f7a5f;
-  --warning: #c07512;
-  --error: #df2927;
-  --info: #2456b5;
-  --success-soft: #e6f4f0;
-  --warning-soft: #fcf3e3;
-  --error-soft: #fdeceb;
+  /* Actions */
+  --action-primary: #1d58c7;
+  --action-primary-hover: #1b4594;
+  --focus-ring: #1d58c7;
 
-  --focus-ring: 0 0 0 3px rgba(36, 86, 181, .28);
+  /* Status */
+  --status-success: #16a34a;
+  --status-success-text: #137333;
+  --status-success-bg: #e8f7ee;
+  --status-warning: #d97706;
+  --status-warning-text: #b45309;
+  --status-warning-bg: #fdf3e2;
+  --status-danger: #df2927;
+  --status-danger-text: #c02120;
+  --status-danger-bg: #fdecec;
+  --status-info-text: #1d58c7;
+  --status-info-bg: #e9f0fc;
 
-  font-family: var(--font-sans);
-  color: var(--text);
-  background: var(--bg);
+  /* Tinted tiles (icon chips, role tiles) */
+  --tone-blue-bg: #e9f0fc;
+  --tone-blue-fg: #1d58c7;
+  --tone-green-bg: #e6f6ef;
+  --tone-green-fg: #137333;
+  --tone-purple-bg: #efeafd;
+  --tone-purple-fg: #6d3fd1;
+  --tone-orange-bg: #fdf0e3;
+  --tone-orange-fg: #b4500a;
+  --tone-teal-bg: #e3f5f4;
+  --tone-teal-fg: #0f766e;
+
+  /* Sidebar */
+  --sidebar-bg: #0f2557;
+  --sidebar-text: #dbe4f5;
+  --sidebar-text-strong: #ffffff;
+  --sidebar-text-muted: #93a4c7;
+  --sidebar-active-bg: #1d58c7;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: #183271;
+  --sidebar-border: #1c3570;
+
+  /* Login decoration (the two permitted gradients live on the login page) */
+  --curve-back: #bcd2f5;
+  --curve-front-start: #8fb2ef;
+  --curve-front-end: #3f76d6;
+  --login-glow: #e7effb;
+
+  /* Charts */
+  --chart-1: #1d58c7;
+  --chart-2: #16a34a;
+  --chart-3: #d97706;
+  --chart-4: #6d3fd1;
+  --chart-5: #0f766e;
+
+  /* Overlay */
+  --overlay: rgba(15, 23, 42, 0.45);
+
+  /* Unread-count pill: white text stays above 4.5:1 in both themes */
+  --count-badge-bg: #c02120;
+
+  /* The logo artwork needs a light backing on dark surfaces in both themes */
+  --logo-chip-bg: #ffffff;
+
+  /* Printed paper (resume thumbnail): white with dark ink in both themes, like the PDF */
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #c9ced6;
+  --paper-accent: #1b4594;
+
+  /* Shape and elevation */
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-raised: 0 8px 24px rgba(15, 37, 87, 0.1);
+
+  /* Type */
+  --font-brand: "Maven Pro", system-ui, sans-serif;
+
+  /* Motion */
+  --duration-fast: 150ms;
+
+  color-scheme: light;
 }
 
-[data-theme="dark"], body.dark-theme {
-  --font-sans: 'Maven Pro', Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-heading: 'Maven Pro', sans-serif;
+[data-theme="dark"] {
+  --kiet-blue: #7fa8f5;
+  --kiet-navy: #dbe6ff;
+  --kiet-red: #f26b69;
 
-  --kiet-blue: #6f9bea;
-  --kiet-red: #f2564f;
+  --canvas: #0b1220;
+  --surface: #121b2e;
+  --surface-raised: #17223a;
+  --surface-sunken: #0f1727;
+  --border-subtle: #22304b;
+  --border-strong: #334463;
+  --border-input: #5a6d90;
 
-  --navy: #eaf1fb;
-  --navy-2: #cddcf4;
-  --blue: #6f9bea;
-  --blue-hover: #8db1f0;
-  --blue-soft: #16243a;
+  --text-heading: #e3ebfd;
+  --text-body: #d6deeb;
+  --text-muted: #94a3b8;
+  --text-link: #8cb4ff;
+  --text-on-primary: #ffffff;
 
-  --bg: #0a1220;
-  --paper: #0a1220;
-  --surface: #111c2e;
-  --card-bg: #111c2e;
-  --white: #111c2e;
-  --surface-hover: #172539;
-  --line: #22334c;
-  --border: #22334c;
+  --action-primary: #2f63cf;
+  --action-primary-hover: #3b70dc;
+  --focus-ring: #8cb4ff;
 
-  --text: #e8eef7;
-  --text-primary: #ffffff;
-  --ink: #e8eef7;
-  --muted: #94a7bf;
+  --status-success: #34d399;
+  --status-success-text: #6ee7a8;
+  --status-success-bg: #0f2e22;
+  --status-warning: #f5a524;
+  --status-warning-text: #fbbf5a;
+  --status-warning-bg: #33250d;
+  --status-danger: #f26b69;
+  --status-danger-text: #fb8f8d;
+  --status-danger-bg: #3a1618;
+  --status-info-text: #8cb4ff;
+  --status-info-bg: #16284a;
 
-  --green: #34d399;
-  --orange: #fbbf24;
-  --red: #f2564f;
-  --purple: #a78bfa;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --error: #f2564f;
-  --info: #6f9bea;
-  --success-soft: #0f2a24;
-  --warning-soft: #2e2413;
-  --error-soft: #2e1616;
+  --tone-blue-bg: #16284a;
+  --tone-blue-fg: #8cb4ff;
+  --tone-green-bg: #0f2e22;
+  --tone-green-fg: #6ee7a8;
+  --tone-purple-bg: #251b45;
+  --tone-purple-fg: #b9a2f7;
+  --tone-orange-bg: #33220f;
+  --tone-orange-fg: #fbb26a;
+  --tone-teal-bg: #0e2d2c;
+  --tone-teal-fg: #5eead4;
 
-  --focus-ring: 0 0 0 3px rgba(111, 155, 234, .35);
+  --sidebar-bg: #0a1224;
+  --sidebar-text: #c9d4ea;
+  --sidebar-text-strong: #f4f7fd;
+  --sidebar-text-muted: #8190b0;
+  --sidebar-active-bg: #2f63cf;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: #152241;
+  --sidebar-border: #1a2742;
 
-  color: var(--text);
-  background: var(--bg);
+  --curve-back: #16284a;
+  --curve-front-start: #1d3a73;
+  --curve-front-end: #2f63cf;
+  --login-glow: #0f1a31;
+
+  --chart-1: #8cb4ff;
+  --chart-2: #34d399;
+  --chart-3: #f5a524;
+  --chart-4: #b9a2f7;
+  --chart-5: #5eead4;
+
+  --overlay: rgba(2, 6, 15, 0.7);
+  --count-badge-bg: #c7302e;
+
+  /* Paper stays paper in the dark theme */
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #c9ced6;
+  --paper-accent: #1b4594;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-raised: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
 }
-
-/* Inline icons replace the emoji glyphs these slots used to hold: keep them
-   optically centred on the text baseline and inheriting the text colour. */
-.icon{display:inline-block;vertical-align:-0.135em;flex:none;color:inherit}
-button .icon,a .icon,.tab-icon .icon,.field-icon .icon,.quick-emoji .icon,
-.partner-logo .icon,.acc-icon-badge .icon,.scope-pill-icon .icon{vertical-align:middle}
-:where(.tab-icon,.field-icon,.quick-emoji,.partner-logo,.scope-pill-icon,
-  .acc-icon-badge,.accordion-chevron,.achieve-bullet,.eph-icon,.cert-drop-icon)
-  {display:inline-flex;align-items:center;justify-content:center;line-height:0}
-*{box-sizing:border-box}
-html,body,#root{margin:0;min-height:100%;min-width:100%;background:var(--bg)}
-body{font-family:var(--font-sans);color:var(--text);-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4,h5,h6{font-family:var(--font-heading);font-weight:800;letter-spacing:-0.02em}
-.maven-black{font-family:var(--font-heading);font-weight:900;letter-spacing:-0.03em}
-a{text-decoration:none;color:inherit}
-button,input,textarea,select{font-family:var(--font-sans)}
-button{cursor:pointer}
-
-.app-shell{min-height:100vh;display:flex;background:var(--bg)}
-.sidebar{width:266px;flex:0 0 266px;min-height:100vh;background:linear-gradient(180deg,#12305f 0%,#1b4594 55%,#12305f 100%);color:#fff;padding:22px 16px 18px;display:flex;flex-direction:column;position:sticky;top:0;align-self:flex-start;overflow:auto;box-shadow:8px 0 30px rgba(11,36,72,.08);z-index:20}
-.sidebar-brand{display:flex;align-items:center;gap:12px;padding:6px 8px 20px}
-.sidebar-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#3d7bf4,#174cb8);display:grid;place-items:center;font-family:'Maven Pro', sans-serif;font-weight:800;font-size:19px;box-shadow:0 10px 22px rgba(0,0,0,.18)}
-.sidebar-brand-title{font-family:'Maven Pro', sans-serif;font-size:18px;font-weight:800;letter-spacing:.2px}.sidebar-brand-subtitle{font-size:11px;color:#b9cae5;margin-top:3px}
-.sidebar-divider{height:1px;background:rgba(255,255,255,.11);margin:0 8px 18px}
-.sidebar-nav{display:flex;flex-direction:column;gap:20px}.sidebar-section-title{padding:0 11px;margin:0 0 8px;color:#90a9ca;font-size:10px;letter-spacing:1.5px;font-weight:800}.sidebar-section-items{display:grid;gap:5px}
-.sidebar-link{min-height:43px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:11px;color:#d9e4f2;font-size:13px;font-weight:600;transition:.18s ease}.sidebar-link:hover{background:rgba(255,255,255,.08);color:#fff}.sidebar-link.active{background:linear-gradient(90deg,rgba(71,126,238,.28),rgba(71,126,238,.12));color:#fff;box-shadow:inset 3px 0 0 #6ea0ff}.sidebar-link-icon{width:20px;height:20px;display:grid;place-items:center;color:#9cb5d7}.sidebar-link.active .sidebar-link-icon{color:#fff}.sidebar-link-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.sidebar-section-items + .sidebar-section-title{margin-top:6px}.sidebar-bottom{margin-top:auto;padding:24px 4px 0}.sidebar-campus-card{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.06);padding:14px;border-radius:14px}.sidebar-campus-label{font-size:10px;font-weight:800;letter-spacing:1px;color:#9fc0ee}.sidebar-campus-text{font-size:11px;color:#c8d7ea;line-height:1.55;margin-top:6px}
-
-.app-content{min-width:0;flex:1;display:flex;flex-direction:column}.app-content>header{height:70px;flex:0 0 70px;background:rgba(255,255,255,.9)!important;border-bottom:1px solid var(--line)!important;padding:0 28px!important;box-shadow:0 1px 0 rgba(15,35,65,.02);backdrop-filter:blur(10px)}.app-content>header>div:first-child{font-family:'Maven Pro', sans-serif!important;font-size:16px!important;color:var(--navy)!important}.app-content>header>div:last-child{gap:14px!important}.app-content>header button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-weight:700;color:var(--navy);box-shadow:0 3px 8px rgba(15,35,65,.04)}
-.app-page{flex:1;min-width:0;padding:26px 30px 42px}.app-page-inner{width:100%;max-width:1500px;margin:0 auto}
-
-.student-dashboard{display:grid;gap:22px;padding-bottom:20px}.welcome-card{display:grid;grid-template-columns:1.25fr .75fr;min-height:285px;background:linear-gradient(135deg,#0b2751 0%,#123a73 58%,#1e5ac5 100%);border-radius:24px;overflow:hidden;position:relative;box-shadow:0 22px 45px rgba(13,46,94,.16)}.welcome-copy{padding:36px 38px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.65px;color:#bcd5ff;margin-bottom:12px}.welcome-copy h1{margin:0;font:800 34px/1.18 'Maven Pro', sans-serif;color:#fff;max-width:760px}.welcome-copy h1 span{color:#83b0ff}.welcome-copy p{margin:12px 0 22px;color:#d8e4f5;font-size:14px;max-width:600px}.welcome-actions{display:flex;gap:10px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:11px;font-weight:700;font-size:12px;transition:.18s}.button-primary{background:#fff;color:#12386e}.button-primary:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(0,0,0,.14)}.button-light{color:#fff;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.08)}.welcome-visual{position:relative;min-height:285px;overflow:hidden}.welcome-visual img{width:100%;height:100%;object-fit:cover;display:block}.visual-overlay{position:absolute;inset:0;background:linear-gradient(90deg,#0b2751 0%,rgba(11,39,81,.45) 35%,rgba(11,39,81,.05) 100%)}.visual-badge{position:absolute;right:20px;bottom:18px;background:rgba(5,20,43,.62);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);color:#fff;padding:8px 11px;border-radius:10px;font-size:9px;font-weight:800;letter-spacing:1px}.dot{display:inline-block;width:7px;height:7px;background:#6ee7b7;border-radius:50%;margin-right:7px}
-
-.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.stat-card{min-height:108px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px 17px 15px;position:relative;display:flex;gap:13px;align-items:center;overflow:hidden;box-shadow:0 6px 20px rgba(15,35,65,.05)}.stat-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex:0 0 44px}.stat-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.stat-info{display:flex;flex-direction:column;gap:6px}.stat-info span{font-size:11px;color:var(--muted);font-weight:700}.stat-info strong{font:800 25px/1 'Maven Pro', sans-serif;color:var(--navy)}.stat-accent{position:absolute;left:0;bottom:0;height:3px;width:100%}.stat-card.blue .stat-icon{background:#edf3ff;color:#2a63d9}.stat-card.blue .stat-accent{background:#2a63d9}.stat-card.green .stat-icon{background:#e9f9f4;color:#0d9b7c}.stat-card.green .stat-accent{background:#0d9b7c}.stat-card.purple .stat-icon{background:#f1edff;color:#7356d8}.stat-card.purple .stat-accent{background:#7356d8}.stat-card.orange .stat-icon{background:#fff4df;color:#ea9b20}.stat-card.orange .stat-accent{background:#ea9b20}
-
-.dashboard-grid.two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.surface-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 7px 24px rgba(15,35,65,.045)}.section-block{display:grid;gap:14px}.section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.section-heading h2{margin:0;font:800 18px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.section-heading p{margin:5px 0 0;font-size:12px;color:var(--muted)}.section-action{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-size:11px;font-weight:800;padding-top:2px}.ui-icon{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.updates-list{margin-top:18px;display:grid;gap:2px}.update-row{display:flex;align-items:center;gap:12px;padding:13px 6px;border-bottom:1px solid #eef2f7}.update-row:last-child{border-bottom:0}.update-icon{width:35px;height:35px;border-radius:10px;background:#f3f6fb;display:grid;place-items:center;flex:0 0 35px;font-size:16px}.update-body{flex:1;min-width:0;display:grid;gap:4px}.update-body strong{font-size:12px;color:#223655;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.update-body span{font-size:10px;color:#8795ab;font-weight:700}.update-time{font-size:10px;color:#9aa6b7;font-weight:700}
-.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.quick-action{display:flex;align-items:center;gap:10px;border:1px solid #e7edf5;background:#f9fbfe;padding:13px 12px;border-radius:12px;font-size:12px;font-weight:800;color:#223655;transition:.18s}.quick-action:hover{transform:translateY(-1px);border-color:#cbdaf0;background:#fff}.quick-emoji{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:#fff;border:1px solid #e7edf5}.quick-arrow{margin-left:auto;color:#6d7d95;display:grid;place-items:center}
-
-.image-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.image-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0;box-shadow:0 7px 24px rgba(15,35,65,.05);transition:.2s}.image-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(15,35,65,.11);border-color:#cfdcf0}.image-card-media{height:152px;position:relative;background:#dbe7f8}.image-card-media img{width:100%;height:100%;display:block;object-fit:cover}.image-card-shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(8,27,53,.45) 100%)}.image-card-content{padding:15px}.image-card-content>span:first-child{font-size:9px;font-weight:800;letter-spacing:1.1px;color:#5e81b8}.image-card-content h3{margin:6px 0 6px;font:800 17px 'Maven Pro',sans-serif;color:var(--navy)}.image-card-content p{margin:0;min-height:48px;font-size:11px;line-height:1.55;color:var(--muted)}.card-link{margin-top:14px;display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-size:11px;font-weight:800}.card-link .ui-icon{width:13px;height:13px}
-
-.event-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.event-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 7px 24px rgba(15,35,65,.05);transition:.2s}.event-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,35,65,.1)}.event-media{height:150px;position:relative}.event-media img{width:100%;height:100%;object-fit:cover;display:block}.event-date-badge{position:absolute;left:12px;bottom:12px;background:rgba(8,29,56,.82);color:#fff;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:800;backdrop-filter:blur(6px)}.event-content{padding:14px}.chip{display:inline-flex;align-items:center;min-height:22px;padding:0 8px;border-radius:999px;background:#edf3ff;color:#2458d3;font-size:9px;font-weight:800}.event-content h3{margin:8px 0 4px;font:800 16px 'Maven Pro',sans-serif;color:var(--navy)}.event-content p{margin:0;color:var(--muted);font-size:11px}.text-link{margin-top:12px;display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-size:11px;font-weight:800}
-
-.chart-wrap{height:250px;margin-top:10px}.chart-wide-card{padding-bottom:16px}.chart-wide{height:260px;margin-top:8px}.engagement-card{padding-bottom:18px}.engagement-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.engagement-score{display:flex;align-items:baseline;gap:3px;color:#94a0b2}.engagement-score strong{font:800 28px 'Maven Pro',sans-serif;color:var(--blue)}.engagement-score span{font-size:12px;font-weight:700}.engagement-progress{height:8px;background:#edf2f8;border-radius:999px;overflow:hidden;margin:15px 0 16px}.engagement-progress span{display:block;height:100%;background:linear-gradient(90deg,#2458d3,#5e88ed);border-radius:999px}.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.summary-card{padding:13px;border:1px solid #e8eef6;background:#fbfcfe;border-radius:12px}.summary-card span{display:block;color:var(--muted);font-size:10px;font-weight:700}.summary-card strong{display:block;margin-top:5px;color:var(--navy);font:800 20px 'Maven Pro',sans-serif}
-
-@media (max-width:1200px){.sidebar{width:240px;flex-basis:240px}.image-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.welcome-card{grid-template-columns:1fr}.welcome-visual{min-height:180px}.visual-overlay{background:linear-gradient(180deg,rgba(11,39,81,.05),rgba(11,39,81,.45))}.welcome-copy{padding-bottom:22px}.event-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:860px){.sidebar{display:none}.app-page{padding:18px 14px 30px}.dashboard-grid.two-col{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.image-card-grid{grid-template-columns:1fr}.event-grid{grid-template-columns:1fr}.welcome-copy h1{font-size:28px}.app-content>header{padding:0 16px!important}.app-content>header>div:first-child{font-size:14px!important}}
-@media (max-width:560px){.stat-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.welcome-copy{padding:26px 22px}.welcome-copy h1{font-size:25px}.surface-card{padding:16px}.section-heading h2{font-size:16px}.welcome-visual{min-height:155px}}
-
-/* Campus pages */
-.campus-page{display:grid;gap:24px;padding-bottom:28px}.campus-hero{min-height:320px;border-radius:24px;position:relative;overflow:hidden;background:#0b2448;box-shadow:0 20px 45px rgba(13,46,94,.14)}.campus-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.campus-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,25,52,.94) 0%,rgba(7,34,71,.76) 46%,rgba(9,43,87,.22) 100%)}.campus-hero-content{position:relative;z-index:1;max-width:720px;padding:48px 52px;color:#fff}.campus-pill{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);border-radius:999px;font-size:10px;font-weight:800;letter-spacing:1.5px}.campus-hero h1{margin:18px 0 10px;font:800 42px/1.08 'Maven Pro',sans-serif;letter-spacing:-.7px}.campus-hero p{margin:0;max-width:620px;color:#d7e3f5;font-size:14px;line-height:1.7}.campus-hero-meta{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);font-size:11px;font-weight:700}.campus-live-dot{width:7px;height:7px;border-radius:50%;background:#67e8b0;box-shadow:0 0 0 4px rgba(103,232,176,.12)}.campus-content-header{display:flex;align-items:end;justify-content:space-between;gap:20px}.campus-kicker{font-size:10px;font-weight:800;letter-spacing:1.6px;color:#5273a4}.campus-content-header h2{margin:6px 0 5px;font:800 24px/1.15 'Maven Pro',sans-serif;color:var(--navy)}.campus-content-header p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.campus-filter{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;color:var(--navy);font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 12px rgba(15,35,65,.04)}.campus-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.campus-card-grid.four-up{grid-template-columns:repeat(4,minmax(0,1fr))}.campus-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 25px rgba(15,35,65,.05);transition:.2s ease}.campus-card:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(15,35,65,.12)}.campus-card-media{height:190px;position:relative;background:#dfe8f3;overflow:hidden}.campus-card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}.campus-card:hover .campus-card-media img{transform:scale(1.045)}.campus-card-category{position:absolute;top:12px;left:12px;padding:6px 9px;border-radius:999px;background:rgba(7,31,63,.86);color:#fff;font-size:9px;font-weight:800;letter-spacing:.4px;backdrop-filter:blur(7px)}.campus-date{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.93);color:var(--navy);font-size:9px;font-weight:800}.campus-date svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8}.campus-card-body{padding:17px}.campus-card-body h3{margin:0 0 7px;font:800 17px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.campus-card-body p{margin:0;color:var(--muted);font-size:11px;line-height:1.65;min-height:54px}.campus-view-button{margin-top:15px;display:inline-flex;align-items:center;gap:7px;padding:0;border:0;background:none;color:var(--blue);font-size:11px;font-weight:800}.campus-view-button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}.campus-view-button:hover svg{transform:translateX(3px)}.campus-bottom-banner{display:grid;grid-template-columns:1fr 360px;min-height:180px;overflow:hidden;border-radius:18px;background:linear-gradient(135deg,#edf4ff,#f8fbff);border:1px solid #dce7f7}.campus-bottom-banner>div{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}.campus-bottom-banner h3{margin:5px 0 7px;font:800 24px 'Maven Pro',sans-serif;color:var(--navy)}.campus-bottom-banner p{margin:0;max-width:600px;color:var(--muted);font-size:12px;line-height:1.6}.campus-bottom-banner img{width:100%;height:100%;min-height:180px;object-fit:cover;display:block}
-@media (max-width:1200px){.campus-card-grid.four-up{grid-template-columns:repeat(2,minmax(0,1fr))}.campus-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.campus-bottom-banner{grid-template-columns:1fr 300px}}
-@media (max-width:860px){.campus-hero{min-height:300px}.campus-hero-content{padding:36px 28px}.campus-hero h1{font-size:34px}.campus-card-grid,.campus-card-grid.four-up{grid-template-columns:1fr}.campus-content-header{align-items:flex-start;flex-direction:column}.campus-bottom-banner{grid-template-columns:1fr}.campus-bottom-banner img{min-height:160px}}
-@media (max-width:560px){.campus-hero h1{font-size:29px}.campus-hero p{font-size:13px}.campus-card-media{height:200px}}
-
-
-/* Campus UI v2 */
-.campus-page-v2{gap:22px}.campus-hero-v2{min-height:360px;border-radius:26px}.campus-hero-v2 .campus-hero-overlay{background:linear-gradient(90deg,rgba(5,24,49,.96) 0%,rgba(8,40,82,.70) 52%,rgba(6,28,57,.10) 100%)}.campus-hero-glow{position:absolute;inset:auto -10% -55% 40%;height:240px;background:radial-gradient(circle,rgba(61,139,255,.26),transparent 65%);pointer-events:none}.campus-hero-v2 .campus-hero-content{padding:54px 56px}.campus-hero-v2 .campus-pill{font-size:9px;letter-spacing:1.7px}.campus-hero-v2 h1{font-size:48px;max-width:720px}.campus-hero-v2 p{font-size:14px;max-width:660px}.campus-hero-v2 .campus-hero-meta{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16)}.campus-hero-meta i{width:8px;height:8px;border-radius:50%;background:#61e5a5;box-shadow:0 0 0 5px rgba(97,229,165,.13);display:inline-block}.campus-hero-brand{position:absolute;right:26px;bottom:22px;z-index:2;display:flex;align-items:baseline;gap:7px;color:#fff;letter-spacing:1px}.campus-hero-brand b{font:900 28px/1 'Maven Pro',sans-serif}.campus-hero-brand span{font-size:9px;font-weight:800;opacity:.72}.campus-content-header-v2{padding:2px 2px}.campus-content-header-v2 h2{font-size:27px}.campus-count{display:flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 20px rgba(15,35,65,.05)}.campus-count strong{font:900 24px/1 'Maven Pro',sans-serif;color:var(--navy)}.campus-count span{font-size:8px;line-height:1.25;font-weight:800;letter-spacing:1.1px;color:#7990ae}.campus-card-grid-v2{gap:20px}.campus-card-grid-v2.four-up{grid-template-columns:repeat(4,minmax(0,1fr))}.campus-card-v2{border-radius:20px;box-shadow:0 12px 30px rgba(15,35,65,.07)}.campus-card-v2:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(15,35,65,.13)}.campus-card-v2 .campus-card-media{height:210px}.campus-card-v2 .campus-card-media img{filter:saturate(1.03) contrast(1.02)}.campus-media-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,18,39,.08),rgba(4,22,43,.62))}.campus-card-year{position:absolute;right:12px;top:12px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.93);font-size:9px;font-weight:900;color:var(--navy);letter-spacing:.5px}.campus-card-v2 .campus-card-category{background:rgba(5,28,58,.88);font-size:8px;letter-spacing:1px}.campus-card-v2 .campus-card-body{padding:19px 18px 18px}.campus-card-line{width:28px;height:3px;border-radius:9px;background:#2b65c9;margin-bottom:11px}.campus-card-v2 .campus-card-body h3{font-size:18px}.campus-card-v2 .campus-card-body p{min-height:58px;font-size:11.5px}.campus-card-v2 .campus-view-button{margin-top:16px}.campus-bottom-banner-v2{border-radius:20px;min-height:205px}.campus-bottom-banner-v2>div:first-child{padding:34px}.campus-bottom-banner-v2 h3{font-size:27px}.campus-banner-image{position:relative;padding:0!important;overflow:hidden}.campus-banner-image img{height:100%;width:100%;object-fit:cover}.campus-banner-image:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,31,62,.2),rgba(7,31,62,.02))}.campus-banner-image span{position:absolute;z-index:2;right:16px;bottom:14px;color:#fff;font-size:8px;font-weight:900;letter-spacing:1.4px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
-@media (max-width:1200px){.campus-card-grid-v2.four-up{grid-template-columns:repeat(2,minmax(0,1fr))}.campus-hero-v2 h1{font-size:42px}}
-@media (max-width:860px){.campus-hero-v2{min-height:320px}.campus-hero-v2 .campus-hero-content{padding:38px 28px}.campus-hero-v2 h1{font-size:34px}.campus-count{display:none}.campus-bottom-banner-v2{grid-template-columns:1fr}.campus-banner-image{min-height:180px}}
-
-/* Student My Space UI — shared visual language with KIET Engage pages */
-.student-space-page{display:grid;gap:22px;padding-bottom:28px}
-.space-hero{min-height:330px;border-radius:26px;overflow:hidden;display:grid;grid-template-columns:1.25fr .75fr;background:linear-gradient(135deg,#08244a,#123e78 65%,#2458d3);box-shadow:0 20px 45px rgba(13,46,94,.14)}
-.space-hero-copy{padding:48px 50px;display:flex;flex-direction:column;justify-content:center;color:#fff}
-.space-eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:900;color:#b9d4fa}
-.space-hero h1{margin:16px 0 10px;font:900 46px/1.08 'Maven Pro',sans-serif;letter-spacing:-.8px}
-.space-hero p{margin:0;max-width:650px;font-size:14px;line-height:1.75;color:#d7e5f7}
-.space-hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}.space-hero-tags span{padding:8px 11px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);border-radius:999px;font-size:9px;font-weight:800;letter-spacing:.5px}
-.space-hero-image{position:relative;min-height:330px;overflow:hidden}.space-hero-image img{width:100%;height:100%;object-fit:cover;display:block}.space-hero-image-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,32,67,.85) 0%,rgba(7,32,67,.18) 70%)}.space-hero-image>span{position:absolute;right:18px;bottom:17px;z-index:2;color:#fff;font-size:8px;letter-spacing:1.2px;font-weight:900;background:rgba(4,20,43,.55);border:1px solid rgba(255,255,255,.13);padding:8px 10px;border-radius:9px}
-.space-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.space-stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 18px 16px;box-shadow:0 8px 22px rgba(15,35,65,.045);position:relative;overflow:hidden}.space-stat:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#2458d3,#6e9bff)}.space-stat span{display:block;font-size:10px;font-weight:800;letter-spacing:.45px;color:#6f8099}.space-stat strong{display:block;margin-top:8px;font:900 28px/1 'Maven Pro',sans-serif;color:var(--navy)}.space-stat small{display:block;margin-top:7px;color:#8b99ad;font-size:9.5px;line-height:1.45}
-.space-section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:2px 2px}.space-kicker{font-size:9px;color:#5578aa;font-weight:900;letter-spacing:1.7px}.space-section-head h2{margin:6px 0 5px;font:900 25px/1.15 'Maven Pro',sans-serif;color:var(--navy)}.space-section-head p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}.space-primary-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 14px;background:#2458d3;color:#fff;border-radius:11px;font-size:11px;font-weight:800;box-shadow:0 7px 16px rgba(36,88,211,.18)}
-.activity-toolbar{display:flex;gap:7px;padding:5px;background:#eef3fa;border-radius:13px;width:max-content}.activity-filter{border:0;background:transparent;color:#667992;padding:9px 13px;border-radius:9px;font-size:10px;font-weight:800}.activity-filter.active{background:#fff;color:#173b6e;box-shadow:0 5px 14px rgba(15,35,65,.07)}
-.activity-list-v2{display:grid;gap:12px}.activity-row-v2{display:grid;grid-template-columns:120px 1fr auto;gap:17px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:11px;box-shadow:0 8px 23px rgba(15,35,65,.045);transition:.2s}.activity-row-v2:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(15,35,65,.09)}.activity-row-media{height:112px;border-radius:13px;overflow:hidden;background:#e7eef8}.activity-row-media img{width:100%;height:100%;object-fit:cover}.activity-row-main{min-width:0}.activity-row-top{display:flex;align-items:center;gap:9px;justify-content:space-between}.activity-category{font-size:9px;letter-spacing:1px;font-weight:900;color:#6481aa}.activity-row-main h3{margin:7px 0 6px;font:900 18px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.activity-row-main p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.55}.activity-row-action a{display:inline-flex;align-items:center;gap:7px;color:#2458d3;font-size:10px;font-weight:900;padding:9px 8px;white-space:nowrap}.activity-row-action a span{font-size:14px}.empty-state-v2{padding:34px;background:#fff;border:1px dashed #ced9e8;border-radius:17px;text-align:center;display:grid;gap:6px}.empty-state-v2 strong{font:800 16px 'Maven Pro',sans-serif;color:var(--navy)}.empty-state-v2 span{font-size:10.5px;color:var(--muted)}
-.space-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.space-info-card{display:grid;grid-template-columns:135px 1fr;min-height:150px;overflow:hidden;border-radius:18px;border:1px solid var(--line);background:#fff;box-shadow:0 8px 22px rgba(15,35,65,.045)}.space-info-card img{width:100%;height:100%;min-height:150px;object-fit:cover}.space-info-card>div{padding:20px}.space-info-card span{font-size:8px;font-weight:900;letter-spacing:1.4px;color:#5279ac}.space-info-card h3{margin:8px 0 7px;font:900 17px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.space-info-card p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.6}.space-info-card.dark{background:linear-gradient(135deg,#0a264d,#123964);border-color:rgba(255,255,255,.05)}.space-info-card.dark span{color:#9cc1f2}.space-info-card.dark h3,.space-info-card.dark p{color:#fff}.space-info-card.dark p{color:#cedcf0}
-.achievement-grid-v2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.achievement-card-v2{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 23px rgba(15,35,65,.045);transition:.2s}.achievement-card-v2:hover{transform:translateY(-3px);box-shadow:0 16px 31px rgba(15,35,65,.10)}.achievement-card-image{height:190px;position:relative;overflow:hidden}.achievement-card-image img{width:100%;height:100%;object-fit:cover}.achievement-card-image span{position:absolute;top:12px;right:12px;padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.94);font-size:8px;font-weight:900;color:#0d9b7c;letter-spacing:1px}.achievement-card-body{padding:16px}.achievement-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}.achievement-meta>span{font-size:8.5px;letter-spacing:1px;font-weight:900;color:#6480a5}.achievement-card-body h3{margin:9px 0 6px;font:900 18px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.achievement-card-body p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.6}
-.c4gt-feature-card{display:grid;grid-template-columns:1.2fr .8fr;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#0b2a54,#163f79);box-shadow:0 16px 34px rgba(10,37,75,.13)}.c4gt-feature-main{padding:30px 32px;color:#fff}.c4gt-feature-main h2{margin:7px 0 9px;font:900 25px/1.18 'Maven Pro',sans-serif;max-width:700px}.c4gt-feature-main p{margin:0;max-width:700px;color:#d2e0f2;font-size:11px;line-height:1.7}.c4gt-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.c4gt-metrics div{padding:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px}.c4gt-metrics strong{display:block;font:900 22px/1 'Maven Pro',sans-serif}.c4gt-metrics span{display:block;margin-top:5px;font-size:8.5px;color:#b9cae5}.c4gt-feature-visual{display:grid;grid-template-columns:1fr 1fr;min-height:250px}.c4gt-feature-visual img{width:100%;height:100%;min-height:250px;object-fit:cover}
-
-.cert-upload-form{padding:22px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fbfdff 0%,#f6f9fc 100%);box-shadow:0 10px 24px rgba(15,35,65,.05)}
-.cert-form-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:12px}.cert-field{margin-top:12px}.cert-form-grid .cert-field{margin-top:0}.cert-field-wide{min-width:0}.cert-field label{display:block;margin-bottom:6px;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--navy)}.cert-field label span{font-weight:500;color:var(--muted);letter-spacing:0}.cert-field input:not([type=file]){width:100%;height:44px;padding:0 13px;border:1px solid #d8e2ee;border-radius:11px;background:#fff;color:var(--navy);font:500 13px 'Maven Pro',sans-serif;outline:none;box-sizing:border-box}.cert-field input:not([type=file]):focus{border-color:#7aa6de;box-shadow:0 0 0 3px rgba(92,143,210,.12)}.cert-dropzone{position:relative;display:flex;align-items:center;gap:12px;min-height:78px;padding:12px 14px;border:1.5px dashed #b9c9dd;border-radius:13px;background:#fff;cursor:pointer;box-sizing:border-box}.cert-dropzone input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.cert-dropzone strong{display:block;font-size:12.5px;color:var(--navy)}.cert-dropzone small{display:block;margin-top:3px;color:var(--muted);font-size:10.5px}.cert-drop-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#eaf2ff;color:#3869ad;font-size:20px;font-weight:800}.cert-file-preview{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;border:1px solid #dfe7ef;border-radius:11px;background:#fff}.cert-file-preview img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #e4eaf1}.cert-pdf-badge{display:grid;place-items:center;width:48px;height:48px;border-radius:8px;background:#f4e8e6;color:#9c4a3c;font-weight:900;font-size:12px}.cert-file-preview strong{display:block;font-size:11.5px;color:var(--navy);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cert-file-preview span{display:block;margin-top:2px;color:#5b7b9e;font-size:10.5px}.cert-form-error{margin-top:8px;color:#9c4a3c;font-size:11px;font-weight:700}.cert-form-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:13px;border-top:1px solid #e3eaf2}.cert-form-footer>span{font-size:10.5px;color:var(--muted)}.cert-submit{min-width:180px;padding:11px 16px;border-radius:10px}
-.certification-panel{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start;padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 8px 23px rgba(15,35,65,.045)}.certification-panel h3{margin:7px 0 6px;font:900 19px 'Maven Pro',sans-serif;color:var(--navy)}.certification-panel p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.6}
-.analytics-grid-v2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.analytics-card-v2{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 23px rgba(15,35,65,.045)}.analytics-card-v2.wide{min-height:340px}.analytics-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.analytics-head span{font-size:8px;font-weight:900;letter-spacing:1.5px;color:#6381a9}.analytics-head h3{margin:6px 0 0;font:900 17px 'Maven Pro',sans-serif;color:var(--navy)}.analytics-head>strong{font:900 14px 'Maven Pro',sans-serif;color:#2458d3}.chart-box{height:275px;margin-top:9px}.chart-box.compact{display:flex;flex-direction:column;align-items:center;justify-content:center;height:270px}.donut-legend{display:flex;gap:16px;font-size:9px;color:#6e7f97;font-weight:800}.donut-legend span{display:inline-flex;align-items:center;gap:6px}.donut-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
-.analytics-story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.analytics-story{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 23px rgba(15,35,65,.045)}.analytics-story img{width:100%;height:165px;object-fit:cover;display:block}.analytics-story>div{padding:16px}.analytics-story span{font-size:8px;font-weight:900;letter-spacing:1.4px;color:#5c7da7}.analytics-story h3{margin:8px 0 6px;font:900 16px/1.2 'Maven Pro',sans-serif;color:var(--navy)}.analytics-story p{margin:0;color:var(--muted);font-size:10px;line-height:1.6}
-@media (max-width:1200px){.space-hero{grid-template-columns:1fr}.space-hero-image{min-height:210px}.space-stat-grid{grid-template-columns:repeat(2,1fr)}.achievement-grid-v2{grid-template-columns:repeat(2,1fr)}.analytics-grid-v2{grid-template-columns:1fr}.analytics-story-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:860px){.cert-form-grid{grid-template-columns:1fr}.cert-form-footer{align-items:stretch;flex-direction:column}.cert-submit{width:100%}.space-hero-copy{padding:38px 28px}.space-hero h1{font-size:36px}.space-hero-image{min-height:190px}.space-section-head{align-items:flex-start;flex-direction:column}.activity-row-v2{grid-template-columns:90px 1fr}.activity-row-action{grid-column:2}.activity-row-media{height:88px}.space-info-grid,.achievement-grid-v2,.analytics-story-grid{grid-template-columns:1fr}.c4gt-feature-card{grid-template-columns:1fr}.c4gt-feature-visual{min-height:200px}.c4gt-feature-visual img{min-height:200px}.certification-panel{grid-template-columns:1fr}.analytics-card-v2{padding:15px}}
-@media (max-width:560px){.space-stat-grid{grid-template-columns:1fr}.space-hero h1{font-size:31px}.space-hero p{font-size:13px}.space-info-card{grid-template-columns:1fr}.space-info-card img{height:180px}.activity-toolbar{width:100%}.activity-filter{flex:1}.c4gt-metrics{grid-template-columns:1fr}.chart-box{height:230px}}
-
-/* C4GT v2 additions — kept additive so the existing project remains intact. */
-.page-hero,.portfolio-hero{background:linear-gradient(135deg,#0b2448,#174d91);border-radius:24px;overflow:hidden;color:#fff;display:grid;grid-template-columns:1fr 330px;min-height:220px;box-shadow:0 20px 50px rgba(11,36,72,.16)}
-.page-hero>div,.portfolio-hero>div{padding:34px}.page-hero h1,.portfolio-hero h1{font:800 34px/1.12 'Maven Pro',sans-serif;margin:8px 0}.page-hero p,.portfolio-hero p{color:#cfe0f6;margin:10px 0 0;font-size:13px}.portfolio-hero img{width:100%;height:100%;min-height:220px;object-fit:cover}.attendance-hero{grid-template-columns:1fr 190px;align-items:center;padding-right:28px}.attendance-ring{width:132px;height:132px;border-radius:50%;border:9px solid rgba(255,255,255,.18);outline:2px solid rgba(255,255,255,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:auto}.attendance-ring strong{font:800 30px 'Maven Pro'}.attendance-ring span{font-size:10px;color:#cfe0f6}.live-pill{font-size:10px;font-weight:800;color:#0b9b7c;background:#e8fbf5;border-radius:999px;padding:7px 10px}.attendance-table{margin-top:18px;display:grid;gap:4px}.attendance-row{display:grid;grid-template-columns:240px 1fr 60px;gap:16px;align-items:center;padding:15px 0;border-top:1px solid #edf1f7}.attendance-row div:first-child{display:grid;gap:4px}.attendance-row span{font-size:10px;color:var(--muted)}.attendance-row b{text-align:right}.progress-track{height:9px;border-radius:99px;background:#edf2f8;overflow:hidden}.progress-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2458d3,#48a3ff)}.page-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}.page-title-row h1{margin:5px 0;font:800 30px 'Maven Pro';color:var(--navy)}.page-title-row p{margin:0;color:var(--muted);font-size:12px}.dark-eyebrow{color:#5e81b8}.resume-save{background:var(--navy);color:#fff;border:0}.resume-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}.resume-form h2{margin:0 0 18px;font:800 18px 'Maven Pro';color:var(--navy)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.form-grid label{display:grid;gap:6px;font-size:10px;font-weight:800;color:#52627a}.form-grid label.full{grid-column:1/-1}.form-grid input,.form-grid textarea,.attendance-toolbar input,.attendance-toolbar select,.fa-row input{width:100%;border:1px solid #dce5f1;border-radius:10px;padding:11px 12px;outline:none;background:#fbfcfe}.form-grid input:focus,.form-grid textarea:focus{border-color:#6e9df2;box-shadow:0 0 0 3px #eaf1ff}.resume-preview{background:#dfe6ef;padding:20px;border-radius:18px}.resume-paper{background:#fff;min-height:720px;padding:28px;box-shadow:0 14px 35px rgba(20,39,67,.12)}.resume-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #173e72;padding-bottom:13px}.resume-head h2{margin:0;font:800 25px 'Maven Pro';color:#102e56}.resume-head p{margin:5px 0 0;color:#66758b;font-size:11px}.resume-logo{font:900 20px 'Maven Pro';color:#173e72}.resume-contact{font-size:9px;color:#6a7890;padding:9px 0 4px}.resume-section{margin-top:15px}.resume-section h3{margin:0 0 5px;font:800 11px 'Maven Pro';color:#173e72;text-transform:uppercase;letter-spacing:1px}.resume-section p{margin:0;white-space:pre-line;font-size:10px;line-height:1.65;color:#48566b}.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.portfolio-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(15,35,65,.05);transition:.2s}.portfolio-card:hover{transform:translateY(-4px);border-color:#c9d9ee;box-shadow:0 15px 35px rgba(15,35,65,.1)}.portfolio-icon{width:44px;height:44px;border-radius:13px;background:#eef4ff;display:grid;place-items:center;font-size:20px}.portfolio-card h3{margin:14px 0 7px;font:800 16px 'Maven Pro';color:var(--navy)}.portfolio-card p{font-size:11px;color:var(--muted);line-height:1.6;min-height:38px}.portfolio-arrow{display:block;color:var(--blue);font-size:11px;font-weight:800;margin-top:13px}.campus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}.campus-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(15,35,65,.05)}.campus-card img{width:100%;height:150px;object-fit:cover}.campus-card div{padding:16px}.campus-card span{font-size:9px;font-weight:800;color:#6681a6}.campus-card h3{margin:5px 0;font:800 20px 'Maven Pro';color:var(--navy)}.campus-card p{margin:0;color:var(--muted);font-size:11px}.admin-pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:14px}.admin-pillar{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}.admin-pillar img{width:100%;height:125px;object-fit:cover}.admin-pillar div{padding:14px}.admin-pillar h3{margin:0 0 5px;font:800 15px 'Maven Pro';color:var(--navy)}.admin-pillar p{font-size:10px;color:var(--muted);line-height:1.5;min-height:31px}.text-button{border:0;background:none;color:var(--blue);font-weight:800;font-size:10px;padding:0}.attendance-toolbar{display:grid;grid-template-columns:1fr 180px;gap:10px;margin-bottom:15px}.faculty-attendance-table{display:grid}.fa-head,.fa-row{display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr;gap:12px;align-items:center;padding:13px 8px;border-bottom:1px solid #edf1f6;font-size:11px}.fa-head{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#71809a;font-weight:800}.fa-row input{max-width:90px;padding:8px}.status-good{color:#0b9b7c;font-weight:800}.status-low{color:#d47c13;font-weight:800}
-.login-page{min-height:100vh;background:#eef3f9;position:relative;overflow:hidden;display:grid;place-items:center;padding:24px}
-.login-glow{position:absolute;width:480px;height:480px;border-radius:50%;filter:blur(60px);opacity:.4;pointer-events:none}
-.login-glow.one{background:#d0e3ff;top:-160px;right:-80px}
-.login-glow.two{background:#e3dcff;bottom:-180px;left:-100px}
-.login-shell{position:relative;z-index:1;width:min(1080px,100%);display:grid;grid-template-columns:1.08fr .92fr;background:#fff;border:1px solid rgba(255,255,255,.8);border-radius:26px;overflow:hidden;box-shadow:0 30px 80px rgba(10,37,74,.15)}
-.login-brand{padding:48px 46px;background:linear-gradient(145deg,#0c284f 0%,#133e75 55%,#1c5bbd 100%);color:#fff;display:flex;flex-direction:column;justify-content:center}
-.kiet-logo-badge{background:#fff;padding:12px 20px;border-radius:14px;display:inline-flex;align-items:center;width:fit-content;box-shadow:0 6px 20px rgba(0,0,0,.15);margin-bottom:26px}
-.kiet-official-logo{height:54px;width:auto;object-fit:contain;display:block}
-.kiet-institution-block{display:flex;flex-direction:column;gap:5px;margin-bottom:28px}
-.kiet-abbr{font:900 13px 'Maven Pro',sans-serif;letter-spacing:2px;color:#85b5ff;text-transform:uppercase}
-.kiet-institution-name{font:800 22px/1.26 'Maven Pro',Inter,sans-serif;color:#fff;margin:0}
-.kiet-location{font-size:12px;font-weight:600;color:#c0d6f4;margin:4px 0 0;display:flex;align-items:center;gap:6px}
-.location-pin{font-size:13px}
-.kiet-slogan-block{border-top:1px solid rgba(255,255,255,.14);padding-top:24px}
-.kiet-slogan-block h1{font:800 30px/1.2 'Maven Pro',Inter,sans-serif;color:#fff;margin:0 0 10px}
-.kiet-slogan-block p{color:#cadbf0;line-height:1.65;font-size:13px;margin:0;max-width:440px}
-.mobile-login-brand{display:none;margin-bottom:20px;align-items:center;gap:12px;background:#f7faff;padding:12px 14px;border-radius:12px;border:1px solid #dbe6f5}
-.mobile-kiet-logo{height:36px;width:auto;object-fit:contain}
-.mobile-brand-text{display:flex;flex-direction:column}
-.mobile-brand-text strong{font:800 13px 'Maven Pro';color:var(--navy)}
-.mobile-brand-text small{font-size:10px;color:var(--muted)}
-.login-panel{padding:46px 44px;display:flex;flex-direction:column;justify-content:center;background:#fff}
-.login-panel-top{margin-bottom:18px}
-.back-role{border:0;background:none;color:var(--blue);font-size:12px;font-weight:800;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
-.back-role:hover{text-decoration:underline}
-.login-head>span{font-size:10px;font-weight:900;letter-spacing:1.5px;color:#6581a8;text-transform:uppercase}
-.login-head h2{font:800 26px 'Maven Pro';color:var(--navy);margin:6px 0 8px}
-.login-head p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
-.role-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
-.role-select{border:1px solid #e0e8f3;background:#fff;border-radius:16px;padding:18px 16px;text-align:left;display:grid;gap:6px;transition:.2s;cursor:pointer}
-.role-select:hover{transform:translateY(-2px);border-color:#9bbcf0;box-shadow:0 10px 25px rgba(36,88,211,.08)}
-.role-select b{font-size:24px}
-.role-select strong{font:800 15px 'Maven Pro';color:var(--navy)}
-.role-select small{color:var(--muted);font-size:10px}
-.role-select i{font-style:normal;color:var(--blue);font-size:10px;font-weight:800;margin-top:4px}
-.login-form{display:grid;gap:16px;margin-top:24px}
-.login-form label{font-size:11px;font-weight:800;color:#495973;display:grid;gap:7px}
-.login-form input{width:100%;padding:13px 14px;border:1px solid #d4e0ef;border-radius:11px;outline:none;font-size:13px;background:#fcfdfe;transition:border-color .2s,box-shadow .2s}
-.login-form input:focus{border-color:#2a65d8;background:#fff;box-shadow:0 0 0 3px rgba(42,101,216,.12)}
-.password-box{position:relative}
-.password-box input{padding-right:62px}
-.password-toggle-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--blue);font-size:11px;font-weight:800;cursor:pointer;padding:6px 8px;border-radius:6px}
-.password-toggle-btn:hover{background:#eff4fb}
-.login-error{background:#fff1f1;color:#b83232;border:1px solid #fecaca;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:700;line-height:1.4}
-.login-submit{border:0;background:#102d57;color:#fff;border-radius:12px;padding:14px;font-weight:800;font-size:13px;letter-spacing:.3px;cursor:pointer;transition:.2s;box-shadow:0 10px 22px rgba(16,45,87,.22)}
-.login-submit:hover:not(:disabled){background:#1d5fd1;box-shadow:0 12px 24px rgba(29,95,209,.3)}
-.login-submit:disabled{opacity:.6;cursor:not-allowed}
-@media(max-width:900px){.login-shell,.resume-layout{grid-template-columns:1fr}.login-brand{padding:34px}.login-brand h1{font-size:34px}.login-panel{padding:30px}.portfolio-grid,.campus-grid,.admin-pillar-grid{grid-template-columns:1fr 1fr}.page-hero,.portfolio-hero{grid-template-columns:1fr}.portfolio-hero img{min-height:180px}.attendance-row{grid-template-columns:180px 1fr 50px}}
-@media(max-width:560px){.login-page{padding:12px}.login-shell{border-radius:20px}.login-brand{display:none}.mobile-login-brand{display:flex}.login-panel{padding:28px 20px!important}.role-select-grid,.portfolio-grid,.campus-grid,.admin-pillar-grid,.form-grid{grid-template-columns:1fr}.page-title-row{flex-direction:column}.page-title-row .resume-save{width:100%}.attendance-toolbar{grid-template-columns:1fr}.attendance-row{grid-template-columns:1fr 80px}.attendance-row .progress-track{grid-column:1/-1}.fa-head,.fa-row{grid-template-columns:1fr 1fr}.fa-head span:nth-child(3),.fa-row input{display:none}}
-
-/* Academic record + faculty register — production UI additions */
-.academic-hero{grid-template-columns:1fr 180px;align-items:center;padding-right:30px}.academic-id{width:128px;height:128px;border-radius:28px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;align-content:center;margin:auto}.academic-id strong{font:900 30px 'Maven Pro'}.academic-id span{font-size:10px;color:#cfe0f6;margin-top:3px}.academic-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.academic-summary-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 8px 22px rgba(15,35,65,.04)}.academic-summary-card span{display:block;color:#708098;font-size:10px;font-weight:800}.academic-summary-card strong{display:block;color:var(--navy);font:800 21px 'Maven Pro';margin:8px 0 3px}.academic-summary-card small{color:#7c8ba0;font-size:9px}.academic-record-card{overflow:hidden}.record-tabs{display:flex;gap:4px;border-bottom:1px solid #e8edf4;padding:0 18px}.record-tab{border:0;background:transparent;padding:15px 14px;color:#71809a;font-size:11px;font-weight:800;border-bottom:2px solid transparent;cursor:pointer}.record-tab.active{color:var(--navy);border-bottom-color:#2862ce}.record-content{padding:20px}.record-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.record-heading>div span{font-size:9px;letter-spacing:1.3px;font-weight:900;color:#6681a6}.record-heading h2{margin:5px 0 0;font:800 19px 'Maven Pro';color:var(--navy)}.badge{font-size:9px;font-weight:900;padding:7px 10px;border-radius:999px}.badge.good{background:#e9f8f3;color:#0b9b7c}.badge.warning{background:#fff4e7;color:#bd6c0a}.badge.neutral{background:#eef2f7;color:#68768a}.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.detail-item{border:1px solid #e7edf5;border-radius:12px;padding:13px;background:#fbfcfe}.detail-item span{display:block;color:#75839a;font-size:9px;font-weight:800;margin-bottom:6px}.detail-item strong{font-size:12px;color:var(--navy)}.record-note{margin-top:16px;padding:12px 14px;border-radius:10px;background:#f4f7fb;color:#65748b;font-size:10px;line-height:1.6}.result-table{margin-top:18px}.result-head,.result-row{display:grid;grid-template-columns:1fr 1fr 1.5fr 1fr;gap:12px;align-items:center;padding:12px 10px;border-bottom:1px solid #edf1f6;font-size:11px}.result-head{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#71809a;font-weight:900}.result-expand{margin-top:14px;border:0;background:none;color:#2862ce;font-size:10px;font-weight:900;cursor:pointer}.filter-panel{padding:17px;margin-bottom:16px}.filter-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1.5fr;gap:11px}.filter-grid label{display:grid;gap:6px;color:#66758b;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}.filter-grid select,.filter-grid input{width:100%;padding:11px;border:1px solid #dce5f1;border-radius:10px;background:#fff;color:#2c3c55;outline:none;font-size:11px}.faculty-count{background:#eef4ff;border:1px solid #dce8fb;border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;align-items:center}.faculty-count strong{font:900 20px 'Maven Pro';color:#1e55b6}.faculty-count span{font-size:9px;color:#6d7d95}.faculty-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:16px}.faculty-metric{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 16px}.faculty-metric span{font-size:9px;color:#71809a;font-weight:800}.faculty-metric strong{display:block;font:800 22px 'Maven Pro';color:var(--navy);margin-top:5px}.register-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #edf1f6}.register-head h2{font:800 18px 'Maven Pro';color:var(--navy);margin:0}.register-head p{font-size:10px;color:#77869b;margin:4px 0 0}.student-table{margin-top:2px}.student-table-head,.student-table-row{display:grid;grid-template-columns:1.35fr 1.25fr .75fr .8fr .6fr;gap:12px;align-items:center;padding:13px 8px}.student-table-head{font-size:9px;color:#71809a;text-transform:uppercase;letter-spacing:.7px;font-weight:900;border-bottom:1px solid #e8edf4}.student-table-row{width:100%;border:0;border-bottom:1px solid #edf1f6;background:#fff;text-align:left;cursor:pointer;color:#2d3c53}.student-table-row:hover{background:#f8fbff}.student-table-row span:first-child,.student-table-row span:nth-child(2){display:grid;gap:3px}.student-table-row strong{font-size:11px}.student-table-row small{font-size:9px;color:#7b899d}.view-link{color:#2862ce;font-size:10px;font-weight:900}.empty-state{text-align:center;padding:35px;color:#7a899f;font-size:11px}.student-modal-backdrop{position:fixed;inset:0;background:rgba(8,18,35,.45);z-index:100;display:grid;place-items:center;padding:20px}.student-modal{position:relative;width:min(650px,100%);background:#fff;border-radius:20px;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.22)}.modal-close{position:absolute;right:15px;top:12px;border:0;background:#f0f3f7;border-radius:50%;width:30px;height:30px;font-size:19px;color:#52627a;cursor:pointer}.student-modal h2{margin:7px 0 4px;font:800 25px 'Maven Pro';color:var(--navy)}.modal-sub{font-size:10px;color:#75839a}.student-modal h3{font:800 14px 'Maven Pro';color:var(--navy);margin:22px 0 10px}.modal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:17px}.mini-result-list{border-top:1px solid #edf1f6}.mini-result-list div{display:grid;grid-template-columns:1fr .6fr 1fr;padding:11px 3px;border-bottom:1px solid #edf1f6;font-size:10px}.mini-result-list em{font-style:normal;color:#0b9b7c;font-weight:800;text-align:right}
-@media(max-width:900px){.academic-summary,.faculty-metrics{grid-template-columns:1fr 1fr}.filter-grid{grid-template-columns:1fr 1fr}.academic-hero{grid-template-columns:1fr}.detail-grid,.modal-grid{grid-template-columns:1fr 1fr}.student-table-head,.student-table-row{grid-template-columns:1.4fr 1.2fr .8fr .8fr}.student-table-head span:last-child{display:none}.student-table-row .view-link{display:none}}
-@media(max-width:560px){.academic-summary,.faculty-metrics,.filter-grid,.detail-grid,.modal-grid{grid-template-columns:1fr}.record-tabs{overflow:auto}.record-tab{white-space:nowrap}.result-head,.result-row{grid-template-columns:1fr 1fr 1fr}.result-head span:last-child,.result-row span:last-child{display:none}.student-table-head{display:none}.student-table-row{grid-template-columns:1fr 1fr;padding:14px 5px}.student-table-row span:nth-child(3),.student-table-row span:nth-child(4){display:none}.register-head{align-items:flex-start;gap:10px;flex-direction:column}}
-
-/* Final frontend polish — clean institutional portal */
-*{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}.app-shell{min-height:100vh;background:var(--bg)}.app-content{min-width:0}.topbar{height:76px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:40}.topbar-left{display:flex;align-items:center;gap:13px}.topbar-kicker{font-size:8px;letter-spacing:1.5px;font-weight:900;color:#8090a8}.topbar h2{margin:3px 0 0;font:800 18px 'Maven Pro',Inter,sans-serif;color:var(--navy)}.mobile-mark{display:none;font:900 14px 'Maven Pro';color:var(--navy-2)}.topbar-right{display:flex;align-items:center;gap:14px}.status-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#166534;border:1px solid #bbf7d0;border-radius:999px;padding:5px 12px;background:#f0fdf4;white-space:nowrap;flex-shrink:0}.status-chip .status-pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:0;flex-shrink:0}.status-chip .status-text,.status-chip span:not(.status-pulse){display:inline;width:auto;height:auto;border-radius:0;background:transparent;margin:0;font-size:inherit;font-weight:inherit;color:inherit;white-space:nowrap}.profile-chip{display:inline-flex;align-items:center;gap:10px;flex-shrink:0}.profile-avatar{width:34px;height:34px;border-radius:10px;background:var(--navy);color:white;display:grid;place-items:center;font-weight:900;font-size:12px}.profile-copy{display:grid;gap:1px}.profile-copy strong{font-size:10px;color:var(--navy)}.profile-copy small{font-size:8px;color:#8190a4}.topbar-logout{border:1px solid #dfe6ef;background:white;color:#50617a;border-radius:9px;padding:8px 11px;font-size:9px;font-weight:800;cursor:pointer}.topbar-logout:hover{background:#f5f8fc}.sidebar{background:var(--navy)!important;border-right:0!important}.sidebar-brand{padding:20px 18px!important}.sidebar-logo{width:46px!important;height:46px!important;border-radius:12px!important;background:#fff!important;color:var(--navy-2)!important;font:900 12px 'Maven Pro'!important;display:grid!important;place-items:center!important;position:relative}.logo-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#d82f69;top:9px;right:9px}.sidebar-brand-title{color:#fff!important;font-size:13px!important}.sidebar-brand-subtitle{color:#91acd0!important}.sidebar-section-title{color:#7895bd!important}.sidebar-link{color:#b7c7dd!important;border-radius:9px!important;margin:2px 10px!important}.sidebar-link:hover{background:rgba(255,255,255,.07)!important;color:#fff!important}.sidebar-link.active{background:var(--blue)!important;color:#fff!important;box-shadow:0 7px 18px rgba(0,0,0,.16)}.sidebar-link-icon svg{stroke:currentColor!important}.sidebar-campus-card{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.08)!important}.sidebar-campus-label{color:#cfe0f7!important}.sidebar-campus-text{color:#7f9bc2!important}.app-page{padding:26px 28px 45px}.app-page-inner{max-width:1440px;margin:auto}.premium-hero{position:relative;overflow:hidden;min-height:320px!important;background:linear-gradient(110deg,#12305f 0%,#1b4594 57%,#2456b5 100%)!important;border-radius:22px!important;border:0!important;box-shadow:0 20px 45px rgba(17,47,89,.18)}.premium-hero:after{content:"";position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid rgba(255,255,255,.12);right:26%;top:-210px}.premium-hero .hero-copy{position:relative;z-index:2;padding:38px 40px}.premium-hero h1{font:800 34px/1.15 'Maven Pro',Inter,sans-serif;max-width:650px;margin:10px 0 12px;color:#fff!important}.premium-hero .eyebrow{color:#a9c7ee!important}.hero-meta{color:#c8d9ef!important;font-size:11px}.hero-meta b{margin:0 5px;color:#7194c1}.hero-actions{display:flex;align-items:center;gap:18px;margin-top:24px}.button-light{background:#fff!important;color:var(--navy-2)!important;border:0!important}.hero-text-link{color:#d7e6fb;font-size:10px;font-weight:900;text-decoration:none}.hero-image{position:absolute;right:0;top:0;width:42%;height:100%;overflow:hidden}.hero-image:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#173f76 0%,rgba(23,63,118,.15) 45%,rgba(23,63,118,0) 100%)}.hero-image img{width:100%;height:100%;object-fit:cover;display:block;opacity:.78}.hero-image-caption{position:absolute;right:22px;bottom:20px;z-index:2;color:#fff;text-align:right;display:grid}.hero-image-caption span{font-size:10px;font-weight:900}.hero-image-caption small{font-size:8px;color:#d7e5f6;margin-top:3px}.portfolio-welcome{display:flex;justify-content:space-between;align-items:center;margin:26px 2px 16px}.portfolio-welcome h2{margin:3px 0 3px;font:800 20px 'Maven Pro';color:var(--navy)}.portfolio-welcome p{margin:0;color:var(--muted);font-size:10px}.student-identity{min-width:150px;padding:13px 15px;border:1px solid var(--line);background:#fff;border-radius:13px;display:grid;gap:3px}.student-identity span,.student-identity small{font-size:8px;color:#8090a5}.student-identity strong{font:900 21px 'Maven Pro';color:var(--navy-2)}.modern-grid{grid-template-columns:repeat(3,1fr)!important;gap:13px!important}.modern-card{min-height:150px!important;position:relative;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:21px!important;background:#fff!important;border:1px solid var(--line)!important;box-shadow:0 6px 20px rgba(18,43,77,.04)!important}.modern-card:hover{transform:translateY(-3px);border-color:#b8cae5!important;box-shadow:0 15px 30px rgba(18,43,77,.08)!important}.modern-card h3{margin:8px 0 5px!important;font:800 15px 'Maven Pro'!important;color:var(--navy)!important}.modern-card p{font-size:10px!important;line-height:1.55!important;color:#748299!important;max-width:250px}.card-number{font-size:9px;font-weight:900;color:#8ea3c1;letter-spacing:1px}.modern-card .portfolio-arrow{font-size:9px!important;color:var(--blue)!important}.campus-strip{margin-top:22px;padding:24px 25px;background:var(--blue-soft);border:1px solid var(--border);border-radius:17px;display:flex;align-items:center;justify-content:space-between;gap:20px}.campus-strip h2{font:800 18px 'Maven Pro';color:var(--navy);margin:4px 0}.campus-strip p{font-size:10px;color:#667891;max-width:680px;line-height:1.6;margin:0}.button-primary{background:var(--navy)!important;border:0!important;color:#fff!important;border-radius:9px!important;padding:11px 15px!important;font-size:10px!important;font-weight:900!important}.button-primary:hover{background:var(--blue)!important}.page-title-row h1{font:800 26px 'Maven Pro'!important;color:var(--navy)!important}.surface-card{background:#fff!important;border:1px solid var(--line)!important;box-shadow:0 8px 24px rgba(20,43,78,.035)!important}.live-pill{font-size:8px!important;font-weight:900!important;color:#159b77!important;background:#e9f7f2!important;padding:7px 9px!important;border-radius:999px}.role-select{cursor:pointer}.role-select:focus-visible,.login-submit:focus-visible,.topbar-logout:focus-visible{outline:3px solid rgba(36,86,181,.28);outline-offset:2px}
-@media(max-width:900px){.topbar{padding:0 16px}.topbar-right .status-chip{display:none}.profile-copy{display:none}.mobile-mark{display:block}.app-page{padding:20px 16px 35px}.premium-hero .hero-copy{padding:30px}.hero-image{opacity:.45;width:55%}.modern-grid{grid-template-columns:1fr 1fr!important}.campus-strip{align-items:flex-start;flex-direction:column}.campus-strip .button{width:100%;text-align:center}.sidebar{width:220px!important}}
-@media(max-width:600px){.topbar{height:68px}.topbar h2{font-size:15px}.topbar-left{gap:9px}.topbar-logout{padding:7px 9px}.premium-hero{min-height:390px!important}.premium-hero .hero-copy{padding:25px 22px}.premium-hero h1{font-size:28px}.hero-image{width:100%;height:48%;top:auto;bottom:0;opacity:.55}.hero-image:after{background:linear-gradient(0deg,#173f76,rgba(23,63,118,0))}.modern-grid{grid-template-columns:1fr!important}.portfolio-welcome{align-items:flex-start;gap:12px;flex-direction:column}.student-identity{width:100%}.app-page{padding:15px 12px 30px}.login-panel{padding:25px 18px!important}}
-.admin-campus-section{margin:28px 0}.campus-tabs{display:flex;gap:9px;margin:15px 0}.campus-tab{border:1px solid var(--line);background:#fff;border-radius:11px;padding:12px 16px;text-align:left;color:#60718a;cursor:pointer}.campus-tab strong,.campus-tab{font-weight:900;font-size:10px}.campus-tab small{display:block;font-size:8px;font-weight:500;color:#8b98aa;margin-top:3px}.campus-tab.active{background:#12386e;color:#fff;border-color:#12386e}.campus-tab.active small{color:#c8d8ef}.campus-feature{display:grid;grid-template-columns:40% 1fr;min-height:245px;overflow:hidden}.campus-feature-image{background:#dfe7f1;min-height:245px}.campus-feature-image img{width:100%;height:100%;object-fit:cover;display:block}.campus-feature-copy{padding:30px}.campus-feature-copy h2{font:800 27px 'Maven Pro';color:var(--navy);margin:5px 0}.campus-feature-copy h4{font-size:11px;color:#60718a;margin:0 0 12px}.campus-feature-copy p{font-size:11px;color:#718097;line-height:1.65;max-width:600px}.admin-mini-stats{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}.admin-mini-stats span{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:8px;color:#77879c}.admin-mini-stats b{color:var(--navy);font-size:10px;margin-right:3px}.admin-pillar-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:12px!important}.admin-pillar{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;min-height:145px;position:relative;display:flex;gap:12px;box-shadow:0 7px 20px rgba(15,35,65,.03)}.pillar-index{font-size:9px;font-weight:900;color:#91a5c0}.admin-pillar h3{font:800 13px 'Maven Pro';color:var(--navy);margin:0 0 5px}.admin-pillar p{font-size:9px;color:#78879b;line-height:1.55;margin:0 0 12px}.text-button{border:0;background:none;color:#2862ce;font-size:9px;font-weight:900;padding:0;cursor:pointer}.admin-note{margin-top:22px;padding:16px 18px;border:1px solid #dbe5f2;background:#eef4fb;border-radius:13px;display:grid;gap:4px}.admin-note strong{font-size:10px;color:#183d74}.admin-note span{font-size:9px;color:#71829a;line-height:1.5}@media(max-width:900px){.admin-pillar-grid{grid-template-columns:1fr 1fr!important}.campus-feature{grid-template-columns:1fr}.campus-feature-image{height:210px}.campus-tabs{overflow:auto}.campus-tab{min-width:150px}}@media(max-width:560px){.admin-pillar-grid{grid-template-columns:1fr!important}.campus-feature-copy{padding:20px}.campus-tabs{gap:6px}.campus-tab{min-width:130px}}
-.attendance-edit{width:70px;border:1px solid #dbe4ef;border-radius:8px;padding:7px 8px;color:#183d74;font-weight:800;background:#fff;font-size:10px}.attendance-edit:focus{outline:2px solid rgba(29,95,209,.15);border-color:#7ea4dc}.student-table-row .status-good,.student-table-row .status-low{font-size:9px;font-weight:900}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:18px 20px}.section-heading h2{font:800 16px 'Maven Pro';color:var(--navy);margin:0 0 4px}.section-heading p{font-size:9px;color:#7a899d;margin:0}

@@ -1,16 +1,14 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App'
-import './styles/tokens.css'
-import './styles/portal-enhancements.css'
-import { AuthProvider } from './contexts/AuthContext'
-import { DataProvider } from './contexts/DataContext'
+import { RouterProvider } from 'react-router-dom'
+import { AppProviders } from '@/app/AppProviders'
+import { router } from '@/app/router'
+import '@/styles/globals.css'
 
-const root = createRoot(document.getElementById('root'))
-root.render(
-	<AuthProvider>
-		<DataProvider>
-			<App />
-		</DataProvider>
-	</AuthProvider>
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <AppProviders>
+      <RouterProvider router={router} />
+    </AppProviders>
+  </StrictMode>,
 )
