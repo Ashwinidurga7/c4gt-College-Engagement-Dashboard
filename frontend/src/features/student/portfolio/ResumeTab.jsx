@@ -1,10 +1,14 @@
-import { Eye, FileText, Loader2, Star, Trash2, Upload } from 'lucide-react'
+import { Eye, FilePen, FileText, Loader2, Star, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { FilePicker } from '@/components/common/FilePicker'
 import { Button } from '@/components/ui/button'
 import { resumeFileSchema } from '@/features/student/portfolio/portfolioSchemas'
+import { BUILDER_PATH, ResumeBuilderCard } from '@/features/student/portfolio/ResumeBuilderCard'
+import { readResumeDraft } from '@/features/student/resume/useResumeDraft'
+import { useAuth } from '@/hooks/useAuth'
 import { TabSection } from '@/features/student/portfolio/TabSection'
 import { useConfirmAction } from '@/hooks/useConfirmAction'
 import { useDeleteResume, useResumes, useSetPrimaryResume, useUploadResume } from '@/hooks/usePortfolio'
@@ -57,6 +61,9 @@ function ResumeUploader() {
 }
 
 export function ResumeTab() {
+  const { user } = useAuth()
+  const [draft] = useState(() => readResumeDraft(user.id))
+  const fromBuilder = new Set(draft?.savedResumeIds ?? [])
   const query = useResumes()
   const setPrimary = useSetPrimaryResume()
   const remove = useConfirmAction(useDeleteResume())
@@ -67,9 +74,14 @@ export function ResumeTab() {
       description="Your primary resume is the one shared with placement officers."
       count={query.data?.length}
       query={query}
-      toolbar={<ResumeUploader />}
+      toolbar={
+        <div className="grid gap-4 lg:grid-cols-2">
+          <ResumeBuilderCard draft={draft} />
+          <ResumeUploader />
+        </div>
+      }
       isEmpty={(resumes) => resumes.length === 0}
-      empty={{ icon: FileText, title: 'No resume uploaded', description: 'Upload a PDF resume so it is ready for placement drives.' }}
+      empty={{ icon: FileText, title: 'No resume yet', description: 'Create one with the builder or upload a PDF so it is ready for placement drives.' }}
       render={(resumes) => (
         <ul className="bg-card shadow-soft divide-y rounded-xl border">
           {resumes.map((resume) => (
@@ -88,11 +100,18 @@ export function ResumeTab() {
                     )}
                   </p>
                   <p className="text-muted-foreground text-xs">
-                    {formatFileSize(resume.size)} · Uploaded {formatDateTime(resume.uploadedAt)}
+                    {formatFileSize(resume.size)} · {fromBuilder.has(resume.id) ? 'Made with the builder' : 'Uploaded'} {formatDateTime(resume.uploadedAt)}
                   </p>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-1">
+                {fromBuilder.has(resume.id) && (
+                  <Button asChild variant="ghost" size="lg">
+                    <Link to={BUILDER_PATH}>
+                      <FilePen aria-hidden /> Edit in builder<span className="sr-only">: {resume.fileName}</span>
+                    </Link>
+                  </Button>
+                )}
                 {resume.fileUrl && (
                   <Button asChild variant="ghost" size="lg">
                     <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer">

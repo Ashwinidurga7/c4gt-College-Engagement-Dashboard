@@ -98,6 +98,10 @@
   --color-login-glow: var(--login-glow);
   --color-overlay: var(--overlay);
   --color-logo-chip: var(--logo-chip-bg);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-line: var(--paper-line);
+  --color-paper-accent: var(--paper-accent);
   --color-count-badge: var(--count-badge-bg);
 
   --color-chart-1: var(--chart-1);

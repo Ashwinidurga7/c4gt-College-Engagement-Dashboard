@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   FileBarChart,
   FileCheck2,
+  FileUser,
   FolderKanban,
   GraduationCap,
   IndianRupee,
@@ -55,6 +56,7 @@ export const NAVIGATION = {
       section: 'Portfolio and campus',
       items: [
         { path: 'portfolio', label: 'Portfolio', icon: FolderKanban, phase: 2 },
+        { path: 'resume/builder', label: 'Resume Builder', icon: FileUser, phase: '2R' },
         { path: 'clubs', label: 'Clubs', icon: UsersRound, phase: 2 },
         { path: 'events', label: 'Events', icon: CalendarDays, phase: 2 },
         { path: 'notifications', label: 'Notifications', icon: Bell, phase: 2 },
@@ -168,7 +170,9 @@ export function navItemsFor(role) {
   return (NAVIGATION[role] ?? []).flatMap((group) => group.items)
 }
 
+/** The navigation item a URL belongs to; paths may have several segments (e.g. "resume/builder"). */
 export function findNavItem(role, pathname) {
-  const segment = pathname.split('/').filter(Boolean)[1]
-  return navItemsFor(role).find((item) => item.path === segment) ?? null
+  const rest = pathname.split('/').filter(Boolean).slice(1).join('/')
+  const matches = navItemsFor(role).filter((item) => rest === item.path || rest.startsWith(`${item.path}/`))
+  return matches.sort((a, b) => b.path.length - a.path.length)[0] ?? null
 }

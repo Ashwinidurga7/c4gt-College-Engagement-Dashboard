@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import { toListParams, toPage } from '@/lib/listQuery'
-import { achievementsMock, activitiesMock } from '@/mocks/portfolioMock'
+import { achievementsMock, activitiesMock, certificatesMock, certificationsMock, internshipsMock, projectsMock } from '@/mocks/portfolioMock'
 import { studentMock } from '@/mocks/studentMock'
 import { apiClient } from '@/services/apiClient'
 import {
@@ -14,11 +14,27 @@ import {
   toProfilePayload,
 } from '@/services/studentAdapters'
 import { toList } from '@/services/adapterUtils'
-import { toAchievement, toPortfolioActivity } from '@/services/portfolioAdapters'
+import {
+  toAchievement,
+  toCertificate,
+  toCertification,
+  toInternship,
+  toPortfolioActivity,
+  toProject,
+} from '@/services/portfolioAdapters'
 
 function get(path, params) {
   return apiClient.get(`/students/${path}`, { params })
 }
+
+/** The student's own records, read from `/api/students/<name>` (the editable lists use `/api/<name>`). */
+const OWN_RECORDS = {
+  projects: { mock: projectsMock, toItem: toProject },
+  internships: { mock: internshipsMock, toItem: toInternship },
+  certifications: { mock: certificationsMock, toItem: toCertification },
+  certificates: { mock: certificatesMock, toItem: toCertificate },
+}
+const ALL = { page: 1, pageSize: 100 }
 
 export const studentService = {
   async dashboard() {
@@ -60,6 +76,13 @@ export const studentService = {
   async activities(query = {}) {
     const raw = env.useMock ? await activitiesMock.list(query) : await get('activities', toListParams(query))
     return toPage(raw?.activities ?? raw, query, toPortfolioActivity, { searchKeys: ['title', 'type', 'organizer'] })
+  },
+
+  /** Every record of one kind, e.g. `ownRecords('projects')`, for read-only views such as the resume builder. */
+  async ownRecords(name) {
+    const { mock, toItem } = OWN_RECORDS[name]
+    const raw = env.useMock ? await mock.list(ALL) : await get(name)
+    return toPage(raw?.[name] ?? raw, ALL, toItem).items
   },
 
   async upcomingEvents() {

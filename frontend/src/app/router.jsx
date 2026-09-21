@@ -21,6 +21,8 @@ const PAGES = {
   'student/attendance': page(() => import('@/features/student/AttendancePage'), 'AttendancePage'),
   'student/academic-report': page(() => import('@/features/student/AcademicReportPage'), 'AcademicReportPage'),
   'student/portfolio': page(() => import('@/features/student/PortfolioPage'), 'PortfolioPage'),
+  // Lazy route: the PDF library loads only with the builder, never in the main bundle.
+  'student/resume/builder': page(() => import('@/features/student/resume/ResumeBuilderPage'), 'ResumeBuilderPage'),
   'student/clubs': page(() => import('@/features/clubs/ClubsPage'), 'ClubsPage'),
   'student/events': page(() => import('@/features/events/EventsPage'), 'EventsPage'),
   'student/notifications': page(() => import('@/features/notifications/NotificationsPage'), 'NotificationsPage'),

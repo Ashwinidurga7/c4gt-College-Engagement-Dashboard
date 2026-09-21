@@ -88,6 +88,12 @@
   /* The logo artwork needs a light backing on dark surfaces in both themes */
   --logo-chip-bg: #ffffff;
 
+  /* Printed paper (resume thumbnail): white with dark ink in both themes, like the PDF */
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #c9ced6;
+  --paper-accent: #1b4594;
+
   /* Shape and elevation */
   --radius-card: 12px;
   --radius-control: 8px;
@@ -171,6 +177,12 @@
 
   --overlay: rgba(2, 6, 15, 0.7);
   --count-badge-bg: #c7302e;
+
+  /* Paper stays paper in the dark theme */
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #c9ced6;
+  --paper-accent: #1b4594;
 
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-raised: 0 8px 24px rgba(0, 0, 0, 0.45);

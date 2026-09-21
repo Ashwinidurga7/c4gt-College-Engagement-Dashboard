@@ -19,6 +19,8 @@ export default defineConfig({
     },
   },
   build: {
+    // The PDF renderer (about 1.2 MB, loaded only by the Resume Builder) is larger than the default 500 kB limit.
+    chunkSizeWarningLimit: 1400,
     rolldownOptions: {
       output: {
         // Long-lived vendor chunks so app updates do not invalidate library caches.
@@ -29,6 +31,8 @@ export default defineConfig({
             { name: 'forms', test: fromPackages('react-hook-form/', '@hookform/', 'zod/') },
             { name: 'ui', test: fromPackages('radix-ui/', '@radix-ui/', 'sonner/', 'lucide-react/') },
             { name: 'charts', test: fromPackages('recharts/', 'd3-', 'victory-vendor/') },
+            // Only the lazily loaded Resume Builder imports this, so it never joins the initial download.
+            { name: 'pdf', test: fromPackages('@react-pdf/') },
           ],
         },
       },

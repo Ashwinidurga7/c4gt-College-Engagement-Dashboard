@@ -17,7 +17,8 @@ export function AppBreadcrumb() {
   const { pathname } = useLocation()
   const current = findNavItem(user.role, pathname)
   const onDashboard = current?.path === 'dashboard'
-  const isDetail = pathname.split('/').filter(Boolean).length > 2
+  // A detail page sits below its navigation item, e.g. /student/clubs/:clubId under Clubs.
+  const isDetail = Boolean(current) && pathname.replace(/\/+$/, '') !== `/${user.role}/${current.path}`
 
   return (
     <Breadcrumb className="mb-5">
