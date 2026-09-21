@@ -1,11 +1,12 @@
-import { ArrowRight, Briefcase, Camera, Globe, MessageCircle, Share2 } from 'lucide-react'
+import { ArrowRight, Globe, Share2 } from 'lucide-react'
+import { InstagramIcon, LinkedInIcon, WhatsAppIcon } from '@/components/common/BrandIcons'
 import { SectionCard } from '@/components/common/SectionCard'
 
-/** Presentation per network. lucide dropped brand marks, so these are generic stand-ins. */
+/** Presentation per network. Brand marks carry their own colour; anything else uses a token. */
 const NETWORKS = {
-  instagram: { name: 'Instagram', icon: Camera, fallback: 'Follow us', tone: 'bg-tone-orange text-tone-orange-fg' },
-  linkedin: { name: 'LinkedIn', icon: Briefcase, fallback: 'Connect with us', tone: 'bg-tone-blue text-tone-blue-fg' },
-  whatsapp: { name: 'WhatsApp community', icon: MessageCircle, fallback: 'Join our community', tone: 'bg-tone-green text-tone-green-fg' },
+  instagram: { name: 'Instagram', icon: InstagramIcon, fallback: 'Follow us', chip: { background: 'linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4)', color: '#fff' } },
+  linkedin: { name: 'LinkedIn', icon: LinkedInIcon, fallback: 'Connect with us', chip: { background: '#0A66C2', color: '#fff' } },
+  whatsapp: { name: 'WhatsApp community', icon: WhatsAppIcon, fallback: 'Join our community', chip: { background: '#25D366', color: '#fff' } },
   website: { name: 'Website', icon: Globe, fallback: 'Visit the site', tone: 'bg-tone-purple text-tone-purple-fg' },
 }
 
@@ -20,6 +21,7 @@ export function ClubSocials({ club }) {
         {entries.map(([network, { url, label }]) => {
           const meta = NETWORKS[network] ?? { name: network, icon: Globe, fallback: 'Visit', tone: 'bg-muted text-muted-foreground' }
           const Icon = meta.icon
+          const chip = meta.chip
           return (
             <li key={network}>
               <a
@@ -28,7 +30,7 @@ export function ClubSocials({ club }) {
                 rel="noopener noreferrer"
                 className="group hover:border-primary/40 focus-visible:ring-ring flex items-center gap-3 rounded-xl border p-3 transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
-                <span className={`flex size-10 shrink-0 items-center justify-center rounded-full ${meta.tone}`}>
+                <span className={`flex size-10 shrink-0 items-center justify-center rounded-full ${chip ? '' : meta.tone}`} style={chip}>
                   <Icon className="size-5" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1">
