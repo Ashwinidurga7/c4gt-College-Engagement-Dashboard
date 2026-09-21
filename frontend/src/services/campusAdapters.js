@@ -23,6 +23,10 @@ export function toClub(raw = {}) {
     },
     socials: raw.socials ?? {},
     logoUrl: pick(raw.logoUrl, raw.logo),
+    // A photo may arrive as a bare URL string or as { url, caption }.
+    photos: toList(pick(raw.photos, raw.gallery, raw.images))
+      .map((photo) => (typeof photo === 'string' ? { url: photo, caption: '' } : { url: pick(photo?.url, photo?.src), caption: photo?.caption ?? '' }))
+      .filter((photo) => photo.url),
   }
 }
 

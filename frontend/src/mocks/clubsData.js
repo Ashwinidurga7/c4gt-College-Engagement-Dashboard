@@ -16,6 +16,16 @@ export const clubsData = [
     description:
       'The coding and technology club of KIET, where innovation meets action. We bring together learners, developers and problem-solvers to build meaningful projects and work on real-world challenges.',
     focusAreas: ['Hackathons', 'Workshops', 'Projects', 'Tech Talks', 'Open Source', 'Community'],
+    photos: [
+      { url: '/clubs/c4gt/team.jpg', caption: 'The C4GT Hub team with faculty at a campus ceremony' },
+      { url: '/clubs/c4gt/session-hall.jpg', caption: 'A member presenting to a full seminar hall' },
+      { url: '/clubs/c4gt/session-speaker.jpg', caption: 'A speaker addressing students at a club session' },
+      { url: '/clubs/c4gt/session-audience.jpg', caption: 'Members at a C4GT Hub session' },
+      { url: '/clubs/c4gt/seminar.jpg', caption: 'A seminar in progress on campus' },
+      { url: '/clubs/c4gt/certificates.jpg', caption: 'Members with their programme certificates' },
+      { url: '/clubs/c4gt/dpg-dialogues.jpg', caption: 'C4GT at DPG Dialogues, India International Centre, New Delhi' },
+      { url: '/clubs/c4gt/c4gt-feature.jpg', caption: 'Code for Good Tech featured by IIIT Hyderabad' },
+    ],
     stats: { projects: 12, workshops: 8, hackathons: 5 },
     socials: { instagram: 'https://instagram.com/c4gt_kiet', linkedin: 'https://linkedin.com/company/c4gt-kiet' },
   },

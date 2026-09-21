@@ -3,15 +3,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import { cn } from '@/lib/utils'
 
-/** Campus and club life, in the order they are shown. The first one loads eagerly. */
-const SLIDES = [
-  { src: '/campus.jpg', alt: 'KIET campus building' },
-  { src: '/campus/c4gt-team.jpg', alt: 'The C4GT Hub team with faculty at a campus ceremony' },
-  { src: '/campus/session-hall.jpg', alt: 'A student presenting to a full seminar hall' },
-  { src: '/campus/session-speaker.jpg', alt: 'A speaker addressing students at a club session' },
-  { src: '/campus/session-audience.jpg', alt: 'Students at a C4GT Hub session' },
-  { src: '/campus/seminar.jpg', alt: 'A seminar in progress on campus' },
-]
+/**
+ * Campus photographs, in the order they are shown. The first one loads eagerly.
+ * Add more to /public/campus/ and list them here; one entry shows as a still image.
+ */
+const SLIDES = [{ src: '/campus.jpg', alt: 'KIET campus building' }]
 
 const HOLD_MS = 5500
 const FADE_MS = 1200

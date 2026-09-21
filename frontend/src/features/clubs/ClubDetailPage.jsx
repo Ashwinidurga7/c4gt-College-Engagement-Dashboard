@@ -10,6 +10,7 @@ import { StatCard } from '@/components/common/StatCard'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { ClubEvents } from '@/features/clubs/ClubEvents'
+import { ClubGallery } from '@/features/clubs/ClubGallery'
 import { ClubLogo } from '@/features/clubs/ClubLogo'
 import { useAuth } from '@/hooks/useAuth'
 import { useClub } from '@/hooks/useCampus'
@@ -111,6 +112,7 @@ export function ClubDetailPage() {
                 )}
               </SectionCard>
             </div>
+            <ClubGallery club={club} />
             <ClubEvents clubId={club.id} />
           </>
         )}
