@@ -22,7 +22,8 @@ function toUser(raw) {
 }
 
 function toSession(data) {
-  const user = toUser(data?.user)
+  // The backend returns the user's fields beside the token, not nested under `user`.
+  const user = toUser(data?.user ?? data)
   if (!data?.token || !user?.role) {
     throw new ApiError('Sign-in response was incomplete. Please try again.', { status: 500 })
   }
