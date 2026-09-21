@@ -2,7 +2,7 @@ import { env } from '@/lib/env'
 import { toListParams, toPage } from '@/lib/listQuery'
 import { isRole } from '@/lib/roles'
 import { adminMock } from '@/mocks/adminMock'
-import { pick, toId, toList, toNumber } from '@/services/adapterUtils'
+import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
 import { apiClient } from '@/services/apiClient'
 import { toCertificate } from '@/services/portfolioAdapters'
 import { toPendingRegistration } from '@/services/rosterAdapters'
@@ -17,7 +17,7 @@ function toDirectoryUser(raw = {}) {
     email: raw.email ?? null,
     role: isRole(raw.role) ? raw.role : null,
     college: raw.college ?? null,
-    department: raw.department ?? null,
+    department: nameOf(raw.department),
     approvalStatus: String(pick(raw.approvalStatus, raw.status, 'approved')).toLowerCase(),
     createdAt: pick(raw.createdAt, raw.joinedOn),
   }
