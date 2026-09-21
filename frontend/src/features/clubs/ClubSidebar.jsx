@@ -17,7 +17,7 @@ const STAT_ROWS = [
 function quickLinksFor(club, role) {
   const links = []
   if (club.website) links.push({ key: 'website', label: `${club.name} website`, icon: ExternalLink, href: club.website, external: true })
-  if (club.socials.whatsapp) links.push({ key: 'community', label: 'Join the community', icon: MessageCircle, href: club.socials.whatsapp.url, external: true })
+  if (club.socials.whatsapp) links.push({ key: 'whatsapp', label: 'Follow on WhatsApp', icon: MessageCircle, href: club.socials.whatsapp.url, external: true })
   links.push({ key: 'events', label: 'Events and workshops', icon: CalendarDays, to: `/${role}/events` })
   if (club.email) links.push({ key: 'contact', label: 'Contact the club', icon: Link2, href: `mailto:${club.email}` })
   return links

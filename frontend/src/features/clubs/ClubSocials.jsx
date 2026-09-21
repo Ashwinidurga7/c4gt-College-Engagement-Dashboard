@@ -6,7 +6,7 @@ import { SectionCard } from '@/components/common/SectionCard'
 const NETWORKS = {
   instagram: { name: 'Instagram', icon: InstagramIcon, fallback: 'Follow us', chip: { background: 'linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4)', color: '#fff' } },
   linkedin: { name: 'LinkedIn', icon: LinkedInIcon, fallback: 'Connect with us', chip: { background: '#0A66C2', color: '#fff' } },
-  whatsapp: { name: 'WhatsApp community', icon: WhatsAppIcon, fallback: 'Join our community', chip: { background: '#25D366', color: '#fff' } },
+  whatsapp: { name: 'WhatsApp', icon: WhatsAppIcon, fallback: 'Follow the channel', chip: { background: '#25D366', color: '#fff' } },
   website: { name: 'Website', icon: Globe, fallback: 'Visit the site', tone: 'bg-tone-purple text-tone-purple-fg' },
 }
 

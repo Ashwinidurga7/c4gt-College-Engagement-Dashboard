@@ -54,6 +54,7 @@ export const clubsData = [
     socials: {
       instagram: { url: 'https://instagram.com/c4gt_kiet', label: '@c4gt_kiet' },
       linkedin: { url: 'https://linkedin.com/company/c4gt-kiet', label: 'C4GT - KIET' },
+      whatsapp: { url: 'https://whatsapp.com/channel/0029VadjV9a5K3zXVQlbLS1f', label: 'Follow the C4GT channel' },
     },
   },
   {
