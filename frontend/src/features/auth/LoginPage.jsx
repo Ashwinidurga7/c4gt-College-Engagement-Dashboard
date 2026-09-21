@@ -1,4 +1,4 @@
-import { CampusImage } from '@/components/common/CampusImage'
+import { CampusSlideshow } from '@/components/common/CampusSlideshow'
 import { AuthFooter, AuthHeader } from '@/features/auth/AuthLayout'
 import { LoginCurves } from '@/features/auth/LoginCurves'
 import { LoginForm } from '@/features/auth/LoginForm'
@@ -10,9 +10,9 @@ export function LoginPage() {
 
   return (
     <div className="bg-canvas relative flex min-h-dvh flex-col overflow-hidden">
-      {/* Campus photo fades into the page from the right, as in the reference */}
+      {/* Campus photos cross-fade into the page from the right, as in the reference */}
       <div className="absolute inset-y-0 right-0 hidden w-[42%] lg:block">
-        <CampusImage className="h-full w-full [mask-image:linear-gradient(to_right,transparent,black_38%)]" />
+        <CampusSlideshow className="h-full w-full [mask-image:linear-gradient(to_right,transparent,black_38%)]" />
       </div>
       <LoginCurves className="h-40 w-[70%] sm:h-56 lg:h-72 lg:w-[46%]" />
 

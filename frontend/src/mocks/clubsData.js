@@ -6,6 +6,7 @@ export const clubsData = [
     fullName: 'Code for a Greater Tomorrow',
     tagline: 'Build · Innovate · Create',
     category: 'Technical',
+    logoUrl: '/clubs/c4gt.png',
     status: 'active',
     membersCount: 250,
     founded: 2022,
