@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { CLUB_CATEGORIES } from '@/lib/campus'
-import { COLLEGES } from '@/lib/colleges'
 
 const currentYear = new Date().getFullYear()
 
@@ -9,7 +8,6 @@ export const clubSchema = z.object({
   fullName: z.string().trim().max(100),
   tagline: z.string().trim().max(80, 'Keep the tagline under 80 characters.'),
   category: z.enum(CLUB_CATEGORIES, { error: 'Select a category.' }),
-  college: z.enum(COLLEGES, { error: 'Select the college.' }),
   coordinator: z.string().trim().min(3, 'Enter the faculty coordinator.').max(80),
   email: z.string().trim().refine((value) => value === '' || z.email().safeParse(value).success, 'Enter a valid email address or leave it empty.'),
   founded: z
@@ -25,7 +23,6 @@ export function clubDefaults(club) {
     fullName: club?.fullName && club.fullName !== club.name ? club.fullName : '',
     tagline: club?.tagline ?? '',
     category: club?.category ?? '',
-    college: club?.college ?? '',
     coordinator: club?.coordinator ?? '',
     email: club?.email ?? '',
     founded: club?.founded ? String(club.founded) : '',

@@ -98,19 +98,6 @@ export const campusEvents = [
     venue: 'KIET+ Main Hall',
     college: 'KIET+',
   },
-  {
-    _id: 'ev-cultural-fest',
-    clubId: 'club-kalakshetra',
-    description: 'Annual inter-college cultural fest with dance, music and drama competitions.',
-    title: 'Kalakshetra Cultural Fest',
-    organizer: 'Kalakshetra',
-    category: 'Cultural',
-    date: '2026-10-24',
-    startTime: '09:30',
-    endTime: '20:00',
-    venue: 'KIEW Open Air Theatre',
-    college: 'KIEW',
-  },
 ]
 
 export const recentActivities = [

@@ -1,7 +1,6 @@
 import { Pencil, Plus, Power, PowerOff, Trash2, UsersRound } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { DataTable } from '@/components/common/DataTable'
 import { FilterBar } from '@/components/common/FilterBar'
@@ -17,7 +16,6 @@ import { useConfirmAction } from '@/hooks/useConfirmAction'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useListQuery } from '@/hooks/useListQuery'
 import { CLUB_CATEGORIES } from '@/lib/campus'
-import { COLLEGES } from '@/lib/colleges'
 import { formatNumber } from '@/lib/formatters'
 
 const COLUMNS = [
@@ -37,21 +35,19 @@ const COLUMNS = [
       </div>
     ),
   },
-  { key: 'college', header: 'College', sortable: true, cell: (row) => <CollegeBadge college={row.college} /> },
   { key: 'category', header: 'Category', sortable: true },
   { key: 'membersCount', header: 'Members', sortable: true, align: 'right', cell: (row) => formatNumber(row.membersCount), className: 'tabular-nums' },
   { key: 'status', header: 'Status', sortable: true, cell: (row) => <StatusBadge status={row.status} /> },
 ]
 
 const FILTERS = [
-  { key: 'college', allLabel: 'All colleges', options: COLLEGES },
   { key: 'category', allLabel: 'All categories', options: CLUB_CATEGORIES },
   { key: 'status', allLabel: 'Any status', options: ['active', 'inactive'], labels: { active: 'Active', inactive: 'Inactive' } },
 ]
 
 export function AdminClubsPage() {
   useDocumentTitle('Clubs')
-  const list = useListQuery({ initialFilters: { college: '', category: '', status: '' }, initialSort: { key: 'name', direction: 'asc' } })
+  const list = useListQuery({ initialFilters: { category: '', status: '' }, initialSort: { key: 'name', direction: 'asc' } })
   const query = useClubs(list.query)
   const [editor, setEditor] = useState(null)
   const remove = useConfirmAction(useDeleteClub())
@@ -63,7 +59,7 @@ export function AdminClubsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Clubs management"
-        description="Create, edit, activate and deactivate clubs across all three colleges. Inactive clubs are hidden from students."
+        description="Create, edit, activate and deactivate clubs. Inactive clubs are hidden from students."
         icon={UsersRound}
         actions={
           <Button size="lg" onClick={() => setEditor({ club: null })}>

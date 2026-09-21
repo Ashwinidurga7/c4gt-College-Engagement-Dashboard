@@ -1,6 +1,5 @@
 import { ArrowLeft, CalendarRange, FolderKanban, Info, Link2, Mail, Trophy, Users, Wrench } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
-import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { DetailList } from '@/components/common/DetailList'
 import { PreviewBadge } from '@/components/common/PreviewBadge'
 import { QueryView } from '@/components/common/QueryView'
@@ -28,7 +27,6 @@ function ClubHero({ club }) {
         {club.fullName && club.fullName !== club.name && <p className="text-nav-text">{club.fullName}</p>}
         {club.tagline && <p className="text-nav-text mt-1 text-sm">{club.tagline}</p>}
         <div className="mt-3 flex flex-wrap gap-2">
-          <CollegeBadge college={club.college} />
           {club.category && <span className="bg-nav-hover text-nav-text rounded-full px-2 py-0.5 text-xs font-semibold">{club.category}</span>}
           <StatusBadge status={club.status} />
         </div>

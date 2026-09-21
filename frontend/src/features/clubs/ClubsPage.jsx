@@ -12,7 +12,6 @@ import { useClubs } from '@/hooks/useCampus'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useListQuery } from '@/hooks/useListQuery'
 import { CLUB_CATEGORIES } from '@/lib/campus'
-import { COLLEGES } from '@/lib/colleges'
 
 const PAGE_SIZE = 9
 
@@ -34,14 +33,14 @@ function FilterSelect({ id, label, value, onChange, options, allLabel }) {
   )
 }
 
-/** Active clubs from all three colleges, filtered on the server. */
+/** Active KIET clubs, open to students of all three colleges and filtered on the server. */
 export function ClubsPage() {
   useDocumentTitle('Clubs')
   const { user } = useAuth()
-  const list = useListQuery({ pageSize: PAGE_SIZE, initialFilters: { status: 'active', college: '', category: '' } })
+  const list = useListQuery({ pageSize: PAGE_SIZE, initialFilters: { status: 'active', category: '' } })
   const query = useClubs(list.query)
   const data = query.data
-  const filtered = list.query.search || list.filters.college || list.filters.category
+  const filtered = list.query.search || list.filters.category
 
   let body
   if (query.isPending) body = <ListSkeleton rows={4} />
@@ -51,7 +50,7 @@ export function ClubsPage() {
       <EmptyState
         icon={UsersRound}
         title={filtered ? 'No clubs match these filters' : 'No active clubs yet'}
-        description={filtered ? 'Try another college or category.' : 'Clubs will appear here once they are set up.'}
+        description={filtered ? 'Try another category.' : 'Clubs will appear here once they are set up.'}
       />
     )
   } else {
@@ -68,9 +67,8 @@ export function ClubsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Clubs and communities" description="Active clubs across KIET, KIET+ and KIEW." icon={UsersRound} />
+      <PageHeader title="Clubs and communities" description="Active clubs, open to students of all three colleges." icon={UsersRound} />
       <FilterBar search={list.search} onSearchChange={list.setSearch} searchPlaceholder="Search clubs" searchLabel="Search clubs">
-        <FilterSelect id="club-college" label="College" value={list.filters.college} onChange={(value) => list.setFilter('college', value)} options={COLLEGES} allLabel="All colleges" />
         <FilterSelect id="club-category" label="Category" value={list.filters.category} onChange={(value) => list.setFilter('category', value)} options={CLUB_CATEGORIES} allLabel="All categories" />
       </FilterBar>
       <div aria-busy={query.isFetching || undefined} className={query.isFetching && !query.isPending ? 'opacity-70' : undefined}>
