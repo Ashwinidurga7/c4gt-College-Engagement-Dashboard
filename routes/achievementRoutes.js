@@ -59,6 +59,47 @@ router.post('/', authorize('student'), async (req, res, next) => {
   }
 });
 
+// @desc    Get single achievement by ID
+// @route   GET /api/achievements/:id
+// @access  Private
+router.get('/:id', async (req, res, next) => {
+  try {
+    const achievement = await Achievement.findById(req.params.id);
+    if (!achievement) {
+      return res.status(404).json({ success: false, message: 'Achievement not found' });
+    }
+    res.status(200).json({ success: true, data: achievement });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Update an achievement
+// @route   PUT /api/achievements/:id
+// @access  Private (Owner Student, Admin)
+router.put('/:id', async (req, res, next) => {
+  try {
+    const achievement = await Achievement.findById(req.params.id);
+    if (!achievement) {
+      return res.status(404).json({ success: false, message: 'Achievement not found' });
+    }
+
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(achievement.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to update this achievement' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the owning student or an admin can update this achievement' });
+    }
+
+    const updated = await Achievement.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json({ success: true, message: 'Achievement updated successfully', data: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @desc    Delete an achievement
 // @route   DELETE /api/achievements/:id
 // @access  Private (Owner Student, Admin)

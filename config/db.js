@@ -8,25 +8,25 @@ const connectDB = async () => {
   const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
   if (!uri || uri.includes('<username>') || uri.includes('<password>') || uri.includes('YOUR_ATLAS_PASSWORD')) {
-    console.log('ℹ️  No valid MongoDB Atlas connection string found in .env.');
-    console.log('   Running in Standalone In-Memory Mode with full institutional seed data.');
-    console.log('   To connect to MongoDB Atlas, set MONGODB_URI in c4gt-College-Engagement-Dashboard/.env');
+    console.warn('⚠️  No valid MongoDB connection string found in .env (MONGODB_URI is not set).');
+    console.warn('   Database operations will fail until MONGODB_URI is configured in your .env file.');
+    console.warn('   See .env.example for required configuration.');
     return;
   }
 
   try {
-    console.log('⏳ Connecting to MongoDB Atlas...');
+    console.log('⏳ Connecting to MongoDB...');
     const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 8000,
     });
     console.log(`=========================================`);
-    console.log(`🍃 MongoDB Atlas Connected Successfully!`);
+    console.log(`🍃 MongoDB Connected Successfully!`);
     console.log(`📡 Host: ${conn.connection.host}`);
     console.log(`📂 Database: ${conn.connection.name}`);
     console.log(`=========================================`);
   } catch (error) {
-    console.error(`❌ MongoDB Atlas Connection Failed: ${error.message}`);
-    console.log('⚠️  Falling back to Standalone In-Memory Mode so the server remains fully operational.');
+    console.error(`❌ MongoDB Connection Failed: ${error.message}`);
+    console.error('⚠️  Database is unavailable. Routes requiring database operations will fail until connected.');
   }
 };
 

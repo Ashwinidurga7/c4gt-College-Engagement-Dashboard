@@ -487,28 +487,102 @@ const getMe = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    let extra = {};
+
+    const userObj = typeof user.toObject === 'function' ? user.toObject() : { ...user };
+    delete userObj.password;
+
+    let roleData = {};
     if (user.role === 'student') {
       const student = await Student.findOne({ user: user._id });
       if (student) {
-        extra = {
+        roleData = {
           rollNumber: student.rollNumber,
           department: student.department,
+          assignedYears: student.year ? [student.year] : [],
           year: student.year,
           section: student.section,
           semester: student.semester,
           branch: student.branch,
           cgpa: student.cgpa,
           campus: student.college || user.college,
+          student: {
+            rollNumber: student.rollNumber,
+            department: student.department,
+            assignedYears: student.year ? [student.year] : [],
+            year: student.year,
+            section: student.section,
+            semester: student.semester,
+            branch: student.branch,
+            cgpa: student.cgpa,
+            campus: student.college || user.college,
+          },
+        };
+      }
+    } else if (user.role === 'faculty') {
+      const faculty = await Faculty.findOne({ user: user._id });
+      if (faculty) {
+        roleData = {
+          department: faculty.department,
+          assignedYears: faculty.assignedYears || [],
+          approvalStatus: faculty.approvalStatus || user.approvalStatus || 'approved',
+          faculty: {
+            department: faculty.department,
+            assignedYears: faculty.assignedYears || [],
+            approvalStatus: faculty.approvalStatus || user.approvalStatus || 'approved',
+          },
+        };
+      }
+    } else if (user.role === 'hod') {
+      const hod = await Hod.findOne({ user: user._id });
+      if (hod) {
+        roleData = {
+          college: hod.college || user.college,
+          department: hod.department,
+          academicYear: hod.academicYear || hod.year,
+          approvalStatus: hod.approvalStatus || user.approvalStatus || 'approved',
+          hod: {
+            college: hod.college || user.college,
+            department: hod.department,
+            academicYear: hod.academicYear || hod.year,
+            approvalStatus: hod.approvalStatus || user.approvalStatus || 'approved',
+          },
+        };
+      }
+    } else if (user.role === 'ctpo') {
+      const ctpo = await Ctpo.findOne({ user: user._id });
+      if (ctpo) {
+        roleData = {
+          college: ctpo.college || user.college,
+          department: ctpo.department,
+          academicYear: ctpo.academicYear || ctpo.year,
+          section: ctpo.section || ctpo.class,
+          approvalStatus: ctpo.approvalStatus || user.approvalStatus || 'approved',
+          ctpo: {
+            college: ctpo.college || user.college,
+            department: ctpo.department,
+            academicYear: ctpo.academicYear || ctpo.year,
+            section: ctpo.section || ctpo.class,
+            approvalStatus: ctpo.approvalStatus || user.approvalStatus || 'approved',
+          },
         };
       }
     }
+
+    const resolvedApprovalStatus =
+      user.approvalStatus ||
+      roleData.hod?.approvalStatus ||
+      roleData.ctpo?.approvalStatus ||
+      roleData.faculty?.approvalStatus ||
+      'approved';
+
     res.status(200).json({
       success: true,
       data: {
-        ...user,
+        ...userObj,
         id: user._id,
-        ...extra,
+        _id: user._id,
+        approvalStatus: resolvedApprovalStatus,
+        ...roleData,
       },
     });
   } catch (error) {

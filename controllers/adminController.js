@@ -449,8 +449,9 @@ const getPendingHods = async (req, res, next) => {
     for (const h of pendingHods) {
       const uId = h.user?._id || h.user;
       const u = allUsers.find((user) => String(user._id || user.id) === String(uId));
+      const hObj = typeof h.toObject === 'function' ? h.toObject() : { ...h };
       merged.push({
-        ...h,
+        ...hObj,
         user: u || h.user,
         name: u ? u.name : (h.name || 'HOD'),
         email: u ? u.email : (h.email || 'Unknown'),

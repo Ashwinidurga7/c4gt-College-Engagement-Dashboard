@@ -45,7 +45,7 @@ const getMyResume = async (req, res, next) => {
     }
 
     const resumes = await Resume.find({ student: studentProfile._id });
-    const defaultResume = resumes.find((r) => r.isDefault) || resumes[0];
+    const defaultResume = resumes.find((r) => r.isPrimary || r.isDefault) || resumes[0];
 
     if (!defaultResume) {
       return res.status(404).json({ success: false, message: 'No resume found for student' });
@@ -77,16 +77,17 @@ const getResumeById = async (req, res, next) => {
 // @access  Private (Student)
 const createResume = async (req, res, next) => {
   try {
-    const { title, summary, skills, education, experience, projects, certifications, template, isDefault } = req.body;
+    const { title, summary, skills, education, experience, projects, certifications, template, isDefault, isPrimary } = req.body;
 
     const studentProfile = await Student.findOne({ user: req.user.id });
     if (!studentProfile) {
       return res.status(404).json({ success: false, message: 'Student profile not found for logged in user' });
     }
 
-    if (isDefault) {
-      // Unset previous default resumes
-      await Resume.updateMany({ student: studentProfile._id, isDefault: true }, { isDefault: false });
+    const makePrimary = isPrimary === true || isDefault === true;
+    if (makePrimary) {
+      // Unset previous primary/default resumes
+      await Resume.updateMany({ student: studentProfile._id }, { isDefault: false, isPrimary: false });
     }
 
     const newResume = await Resume.create({
@@ -99,8 +100,9 @@ const createResume = async (req, res, next) => {
       projects: Array.isArray(projects) ? projects : [],
       certifications: Array.isArray(certifications) ? certifications : [],
       template: template || 'modern',
-      isDefault: isDefault === true,
-      fileUrl: null,
+      isDefault: makePrimary,
+      isPrimary: makePrimary,
+      fileUrl: req.body.fileUrl || null,
     });
 
     res.status(201).json({
@@ -123,8 +125,10 @@ const updateResume = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Resume not found' });
     }
 
-    if (req.body.isDefault) {
-      await Resume.updateMany({ student: resume.student, isDefault: true }, { isDefault: false });
+    if (req.body.isDefault || req.body.isPrimary) {
+      await Resume.updateMany({ student: resume.student }, { isDefault: false, isPrimary: false });
+      req.body.isDefault = true;
+      req.body.isPrimary = true;
     }
 
     const updated = await Resume.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -132,6 +136,41 @@ const updateResume = async (req, res, next) => {
       success: true,
       message: 'Resume updated successfully',
       data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Set a resume as primary
+// @route   PATCH /api/resumes/:id/primary
+// @access  Private (Student)
+const setPrimaryResume = async (req, res, next) => {
+  try {
+    const resume = await Resume.findById(req.params.id);
+    if (!resume) {
+      return res.status(404).json({ success: false, message: 'Resume not found' });
+    }
+
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(resume.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'Not authorized to update this resume' });
+      }
+    }
+
+    // Unset primary/default on all resumes for this student
+    await Resume.updateMany({ student: resume.student }, { isDefault: false, isPrimary: false });
+
+    // Set target resume as primary and default
+    resume.isPrimary = true;
+    resume.isDefault = true;
+    await resume.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Resume marked as primary successfully',
+      data: resume,
     });
   } catch (error) {
     next(error);
@@ -262,4 +301,5 @@ module.exports = {
   updateResume,
   deleteResume,
   generateResumeData,
+  setPrimaryResume,
 };

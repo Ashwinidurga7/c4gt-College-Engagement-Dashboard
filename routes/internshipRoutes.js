@@ -61,6 +61,47 @@ router.post('/', authorize('student'), async (req, res, next) => {
   }
 });
 
+// @desc    Get single internship by ID
+// @route   GET /api/internships/:id
+// @access  Private
+router.get('/:id', async (req, res, next) => {
+  try {
+    const internship = await Internship.findById(req.params.id);
+    if (!internship) {
+      return res.status(404).json({ success: false, message: 'Internship not found' });
+    }
+    res.status(200).json({ success: true, data: internship });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Update an internship
+// @route   PUT /api/internships/:id
+// @access  Private (Owner Student, Admin)
+router.put('/:id', async (req, res, next) => {
+  try {
+    const internship = await Internship.findById(req.params.id);
+    if (!internship) {
+      return res.status(404).json({ success: false, message: 'Internship not found' });
+    }
+
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(internship.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to update this internship' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the owning student or an admin can update this internship' });
+    }
+
+    const updated = await Internship.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json({ success: true, message: 'Internship updated successfully', data: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @desc    Delete an internship
 // @route   DELETE /api/internships/:id
 // @access  Private (Owner Student, Admin)

@@ -10,6 +10,10 @@ const Resume = createModel('Resume', 'resumes', {
   projects: { type: Array, default: [] },
   experience: { type: Array, default: [] },
   certifications: { type: Array, default: [] },
+  title: { type: String },
+  fileUrl: { type: String },
+  isPrimary: { type: Boolean, default: false },
+  isDefault: { type: Boolean, default: false },
 });
 
 module.exports = Resume;

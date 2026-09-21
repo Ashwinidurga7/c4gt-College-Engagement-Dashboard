@@ -156,23 +156,28 @@ const getNearbyActivitiesForStudent = async (student, query = {}) => {
  */
 const getStudentDashboard = async (userId, query = {}) => {
   const User = require('../models/User');
-  let student = await Student.findOne({ user: userId });
+  let student = await Student.findOne({ user: userId }).populate('user', 'name email');
   if (!student) {
     const u = await User.findById(userId);
     if (u && u.rollNumber) {
-      student = await Student.findOne({ rollNumber: u.rollNumber });
+      student = await Student.findOne({ rollNumber: u.rollNumber }).populate('user', 'name email');
     }
   }
   if (!student) {
     student = await Student.findOne({
       $or: [{ 'user._id': userId }, { 'user.id': userId }]
-    });
+    }).populate('user', 'name email');
   }
 
   if (!student) {
     const error = new Error('Student profile not found');
     error.statusCode = 404;
     throw error;
+  }
+
+  let studentUser = student.user;
+  if (!studentUser || !studentUser.name) {
+    studentUser = await User.findById(userId);
   }
 
   const studentId = student._id;
@@ -241,8 +246,8 @@ const getStudentDashboard = async (userId, query = {}) => {
     subjects: [],
   };
 
-  const studentName = student.user?.name || 'Student';
-  const studentEmail = student.user?.email || '';
+  const studentName = studentUser?.name || student.user?.name || 'Student';
+  const studentEmail = studentUser?.email || student.user?.email || '';
 
   return {
     student: {
@@ -361,7 +366,12 @@ const getStudentDashboard = async (userId, query = {}) => {
  * Returns attendance breakdown and day-wise calendar for student.
  */
 const getStudentAttendance = async (userId, query = {}) => {
-  const student = await Student.findOne({ user: userId });
+  let student = await Student.findOne({ user: userId });
+  if (!student) {
+    student = await Student.findOne({
+      $or: [{ 'user._id': userId }, { 'user.id': userId }]
+    });
+  }
   if (!student) {
     const error = new Error('Student profile not found');
     error.statusCode = 404;
@@ -419,12 +429,24 @@ const getStudentAttendance = async (userId, query = {}) => {
  * Returns academic marks, grades, SGPA, CGPA, and credits.
  */
 const getStudentAcademicReport = async (userId, query = {}) => {
-  const student = await Student.findOne({ user: userId });
+  const User = require('../models/User');
+  let student = await Student.findOne({ user: userId }).populate('user', 'name email');
+  if (!student) {
+    student = await Student.findOne({
+      $or: [{ 'user._id': userId }, { 'user.id': userId }]
+    }).populate('user', 'name email');
+  }
   if (!student) {
     const error = new Error('Student profile not found');
     error.statusCode = 404;
     throw error;
   }
+
+  let studentUser = student.user;
+  if (!studentUser || !studentUser.name) {
+    studentUser = await User.findById(userId);
+  }
+  const studentName = studentUser?.name || student.user?.name || 'Student';
 
   const reports = await AcademicReport.find({ student: student._id });
   let report = reports[0];
@@ -452,7 +474,7 @@ const getStudentAcademicReport = async (userId, query = {}) => {
   return {
     studentId: student._id,
     rollNumber: student.rollNumber,
-    name: student.user?.name,
+    name: studentName,
     regulation: report.regulation,
     batch: report.batch,
     department: report.department,

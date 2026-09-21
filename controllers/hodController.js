@@ -265,8 +265,9 @@ const getPendingCtpos = async (req, res, next) => {
       if (isPending && canHodApproveCtpo(hod, c)) {
         const uId = c.user?._id || c.user;
         const u = allUsers.find((user) => String(user._id || user.id) === String(uId));
+        const cObj = typeof c.toObject === 'function' ? c.toObject() : { ...c };
         pending.push({
-          ...c,
+          ...cObj,
           user: u || c.user,
           name: u ? u.name : (c.name || 'CTPO'),
           email: u ? u.email : (c.email || 'Unknown'),
