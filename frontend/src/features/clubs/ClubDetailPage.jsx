@@ -1,4 +1,4 @@
-import { ArrowLeft, CalendarRange, FolderKanban, Info, Link2, Mail, Trophy, Users, Wrench } from 'lucide-react'
+import { ArrowLeft, BookOpen, CalendarRange, Code2, FolderKanban, GitBranch, Info, Lightbulb, Mail, Mic, Trophy, UsersRound, Wrench } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { DetailList } from '@/components/common/DetailList'
 import { PreviewBadge } from '@/components/common/PreviewBadge'
@@ -6,18 +6,29 @@ import { QueryView } from '@/components/common/QueryView'
 import { RoleGate } from '@/components/common/RoleGate'
 import { SectionCard } from '@/components/common/SectionCard'
 import { Skeleton, StatGridSkeleton } from '@/components/common/Skeleton'
-import { StatCard } from '@/components/common/StatCard'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { ClubEvents } from '@/features/clubs/ClubEvents'
 import { ClubGallery } from '@/features/clubs/ClubGallery'
+import { ClubHighlights } from '@/features/clubs/ClubHighlights'
+import { ClubQuickLinks, ClubStats } from '@/features/clubs/ClubSidebar'
+import { ClubSocials } from '@/features/clubs/ClubSocials'
 import { ClubLogo } from '@/features/clubs/ClubLogo'
 import { useAuth } from '@/hooks/useAuth'
 import { useClub } from '@/hooks/useCampus'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
-import { formatNumber } from '@/lib/formatters'
 
-const SOCIAL_LABELS = { instagram: 'Instagram', linkedin: 'LinkedIn', whatsapp: 'WhatsApp community', website: 'Website' }
+/** Icon per focus area, matched case-insensitively; anything unlisted gets a neutral mark. */
+const FOCUS_ICONS = {
+  hackathons: Trophy,
+  workshops: Wrench,
+  projects: FolderKanban,
+  'tech talks': Mic,
+  'open source': GitBranch,
+  community: UsersRound,
+  mentoring: BookOpen,
+  'digital public goods': Code2,
+}
 
 function ClubHero({ club }) {
   return (
@@ -69,48 +80,44 @@ export function ClubDetailPage() {
         {(club) => (
           <>
             <ClubHero club={club} />
-            <section aria-label="Club statistics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <StatCard label="Members" value={formatNumber(club.membersCount)} icon={Users} tone="blue" />
-              <StatCard label="Projects" value={formatNumber(club.stats.projects)} icon={FolderKanban} tone="green" />
-              <StatCard label="Workshops" value={formatNumber(club.stats.workshops)} icon={Wrench} tone="purple" />
-              <StatCard label="Hackathons" value={formatNumber(club.stats.hackathons)} icon={Trophy} tone="orange" />
-            </section>
-            <div className="grid gap-6 lg:grid-cols-3">
-              <SectionCard title={`About ${club.name}`} icon={Info} className="lg:col-span-2">
-                <p className="text-body text-sm leading-relaxed">{club.description || 'No description yet.'}</p>
-                {club.focusAreas.length > 0 && (
-                  <ul aria-label="Focus areas" className="mt-4 flex flex-wrap gap-2">
-                    {club.focusAreas.map((area) => (
-                      <li key={area} className="bg-tone-blue text-tone-blue-fg rounded-full px-3 py-1 text-xs font-semibold">
-                        {area}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </SectionCard>
-              <SectionCard title="Club details" icon={CalendarRange}>
-                <DetailList
-                  columns={1}
-                  items={[
-                    { label: 'Faculty coordinator', value: club.coordinator },
-                    { label: 'Student president', value: club.president },
-                    { label: 'Founded', value: club.founded },
-                    { label: 'Contact', value: club.email && <a className="text-link inline-flex items-center gap-1 hover:underline" href={`mailto:${club.email}`}><Mail className="size-3.5" aria-hidden />{club.email}</a> },
-                  ]}
-                />
-                {Object.keys(club.socials).length > 0 && (
-                  <ul className="mt-4 flex flex-col gap-2 border-t pt-4">
-                    {Object.entries(club.socials).map(([network, url]) => (
-                      <li key={network}>
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-link inline-flex items-center gap-1.5 text-sm font-medium hover:underline">
-                          <Link2 className="size-4" aria-hidden /> {SOCIAL_LABELS[network] ?? network}
-                          <span className="sr-only">(opens in a new tab)</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </SectionCard>
+            <ClubSocials club={club} />
+            <div className="grid items-start gap-6 lg:grid-cols-3">
+              <div className="flex flex-col gap-6 lg:col-span-2">
+                <SectionCard title={`About ${club.name}`} icon={Lightbulb}>
+                  <p className="text-body text-sm leading-relaxed">{club.description || 'No description yet.'}</p>
+                  {club.focusAreas.length > 0 && (
+                    <ul aria-label="Focus areas" className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                      {club.focusAreas.map((area) => {
+                        const Icon = FOCUS_ICONS[area.toLowerCase()] ?? Info
+                        return (
+                          <li key={area} className="flex items-center gap-2.5">
+                            <span className="bg-tone-blue text-tone-blue-fg flex size-9 shrink-0 items-center justify-center rounded-lg">
+                              <Icon className="size-4" aria-hidden />
+                            </span>
+                            <span className="text-body min-w-0 truncate text-sm font-medium">{area}</span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
+                </SectionCard>
+                <ClubHighlights club={club} />
+              </div>
+              <div className="flex flex-col gap-6">
+                <ClubQuickLinks club={club} role={user.role} />
+                <ClubStats club={club} />
+                <SectionCard title="Club details" icon={CalendarRange}>
+                  <DetailList
+                    columns={1}
+                    items={[
+                      { label: 'Faculty coordinator', value: club.coordinator },
+                      { label: 'Student president', value: club.president },
+                      { label: 'Founded', value: club.founded },
+                      { label: 'Contact', value: club.email && <a className="text-link inline-flex items-center gap-1 hover:underline" href={`mailto:${club.email}`}><Mail className="size-3.5" aria-hidden />{club.email}</a> },
+                    ]}
+                  />
+                </SectionCard>
+              </div>
             </div>
             <ClubGallery club={club} />
             <ClubEvents clubId={club.id} />

@@ -20,8 +20,23 @@ export function toClub(raw = {}) {
       projects: toNumber(raw.stats?.projects),
       workshops: toNumber(raw.stats?.workshops),
       hackathons: toNumber(raw.stats?.hackathons),
+      placements: toNumber(raw.stats?.placements),
+      internships: toNumber(raw.stats?.internships),
     },
-    socials: raw.socials ?? {},
+    // A social entry may be a bare URL or { url, label }; the label is the handle shown on the card.
+    socials: Object.fromEntries(
+      Object.entries(raw.socials ?? {})
+        .map(([network, value]) => [network, typeof value === 'string' ? { url: value, label: '' } : { url: pick(value?.url, value?.href), label: value?.label ?? '' }])
+        .filter(([, value]) => value.url),
+    ),
+    website: pick(raw.website, raw.site),
+    highlights: toList(raw.highlights).map((item, index) => ({
+      id: pick(item?.id, `highlight-${index}`),
+      category: item?.category ?? null,
+      title: pick(item?.title, item?.name, ''),
+      description: item?.description ?? '',
+      date: item?.date ?? null,
+    })),
     logoUrl: pick(raw.logoUrl, raw.logo),
     // A photo may arrive as a bare URL string or as { url, caption }.
     photos: toList(pick(raw.photos, raw.gallery, raw.images))
