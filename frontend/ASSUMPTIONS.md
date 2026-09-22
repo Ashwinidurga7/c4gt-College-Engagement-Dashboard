@@ -233,6 +233,10 @@ Every data view goes through `QueryView` or `DataTable`, which render the shared
 - The router throws a named error at start-up if a navigation item has no registered page, so the sidebar and the routes cannot drift apart.
 - "Join club" is wrapped in `RoleGate` (students only) instead of a prop passed through the hero.
 
+## About the college page
+
+`/about` is public (outside `GuestRoute`) and linked from the login form (issue #32). Signed-out visitors return to sign in, signed-in users to their dashboard. Content lives in `features/about/aboutContent.js`: vision, mission, values, programmes and headline figures follow kietgroup.in/about-us; JNTUK affiliation, AICTE approval and the address follow public college listings. Confirm with the college before quoting new figures.
+
 ## Brand assets
 
 - **Logo**: supplied as a transparent WebP (808×309). Converted to `public/kietlogo.png` with the empty transparent margin trimmed (622×297), so the logo fills its box at every size. Its "GROUP OF INSTITUTIONS" lettering is dark grey, so the logo sits on a white chip on navy surfaces (sidebar, bus pass) and everywhere in the dark theme.
