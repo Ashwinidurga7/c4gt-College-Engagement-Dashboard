@@ -126,6 +126,8 @@ Certifications (`/api/certifications`, full CRUD), certificates (`/api/certifica
 - Internships cannot be edited (no `PUT` endpoint), and the add dialog says so.
 - **Club detail** is at `/student/clubs/:clubId`. "Join club" is shown disabled with a Preview note because no join endpoint exists (plan conflict 8).
 - Club hero banners are flat navy, not gradients (plan conflict 5).
+- **Club membership** (issue #34): a student sees a club's activities, past projects, events, gallery and quick links only when the club response says `isMember: true` (or carries a `membership` object). Everyone else, and every student until the backend sends that field, gets the read-only view: hero, about, stats, club details and a "Members only" card. Staff roles always see the full page. Members get a "You are a member" badge on the page and a "Member" badge on the club card. Hiding is a convenience; the backend must still refuse member-only data to non-members.
+- **Past projects** (issue #33): read from `projects[]` on the club, each `{ name, academicYear, description, team[], deployUrl, repoUrl }` (aliases `title`, `year`, `teamMembers`, `liveUrl`, `sourceUrl` are accepted). Only real entries are listed, never counts. The backend `Club` model has no such field yet.
 - Opening a notification's link marks it as read.
 
 ### Mock data

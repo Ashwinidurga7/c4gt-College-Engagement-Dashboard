@@ -1,5 +1,5 @@
 import { applyListQuery } from '@/lib/listQuery'
-import { campusEvents, MOCK_TODAY } from '@/mocks/campusData'
+import { campusEvents, clubMemberships, MOCK_TODAY } from '@/mocks/campusData'
 import { clubsData } from '@/mocks/clubsData'
 import { createMockCollection } from '@/mocks/mockStore'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
@@ -11,9 +11,20 @@ const clubs = createMockCollection(clubsData, {
   defaultSort: { key: 'name', direction: 'asc' },
 })
 
+/** Clubs the mock student belongs to; the mock has one student, so membership is not per user. */
+const memberOf = new Set(clubMemberships.map((entry) => entry.clubId))
+
+async function withMembership(request) {
+  const data = await request
+  if (Array.isArray(data?.items)) return { ...data, items: data.items.map((club) => ({ ...club, isMember: memberOf.has(club._id) })) }
+  return data && data._id ? { ...data, isMember: memberOf.has(data._id) } : data
+}
+
 /** New clubs start active with no members, as the admin creates them. */
 export const clubsMock = {
   ...clubs,
+  list: (query) => withMembership(clubs.list(query)),
+  get: (id) => withMembership(clubs.get(id)),
   create: (data) => clubs.create({ status: 'active', membersCount: 0, stats: { projects: 0, workshops: 0, hackathons: 0 }, socials: {}, ...data }),
 }
 

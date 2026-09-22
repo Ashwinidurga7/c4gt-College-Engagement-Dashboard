@@ -42,6 +42,18 @@ export function toClub(raw = {}) {
     photos: toList(pick(raw.photos, raw.gallery, raw.images))
       .map((photo) => (typeof photo === 'string' ? { url: photo, caption: '' } : { url: pick(photo?.url, photo?.src), caption: photo?.caption ?? '' }))
       .filter((photo) => photo.url),
+    projects: toList(raw.projects).map((item, index) => ({
+      id: pick(item?.id, item?._id, `project-${index}`),
+      name: pick(item?.name, item?.title, 'Untitled project'),
+      academicYear: pick(item?.academicYear, item?.year),
+      description: item?.description ?? '',
+      team: toList(pick(item?.team, item?.teamMembers, item?.members)).map(nameOf).filter(Boolean),
+      deployUrl: pick(item?.deployUrl, item?.liveUrl, item?.url),
+      repoUrl: pick(item?.repoUrl, item?.sourceUrl, item?.github),
+    })),
+    // Whether the signed-in student belongs to the club. The backend does not send this yet,
+    // so against the real API every student sees the non-member view until it does.
+    isMember: Boolean(pick(raw.isMember, raw.membership)),
   }
 }
 

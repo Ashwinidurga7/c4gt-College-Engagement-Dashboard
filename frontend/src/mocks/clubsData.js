@@ -29,6 +29,25 @@ export const clubsData = [
     ],
     // Figures from IIIT Hyderabad's writeup of the three-year KIET pilot; confirm before publishing.
     stats: { projects: 12, workshops: 8, hackathons: 5, placements: 60, internships: 38 },
+    projects: [
+      {
+        id: 'college-dashboard',
+        name: 'College All-Activities Dashboard',
+        academicYear: '2026-27',
+        description:
+          'The portal you are using: one place for KIET students, faculty, CTPOs, HODs and admins to track academics, attendance, clubs, events, certificates and resumes. Built with React on the front end and Node.js with MongoDB on the back end.',
+        team: [
+          'Ashwini Durga',
+          'Yuvaraju Bondada',
+          'Sampath B',
+          'Samsani Giridhar Shyam',
+          'P. S. V. S. Durga Prasad',
+          'Ramyasri Chintada',
+          'Gandham Sri Lakshmi',
+        ],
+        repoUrl: 'https://github.com/Ashwinidurga7/c4gt-College-Engagement-Dashboard',
+      },
+    ],
     highlights: [
       {
         id: 'dmp',
