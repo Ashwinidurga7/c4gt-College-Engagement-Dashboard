@@ -113,6 +113,8 @@ export const router = createBrowserRouter([
           { path: '/register', lazy: page(() => import('@/features/auth/RegisterPage'), 'RegisterPage') },
         ],
       },
+      // Public: linked from the login page and readable whether or not you are signed in.
+      { path: '/about', lazy: page(() => import('@/features/about/AboutPage'), 'AboutPage') },
       { path: '/awaiting-approval', lazy: page(() => import('@/features/auth/AwaitingApprovalPage'), 'AwaitingApprovalPage') },
       statusRoute('/forbidden', 'forbidden'),
       ...ROLE_LIST.map(roleRoutes),

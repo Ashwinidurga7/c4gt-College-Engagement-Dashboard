@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRight, Loader2, Mail } from 'lucide-react'
+import { ArrowRight, Landmark, Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -137,6 +137,10 @@ export function LoginForm() {
           Create an account
         </Link>
       </p>
+
+      <Link to="/about" className="text-link inline-flex items-center justify-center gap-1.5 self-center text-sm font-semibold hover:underline">
+        <Landmark className="size-4" aria-hidden /> About the college
+      </Link>
 
       {env.useMock && (
         <DemoAccounts
