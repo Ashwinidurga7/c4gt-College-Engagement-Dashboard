@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { ClubEvents } from '@/features/clubs/ClubEvents'
 import { ClubGallery } from '@/features/clubs/ClubGallery'
 import { ClubHighlights } from '@/features/clubs/ClubHighlights'
+import { ClubHubMembers } from '@/features/clubs/ClubHubMembers'
 import { ClubProjects } from '@/features/clubs/ClubProjects'
 import { ClubQuickLinks, ClubStats } from '@/features/clubs/ClubSidebar'
 import { ClubSocials } from '@/features/clubs/ClubSocials'
@@ -40,10 +41,10 @@ function MembersOnly({ club }) {
   return (
     <SectionCard title="Members only" icon={LockKeyhole}>
       <p className="text-body text-sm leading-relaxed">
-        Activities, past projects, upcoming events and the photo gallery of {club.name} are open to club members. Join the club to see them and take part.
+        Activities, past projects, hub members, upcoming events and the photo gallery of {club.name} are open to club members. Join the club to see them and take part.
       </p>
       <ul aria-label="Available to members" className="mt-4 grid gap-2 sm:grid-cols-2">
-        {['What the club is working on', 'Past projects and their teams', 'Upcoming club events', 'Photo gallery'].map((item) => (
+        {['What the club is working on', 'Past projects and their teams', 'Hub members and teams', 'Upcoming club events', 'Photo gallery'].map((item) => (
           <li key={item} className="text-muted-foreground flex items-center gap-2 text-sm">
             <LockKeyhole className="size-3.5 shrink-0" aria-hidden />
             {item}
@@ -142,6 +143,7 @@ function ClubBody({ club, role }) {
       </div>
       {full && (
         <>
+          <ClubHubMembers club={club} />
           <ClubGallery club={club} />
           <ClubEvents clubId={club.id} />
         </>
