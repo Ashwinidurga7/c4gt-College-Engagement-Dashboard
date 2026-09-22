@@ -6,8 +6,15 @@ import { cn } from '@/lib/utils'
 /**
  * Campus photographs, in the order they are shown. The first one loads eagerly.
  * Add more to /public/campus/ and list them here; one entry shows as a still image.
+ * `position` is the CSS object-position that keeps the subject in view when a wide
+ * photo is cropped into the tall login panel, whose left edge fades out.
  */
-const SLIDES = [{ src: '/campus.jpg', alt: 'KIET campus building' }]
+const SLIDES = [
+  { src: '/campus.jpg', alt: 'KIET campus building' },
+  { src: '/campus/aerial-grounds.jpg', alt: 'Aerial view of the KIET campus and sports grounds', position: '62% center' },
+  { src: '/campus/aerial-main-block.jpg', alt: 'Aerial view of the KIET main academic block', position: '40% center' },
+  { src: '/campus/aerial-wide.jpg', alt: 'Wide aerial view of the KIET campus', position: '45% center' },
+]
 
 const HOLD_MS = 5500
 const FADE_MS = 1200
@@ -76,7 +83,7 @@ export function CampusSlideshow({ className }) {
             loading={position === 0 ? 'eager' : 'lazy'}
             decoding="async"
             onError={() => setBroken((current) => new Set(current).add(slide.src))}
-            style={{ transitionDuration: reducedMotion ? '0ms' : `${FADE_MS}ms` }}
+            style={{ objectPosition: slide.position, transitionDuration: reducedMotion ? '0ms' : `${FADE_MS}ms` }}
             className={cn(
               'absolute inset-0 size-full object-cover transition-opacity ease-in-out motion-reduce:transition-none',
               isActive ? 'opacity-100' : 'opacity-0',
