@@ -88,9 +88,9 @@ export const campusEvents = [
   {
     _id: 'ev-robotics-expo',
     clubId: 'club-robotics',
-    description: 'Robotics Club project expo with line followers, drones and a pick-and-place arm.',
+    description: 'KIET Robotics Lab project expo with line followers, drones and a pick-and-place arm.',
     title: 'Robotics Project Expo',
-    organizer: 'Robotics Club',
+    organizer: 'KIET Robotics Lab',
     category: 'Workshop',
     date: '2026-08-22',
     startTime: '10:00',

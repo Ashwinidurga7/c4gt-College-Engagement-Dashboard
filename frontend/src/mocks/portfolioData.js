@@ -36,7 +36,7 @@ export const certificatesData = [
   { _id: 'crt-nss', title: 'NSS Volunteer Certificate', category: 'Participation', issuedBy: 'NSS Special Camp', date: '2026-08-15', status: 'verified', fileName: 'nss-special-camp.pdf', verifiedBy: 'Dr. P. Venkata Rao' },
   { _id: 'crt-sports', title: 'Sports Participation', category: 'Sports', issuedBy: 'Inter-College Tournament', date: '2026-04-06', status: 'verified', fileName: 'intercollege-cricket.jpg', verifiedBy: 'Mr. S. Naga Babu' },
   { _id: 'crt-c4gt', title: 'C4GT Certification', category: 'Achievement', issuedBy: 'C4GT Summit 2026', date: '2026-03-10', status: 'pending', fileName: 'c4gt-summit.pdf' },
-  { _id: 'crt-robotics', title: 'Robotics Workshop', category: 'Workshop', issuedBy: 'Robotics Club', date: '2026-02-22', status: 'rejected', fileName: 'robotics-workshop.png', remarks: 'Certificate image is unreadable. Upload a clearer copy.' },
+  { _id: 'crt-robotics', title: 'Robotics Workshop', category: 'Workshop', issuedBy: 'KIET Robotics Lab', date: '2026-02-22', status: 'rejected', fileName: 'robotics-workshop.png', remarks: 'Certificate image is unreadable. Upload a clearer copy.' },
 ]
 
 export const projectsData = [
