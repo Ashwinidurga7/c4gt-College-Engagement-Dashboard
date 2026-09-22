@@ -58,7 +58,7 @@ export function ClubsPage() {
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {data.items.map((club) => (
           <li key={club.id}>
-            <ClubCard club={club} to={`/${user.role}/clubs/${club.id}`} />
+            <ClubCard club={club} to={`/${user.role}/clubs/${club.id}`} member={user.role === 'student' && club.isMember} />
           </li>
         ))}
       </ul>

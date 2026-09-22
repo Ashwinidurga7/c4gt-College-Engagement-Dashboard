@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, CalendarRange, Code2, FolderKanban, GitBranch, Info, Lightbulb, Mail, Mic, Trophy, UsersRound, Wrench } from 'lucide-react'
+import { ArrowLeft, BadgeCheck, BookOpen, CalendarRange, Code2, FolderKanban, GitBranch, Info, Lightbulb, LockKeyhole, Mail, Mic, Trophy, UsersRound, Wrench } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { DetailList } from '@/components/common/DetailList'
 import { PreviewBadge } from '@/components/common/PreviewBadge'
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { ClubEvents } from '@/features/clubs/ClubEvents'
 import { ClubGallery } from '@/features/clubs/ClubGallery'
 import { ClubHighlights } from '@/features/clubs/ClubHighlights'
+import { ClubProjects } from '@/features/clubs/ClubProjects'
 import { ClubQuickLinks, ClubStats } from '@/features/clubs/ClubSidebar'
 import { ClubSocials } from '@/features/clubs/ClubSocials'
 import { ClubLogo } from '@/features/clubs/ClubLogo'
@@ -30,6 +31,29 @@ const FOCUS_ICONS = {
   'digital public goods': Code2,
 }
 
+/** Staff see every club in full; a student sees member-only sections only in clubs they belong to. */
+function hasFullAccess(club, role) {
+  return role !== 'student' || club.isMember
+}
+
+function MembersOnly({ club }) {
+  return (
+    <SectionCard title="Members only" icon={LockKeyhole}>
+      <p className="text-body text-sm leading-relaxed">
+        Activities, past projects, upcoming events and the photo gallery of {club.name} are open to club members. Join the club to see them and take part.
+      </p>
+      <ul aria-label="Available to members" className="mt-4 grid gap-2 sm:grid-cols-2">
+        {['What the club is working on', 'Past projects and their teams', 'Upcoming club events', 'Photo gallery'].map((item) => (
+          <li key={item} className="text-muted-foreground flex items-center gap-2 text-sm">
+            <LockKeyhole className="size-3.5 shrink-0" aria-hidden />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </SectionCard>
+  )
+}
+
 function ClubHero({ club }) {
   return (
     <section aria-label={club.name} className="bg-nav text-nav-strong border-nav-border flex flex-col gap-5 rounded-xl border p-6 sm:flex-row sm:items-center">
@@ -44,16 +68,85 @@ function ClubHero({ club }) {
         </div>
       </div>
       <RoleGate allow={['student']}>
-      <div className="flex flex-col items-start gap-1.5 sm:items-end">
-        <Button size="lg" disabled aria-describedby="join-note">
-          Join club
-        </Button>
-        <p id="join-note" className="text-nav-text flex items-center gap-1.5 text-xs">
-          <PreviewBadge compact /> Joining online is not available yet
-        </p>
-      </div>
+        {club.isMember ? (
+          <span className="bg-tone-green text-tone-green-fg inline-flex items-center gap-1.5 self-start rounded-full px-3 py-1 text-sm font-semibold sm:self-center">
+            <BadgeCheck className="size-4" aria-hidden /> You are a member
+          </span>
+        ) : (
+          <div className="flex flex-col items-start gap-1.5 sm:items-end">
+            <Button size="lg" disabled aria-describedby="join-note">
+              Join club
+            </Button>
+            <p id="join-note" className="text-nav-text flex items-center gap-1.5 text-xs">
+              <PreviewBadge compact /> Joining online is not available yet
+            </p>
+          </div>
+        )}
       </RoleGate>
     </section>
+  )
+}
+
+/** Everything below the back link. Member-only sections are left out of the non-member view. */
+function ClubBody({ club, role }) {
+  const full = hasFullAccess(club, role)
+
+  return (
+    <>
+      <ClubHero club={club} />
+      <ClubSocials club={club} />
+      <div className="grid items-start gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <SectionCard title={`About ${club.name}`} icon={Lightbulb}>
+            <p className="text-body text-sm leading-relaxed">{club.description || 'No description yet.'}</p>
+            {club.focusAreas.length > 0 && (
+              <ul aria-label="Focus areas" className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {club.focusAreas.map((area) => {
+                  const Icon = FOCUS_ICONS[area.toLowerCase()] ?? Info
+                  return (
+                    <li key={area} className="flex items-center gap-2.5">
+                      <span className="bg-tone-blue text-tone-blue-fg flex size-9 shrink-0 items-center justify-center rounded-lg">
+                        <Icon className="size-4" aria-hidden />
+                      </span>
+                      <span className="text-body min-w-0 truncate text-sm font-medium">{area}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </SectionCard>
+          {full ? (
+            <>
+              <ClubHighlights club={club} />
+              <ClubProjects club={club} />
+            </>
+          ) : (
+            <MembersOnly club={club} />
+          )}
+        </div>
+        <div className="flex flex-col gap-6">
+          {full && <ClubQuickLinks club={club} role={role} />}
+          <ClubStats club={club} />
+          <SectionCard title="Club details" icon={CalendarRange}>
+            <DetailList
+              columns={1}
+              items={[
+                { label: 'Faculty coordinator', value: club.coordinator },
+                { label: 'Student president', value: club.president },
+                { label: 'Founded', value: club.founded },
+                { label: 'Contact', value: club.email && <a className="text-link inline-flex items-center gap-1 hover:underline" href={`mailto:${club.email}`}><Mail className="size-3.5" aria-hidden />{club.email}</a> },
+              ]}
+            />
+          </SectionCard>
+        </div>
+      </div>
+      {full && (
+        <>
+          <ClubGallery club={club} />
+          <ClubEvents clubId={club.id} />
+        </>
+      )}
+    </>
   )
 }
 
@@ -77,52 +170,7 @@ export function ClubDetailPage() {
           </div>
         }
       >
-        {(club) => (
-          <>
-            <ClubHero club={club} />
-            <ClubSocials club={club} />
-            <div className="grid items-start gap-6 lg:grid-cols-3">
-              <div className="flex flex-col gap-6 lg:col-span-2">
-                <SectionCard title={`About ${club.name}`} icon={Lightbulb}>
-                  <p className="text-body text-sm leading-relaxed">{club.description || 'No description yet.'}</p>
-                  {club.focusAreas.length > 0 && (
-                    <ul aria-label="Focus areas" className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                      {club.focusAreas.map((area) => {
-                        const Icon = FOCUS_ICONS[area.toLowerCase()] ?? Info
-                        return (
-                          <li key={area} className="flex items-center gap-2.5">
-                            <span className="bg-tone-blue text-tone-blue-fg flex size-9 shrink-0 items-center justify-center rounded-lg">
-                              <Icon className="size-4" aria-hidden />
-                            </span>
-                            <span className="text-body min-w-0 truncate text-sm font-medium">{area}</span>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  )}
-                </SectionCard>
-                <ClubHighlights club={club} />
-              </div>
-              <div className="flex flex-col gap-6">
-                <ClubQuickLinks club={club} role={user.role} />
-                <ClubStats club={club} />
-                <SectionCard title="Club details" icon={CalendarRange}>
-                  <DetailList
-                    columns={1}
-                    items={[
-                      { label: 'Faculty coordinator', value: club.coordinator },
-                      { label: 'Student president', value: club.president },
-                      { label: 'Founded', value: club.founded },
-                      { label: 'Contact', value: club.email && <a className="text-link inline-flex items-center gap-1 hover:underline" href={`mailto:${club.email}`}><Mail className="size-3.5" aria-hidden />{club.email}</a> },
-                    ]}
-                  />
-                </SectionCard>
-              </div>
-            </div>
-            <ClubGallery club={club} />
-            <ClubEvents clubId={club.id} />
-          </>
-        )}
+        {(club) => <ClubBody club={club} role={user.role} />}
       </QueryView>
     </div>
   )

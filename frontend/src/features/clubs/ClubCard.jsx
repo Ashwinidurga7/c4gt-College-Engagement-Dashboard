@@ -1,10 +1,11 @@
-import { ArrowRight, Users } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { ClubLogo } from '@/features/clubs/ClubLogo'
 import { formatNumber } from '@/lib/formatters'
 
-export function ClubCard({ club, to }) {
+/** `member` marks a club the signed-in student belongs to. */
+export function ClubCard({ club, to, member = false }) {
   return (
     <article className="bg-card shadow-soft hover:border-primary/40 flex h-full flex-col items-center gap-3 rounded-xl border p-5 text-center transition-colors">
       <ClubLogo club={club} className="size-16 text-lg" />
@@ -15,6 +16,11 @@ export function ClubCard({ club, to }) {
       {club.tagline && <p className="text-body text-sm">{club.tagline}</p>}
       <div className="flex flex-wrap justify-center gap-1.5">
         {club.category && <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold">{club.category}</span>}
+        {member && (
+          <span className="bg-tone-green text-tone-green-fg inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold">
+            <BadgeCheck className="size-3.5" aria-hidden /> Member
+          </span>
+        )}
         {club.status !== 'active' && <StatusBadge status={club.status} />}
       </div>
       {club.membersCount != null && (
