@@ -12,7 +12,7 @@ Requires Node.js 20 or later.
 
 ```bash
 npm install
-cp .env.example .env      # set VITE_USE_MOCK=true to run without the backend
+cp .env.example .env      # mock mode is on: no backend needed
 npm run dev               # http://localhost:5173
 ```
 
@@ -28,7 +28,7 @@ npm run dev               # http://localhost:5173
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `VITE_API_URL` | `http://localhost:5000` | Backend origin. The client adds `/api`, so do not include it. A trailing slash is ignored. |
-| `VITE_USE_MOCK` | `false` | `true` serves every module from `src/mocks/` and needs no backend |
+| `VITE_USE_MOCK` | `true` in `.env.example` (`false` if unset) | `true` serves every module from `src/mocks/` and needs no backend. Set `false` to use the real API |
 
 Vite reads these at build time, so restart `npm run dev` (or rebuild) after changing them.
 
