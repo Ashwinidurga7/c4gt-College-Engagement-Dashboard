@@ -60,9 +60,10 @@ export const clubsData = [
   {
     _id: 'club-gcc',
     name: 'GCC',
-    fullName: 'Google Developer Student Clubs',
+    fullName: 'Google Coding Club',
     tagline: 'Learn · Build · Grow Together',
     category: 'Technical',
+    logoUrl: '/clubs/gcc.png',
     status: 'active',
     membersCount: 180,
     founded: 2021,

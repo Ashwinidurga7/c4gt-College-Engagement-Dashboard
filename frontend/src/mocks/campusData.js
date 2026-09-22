@@ -2,7 +2,7 @@
 
 export const clubMemberships = [
   { clubId: 'club-c4gt', name: 'C4GT', college: 'KIET', role: 'Member', joinedOn: '2026-09-15' },
-  { clubId: 'club-gcc', name: 'Google Developer Student Clubs', college: 'KIET', role: 'Member', joinedOn: '2025-08-20' },
+  { clubId: 'club-gcc', name: 'Google Coding Club', college: 'KIET', role: 'Member', joinedOn: '2025-08-20' },
   { clubId: 'club-nss', name: 'National Service Scheme', college: 'KIET', role: 'Volunteer', joinedOn: '2025-01-10' },
 ]
 
@@ -38,7 +38,7 @@ export const campusEvents = [
     clubId: 'club-gcc',
     description: 'Make your first open-source contribution with guidance from GDSC leads. Beginner-friendly issues will be shared on the day.',
     title: 'Open Source Contribution Drive',
-    organizer: 'Google Developer Student Clubs',
+    organizer: 'Google Coding Club',
     category: 'Drive',
     date: '2026-10-05',
     startTime: '14:00',
