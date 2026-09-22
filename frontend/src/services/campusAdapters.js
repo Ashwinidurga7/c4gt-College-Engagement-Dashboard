@@ -51,6 +51,17 @@ export function toClub(raw = {}) {
       deployUrl: pick(item?.deployUrl, item?.liveUrl, item?.url),
       repoUrl: pick(item?.repoUrl, item?.sourceUrl, item?.github),
     })),
+    // The club's core team for the year, grouped into teams of a lead, senior and junior developers.
+    hubTeams: {
+      academicYear: pick(raw.hubTeams?.academicYear, raw.hubTeams?.year),
+      teams: toList(raw.hubTeams?.teams).map((team, index) => ({
+        id: pick(team?.id, team?._id, `team-${index}`),
+        name: pick(team?.name, `Team ${index + 1}`),
+        members: toList(team?.members)
+          .map((member) => ({ name: nameOf(member), role: String(pick(member?.role, 'junior')).toLowerCase() }))
+          .filter((member) => member.name),
+      })),
+    },
     // Whether the signed-in student belongs to the club. The backend does not send this yet,
     // so against the real API every student sees the non-member view until it does.
     isMember: Boolean(pick(raw.isMember, raw.membership)),
