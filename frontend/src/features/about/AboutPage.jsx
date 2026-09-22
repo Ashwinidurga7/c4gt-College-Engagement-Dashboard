@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Award, BookOpen, Building2, ExternalLink, Eye, GraduationCap, Landmark, MapPin, Sparkles, Target } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Award, BookOpen, Building2, ExternalLink, Eye, GraduationCap, Handshake, Landmark, MapPin, Sparkles, Target } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SectionCard } from '@/components/common/SectionCard'
@@ -14,6 +14,7 @@ import {
   HIGHLIGHTS,
   MISSION,
   OVERVIEW,
+  PARTNERS,
   PROGRAMMES,
   VALUES,
   VISION,
@@ -94,6 +95,36 @@ function FacilityCard({ facility }) {
   )
 }
 
+function PartnerCard({ partner }) {
+  const [broken, setBroken] = useState(false)
+
+  return (
+    <li>
+      <a
+        href={partner.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-card shadow-soft hover:border-primary/40 focus-visible:ring-ring flex h-full flex-col rounded-xl border p-5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+      >
+        {/* Logos sit on a white chip so dark marks stay visible in dark mode. */}
+        <span className="bg-logo-chip flex h-28 items-center justify-center rounded-lg border p-2">
+          {broken ? (
+            <span className="text-heading text-lg font-bold">{partner.name}</span>
+          ) : (
+            <img src={partner.logo} alt={`${partner.name} logo`} loading="lazy" decoding="async" onError={() => setBroken(true)} className="max-h-full max-w-full object-contain" />
+          )}
+        </span>
+        <span className="text-brand mt-4 text-xs font-bold tracking-wide uppercase">{partner.role}</span>
+        <span className="text-heading mt-1 inline-flex items-center gap-1.5 font-semibold">
+          {partner.name} <ExternalLink className="text-muted-foreground size-3.5" aria-hidden />
+        </span>
+        <span className="text-body mt-1.5 text-sm leading-relaxed">{partner.detail}</span>
+        <span className="sr-only">(opens in a new tab)</span>
+      </a>
+    </li>
+  )
+}
+
 /** Public overview of the college, linked from the login page and open whether or not you are signed in. */
 export function AboutPage() {
   useDocumentTitle('About the college')
@@ -117,6 +148,17 @@ export function AboutPage() {
           </div>
           <p className="text-muted-foreground mt-4 text-sm">{AFFILIATION}</p>
         </SectionCard>
+
+        <section aria-labelledby="partners-title" className="flex flex-col gap-4">
+          <h2 id="partners-title" className="text-heading flex items-center gap-2 text-xl font-bold">
+            <Handshake className="text-brand size-5" aria-hidden /> Affiliations and partners
+          </h2>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {PARTNERS.map((partner) => (
+              <PartnerCard key={partner.key} partner={partner} />
+            ))}
+          </ul>
+        </section>
 
         <div className="grid gap-6 md:grid-cols-2">
           <SectionCard title="Vision" icon={Eye}>

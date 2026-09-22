@@ -74,6 +74,42 @@ export const ACHIEVEMENTS = [
   { title: 'Over two decades of engineering education', detail: `Educating engineers in the Godavari region since ${FOUNDED}.` },
 ]
 
+/** Logos from Wikimedia Commons (JNTUK, AICTE, IIIT-H) and the club's own mark (C4GT). */
+export const PARTNERS = [
+  {
+    key: 'jntuk',
+    name: 'JNTU Kakinada',
+    role: 'Affiliating university',
+    detail: 'KIET’s degree programmes are affiliated to Jawaharlal Nehru Technological University, Kakinada.',
+    logo: '/about/partners/jntuk.png',
+    url: 'https://www.jntuk.edu.in/',
+  },
+  {
+    key: 'aicte',
+    name: 'AICTE',
+    role: 'Approving body',
+    detail: 'Programmes are approved by the All India Council for Technical Education.',
+    logo: '/about/partners/aicte.png',
+    url: 'https://www.aicte-india.org/',
+  },
+  {
+    key: 'iiith',
+    name: 'IIIT Hyderabad',
+    role: 'Academic partner',
+    detail: 'Anchors the C4GT Hub and drives the KIET Smart City Lab through its Smart City Research Center.',
+    logo: '/about/partners/iiith.png',
+    url: 'https://www.iiit.ac.in/',
+  },
+  {
+    key: 'c4gt',
+    name: 'C4GT',
+    role: 'Open-source hub',
+    detail: 'KIET has been a C4GT Hub spoke since 2023, putting students on real Digital Public Goods.',
+    logo: '/clubs/c4gt.png',
+    url: 'https://www.codeforgovtech.in/',
+  },
+]
+
 export const AFFILIATION = 'Affiliated to Jawaharlal Nehru Technological University, Kakinada (JNTUK) and approved by AICTE.'
 
 export const ADDRESS = 'Korangi, Yanam Road, Kakinada, Andhra Pradesh 533461'
