@@ -2,6 +2,7 @@ import { summarizeStudents } from '@/lib/analytics'
 import { applyListQuery } from '@/lib/listQuery'
 import { eligibilityGaps, withPlacementFields } from '@/lib/placement'
 import { currentMockUser } from '@/mocks/authMock'
+import { campusEvents, MOCK_TODAY } from '@/mocks/campusData'
 import { directoryUsers } from '@/mocks/directoryData'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { courseCatalog, examSchedule } from '@/mocks/preview/academicsData'
@@ -60,6 +61,24 @@ function seedApplications() {
       })
     return { ...drive, applications }
   })
+}
+
+/** Each student's event registrations by event id; the demo student has some history already. */
+const eventRegistrations = new Map([
+  [
+    studentProfile._id,
+    {
+      'ev-prompt-workshop': { registeredAt: '2026-08-01T11:00:00+05:30', attended: false },
+      'ev-code-sprint': { registeredAt: '2026-08-20T18:30:00+05:30', attended: true },
+      'ev-nss-plantation': { registeredAt: '2026-09-02T09:40:00+05:30', attended: true },
+      'ev-webdev-workshop': { registeredAt: '2026-09-15T20:10:00+05:30', attended: null },
+    },
+  ],
+])
+
+function registrationsOf(user) {
+  if (!eventRegistrations.has(user.id)) eventRegistrations.set(user.id, {})
+  return eventRegistrations.get(user.id)
 }
 
 /** A section in the signed-in faculty member's college. */
@@ -173,6 +192,40 @@ export const previewMock = {
       students: sectionStudents(section),
       days: workingDaysIn(month, today).map((date) => ({ date, record: recordFor(section, date) })),
     })
+  },
+
+  /** The student's registrations, newest event first: `upcoming`, or `attended` / `absent` once the event is over. */
+  eventRegistrations() {
+    const user = currentMockUser()
+    if (user?.role !== 'student') return mockError('Only students register for events.', 403)
+    const rows = Object.entries(registrationsOf(user))
+      .map(([eventId, registration]) => ({ ...registration, event: campusEvents.find((event) => event._id === eventId) }))
+      .filter((row) => row.event)
+      .map((row) => ({ ...row, status: row.event.date >= MOCK_TODAY ? 'upcoming' : row.attended ? 'attended' : 'absent' }))
+      .sort((a, b) => b.event.date.localeCompare(a.event.date))
+    return mockResponse(rows)
+  },
+
+  registerForEvent(eventId) {
+    const user = currentMockUser()
+    const event = campusEvents.find((entry) => entry._id === eventId)
+    if (user?.role !== 'student') return mockError('Only students register for events.', 403)
+    if (!event) return mockError('This event could not be found.', 404)
+    if ((event.registrationDeadline ?? event.date) < MOCK_TODAY) return mockError('Registration for this event has closed.', 409)
+    const registrations = registrationsOf(user)
+    if (registrations[eventId]) return mockError('You are already registered for this event.', 409)
+    registrations[eventId] = { registeredAt: new Date().toISOString(), attended: null }
+    return mockResponse({ event, ...registrations[eventId] })
+  },
+
+  cancelEventRegistration(eventId) {
+    const user = currentMockUser()
+    const event = campusEvents.find((entry) => entry._id === eventId)
+    const registrations = user ? registrationsOf(user) : {}
+    if (!event || !registrations[eventId]) return mockError('You are not registered for this event.', 404)
+    if (event.date < MOCK_TODAY) return mockError('This event is over, so the registration cannot be cancelled.', 409)
+    delete registrations[eventId]
+    return mockResponse({ event })
   },
 
   placementPool() {

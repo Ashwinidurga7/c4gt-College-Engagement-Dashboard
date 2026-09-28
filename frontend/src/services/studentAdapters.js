@@ -66,6 +66,8 @@ export function toEvent(raw) {
     organizer: pick(nameOf(raw.organizer), nameOf(raw.club)),
     category: raw.category ?? null,
     date: pick(raw.date, raw.startDate),
+    registrationDeadline: pick(raw.registrationDeadline, raw.registrationCloses),
+    registrationOpen: raw.registrationOpen ?? null,
     startTime: raw.startTime ?? null,
     endTime: raw.endTime ?? null,
     venue: pick(raw.venue, raw.location),

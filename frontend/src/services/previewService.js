@@ -2,6 +2,7 @@ import { toPage } from '@/lib/listQuery'
 import { withPlacementFields } from '@/lib/placement'
 import { previewMock } from '@/mocks/preview/previewMock'
 import { toRosterStudent } from '@/services/rosterAdapters'
+import { toEvent } from '@/services/studentAdapters'
 
 const identity = (item) => item
 
@@ -40,6 +41,15 @@ export const previewService = {
     const raw = await previewMock.attendanceMonth(params)
     return { students: raw.students.map(toRosterStudent), days: raw.days }
   },
+
+  async eventRegistrations() {
+    return (await previewMock.eventRegistrations()).map((row) => ({ ...row, event: toEvent(row.event) }))
+  },
+  registerForEvent: async (eventId) => {
+    const raw = await previewMock.registerForEvent(eventId)
+    return { ...raw, event: toEvent(raw.event) }
+  },
+  cancelEventRegistration: async (eventId) => toEvent((await previewMock.cancelEventRegistration(eventId)).event),
 
   placementPool: async () => (await previewMock.placementPool()).map((raw) => withPlacementFields({ ...toRosterStudent(raw), recordsVerified: raw.recordsVerified, resumeSubmitted: raw.resumeSubmitted })),
   placementDrives: () => previewMock.placementDrives(),

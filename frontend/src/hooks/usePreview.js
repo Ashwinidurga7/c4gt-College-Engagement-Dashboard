@@ -22,6 +22,10 @@ export const useCourseCatalog = (query) => usePreviewQuery('catalog', previewSer
 export const useFacilities = (query) => usePreviewQuery('facilities', previewService.facilities, query)
 export const useBusPass = () => usePreviewQuery('bus-pass', previewService.busPass)
 export const useReportSource = () => usePreviewQuery('report-source', previewService.reportSource)
+/** Only students have registrations; pass `enabled: false` for other roles. */
+export function useEventRegistrations({ enabled = true } = {}) {
+  return useQuery({ queryKey: usePreviewKey('event-registrations'), queryFn: previewService.eventRegistrations, enabled })
+}
 export const usePlacementPool = () => usePreviewQuery('placement-pool', previewService.placementPool)
 export const usePlacementDrives = () => usePreviewQuery('placement-drives', previewService.placementDrives)
 export const useInstitutionSettings = () => usePreviewQuery('institution-settings', previewService.institutionSettings)
@@ -62,6 +66,10 @@ export const useSaveAttendanceDay = () =>
   usePreviewMutation('attendance', previewService.saveAttendanceDay, (record) =>
     `Attendance ${record.corrected ? 'updated' : 'saved'}: ${record.total - record.absentees.length} of ${record.total} present`,
   )
+export const useRegisterForEvent = () =>
+  usePreviewMutation('event-registrations', previewService.registerForEvent, (registration) => `Registered for ${registration.event.title}`)
+export const useCancelEventRegistration = () =>
+  usePreviewMutation('event-registrations', previewService.cancelEventRegistration, (event) => `Registration cancelled: ${event.title}`)
 export const useSaveDriveCriteria = () => usePreviewMutation('placement-drives', previewService.saveDriveCriteria, (drive) => `Criteria saved for ${drive.company}`)
 export const useSetApplicationStatus = () => usePreviewMutation('placement-drives', previewService.setApplicationStatus)
 export const useSaveInstitutionSettings = () => usePreviewMutation('institution-settings', previewService.saveInstitutionSettings, 'Institution settings saved')
