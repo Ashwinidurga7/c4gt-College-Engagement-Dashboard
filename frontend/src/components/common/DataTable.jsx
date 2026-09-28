@@ -59,7 +59,7 @@ export function DataTable({
       <div tabIndex={0} role="region" aria-label={caption ?? 'Table'} className={cn('relative overflow-x-auto', isFetching && 'opacity-70')}>
         <table style={{ minWidth }} className="w-full border-collapse text-sm">
           {caption && <caption className="sr-only">{caption}</caption>}
-          <thead className="bg-sunken text-heading">
+          <thead className="bg-sunken/80 backdrop-blur-md text-heading border-b border-border/50">
             <tr>
               {columns.map((column) => {
                 const sortable = column.sortable && onSortChange
@@ -70,14 +70,14 @@ export function DataTable({
                     key={column.key}
                     scope="col"
                     aria-sort={ariaSort}
-                    className={cn('px-4 py-3 font-semibold whitespace-nowrap', ALIGN[column.align ?? 'left'], column.headerClassName)}
+                    className={cn('px-4 py-3.5 font-semibold whitespace-nowrap', ALIGN[column.align ?? 'left'], column.headerClassName)}
                   >
                     {sortable ? <SortHeader column={column} sort={sort} onSortChange={onSortChange} /> : column.header}
                   </th>
                 )
               })}
               {rowActions && (
-                <th scope="col" className="px-4 py-3 text-right">
+                <th scope="col" className="px-4 py-3.5 text-right">
                   <span className="sr-only">Actions</span>
                 </th>
               )}
@@ -85,13 +85,13 @@ export function DataTable({
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={getRowKey(row, index)} className="hover:bg-sunken/60 border-t transition-colors">
+              <tr key={getRowKey(row, index)} className="hover:bg-primary/5 dark:hover:bg-primary/10 border-t border-border/40 transition-colors">
                 {columns.map((column) => (
-                  <td key={column.key} className={cn('text-body px-4 py-3', ALIGN[column.align ?? 'left'], column.className)}>
+                  <td key={column.key} className={cn('text-body px-4 py-3.5', ALIGN[column.align ?? 'left'], column.className)}>
                     {column.cell ? column.cell(row, index) : (row[column.key] ?? '—')}
                   </td>
                 ))}
-                {rowActions && <td className="px-4 py-3 text-right whitespace-nowrap">{rowActions(row)}</td>}
+                {rowActions && <td className="px-4 py-3.5 text-right whitespace-nowrap">{rowActions(row)}</td>}
               </tr>
             ))}
           </tbody>
@@ -101,7 +101,7 @@ export function DataTable({
   }
 
   return (
-    <div className={cn('bg-card shadow-soft min-w-0 overflow-hidden rounded-xl border', className)}>
+    <div className={cn('glass-card min-w-0 overflow-hidden rounded-2xl', className)}>
       {toolbar && <div className="border-b p-4">{toolbar}</div>}
       <div aria-busy={isFetching || isLoading || undefined}>{body}</div>
       {pagination && !error && !isLoading && pagination.total > 0 && <TablePagination {...pagination} />}

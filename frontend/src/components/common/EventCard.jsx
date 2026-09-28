@@ -16,7 +16,7 @@ export function EventCard({ event, action, className }) {
       {date && (
         <time
           dateTime={event.date}
-          className="bg-tone-blue text-tone-blue-fg flex w-14 shrink-0 flex-col items-center rounded-lg py-2 leading-tight"
+          className="glass-chip bg-tone-blue/90 text-tone-blue-fg flex w-14 shrink-0 flex-col items-center rounded-xl py-2.5 leading-tight shadow-sm"
         >
           <span className="text-xl font-bold">{dayFormatter.format(date)}</span>
           <span className="text-xs font-semibold uppercase">{monthFormatter.format(date)}</span>

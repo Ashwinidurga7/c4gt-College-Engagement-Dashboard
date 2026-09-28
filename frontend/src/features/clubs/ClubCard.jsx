@@ -7,7 +7,7 @@ import { formatNumber } from '@/lib/formatters'
 /** `member` marks a club the signed-in student belongs to. */
 export function ClubCard({ club, to, member = false }) {
   return (
-    <article className="bg-card shadow-soft hover:border-primary/40 flex h-full flex-col items-center gap-3 rounded-xl border p-5 text-center transition-colors">
+    <article className="glass-card-interactive glass-glow-subtle glass-sheen flex h-full flex-col items-center gap-3 rounded-2xl p-5 text-center">
       <ClubLogo club={club} className="size-16 text-lg" />
       <div>
         <h3 className="text-lg font-semibold">{club.name}</h3>

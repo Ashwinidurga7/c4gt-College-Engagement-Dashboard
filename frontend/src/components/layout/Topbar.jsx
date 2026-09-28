@@ -15,7 +15,7 @@ export function Topbar({ onOpenDrawer, sidebarOpen, onToggleSidebar }) {
   const sidebarLabel = sidebarOpen ? 'Hide navigation menu' : 'Show navigation menu'
 
   return (
-    <header className="bg-card/95 border-border sticky top-0 z-20 border-b backdrop-blur">
+    <header className="glass-header sticky top-0 z-20 shadow-sm">
       <div className="flex h-16 items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         {/* -ml-2 lines the icon up with the page content below */}
         <Button variant="ghost" size="icon-lg" className="text-heading -ml-2 lg:hidden" onClick={onOpenDrawer} aria-label="Open navigation menu">

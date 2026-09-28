@@ -7,7 +7,7 @@ export function NoticeCard({ notice, className }) {
 
   return (
     <article
-      className={cn('bg-card rounded-lg border p-4', urgent && 'border-l-brand-red border-l-4', className)}
+      className={cn('glass-card-interactive rounded-xl p-4', urgent && 'border-l-brand-red border-l-4', className)}
       aria-label={notice.title}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">

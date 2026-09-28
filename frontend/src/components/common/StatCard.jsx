@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils'
 /** Headline metric with an icon chip and an optional link to the detail page. */
 export function StatCard({ label, value, icon: Icon, tone = 'blue', hint, to, linkLabel = 'View details', className }) {
   return (
-    <div className={cn('bg-card shadow-soft flex flex-col gap-3 rounded-xl border p-5', className)}>
+    <div className={cn('glass-card-interactive glass-glow-subtle glass-sheen flex flex-col gap-3 rounded-2xl p-5', className)}>
       <div className="flex items-center gap-4">
         {Icon && (
-          <span className={cn('flex size-12 shrink-0 items-center justify-center rounded-full', TONE_CLASSES[tone])}>
+          <span className={cn('flex size-12 shrink-0 items-center justify-center rounded-2xl glass-chip shadow-sm', TONE_CLASSES[tone])}>
             <Icon className="size-6" strokeWidth={1.75} aria-hidden />
           </span>
         )}

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 /** White card with a titled header; the base for chart, list and table sections. */
 export function SectionCard({ title, description, icon: Icon, action, className, bodyClassName, children }) {
   return (
-    <section className={cn('bg-card shadow-soft flex min-w-0 flex-col rounded-xl border', className)}>
+    <section className={cn('glass-card flex min-w-0 flex-col rounded-2xl transition-all duration-300', className)}>
       {(title || action) && (
         <header className="flex flex-wrap items-start justify-between gap-3 px-5 pt-5">
           <div className="flex min-w-0 items-start gap-3">

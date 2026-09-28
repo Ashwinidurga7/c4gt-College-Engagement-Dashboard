@@ -12,7 +12,7 @@ export function SidebarContent({ onNavigate }) {
   const { user, signOut } = useAuth()
 
   return (
-    <div className="bg-nav flex h-full flex-col">
+    <div className="bg-nav/95 border-nav-border flex h-full flex-col border-r backdrop-blur-xl">
       {/* Same height as the topbar so their bottom borders form one line. In the drawer, leave room for the close button. */}
       <div className={cn('border-nav-border box-content flex h-16 shrink-0 items-center gap-3 border-b px-5', onNavigate && 'pr-14')}>
         <Link
