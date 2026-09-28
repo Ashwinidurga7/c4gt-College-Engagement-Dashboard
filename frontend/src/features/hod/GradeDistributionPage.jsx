@@ -1,4 +1,4 @@
-import { GraduationCap, PieChart, Trophy } from 'lucide-react'
+import { GraduationCap, PieChart } from 'lucide-react'
 import { PageHeader } from '@/components/common/PageHeader'
 import { QueryView } from '@/components/common/QueryView'
 import { ChartSkeleton, StatGridSkeleton } from '@/components/common/Skeleton'
@@ -6,13 +6,16 @@ import { BandChart } from '@/features/analytics/BandChart'
 import { CohortStats } from '@/features/analytics/CohortStats'
 import { GroupMetricChart } from '@/features/analytics/GroupMetricChart'
 import { GroupTable } from '@/features/analytics/GroupTable'
-import { StudentMiniList } from '@/features/analytics/StudentMiniList'
+import { DepartmentToppers } from '@/features/hod/DepartmentToppers'
+import { useAuth } from '@/hooks/useAuth'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useHodAcademicReport } from '@/hooks/useHod'
+import { branchesOf } from '@/lib/colleges'
 
 export function GradeDistributionPage() {
   useDocumentTitle('Grade Distribution')
   const query = useHodAcademicReport()
+  const { user } = useAuth()
 
   return (
     <div className="flex flex-col gap-6">
@@ -44,18 +47,8 @@ export function GradeDistributionPage() {
                 domain={[0, 10]}
               />
             </div>
-            <div className="grid gap-6 lg:grid-cols-3">
-              <div className="min-w-0 lg:col-span-2">
-                <GroupTable title="Section-wise results" groups={data.bySection} />
-              </div>
-              <StudentMiniList
-                title="Department toppers"
-                icon={Trophy}
-                students={data.topPerformers}
-                emptyTitle="No results yet"
-                metric={(student) => <span className="text-heading text-sm font-semibold tabular-nums">{student.cgpa?.toFixed(2)}</span>}
-              />
-            </div>
+            <DepartmentToppers students={data.students} branches={user.department ? branchesOf(user.department) : []} />
+            <GroupTable title="Section-wise results" groups={data.bySection} />
           </>
         )}
       </QueryView>

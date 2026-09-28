@@ -26,7 +26,16 @@ export const YEARS = [1, 2, 3, 4]
 
 export const SECTIONS = ['A', 'B', 'C', 'D']
 
+/** First calendar year of the academic year `today` falls in; a new year starts in June. */
+export function academicYearStart(today = new Date()) {
+  return today.getMonth() >= 5 ? today.getFullYear() : today.getFullYear() - 1
+}
+
+export function academicYearLabel(start) {
+  return `${start}-${String(start + 1).slice(2)}`
+}
+
 export function academicYearOptions(today = new Date()) {
-  const start = today.getMonth() >= 5 ? today.getFullYear() : today.getFullYear() - 1
-  return [start - 1, start, start + 1].map((year) => `${year}-${String(year + 1).slice(2)}`)
+  const start = academicYearStart(today)
+  return [start - 1, start, start + 1].map(academicYearLabel)
 }
