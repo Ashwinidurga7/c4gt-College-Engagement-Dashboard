@@ -2,10 +2,11 @@ import { branchesOf } from '@/lib/colleges'
 
 const CSE_FAMILY = branchesOf('CSE')
 
-/** Placement drives for the 2026-27 season, each with the criteria the company sent. */
+/** KIET's placement drives for the 2026-27 season, each with the criteria the company sent. */
 export const placementDrives = [
   {
     id: 'tcs-ninja-2027',
+    college: 'KIET',
     company: 'TCS',
     role: 'Ninja (Assistant System Engineer)',
     package: '₹3.6 LPA',
@@ -14,6 +15,7 @@ export const placementDrives = [
   },
   {
     id: 'infosys-se-2027',
+    college: 'KIET',
     company: 'Infosys',
     role: 'Systems Engineer',
     package: '₹3.6 LPA',
@@ -22,6 +24,7 @@ export const placementDrives = [
   },
   {
     id: 'accenture-ase-2027',
+    college: 'KIET',
     company: 'Accenture',
     role: 'Associate Software Engineer',
     package: '₹4.5 LPA',
@@ -30,6 +33,7 @@ export const placementDrives = [
   },
   {
     id: 'cognizant-genc-2027',
+    college: 'KIET',
     company: 'Cognizant',
     role: 'GenC Programmer Analyst',
     package: '₹4.0 LPA',
@@ -38,6 +42,7 @@ export const placementDrives = [
   },
   {
     id: 'amazon-intern-2028',
+    college: 'KIET',
     company: 'Amazon',
     role: 'SDE Intern (summer 2027)',
     package: '₹80,000 per month',

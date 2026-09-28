@@ -28,17 +28,35 @@ function pageOf(items, query, searchKeys, defaultSort) {
 
 const list = (...args) => mockResponse(pageOf(...args))
 
-/** Pre-final and final years of the signed-in user's college: the students placement drives draw from. */
-function placementPool() {
-  const college = currentMockUser()?.college
-  return rosterStudents
-    .filter((student) => student.college === college && student.year >= 3)
-    .map((student) => ({
-      ...student,
-      // A few records are still waiting on the exam cell, and not everyone has uploaded a resume.
-      recordsVerified: !student.rollNumber.endsWith('07'),
-      resumeSubmitted: student.rollNumber === studentProfile.rollNumber || hashString(student.rollNumber) % 10 < 7,
-    }))
+function withPlacementFlags(student) {
+  return {
+    ...student,
+    // A few records are still waiting on the exam cell, and not everyone has uploaded a resume.
+    recordsVerified: !student.rollNumber.endsWith('07'),
+    resumeSubmitted: student.rollNumber === studentProfile.rollNumber || hashString(student.rollNumber) % 10 < 7,
+  }
+}
+
+/** Pre-final and final years of a college: the students its placement drives draw from. */
+function placementPool(college = currentMockUser()?.college) {
+  return rosterStudents.filter((student) => student.college === college && student.year >= 3).map(withPlacementFlags)
+}
+
+/**
+ * Who took part in each event: students of the host college, drawn per event, plus the demo student's own
+ * registrations. Attendance is known only for events that are over.
+ */
+function eventParticipation(students) {
+  const demoRegistrations = registrationsOf({ id: studentProfile._id })
+  return campusEvents.flatMap((event) =>
+    students.flatMap((student) => {
+      const isDemo = student.rollNumber === studentProfile.rollNumber
+      const joined = isDemo ? Boolean(demoRegistrations[event._id]) : student.college === event.college && hashString(`${event._id}${student.rollNumber}`) % 9 === 0
+      if (!joined) return []
+      const attended = isDemo ? Boolean(demoRegistrations[event._id].attended) : hashString(`${student.rollNumber}${event._id}`) % 10 < 8
+      return [{ eventId: event._id, rollNumber: student.rollNumber, attended: event.date >= MOCK_TODAY ? null : attended }]
+    }),
+  )
 }
 
 let drives = placementDrives.map((drive) => ({ ...drive, applications: {} }))
@@ -48,7 +66,7 @@ let drivesSeeded = false
 function seedApplications() {
   if (drivesSeeded) return
   drivesSeeded = true
-  const pool = placementPool().map(withPlacementFields)
+  const pool = placementPool(placementDrives[0].college).map(withPlacementFields)
   const today = new Date().toISOString().slice(0, 10)
   drives = drives.map((drive) => {
     const applications = {}
@@ -162,7 +180,15 @@ export const previewMock = {
 
   reportSource() {
     const user = currentMockUser()
-    return mockResponse({ students: user?.role === 'hod' ? scopedStudents(user) : rosterStudents, payments: feePayments })
+    const students = user?.role === 'hod' ? scopedStudents(user) : rosterStudents
+    seedApplications()
+    return mockResponse({
+      students: students.map(withPlacementFlags),
+      payments: feePayments,
+      drives,
+      events: campusEvents,
+      participation: eventParticipation(students),
+    })
   },
 
   /** One section's register for a day: saved by a faculty member here, seeded for past days, or not taken yet. */
@@ -232,9 +258,10 @@ export const previewMock = {
     return mockResponse(placementPool())
   },
 
+  /** The drives of the signed-in user's college. */
   placementDrives() {
     seedApplications()
-    return mockResponse(drives)
+    return mockResponse(drives.filter((drive) => drive.college === currentMockUser()?.college))
   },
 
   saveDriveCriteria({ id, criteria }) {

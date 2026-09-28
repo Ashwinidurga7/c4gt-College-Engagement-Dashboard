@@ -6,6 +6,8 @@ import { toEvent } from '@/services/studentAdapters'
 
 const identity = (item) => item
 
+const toPlacementStudent = (raw) => withPlacementFields({ ...toRosterStudent(raw), recordsVerified: raw.recordsVerified, resumeSubmitted: raw.resumeSubmitted })
+
 /**
  * Modules with no backend endpoint (plan section 11). They always use the mock layer,
  * even when VITE_USE_MOCK=false, and every page using them shows a Preview badge.
@@ -29,7 +31,13 @@ export const previewService = {
 
   async reportSource() {
     const raw = await previewMock.reportSource()
-    return { students: raw.students.map(toRosterStudent), payments: raw.payments }
+    return {
+      students: raw.students.map(toPlacementStudent),
+      payments: raw.payments,
+      drives: raw.drives,
+      events: raw.events.map(toEvent),
+      participation: raw.participation,
+    }
   },
 
   async attendanceDay(params) {
@@ -51,7 +59,7 @@ export const previewService = {
   },
   cancelEventRegistration: async (eventId) => toEvent((await previewMock.cancelEventRegistration(eventId)).event),
 
-  placementPool: async () => (await previewMock.placementPool()).map((raw) => withPlacementFields({ ...toRosterStudent(raw), recordsVerified: raw.recordsVerified, resumeSubmitted: raw.resumeSubmitted })),
+  placementPool: async () => (await previewMock.placementPool()).map(toPlacementStudent),
   placementDrives: () => previewMock.placementDrives(),
   saveDriveCriteria: (values) => previewMock.saveDriveCriteria(values),
   setApplicationStatus: (values) => previewMock.setApplicationStatus(values),

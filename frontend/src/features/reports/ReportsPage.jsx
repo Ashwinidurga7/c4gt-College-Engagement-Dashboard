@@ -5,19 +5,53 @@ import { PageHeader } from '@/components/common/PageHeader'
 import { PreviewNotice } from '@/components/common/PreviewNotice'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Button } from '@/components/ui/button'
-import { REPORTS } from '@/features/reports/reportDefinitions'
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
+import { filterDefinition, REPORTS } from '@/features/reports/reportDefinitions'
 import { useAuth } from '@/hooks/useAuth'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useReportSource } from '@/hooks/usePreview'
+import { branchesOf } from '@/lib/colleges'
 import { downloadText, toCsv } from '@/lib/csv'
 import { formatNumber } from '@/lib/formatters'
 
 const PREVIEW_ROWS = 25
 
+function ReportFilters({ report, source, filters, onChange }) {
+  if (report.filters.length === 0) return null
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      {report.filters.map(filterDefinition).map((filter) => (
+        <span key={filter.key} className="contents">
+          <label htmlFor={`report-${filter.key}`} className="sr-only">
+            {filter.label}
+          </label>
+          <NativeSelect
+            id={`report-${filter.key}`}
+            size="lg"
+            className="w-full sm:w-48"
+            value={filters[filter.key] ?? ''}
+            onChange={(event) => onChange({ ...filters, [filter.key]: event.target.value })}
+          >
+            <NativeSelectOption value="">{filter.allLabel}</NativeSelectOption>
+            {filter.options(source).map((option) => (
+              <NativeSelectOption key={option.value} value={option.value}>
+                {option.label}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        </span>
+      ))}
+    </div>
+  )
+}
+
+/** A report over the whole scope by default; the filters narrow the summary, table and download together. */
 function GeneratedReport({ report, source }) {
-  const { columns, rows } = report.build(source)
+  const [filters, setFilters] = useState({})
+  const { summary, columns, rows } = report.build(source, filters)
   const tableColumns = columns.map((column) => ({ ...column, cell: column.format }))
   const today = new Date().toISOString().slice(0, 10)
+  const filtered = Object.values(filters).some(Boolean)
 
   return (
     <section aria-labelledby="report-result" className="flex flex-col gap-3">
@@ -30,10 +64,27 @@ function GeneratedReport({ report, source }) {
             {formatNumber(rows.length)} rows{rows.length > PREVIEW_ROWS && `, first ${PREVIEW_ROWS} shown. Download for the full list`}.
           </p>
         </div>
-        <Button variant="outline" size="lg" onClick={() => downloadText(`${report.id}-${today}.csv`, toCsv(columns, rows))} disabled={rows.length === 0}>
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => downloadText(`${[report.id, ...Object.values(filters).filter(Boolean), today].join('-')}.csv`, toCsv(columns, rows))}
+          disabled={rows.length === 0}
+        >
           <Download aria-hidden /> Download CSV
         </Button>
       </div>
+      <ReportFilters report={report} source={source} filters={filters} onChange={setFilters} />
+      <dl className="grid gap-3 sm:grid-cols-3">
+        {summary.map((item) => (
+          <div key={item.label} className="bg-card rounded-lg border p-4">
+            <dt className="text-muted-foreground text-sm">
+              {item.label}
+              {!filtered && ' (overall)'}
+            </dt>
+            <dd className="text-heading text-2xl font-bold tabular-nums">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
       <DataTable caption={report.title} columns={tableColumns} rows={rows.slice(0, PREVIEW_ROWS)} getRowKey={(row, index) => row.id ?? `${row.rollNumber}-${index}`} emptyTitle="Nothing to report" minWidth={640} />
     </section>
   )
@@ -51,7 +102,11 @@ export function ReportsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Reports"
-        description={user.role === 'hod' ? `Reports for the ${user.department} department.` : 'Institution-wide reports across KIET, KIET+ and KIEW.'}
+        description={
+          user.role === 'hod'
+            ? `Overall and filtered reports for ${branchesOf(user.department).join(', ')}.`
+            : 'Overall and filtered reports across KIET, KIET+ and KIEW.'
+        }
         icon={FileBarChart}
         preview
       />
@@ -72,7 +127,7 @@ export function ReportsPage() {
         ))}
       </ul>
       {source.isError && <ErrorState error={source.error} onRetry={source.refetch} />}
-      {report && source.data && <GeneratedReport report={report} source={source.data} />}
+      {report && source.data && <GeneratedReport key={report.id} report={report} source={source.data} />}
       <PreviewNotice />
     </div>
   )
