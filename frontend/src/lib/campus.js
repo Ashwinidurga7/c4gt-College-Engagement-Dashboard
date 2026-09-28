@@ -9,4 +9,4 @@ export const EVENT_WINDOWS = [
   { value: '', label: 'All' },
 ]
 
-export const FACILITY_CATEGORIES = ['Academic', 'Health', 'Food', 'Sports', 'Administration', 'Residential']
+export const FACILITY_CATEGORIES = ['Library', 'Laboratories', 'Computer Labs', 'Sports', 'Hostel', 'Transportation', 'Wi-Fi', 'Medical', 'Cafeteria']
