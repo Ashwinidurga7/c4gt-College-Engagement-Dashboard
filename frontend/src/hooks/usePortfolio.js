@@ -1,12 +1,12 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { queryKeys } from '@/lib/queryKeys'
+import { achievementService, activityService } from '@/services/achievementService'
 import { certificateService } from '@/services/certificateService'
 import { certificationService } from '@/services/certificationService'
 import { internshipService } from '@/services/internshipService'
 import { projectService } from '@/services/projectService'
 import { resumeService } from '@/services/resumeService'
-import { studentService } from '@/services/studentService'
 
 const key = queryKeys.student.resource
 
@@ -46,8 +46,16 @@ export const useInternships = (query) => useResourceList('internships', internsh
 export const useCreateInternship = () => useResourceMutation('internships', internshipService.create, 'Internship added')
 export const useDeleteInternship = () => useResourceMutation('internships', internshipService.remove, 'Internship deleted')
 
-export const useAchievements = (query) => useResourceList('achievements', studentService.achievements, query)
-export const useActivities = (query) => useResourceList('activities', studentService.activities, query)
+export const useAchievements = (query) => useResourceList('achievements', achievementService.list, query)
+export const useCreateAchievement = () => useResourceMutation('achievements', achievementService.create, 'Achievement added')
+export const useUpdateAchievement = () =>
+  useResourceMutation('achievements', ({ id, values }) => achievementService.update(id, values), 'Achievement updated')
+export const useDeleteAchievement = () => useResourceMutation('achievements', achievementService.remove, 'Achievement deleted')
+
+export const useActivities = (query) => useResourceList('activities', activityService.list, query)
+export const useCreateActivity = () => useResourceMutation('activities', activityService.create, 'Activity added')
+export const useUpdateActivity = () => useResourceMutation('activities', ({ id, values }) => activityService.update(id, values), 'Activity updated')
+export const useDeleteActivity = () => useResourceMutation('activities', activityService.remove, 'Activity deleted')
 
 export const useResumes = () => useQuery({ queryKey: key('resumes'), queryFn: resumeService.list })
 export const useUploadResume = () => useResourceMutation('resumes', resumeService.upload, 'Resume uploaded')

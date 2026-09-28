@@ -126,6 +126,16 @@ export function toAchievement(raw = {}) {
   }
 }
 
+export function toAchievementPayload(values) {
+  return {
+    title: values.title.trim(),
+    category: values.category,
+    level: values.level,
+    date: values.date,
+    description: values.description.trim(),
+  }
+}
+
 export function toPortfolioActivity(raw = {}) {
   return {
     id: toId(raw),
@@ -134,5 +144,17 @@ export function toPortfolioActivity(raw = {}) {
     organizer: pick(nameOf(raw.organizer), nameOf(raw.club)),
     role: raw.role ?? null,
     date: pick(raw.date, raw.createdAt),
+  }
+}
+
+/** The API stores the type as `category`; `type` is sent too for the mock and older records. */
+export function toActivityPayload(values) {
+  return {
+    title: values.title.trim(),
+    type: values.type,
+    category: values.type,
+    organizer: values.organizer.trim(),
+    role: values.role.trim(),
+    date: values.date,
   }
 }
