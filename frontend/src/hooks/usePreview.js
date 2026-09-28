@@ -28,6 +28,7 @@ export function useEventRegistrations({ enabled = true } = {}) {
 }
 export const usePlacementPool = () => usePreviewQuery('placement-pool', previewService.placementPool)
 export const usePlacementDrives = () => usePreviewQuery('placement-drives', previewService.placementDrives)
+export const useNotificationPreferences = () => usePreviewQuery('notification-preferences', previewService.notificationPreferences)
 export const useInstitutionSettings = () => usePreviewQuery('institution-settings', previewService.institutionSettings)
 
 /** `params` is `{ department, year, section, date }`; nothing loads until all four are chosen. */
@@ -72,4 +73,6 @@ export const useCancelEventRegistration = () =>
   usePreviewMutation('event-registrations', previewService.cancelEventRegistration, (event) => `Registration cancelled: ${event.title}`)
 export const useSaveDriveCriteria = () => usePreviewMutation('placement-drives', previewService.saveDriveCriteria, (drive) => `Criteria saved for ${drive.company}`)
 export const useSetApplicationStatus = () => usePreviewMutation('placement-drives', previewService.setApplicationStatus)
+export const useSaveNotificationPreferences = () =>
+  usePreviewMutation('notification-preferences', previewService.saveNotificationPreferences, 'Notification preferences saved')
 export const useSaveInstitutionSettings = () => usePreviewMutation('institution-settings', previewService.saveInstitutionSettings, 'Institution settings saved')

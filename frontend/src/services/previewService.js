@@ -64,6 +64,9 @@ export const previewService = {
   saveDriveCriteria: (values) => previewMock.saveDriveCriteria(values),
   setApplicationStatus: (values) => previewMock.setApplicationStatus(values),
 
+  notificationPreferences: () => previewMock.notificationPreferences(),
+  saveNotificationPreferences: (preferences) => previewMock.saveNotificationPreferences(preferences),
+
   institutionSettings: () => previewMock.institutionSettings(),
   saveInstitutionSettings: (values) => previewMock.saveInstitutionSettings(values),
 }

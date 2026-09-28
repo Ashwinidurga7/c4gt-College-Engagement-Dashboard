@@ -1,5 +1,6 @@
 import { summarizeStudents } from '@/lib/analytics'
 import { applyListQuery } from '@/lib/listQuery'
+import { defaultNotificationPreferences } from '@/lib/notificationPreferences'
 import { eligibilityGaps, withPlacementFields } from '@/lib/placement'
 import { currentMockUser } from '@/mocks/authMock'
 import { campusEvents, MOCK_TODAY } from '@/mocks/campusData'
@@ -19,6 +20,8 @@ import { studentProfile } from '@/mocks/studentProfileData'
 let timetable = buildTimetable()
 /** Registers faculty saved in this session, keyed by section and date; they override the seeded history. */
 const savedDays = new Map()
+/** Notification preferences by user id; users without an entry get the defaults. */
+const notificationPreferences = new Map()
 let institutionSettings = { academicYear: '2026-27', semesterStart: '2026-07-01', semesterEnd: '2026-12-19', attendanceThreshold: 75, feeDueDate: '2026-09-30' }
 
 function pageOf(items, query, searchKeys, defaultSort) {
@@ -171,7 +174,7 @@ export const previewMock = {
   },
 
   facilities(query) {
-    return list(facilities, query, ['name', 'location', 'category'], { key: 'name', direction: 'asc' })
+    return list(facilities, query, ['name', 'location', 'category', 'description'], null)
   },
 
   busPass() {
@@ -280,6 +283,19 @@ export const previewMock = {
     else applications[rollNumber] = status
     drives = drives.map((entry) => (entry.id === driveId ? { ...entry, applications } : entry))
     return mockResponse({ driveId, rollNumber, status })
+  },
+
+  notificationPreferences() {
+    const user = currentMockUser()
+    if (!user) return mockError('Sign in to see your preferences.', 401)
+    return mockResponse({ email: user.email, preferences: notificationPreferences.get(user.id) ?? defaultNotificationPreferences() })
+  },
+
+  saveNotificationPreferences(preferences) {
+    const user = currentMockUser()
+    if (!user) return mockError('Sign in to change your preferences.', 401)
+    notificationPreferences.set(user.id, preferences)
+    return mockResponse({ email: user.email, preferences })
   },
 
   institutionSettings() {
