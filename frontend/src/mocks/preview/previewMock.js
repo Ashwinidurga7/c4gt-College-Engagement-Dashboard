@@ -8,6 +8,7 @@ import { directoryUsers } from '@/mocks/directoryData'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { courseCatalog, examSchedule } from '@/mocks/preview/academicsData'
 import { busPass, facilities } from '@/mocks/preview/campusServicesData'
+import { examNotices } from '@/mocks/preview/examNoticesData'
 import { feePayments, studentFeeAccount } from '@/mocks/preview/feesData'
 import { placementDrives } from '@/mocks/preview/placementData'
 import { isWorkingDay, sectionKey, sectionStudents, seededDay, workingDaysIn } from '@/mocks/preview/sectionAttendanceData'
@@ -140,6 +141,12 @@ export const previewMock = {
 
   studentFees() {
     return mockResponse(studentFeeAccount)
+  },
+
+  /** Newest first, with `isNew` for notices from the last week. */
+  examNotices() {
+    const weekAgo = new Date(new Date(`${MOCK_TODAY}T00:00:00Z`).getTime() - 7 * 86400000).toISOString().slice(0, 10)
+    return mockResponse([...examNotices].sort((a, b) => b.publishedOn.localeCompare(a.publishedOn)).map((notice) => ({ ...notice, isNew: notice.publishedOn >= weekAgo })))
   },
 
   exams(query = {}) {

@@ -23,6 +23,7 @@ export const previewService = {
   },
   studentFees: () => previewMock.studentFees(),
 
+  examNotices: () => previewMock.examNotices(),
   exams: async (query) => toPage(await previewMock.exams(query), query, identity),
   departments: () => previewMock.departments(),
   catalog: async (query) => toPage(await previewMock.catalog(query), query, identity),

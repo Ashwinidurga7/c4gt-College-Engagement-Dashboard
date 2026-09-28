@@ -52,6 +52,7 @@ const PAGES = {
 const PREVIEW_PAGES = {
   timetable: page(() => import('@/features/timetable/TimetablePage'), 'TimetablePage'),
   exams: page(() => import('@/features/exams/ExamsPage'), 'ExamsPage'),
+  'exam-notices': page(() => import('@/features/exams/ExamNoticesPage'), 'ExamNoticesPage'),
   fees: page(() => import('@/features/fees/FeesPage'), 'FeesPage'),
   'bus-pass': page(() => import('@/features/busPass/BusPassPage'), 'BusPassPage'),
   facilities: page(() => import('@/features/facilities/FacilitiesPage'), 'FacilitiesPage'),

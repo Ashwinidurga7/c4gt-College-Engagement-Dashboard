@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   Library,
   MapPin,
+  Megaphone,
   NotebookPen,
   PieChart,
   Settings,
@@ -51,6 +52,7 @@ export const NAVIGATION = {
         { path: 'academic-report', label: 'Results', icon: BarChart3, phase: 1 },
         { path: 'timetable', label: 'Timetable', icon: CalendarClock, phase: 6, preview: true },
         { path: 'exams', label: 'Exams', icon: NotebookPen, phase: 6, preview: true },
+        { path: 'exam-notices', label: 'JNTUK Notices', icon: Megaphone, phase: 6, preview: true },
       ],
     },
     {

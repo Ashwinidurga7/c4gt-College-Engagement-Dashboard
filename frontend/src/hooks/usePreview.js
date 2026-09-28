@@ -16,6 +16,7 @@ function usePreviewQuery(module, fetcher, query) {
 export const useTimetable = () => usePreviewQuery('timetable', previewService.timetable)
 export const useFees = (query) => usePreviewQuery('fees', previewService.fees, query)
 export const useStudentFees = () => usePreviewQuery('student-fees', previewService.studentFees)
+export const useExamNotices = () => usePreviewQuery('exam-notices', previewService.examNotices)
 export const useExams = (query) => usePreviewQuery('exams', previewService.exams, query)
 export const useDepartments = () => usePreviewQuery('departments', previewService.departments)
 export const useCourseCatalog = (query) => usePreviewQuery('catalog', previewService.catalog, query)
