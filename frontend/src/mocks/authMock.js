@@ -61,7 +61,7 @@ const users = [
   { _id: 'u-ctpo-p2', name: 'G. Naresh Kumar', email: 'naresh.kumar@kiet.edu', role: 'ctpo', college: 'KIET', department: 'CSE', year: 4, section: 'A', approvalStatus: 'pending', createdAt: '2026-09-18T09:05:00+05:30' },
   { _id: 'u-ctpo-p3', name: 'S. Ravi Teja', email: 'ravi.teja@kiet.edu', role: 'ctpo', college: 'KIET', department: 'ECE', year: 3, section: 'A', approvalStatus: 'pending', createdAt: '2026-09-17T15:40:00+05:30' },
   { _id: 'u-faculty-p1', name: 'Mrs. A. Sowjanya', email: 'sowjanya.a@kiet.edu', role: 'faculty', college: 'KIET', department: 'IT', assignedYears: [1, 2], approvalStatus: 'pending', createdAt: '2026-09-15T10:00:00+05:30' },
-  { _id: 'u-faculty-p2', name: 'Mr. T. Prakash', email: 'prakash.t@kiew.edu', role: 'faculty', college: 'KIEW', department: 'CSE-AI', assignedYears: [3], approvalStatus: 'pending', createdAt: '2026-09-18T12:30:00+05:30' },
+  { _id: 'u-faculty-p2', name: 'Mr. T. Prakash', email: 'prakash.t@kiew.edu', role: 'faculty', college: 'KIEW', department: 'CAI', assignedYears: [3], approvalStatus: 'pending', createdAt: '2026-09-18T12:30:00+05:30' },
   { _id: 'u-hod-p1', name: 'Dr. V. Ramana Murthy', email: 'hod.mech@kietplus.edu', role: 'hod', college: 'KIET+', department: 'MECH', academicYear: '2026-27', approvalStatus: 'pending', createdAt: '2026-09-14T16:45:00+05:30' },
 ]
 

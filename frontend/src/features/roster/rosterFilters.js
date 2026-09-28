@@ -1,4 +1,13 @@
+import { DEPARTMENTS } from '@/lib/colleges'
+
 /** Dropdown filter definitions for RosterTable. Values are sent to the API as query parameters. */
+
+export const BRANCH_FILTER = {
+  key: 'department',
+  label: 'Branch',
+  allLabel: 'All branches',
+  options: DEPARTMENTS.map((code) => ({ value: code, label: code })),
+}
 
 export const YEAR_FILTER = (years = [1, 2, 3, 4]) => ({
   key: 'year',

@@ -30,10 +30,15 @@ export const previewService = {
     return { students: raw.students.map(toRosterStudent), payments: raw.payments }
   },
 
-  facultyClasses: () => previewMock.facultyClasses(),
-  sectionStudents: async (section) => (await previewMock.sectionStudents(section)).map(toRosterStudent),
-  submitAttendance: (session) => previewMock.submitAttendance(session),
-  attendanceSessions: () => previewMock.attendanceSessions(),
+  async attendanceDay(params) {
+    const raw = await previewMock.attendanceDay(params)
+    return { students: raw.students.map(toRosterStudent), record: raw.record, workingDay: raw.workingDay !== false }
+  },
+  saveAttendanceDay: (values) => previewMock.saveAttendanceDay(values),
+  async attendanceMonth(params) {
+    const raw = await previewMock.attendanceMonth(params)
+    return { students: raw.students.map(toRosterStudent), days: raw.days }
+  },
 
   institutionSettings: () => previewMock.institutionSettings(),
   saveInstitutionSettings: (values) => previewMock.saveInstitutionSettings(values),

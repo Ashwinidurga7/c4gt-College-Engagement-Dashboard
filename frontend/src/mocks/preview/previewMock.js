@@ -6,12 +6,14 @@ import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { courseCatalog, examSchedule } from '@/mocks/preview/academicsData'
 import { busPass, facilities } from '@/mocks/preview/campusServicesData'
 import { feePayments, studentFeeAccount } from '@/mocks/preview/feesData'
+import { isWorkingDay, sectionKey, sectionStudents, seededDay, workingDaysIn } from '@/mocks/preview/sectionAttendanceData'
 import { buildTimetable, TIMETABLE_SECTIONS } from '@/mocks/preview/timetableData'
 import { rosterStudents } from '@/mocks/rosterData'
 import { scopedStudents } from '@/mocks/rosterMock'
 
 let timetable = buildTimetable()
-let attendanceSessions = []
+/** Registers faculty saved in this session, keyed by section and date; they override the seeded history. */
+const savedDays = new Map()
 let institutionSettings = { academicYear: '2026-27', semesterStart: '2026-07-01', semesterEnd: '2026-12-19', attendanceThreshold: 75, feeDueDate: '2026-09-30' }
 
 function pageOf(items, query, searchKeys, defaultSort) {
@@ -20,6 +22,16 @@ function pageOf(items, query, searchKeys, defaultSort) {
 }
 
 const list = (...args) => mockResponse(pageOf(...args))
+
+/** A section in the signed-in faculty member's college. */
+function facultySection({ department, year, section }) {
+  const college = currentMockUser()?.college
+  return college && department && year && section ? { college, department, year: Number(year), section } : null
+}
+
+function recordFor(section, date) {
+  return savedDays.get(`${sectionKey(section)}|${date}`) ?? seededDay(section, date)
+}
 
 function feeTotals(payments) {
   const sum = (status) => payments.filter((payment) => !status || payment.status === status).reduce((total, payment) => total + payment.amount, 0)
@@ -95,27 +107,33 @@ export const previewMock = {
     return mockResponse({ students: user?.role === 'hod' ? scopedStudents(user) : rosterStudents, payments: feePayments })
   },
 
-  facultyClasses() {
+  /** One section's register for a day: saved by a faculty member here, seeded for past days, or not taken yet. */
+  attendanceDay({ date, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    return mockResponse({ students: sectionStudents(section), record: recordFor(section, date), workingDay: isWorkingDay(date) })
+  },
+
+  saveAttendanceDay({ date, absentees, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    if (!isWorkingDay(date)) return mockError('Attendance can only be taken on working days.', 400)
+    const previous = recordFor(section, date)
     const user = currentMockUser()
-    return mockResponse(timetable.filter((entry) => entry.faculty === user?.name))
+    const record = { ...section, date, absentees, takenBy: user?.name ?? 'Faculty', submittedAt: new Date().toISOString(), corrected: Boolean(previous) }
+    savedDays.set(`${sectionKey(section)}|${date}`, record)
+    return mockResponse({ ...record, total: sectionStudents(section).length })
   },
 
-  sectionStudents(sectionKey) {
-    const section = TIMETABLE_SECTIONS.find((item) => item.value === sectionKey)
-    if (!section) return mockError('Unknown section.', 404)
-    return mockResponse(
-      rosterStudents.filter((student) => student.college === 'KIET' && student.department === 'CSE' && student.year === section.year && student.section === section.section),
-    )
-  },
-
-  submitAttendance(session) {
-    const saved = { ...session, id: `session-${attendanceSessions.length + 1}`, submittedAt: new Date().toISOString() }
-    attendanceSessions = [saved, ...attendanceSessions]
-    return mockResponse(saved)
-  },
-
-  attendanceSessions() {
-    return mockResponse(attendanceSessions)
+  /** Every working day of the month so far, each with its record or `null` when attendance was not taken. */
+  attendanceMonth({ month, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    const today = new Date().toISOString().slice(0, 10)
+    return mockResponse({
+      students: sectionStudents(section),
+      days: workingDaysIn(month, today).map((date) => ({ date, record: recordFor(section, date) })),
+    })
   },
 
   institutionSettings() {

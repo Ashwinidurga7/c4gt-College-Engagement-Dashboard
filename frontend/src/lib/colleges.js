@@ -1,6 +1,19 @@
 export const COLLEGES = ['KIET', 'KIET+', 'KIEW']
 
-export const DEPARTMENTS = ['CSE', 'CSE-AI', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
+/** Branch codes as JNTUK prints them; CAI, CSM and AID are the CSE specialisations. */
+export const DEPARTMENT_NAMES = {
+  CSE: 'Computer Science and Engineering',
+  CAI: 'Computer Science and Engineering (Artificial Intelligence)',
+  CSM: 'Computer Science and Engineering (AI and Machine Learning)',
+  AID: 'Artificial Intelligence and Data Science',
+  IT: 'Information Technology',
+  ECE: 'Electronics and Communication Engineering',
+  EEE: 'Electrical and Electronics Engineering',
+  MECH: 'Mechanical Engineering',
+  CIVIL: 'Civil Engineering',
+}
+
+export const DEPARTMENTS = Object.keys(DEPARTMENT_NAMES)
 
 export const YEARS = [1, 2, 3, 4]
 

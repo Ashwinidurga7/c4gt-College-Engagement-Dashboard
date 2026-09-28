@@ -14,11 +14,11 @@ const INITIALS = ['A', 'B', 'Ch', 'D', 'G', 'K', 'M', 'N', 'P', 'R', 'S', 'T', '
 
 /** Departments offered at each college. */
 const OFFERINGS = {
-  KIET: ['CSE', 'CSE-AI', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'],
-  'KIET+': ['CSE', 'ECE', 'EEE', 'MECH'],
-  KIEW: ['CSE', 'CSE-AI', 'IT', 'ECE'],
+  KIET: ['CSE', 'CAI', 'CSM', 'AID', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'],
+  'KIET+': ['CSE', 'CSM', 'ECE', 'EEE', 'MECH'],
+  KIEW: ['CSE', 'CAI', 'CSM', 'IT', 'ECE'],
 }
-const BRANCH_CODES = { CSE: '05', 'CSE-AI': '61', IT: '12', ECE: '04', EEE: '02', MECH: '03', CIVIL: '01' }
+const BRANCH_CODES = { CSE: '05', CAI: '43', CSM: '42', AID: '54', IT: '12', ECE: '04', EEE: '02', MECH: '03', CIVIL: '01' }
 const COLLEGE_CODES = { KIET: 'JN', 'KIET+': 'JP', KIEW: 'JW' }
 /** Academic year 2026-27: first years joined in 2026. */
 const JOIN_YEAR = { 1: 26, 2: 25, 3: 24, 4: 23 }

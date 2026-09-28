@@ -22,15 +22,23 @@ export const useCourseCatalog = (query) => usePreviewQuery('catalog', previewSer
 export const useFacilities = (query) => usePreviewQuery('facilities', previewService.facilities, query)
 export const useBusPass = () => usePreviewQuery('bus-pass', previewService.busPass)
 export const useReportSource = () => usePreviewQuery('report-source', previewService.reportSource)
-export const useFacultyClasses = () => usePreviewQuery('faculty-classes', previewService.facultyClasses)
-export const useAttendanceSessions = () => usePreviewQuery('attendance-sessions', previewService.attendanceSessions)
 export const useInstitutionSettings = () => usePreviewQuery('institution-settings', previewService.institutionSettings)
 
-export function useSectionStudents(section) {
+/** `params` is `{ department, year, section, date }`; nothing loads until all four are chosen. */
+export function useAttendanceDay(params) {
   return useQuery({
-    queryKey: usePreviewKey('section-students', section),
-    queryFn: () => previewService.sectionStudents(section),
-    enabled: Boolean(section),
+    queryKey: usePreviewKey('attendance', params),
+    queryFn: () => previewService.attendanceDay(params),
+    enabled: Boolean(params.department && params.year && params.section && params.date),
+  })
+}
+
+/** `params` is `{ department, year, section, month }`. */
+export function useAttendanceMonth(params) {
+  return useQuery({
+    queryKey: usePreviewKey('attendance', params),
+    queryFn: () => previewService.attendanceMonth(params),
+    enabled: Boolean(params.department && params.year && params.section && params.month),
   })
 }
 
@@ -48,6 +56,8 @@ function usePreviewMutation(module, mutationFn, message) {
 
 export const useMoveTimetableEntry = () =>
   usePreviewMutation('timetable', previewService.moveTimetableEntry, (entry) => `${entry.subject} moved to ${entry.day} ${entry.slot}`)
-export const useSubmitAttendance = () =>
-  usePreviewMutation('attendance-sessions', previewService.submitAttendance, (session) => `Attendance saved: ${session.present} of ${session.total} present`)
+export const useSaveAttendanceDay = () =>
+  usePreviewMutation('attendance', previewService.saveAttendanceDay, (record) =>
+    `Attendance ${record.corrected ? 'updated' : 'saved'}: ${record.total - record.absentees.length} of ${record.total} present`,
+  )
 export const useSaveInstitutionSettings = () => usePreviewMutation('institution-settings', previewService.saveInstitutionSettings, 'Institution settings saved')

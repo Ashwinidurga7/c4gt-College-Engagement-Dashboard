@@ -21,7 +21,8 @@ export function scopedStudents(user = currentMockUser()) {
       )
     case 'faculty':
       return rosterStudents.filter(
-        (student) => student.college === user.college && student.department === user.department && (user.assignedYears ?? []).includes(student.year),
+        // Faculty teach across branches (CSE, CAI, CSM, AID and so on) in the years assigned to them.
+        (student) => student.college === user.college && (user.assignedYears ?? []).includes(student.year),
       )
     default:
       return []
