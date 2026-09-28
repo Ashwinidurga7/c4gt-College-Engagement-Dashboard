@@ -1,12 +1,10 @@
 import { env } from '@/lib/env'
-import { toListParams, toPage } from '@/lib/listQuery'
+import { toListParams } from '@/lib/listQuery'
 import { hodMock } from '@/mocks/hodMock'
 import { rosterMock } from '@/mocks/rosterMock'
 import { toList } from '@/services/adapterUtils'
 import { apiClient } from '@/services/apiClient'
-import { toDepartmentAnalytics, toPendingRegistration, toRosterStudent } from '@/services/rosterAdapters'
-
-const SEARCH_KEYS = ['name', 'rollNumber', 'email']
+import { toDepartmentAnalytics, toPendingRegistration, toRosterPage } from '@/services/rosterAdapters'
 
 /** Endpoints scoped by the backend to the HOD's college and department. */
 export const hodService = {
@@ -16,7 +14,7 @@ export const hodService = {
 
   async students(query = {}) {
     const raw = env.useMock ? await rosterMock.students(query) : await apiClient.get('/hod/students', { params: toListParams(query) })
-    return toPage(raw?.students ?? raw, query, toRosterStudent, { searchKeys: SEARCH_KEYS })
+    return toRosterPage(raw, query)
   },
 
   async attendance() {

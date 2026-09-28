@@ -1,9 +1,9 @@
 import { percentage, weightedAverage } from '@/lib/academics'
 import { summarizeAttendance } from '@/lib/attendanceSummary'
 import { attendanceRecords } from '@/mocks/attendanceData'
-import { semesterResults } from '@/mocks/resultsData'
+import { resultBacklogs, semesterResults } from '@/mocks/resultsData'
 import { randomInt, seededRandom } from '@/mocks/seededRandom'
-import { studentProfile } from '@/mocks/studentProfileData'
+import { pastSemesterCourses, studentProfile } from '@/mocks/studentProfileData'
 
 const FIRST_NAMES = [
   'Sai Teja', 'Harshitha', 'Rohith', 'Sravani', 'Manoj', 'Divya Sri', 'Karthik', 'Lakshmi Prasanna', 'Venkatesh', 'Pavani',
@@ -31,6 +31,36 @@ function sectionSize(college, department, year) {
   return college === 'KIET' && department === 'CSE' && year === 3 ? 20 : 8
 }
 
+/** Supplementary exams are held a few months after each semester's results. */
+const SUPPLEMENTARY_ON = { 1: '2025-06-20', 2: '2025-11-14', 3: '2026-06-18', 4: '2026-11-20' }
+
+/**
+ * `active` failed courses still to clear, plus up to one course cleared in a supplementary exam.
+ * Only semesters with a known course list (1 to 4) are drawn from.
+ */
+function backlogSubjectsFor(random, completed, active, cgpa) {
+  const semesters = Object.keys(pastSemesterCourses).map(Number).filter((semester) => semester <= completed)
+  if (semesters.length === 0) return []
+  const pickCourse = (taken) => {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      const semester = semesters[randomInt(random, 0, semesters.length - 1)]
+      const [code, name] = pastSemesterCourses[semester][randomInt(random, 0, pastSemesterCourses[semester].length - 1)]
+      if (!taken.some((subject) => subject.code === code)) return { code, name, semester }
+    }
+    return null
+  }
+  const subjects = []
+  for (let index = 0; index < active; index += 1) {
+    const course = pickCourse(subjects)
+    if (course) subjects.push({ ...course, status: 'active' })
+  }
+  if (cgpa < 7.4 && random() < 0.5) {
+    const course = pickCourse(subjects)
+    if (course && SUPPLEMENTARY_ON[course.semester] < '2026-09-01') subjects.push({ ...course, status: 'cleared', clearedOn: SUPPLEMENTARY_ON[course.semester] })
+  }
+  return subjects
+}
+
 function buildStudent(random, { college, department, year, section, index }) {
   const roll = `${JOIN_YEAR[year]}${COLLEGE_CODES[college]}1A${BRANCH_CODES[department]}${String(index + 1).padStart(2, '0')}`
   const first = FIRST_NAMES[randomInt(random, 0, FIRST_NAMES.length - 1)]
@@ -55,7 +85,8 @@ function buildStudent(random, { college, department, year, section, index }) {
   const base = 5.4 + strength * 3.9
   const sgpas = Array.from({ length: completed }, () => Math.round(Math.min(9.9, Math.max(4.5, base + (random() - 0.5) * 0.9)) * 100) / 100)
   const cgpa = sgpas.length ? Math.round((sgpas.reduce((sum, value) => sum + value, 0) / sgpas.length) * 100) / 100 : null
-  const backlogs = cgpa !== null && cgpa < 6.2 ? randomInt(random, 1, 3) : 0
+  const active = cgpa !== null && cgpa < 6.2 ? randomInt(random, 1, 3) : 0
+  const backlogSubjects = cgpa === null ? [] : backlogSubjectsFor(random, completed, active, cgpa)
 
   return {
     _id: `stu-${roll}`,
@@ -70,7 +101,8 @@ function buildStudent(random, { college, department, year, section, index }) {
     attendancePercentage,
     cgpa,
     sgpas,
-    backlogs,
+    backlogs: backlogSubjects.filter((subject) => subject.status === 'active').length,
+    backlogSubjects,
     subjects,
   }
 }
@@ -78,6 +110,7 @@ function buildStudent(random, { college, department, year, section, index }) {
 /** The demo student, with figures taken from her own attendance records and results. */
 function demoStudent() {
   const attendance = summarizeAttendance(attendanceRecords)
+  const backlogSubjects = resultBacklogs
   return {
     _id: studentProfile._id,
     name: studentProfile.name,
@@ -91,7 +124,8 @@ function demoStudent() {
     attendancePercentage: attendance.percentage,
     cgpa: weightedAverage(semesterResults.flatMap((entry) => entry.courses)),
     sgpas: semesterResults.map((entry) => weightedAverage(entry.courses)),
-    backlogs: 0,
+    backlogs: backlogSubjects.filter((subject) => subject.status === 'active').length,
+    backlogSubjects,
     subjects: attendance.subjects.map(({ code, subject, conducted, attended, percentage: value }) => ({ code, subject, conducted, attended, percentage: value })),
   }
 }

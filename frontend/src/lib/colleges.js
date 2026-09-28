@@ -15,6 +15,13 @@ export const DEPARTMENT_NAMES = {
 
 export const DEPARTMENTS = Object.keys(DEPARTMENT_NAMES)
 
+/** The CSE department also runs the CAI, CSM and AID branches, so its HOD sees all four. */
+const BRANCH_FAMILIES = { CSE: ['CSE', 'CAI', 'CSM', 'AID'] }
+
+export function branchesOf(department) {
+  return BRANCH_FAMILIES[department] ?? [department]
+}
+
 export const YEARS = [1, 2, 3, 4]
 
 export const SECTIONS = ['A', 'B', 'C', 'D']

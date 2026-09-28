@@ -12,7 +12,7 @@ export function FacultyStudentsPage() {
       documentTitle="Student Roster"
       description="Students in the years you teach, by branch, year and section."
       useStudents={useRoster}
-      filterOptions={[BRANCH_FILTER, YEAR_FILTER(years), SECTION_FILTER, ATTENDANCE_FILTER]}
+      filterOptions={[BRANCH_FILTER(), YEAR_FILTER(years), SECTION_FILTER, ATTENDANCE_FILTER]}
     />
   )
 }

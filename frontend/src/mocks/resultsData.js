@@ -35,3 +35,10 @@ function buildResults() {
 
 /** Raw semester results in the shape a results API would plausibly return; SGPA/CGPA are derived. */
 export const semesterResults = buildResults()
+
+/** Every course failed at least once: `active` while the grade is still F, `cleared` once passed. */
+export const resultBacklogs = semesterResults.flatMap((entry) =>
+  entry.courses
+    .filter((course) => course.gradePoints === 0 || course.clearedOn)
+    .map((course) => ({ code: course.code, name: course.name, semester: entry.semester, status: course.gradePoints === 0 ? 'active' : 'cleared', clearedOn: course.clearedOn })),
+)

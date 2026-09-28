@@ -1,6 +1,9 @@
 import { percentage } from '@/lib/academics'
+import { toPage } from '@/lib/listQuery'
+import { queryStudents } from '@/lib/rosterQuery'
 import { attendanceBands, gradeBands, groupStudents, sgpaTrend, subjectAverages, summarizeStudents, topBy } from '@/lib/analytics'
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
+import { toBacklog } from '@/services/studentAdapters'
 
 export function toRosterStudent(raw = {}) {
   const user = raw.user ?? {}
@@ -9,6 +12,7 @@ export function toRosterStudent(raw = {}) {
     const attended = toNumber(pick(subject.attended, subject.present), 0)
     return { code: subject.code ?? null, subject: pick(subject.subject, subject.name, 'Subject'), conducted, attended, percentage: toNumber(subject.percentage, percentage(attended, conducted)) }
   })
+  const backlogSubjects = toList(pick(raw.backlogSubjects, raw.backlogList)).map(toBacklog)
   return {
     id: toId(raw, user._id),
     name: pick(raw.name, user.name, 'Student'),
@@ -22,9 +26,20 @@ export function toRosterStudent(raw = {}) {
     attendancePercentage: toNumber(pick(raw.attendancePercentage, raw.attendance?.percentage, raw.attendance)),
     cgpa: toNumber(pick(raw.cgpa, raw.CGPA)),
     sgpas: toList(raw.sgpas).map((value) => toNumber(value)),
-    backlogs: toNumber(raw.backlogs, 0),
+    backlogs: toNumber(raw.backlogs, backlogSubjects.filter((subject) => subject.status === 'active').length),
+    backlogSubjects,
     subjects,
   }
+}
+
+/**
+ * A page of roster students. When the endpoint returns the whole list, search, filters (including the
+ * CGPA and backlog ranges), sort and paging are applied here.
+ */
+export function toRosterPage(raw, query) {
+  const list = raw?.students ?? raw
+  if (Array.isArray(list)) return queryStudents(list.map(toRosterStudent), query)
+  return toPage(list, query, toRosterStudent)
 }
 
 export function toFacultyProfile(raw = {}) {

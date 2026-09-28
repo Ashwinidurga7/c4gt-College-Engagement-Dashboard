@@ -1,10 +1,8 @@
 import { env } from '@/lib/env'
-import { toListParams, toPage } from '@/lib/listQuery'
+import { toListParams } from '@/lib/listQuery'
 import { rosterMock } from '@/mocks/rosterMock'
 import { apiClient } from '@/services/apiClient'
-import { toCohortAnalytics, toRosterStudent } from '@/services/rosterAdapters'
-
-const SEARCH_KEYS = ['name', 'rollNumber', 'email']
+import { toCohortAnalytics, toRosterPage } from '@/services/rosterAdapters'
 
 /** Endpoints scoped by the backend to the CTPO's college, department, year and section. */
 export const ctpoService = {
@@ -14,7 +12,7 @@ export const ctpoService = {
 
   async students(query = {}) {
     const raw = env.useMock ? await rosterMock.students(query) : await apiClient.get('/ctpo/students', { params: toListParams(query) })
-    return toPage(raw?.students ?? raw, query, toRosterStudent, { searchKeys: SEARCH_KEYS })
+    return toRosterPage(raw, query)
   },
 
   async attendance() {
