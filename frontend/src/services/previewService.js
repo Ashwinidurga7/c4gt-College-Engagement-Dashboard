@@ -1,4 +1,5 @@
 import { toPage } from '@/lib/listQuery'
+import { withPlacementFields } from '@/lib/placement'
 import { previewMock } from '@/mocks/preview/previewMock'
 import { toRosterStudent } from '@/services/rosterAdapters'
 
@@ -39,6 +40,11 @@ export const previewService = {
     const raw = await previewMock.attendanceMonth(params)
     return { students: raw.students.map(toRosterStudent), days: raw.days }
   },
+
+  placementPool: async () => (await previewMock.placementPool()).map((raw) => withPlacementFields({ ...toRosterStudent(raw), recordsVerified: raw.recordsVerified, resumeSubmitted: raw.resumeSubmitted })),
+  placementDrives: () => previewMock.placementDrives(),
+  saveDriveCriteria: (values) => previewMock.saveDriveCriteria(values),
+  setApplicationStatus: (values) => previewMock.setApplicationStatus(values),
 
   institutionSettings: () => previewMock.institutionSettings(),
   saveInstitutionSettings: (values) => previewMock.saveInstitutionSettings(values),

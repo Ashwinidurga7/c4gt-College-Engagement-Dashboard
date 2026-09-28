@@ -15,10 +15,6 @@ export const ctpoService = {
     return toRosterPage(raw, query)
   },
 
-  async attendance() {
-    return toCohortAnalytics(env.useMock ? await rosterMock.ctpoAttendance() : await apiClient.get('/ctpo/attendance'))
-  },
-
   async academicReport() {
     return toCohortAnalytics(env.useMock ? await rosterMock.ctpoAcademicReport() : await apiClient.get('/ctpo/academic-report'))
   },

@@ -1,7 +1,7 @@
 import { summarizeDays } from '@/lib/attendanceSummary'
 import { attendanceRecords } from '@/mocks/attendanceData'
 import { rosterStudents } from '@/mocks/rosterData'
-import { seededRandom } from '@/mocks/seededRandom'
+import { hashString, seededRandom } from '@/mocks/seededRandom'
 import { studentProfile } from '@/mocks/studentProfileData'
 
 const SEMESTER_START = '2026-07-01'
@@ -29,10 +29,6 @@ export function isWorkingDay(date) {
   return new Date(`${date}T00:00:00Z`).getUTCDay() !== 0 && !HOLIDAYS.has(date)
 }
 
-function hashOf(text) {
-  return [...text].reduce((hash, char) => (Math.imul(hash, 31) + char.charCodeAt(0)) >>> 0, 7)
-}
-
 /**
  * The register for a section on a past working day, as if a faculty member had taken it.
  * Each student is absent with a chance that matches their attendance percentage.
@@ -41,7 +37,7 @@ export function seededDay(section, date) {
   if (date < SEMESTER_START || date > RECORDED_UNTIL || !isWorkingDay(date)) return null
   const students = sectionStudents(section)
   if (students.length === 0) return null
-  const random = seededRandom(hashOf(`${sectionKey(section)}|${date}`))
+  const random = seededRandom(hashString(`${sectionKey(section)}|${date}`))
   const absentees = students
     .filter((student) => {
       const roll = random()

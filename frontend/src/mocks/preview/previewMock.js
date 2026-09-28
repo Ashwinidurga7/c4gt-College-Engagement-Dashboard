@@ -1,15 +1,19 @@
 import { summarizeStudents } from '@/lib/analytics'
 import { applyListQuery } from '@/lib/listQuery'
+import { eligibilityGaps, withPlacementFields } from '@/lib/placement'
 import { currentMockUser } from '@/mocks/authMock'
 import { directoryUsers } from '@/mocks/directoryData'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { courseCatalog, examSchedule } from '@/mocks/preview/academicsData'
 import { busPass, facilities } from '@/mocks/preview/campusServicesData'
 import { feePayments, studentFeeAccount } from '@/mocks/preview/feesData'
+import { placementDrives } from '@/mocks/preview/placementData'
 import { isWorkingDay, sectionKey, sectionStudents, seededDay, workingDaysIn } from '@/mocks/preview/sectionAttendanceData'
 import { buildTimetable, TIMETABLE_SECTIONS } from '@/mocks/preview/timetableData'
 import { rosterStudents } from '@/mocks/rosterData'
 import { scopedStudents } from '@/mocks/rosterMock'
+import { hashString } from '@/mocks/seededRandom'
+import { studentProfile } from '@/mocks/studentProfileData'
 
 let timetable = buildTimetable()
 /** Registers faculty saved in this session, keyed by section and date; they override the seeded history. */
@@ -22,6 +26,41 @@ function pageOf(items, query, searchKeys, defaultSort) {
 }
 
 const list = (...args) => mockResponse(pageOf(...args))
+
+/** Pre-final and final years of the signed-in user's college: the students placement drives draw from. */
+function placementPool() {
+  const college = currentMockUser()?.college
+  return rosterStudents
+    .filter((student) => student.college === college && student.year >= 3)
+    .map((student) => ({
+      ...student,
+      // A few records are still waiting on the exam cell, and not everyone has uploaded a resume.
+      recordsVerified: !student.rollNumber.endsWith('07'),
+      resumeSubmitted: student.rollNumber === studentProfile.rollNumber || hashString(student.rollNumber) % 10 < 7,
+    }))
+}
+
+let drives = placementDrives.map((drive) => ({ ...drive, applications: {} }))
+let drivesSeeded = false
+
+/** Some eligible students have already applied; drives that have happened have results. */
+function seedApplications() {
+  if (drivesSeeded) return
+  drivesSeeded = true
+  const pool = placementPool().map(withPlacementFields)
+  const today = new Date().toISOString().slice(0, 10)
+  drives = drives.map((drive) => {
+    const applications = {}
+    pool
+      .filter((student) => eligibilityGaps(student, drive.criteria).length === 0)
+      .forEach((student) => {
+        const roll = hashString(`${drive.id}${student.rollNumber}`) % 6
+        if (roll > 3) return
+        applications[student.rollNumber] = drive.driveDate < today ? (roll === 0 ? 'selected' : roll === 1 ? 'shortlisted' : 'rejected') : roll === 0 ? 'shortlisted' : 'applied'
+      })
+    return { ...drive, applications }
+  })
+}
 
 /** A section in the signed-in faculty member's college. */
 function facultySection({ department, year, section }) {
@@ -134,6 +173,33 @@ export const previewMock = {
       students: sectionStudents(section),
       days: workingDaysIn(month, today).map((date) => ({ date, record: recordFor(section, date) })),
     })
+  },
+
+  placementPool() {
+    return mockResponse(placementPool())
+  },
+
+  placementDrives() {
+    seedApplications()
+    return mockResponse(drives)
+  },
+
+  saveDriveCriteria({ id, criteria }) {
+    seedApplications()
+    if (!drives.some((drive) => drive.id === id)) return mockError('This drive could not be found.', 404)
+    drives = drives.map((drive) => (drive.id === id ? { ...drive, criteria } : drive))
+    return mockResponse(drives.find((drive) => drive.id === id))
+  },
+
+  setApplicationStatus({ driveId, rollNumber, status }) {
+    seedApplications()
+    const drive = drives.find((entry) => entry.id === driveId)
+    if (!drive) return mockError('This drive could not be found.', 404)
+    const applications = { ...drive.applications }
+    if (status === 'not-applied') delete applications[rollNumber]
+    else applications[rollNumber] = status
+    drives = drives.map((entry) => (entry.id === driveId ? { ...entry, applications } : entry))
+    return mockResponse({ driveId, rollNumber, status })
   },
 
   institutionSettings() {

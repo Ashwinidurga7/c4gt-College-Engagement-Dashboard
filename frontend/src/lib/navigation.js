@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Briefcase,
   Bell,
   BookOpen,
   Building2,
@@ -103,9 +104,15 @@ export const NAVIGATION = {
       items: [
         { path: 'dashboard', label: 'Class Dashboard', icon: LayoutDashboard, phase: 3 },
         { path: 'students', label: 'Section Students', icon: Users, phase: 3 },
-        { path: 'attendance', label: 'Section Attendance', icon: CalendarCheck, phase: 3 },
         { path: 'academic-report', label: 'Academic Report', icon: BarChart3, phase: 3 },
         { path: 'timetable', label: 'Timetable', icon: CalendarClock, phase: 6, preview: true },
+      ],
+    },
+    {
+      section: 'Placements',
+      items: [
+        { path: 'attendance', label: 'Attendance', icon: CalendarCheck, phase: 6, preview: true },
+        { path: 'placements', label: 'Placement Drives', icon: Briefcase, phase: 6, preview: true },
       ],
     },
     {

@@ -1,4 +1,4 @@
-import { attendanceBands, gradeBands, sgpaTrend, subjectAverages, summarizeStudents, topBy } from '@/lib/analytics'
+import { attendanceBands, gradeBands, sgpaTrend, summarizeStudents, topBy } from '@/lib/analytics'
 import { branchesOf } from '@/lib/colleges'
 import { queryStudents } from '@/lib/rosterQuery'
 import { currentMockUser } from '@/mocks/authMock'
@@ -60,16 +60,6 @@ export const rosterMock = {
       gradeBands: gradeBands(students),
       lowAttendanceStudents: topBy(students, 'attendancePercentage', 5, 'asc').filter((student) => student.attendancePercentage < 75),
       topPerformers: topBy(students, 'cgpa', 5),
-    })
-  },
-
-  ctpoAttendance() {
-    const students = scopedStudents()
-    return mockResponse({
-      summary: summarizeStudents(students),
-      subjects: subjectAverages(students),
-      attendanceBands: attendanceBands(students),
-      students,
     })
   },
 

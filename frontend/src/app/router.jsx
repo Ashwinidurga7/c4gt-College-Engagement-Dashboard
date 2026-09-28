@@ -43,7 +43,8 @@ const PAGES = {
   'hod/ctpo-approvals': page(() => import('@/features/hod/CtpoApprovalsPage'), 'CtpoApprovalsPage'),
   'ctpo/dashboard': page(() => import('@/features/ctpo/ClassDashboardPage'), 'ClassDashboardPage'),
   'ctpo/students': page(() => import('@/features/ctpo/SectionStudentsPage'), 'SectionStudentsPage'),
-  'ctpo/attendance': page(() => import('@/features/ctpo/SectionAttendancePage'), 'SectionAttendancePage'),
+  'ctpo/attendance': page(() => import('@/features/ctpo/PlacementAttendancePage'), 'PlacementAttendancePage'),
+  'ctpo/placements': page(() => import('@/features/ctpo/PlacementDrivesPage'), 'PlacementDrivesPage'),
   'ctpo/academic-report': page(() => import('@/features/ctpo/SectionReportPage'), 'SectionReportPage'),
 }
 
