@@ -29,7 +29,7 @@ function attendancePayload() {
     attendedClasses: summary.attended,
     subjects: summary.subjects,
     monthly: summary.monthly,
-    records: attendanceRecords.slice(0, 40),
+    records: attendanceRecords,
   }
 }
 
@@ -66,7 +66,17 @@ export const studentMock = {
       .flatMap((entry) => entry.courses)
       .filter((course) => course.gradePoints > 0)
       .reduce((sum, course) => sum + course.credits, 0)
-    const backlogs = semesterResults.flatMap((entry) => entry.courses).filter((course) => course.gradePoints === 0).length
+    const backlogSubjects = semesterResults.flatMap((entry) =>
+      entry.courses
+        .filter((course) => course.gradePoints === 0 || course.clearedOn)
+        .map((course) => ({
+          code: course.code,
+          name: course.name,
+          semester: entry.semester,
+          status: course.gradePoints === 0 ? 'active' : 'cleared',
+          clearedOn: course.clearedOn,
+        })),
+    )
     return mockResponse({
       batch: profile.batch,
       regulation: profile.regulation,
@@ -80,7 +90,8 @@ export const studentMock = {
       cgpa: reportPayload().cgpa,
       creditsEarned: earned,
       totalCredits: TOTAL_PROGRAMME_CREDITS,
-      backlogs,
+      backlogs: backlogSubjects.filter((subject) => subject.status === 'active').length,
+      backlogSubjects,
     })
   },
 

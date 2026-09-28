@@ -1,5 +1,5 @@
 import { percentage, weightedAverage } from '@/lib/academics'
-import { summarizeAttendance } from '@/lib/attendanceSummary'
+import { summarizeAttendance, summarizeDays } from '@/lib/attendanceSummary'
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
 
 export function toProfile(raw = {}) {
@@ -90,7 +90,21 @@ export function toDashboard(raw = {}) {
   }
 }
 
+/** A failed course: `active` until the student passes it, then `cleared`. */
+export function toBacklog(raw) {
+  const clearedOn = pick(raw.clearedOn, raw.clearedDate)
+  const status = String(pick(raw.status, clearedOn ? 'cleared' : 'active')).toLowerCase()
+  return {
+    code: pick(raw.code, raw.subjectCode, raw.courseCode, ''),
+    name: pick(raw.name, raw.subject, raw.subjectName, raw.courseName, 'Subject'),
+    semester: toNumber(raw.semester),
+    status: status === 'cleared' ? 'cleared' : 'active',
+    clearedOn: clearedOn ?? null,
+  }
+}
+
 export function toAcademic(raw = {}) {
+  const backlogSubjects = toList(pick(raw.backlogSubjects, raw.backlogList)).map(toBacklog)
   return {
     batch: raw.batch ?? null,
     regulation: raw.regulation ?? null,
@@ -104,7 +118,8 @@ export function toAcademic(raw = {}) {
     cgpa: toNumber(pick(raw.cgpa, raw.CGPA)),
     creditsEarned: toNumber(raw.creditsEarned),
     totalCredits: toNumber(raw.totalCredits),
-    backlogs: toNumber(raw.backlogs, 0),
+    backlogs: toNumber(raw.backlogs, backlogSubjects.filter((subject) => subject.status === 'active').length),
+    backlogSubjects,
   }
 }
 
@@ -153,6 +168,7 @@ export function toAttendance(raw = {}) {
     subjects,
     monthly,
     records,
+    days: summarizeDays(records),
   }
 }
 

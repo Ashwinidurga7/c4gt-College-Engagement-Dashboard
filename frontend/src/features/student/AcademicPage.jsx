@@ -1,4 +1,5 @@
 import { Award, BookOpenCheck, GraduationCap, Layers, ListChecks, TriangleAlert } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DetailList } from '@/components/common/DetailList'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -6,6 +7,7 @@ import { QueryView } from '@/components/common/QueryView'
 import { SectionCard } from '@/components/common/SectionCard'
 import { StatGridSkeleton } from '@/components/common/Skeleton'
 import { StatCard } from '@/components/common/StatCard'
+import { BacklogDialog } from '@/features/student/academic/BacklogDialog'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useStudentAcademic } from '@/hooks/useStudent'
 import { semesterLabel } from '@/lib/academics'
@@ -49,6 +51,7 @@ function ProgrammeProgress({ semester, creditsEarned, totalCredits }) {
 export function AcademicPage() {
   useDocumentTitle('Academic Info')
   const query = useStudentAcademic()
+  const [showBacklogs, setShowBacklogs] = useState(false)
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,6 +70,8 @@ export function AcademicPage() {
                 icon={academic.backlogs > 0 ? TriangleAlert : BookOpenCheck}
                 tone={academic.backlogs > 0 ? 'red' : 'teal'}
                 hint={academic.backlogs > 0 ? 'Clear before final year' : 'All clear'}
+                onClick={academic.backlogSubjects.length > 0 ? () => setShowBacklogs(true) : undefined}
+                linkLabel="View subjects"
               />
             </section>
 
@@ -102,6 +107,7 @@ export function AcademicPage() {
                 />
               </SectionCard>
             </div>
+            {showBacklogs && <BacklogDialog subjects={academic.backlogSubjects} onClose={() => setShowBacklogs(false)} />}
           </>
         )}
       </QueryView>

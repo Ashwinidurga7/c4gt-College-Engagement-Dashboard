@@ -38,6 +38,7 @@ export const clubsData = [
           'The portal you are using: one place for KIET students, faculty, CTPOs, HODs and admins to track academics, attendance, clubs, events, certificates and resumes. Built with React on the front end and Node.js with MongoDB on the back end.',
         team: [
           'Ashwini Durga',
+          'Monika Kona',
           'Yuvaraju Bondada',
           'Sampath B',
           'Samsani Giridhar Shyam',
