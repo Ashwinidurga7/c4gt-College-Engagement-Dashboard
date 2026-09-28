@@ -4,6 +4,7 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { FilterChips } from '@/components/common/FilterChips'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
+import { CertificateDialog } from '@/features/student/portfolio/CertificateDialog'
 import { CERTIFICATE_CATEGORIES } from '@/features/student/portfolio/portfolioSchemas'
 import { TabSection } from '@/features/student/portfolio/TabSection'
 import { UploadCertificateModal } from '@/features/student/portfolio/UploadCertificateModal'
@@ -17,12 +18,13 @@ export function CertificatesTab() {
   const [category, setCategory] = useState('')
   const query = useCertificates({ page: 1, pageSize: 50, filters: { category } })
   const [uploading, setUploading] = useState(false)
+  const [viewing, setViewing] = useState(null)
   const remove = useConfirmAction(useDeleteCertificate())
 
   return (
     <TabSection
       title="Certificates"
-      description="Uploaded certificates and their verification status."
+      description="Uploaded certificates and their verification status. Open one to see its details or download it."
       count={query.data?.total}
       query={query}
       toolbar={<FilterChips label="Filter by category" options={CATEGORY_OPTIONS} value={category} onChange={setCategory} />}
@@ -53,15 +55,9 @@ export function CertificatesTab() {
               {item.status === 'verified' && item.verifiedBy && <p className="text-muted-foreground text-xs">Verified by {item.verifiedBy}</p>}
               {item.status === 'rejected' && item.remarks && <p className="text-danger-text bg-danger-soft rounded-md px-2 py-1 text-xs">{item.remarks}</p>}
               <div className="mt-auto flex w-full items-center justify-center gap-2 border-t pt-3">
-                {item.fileUrl ? (
-                  <Button asChild variant="outline" size="lg">
-                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer">
-                      <Eye aria-hidden /> View<span className="sr-only"> {item.title} (opens in a new tab)</span>
-                    </a>
-                  </Button>
-                ) : (
-                  <span className="text-muted-foreground text-xs">{item.fileName ?? 'File stored with the college'}</span>
-                )}
+                <Button variant="outline" size="lg" onClick={() => setViewing(item)}>
+                  <Eye aria-hidden /> View<span className="sr-only"> {item.title}</span>
+                </Button>
                 <Button variant="ghost" size="icon-lg" className="text-danger-text" aria-label={`Delete ${item.title}`} onClick={() => remove.request(item)}>
                   <Trash2 />
                 </Button>
@@ -72,6 +68,7 @@ export function CertificatesTab() {
       )}
     >
       {uploading && <UploadCertificateModal open onOpenChange={setUploading} />}
+      {viewing && <CertificateDialog certificate={viewing} onClose={() => setViewing(null)} />}
       <ConfirmDialog
         {...remove.dialogProps}
         title="Delete this certificate?"

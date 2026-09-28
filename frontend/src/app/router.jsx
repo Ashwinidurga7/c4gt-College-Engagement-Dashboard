@@ -43,7 +43,8 @@ const PAGES = {
   'hod/ctpo-approvals': page(() => import('@/features/hod/CtpoApprovalsPage'), 'CtpoApprovalsPage'),
   'ctpo/dashboard': page(() => import('@/features/ctpo/ClassDashboardPage'), 'ClassDashboardPage'),
   'ctpo/students': page(() => import('@/features/ctpo/SectionStudentsPage'), 'SectionStudentsPage'),
-  'ctpo/attendance': page(() => import('@/features/ctpo/SectionAttendancePage'), 'SectionAttendancePage'),
+  'ctpo/attendance': page(() => import('@/features/ctpo/PlacementAttendancePage'), 'PlacementAttendancePage'),
+  'ctpo/placements': page(() => import('@/features/ctpo/PlacementDrivesPage'), 'PlacementDrivesPage'),
   'ctpo/academic-report': page(() => import('@/features/ctpo/SectionReportPage'), 'SectionReportPage'),
 }
 
@@ -51,6 +52,7 @@ const PAGES = {
 const PREVIEW_PAGES = {
   timetable: page(() => import('@/features/timetable/TimetablePage'), 'TimetablePage'),
   exams: page(() => import('@/features/exams/ExamsPage'), 'ExamsPage'),
+  'exam-notices': page(() => import('@/features/exams/ExamNoticesPage'), 'ExamNoticesPage'),
   fees: page(() => import('@/features/fees/FeesPage'), 'FeesPage'),
   'bus-pass': page(() => import('@/features/busPass/BusPassPage'), 'BusPassPage'),
   facilities: page(() => import('@/features/facilities/FacilitiesPage'), 'FacilitiesPage'),

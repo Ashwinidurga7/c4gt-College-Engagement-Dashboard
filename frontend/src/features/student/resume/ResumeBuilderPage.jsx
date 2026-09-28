@@ -17,9 +17,10 @@ import { formatDateTime } from '@/lib/formatters'
 
 function DraftStatus({ status }) {
   const content = {
-    saving: [Loader2, 'Saving draft…', 'animate-spin'],
-    saved: [Check, status.at ? `Draft saved ${formatDateTime(status.at)}` : 'Draft saved'],
-    unavailable: [CloudOff, 'Draft not saved: browser storage is unavailable'],
+    saving: [Loader2, 'Saving…', 'animate-spin'],
+    saved: [Check, status.at ? `Saved to your account ${formatDateTime(status.at)}` : 'Saved to your account'],
+    local: [CloudOff, 'Saved in this browser only. Your account copy updates with your next edit once the connection is back.'],
+    unavailable: [CloudOff, 'Not saved: your account and this browser could not be reached'],
   }[status.state]
   if (!content) return null
   const [Icon, label, iconClass] = content
@@ -32,7 +33,7 @@ function DraftStatus({ status }) {
 
 /**
  * Resume Builder: reads the student's profile, academics and portfolio, lets them adjust it,
- * and produces a PDF. Local edits live in a browser draft (see useResumeDraft).
+ * and produces a PDF. Edits are saved to the student's account as they go (see useResumeDraft).
  */
 export function ResumeBuilderPage() {
   useDocumentTitle('Resume Builder')
@@ -89,7 +90,7 @@ export function ResumeBuilderPage() {
         open={confirmReset}
         onOpenChange={setConfirmReset}
         title="Reset to profile data?"
-        description="Your local edits (skills, summary, school marks, links, bullet points, choices, section order and template) will be discarded. Your profile and portfolio are not changed."
+        description="Your edits (skills, summary, school marks, links, bullet points, choices, section order and template) will be discarded here and in your account. Your profile and portfolio are not changed."
         confirmLabel="Reset"
         onConfirm={() => {
           reset()

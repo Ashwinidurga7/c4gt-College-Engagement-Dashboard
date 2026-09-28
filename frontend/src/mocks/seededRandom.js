@@ -10,6 +10,11 @@ export function seededRandom(seed) {
   }
 }
 
+/** Stable 32-bit hash of a string, for seeding per-record randomness. */
+export function hashString(text) {
+  return [...text].reduce((hash, char) => (Math.imul(hash, 31) + char.charCodeAt(0)) >>> 0, 7)
+}
+
 export function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min
 }

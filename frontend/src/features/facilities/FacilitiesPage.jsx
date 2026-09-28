@@ -17,6 +17,7 @@ const CATEGORY_OPTIONS = [{ value: '', label: 'All' }, ...FACILITY_CATEGORIES.ma
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 function isOpen(facility, now = new Date()) {
+  if (!facility.opens) return true
   const minutes = now.getHours() * 60 + now.getMinutes()
   const toMinutes = (value) => Number(value.slice(0, 2)) * 60 + Number(value.slice(3))
   return facility.days.includes(now.getDay()) && minutes >= toMinutes(facility.opens) && minutes < toMinutes(facility.closes)
@@ -50,13 +51,15 @@ export function FacilitiesPage() {
                   <h2 className="font-semibold">{facility.name}</h2>
                   <p className="text-muted-foreground text-xs">{facility.category}</p>
                 </div>
-                <StatusBadge status={open ? 'active' : 'inactive'} label={open ? 'Open now' : 'Closed'} />
+                <StatusBadge status={open ? 'active' : 'inactive'} label={!facility.opens ? 'Always on' : open ? 'Open now' : 'Closed'} />
               </div>
+              {facility.description && <p className="text-body text-sm">{facility.description}</p>}
               <p className="text-body flex items-center gap-2 text-sm">
                 <MapPin className="text-brand size-4 shrink-0" aria-hidden /> {facility.location}
               </p>
               <p className="text-body flex items-center gap-2 text-sm">
-                <Clock className="text-brand size-4 shrink-0" aria-hidden /> {dayRange(facility.days)}, {formatTime(facility.opens)} – {formatTime(facility.closes)}
+                <Clock className="text-brand size-4 shrink-0" aria-hidden />{' '}
+                {facility.opens ? `${dayRange(facility.days)}, ${formatTime(facility.opens)} – ${formatTime(facility.closes)}` : 'Available at all hours'}
               </p>
               <p className="text-body flex items-center gap-2 text-sm">
                 <Phone className="text-brand size-4 shrink-0" aria-hidden />
@@ -64,7 +67,13 @@ export function FacilitiesPage() {
                   {facility.contact}
                 </a>
               </p>
-              {facility.note && <p className="text-muted-foreground border-t pt-2 text-xs">{facility.note}</p>}
+              {facility.details?.length > 0 && (
+                <ul className="text-muted-foreground mt-1 flex list-disc flex-col gap-1 border-t pt-3 pl-4 text-xs">
+                  {facility.details.map((detail) => (
+                    <li key={detail}>{detail}</li>
+                  ))}
+                </ul>
+              )}
             </li>
           )
         })}
@@ -74,11 +83,11 @@ export function FacilitiesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Facilities" description="Where things are on campus and when they are open." icon={MapPin} preview />
+      <PageHeader title="Facilities" description="What the campus offers, where it is and when it is open." icon={MapPin} preview />
       <FilterBar search={list.search} onSearchChange={list.setSearch} searchPlaceholder="Search facilities or locations" searchLabel="Search facilities" />
       <FilterChips label="Category" options={CATEGORY_OPTIONS} value={list.filters.category} onChange={(value) => list.setFilter('category', value)} />
       <div aria-busy={query.isFetching || undefined}>{body}</div>
-      <PreviewNotice />
+      <PreviewNotice>Hours, contact numbers and some details are placeholders until the college office confirms them.</PreviewNotice>
     </div>
   )
 }

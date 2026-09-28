@@ -53,11 +53,35 @@ export function createDraftActions(update) {
   }
 }
 
-/** Name and email are required before the PDF can be downloaded or saved. */
-export function validatePersonal(personal) {
+/** Letters in any script, with spaces, dots, apostrophes and hyphens between them (e.g. "B. Ashwini Durga"). */
+const NAME = /^[\p{L}\p{M}]+(?:[ .'-]+[\p{L}\p{M}]+)*\.?$/u
+/** Place names: letters with spaces, commas, dots and hyphens; no digits. */
+const LOCATION = /^[\p{L}\p{M}]+(?:[ ,.'-]+[\p{L}\p{M}]+)*$/u
+/** Indian mobile, optionally written with +91 or 0 and spaces or hyphens. */
+const PHONE = /^(?:\+91|0)?[6-9]\d{9}$/
+const LINK = /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i
+
+/**
+ * Problems with the personal details, keyed by field. `required` adds the errors for empty name and email,
+ * which are shown only when the student tries to download or save; format errors show while typing.
+ */
+export function validatePersonal(personal, { required = true } = {}) {
   const errors = {}
-  if (!personal.name.trim()) errors.name = 'Enter your name as it should appear on the resume.'
-  if (!personal.email.trim()) errors.email = 'Enter an email address recruiters can reach you on.'
-  else if (!looksLikeEmail(personal.email)) errors.email = 'Enter a valid email address, e.g. name@example.com.'
+  const name = personal.name.trim()
+  const email = personal.email.trim()
+  if (!name) {
+    if (required) errors.name = 'Enter your name as it should appear on the resume.'
+  } else if (!NAME.test(name)) errors.name = 'Use letters only, with spaces, dots or hyphens. No numbers or symbols such as # or $.'
+  if (!email) {
+    if (required) errors.email = 'Enter an email address recruiters can reach you on.'
+  } else if (!looksLikeEmail(email)) errors.email = 'Enter a valid email address, e.g. name@example.com.'
+  const phone = personal.phone.trim()
+  if (phone && !PHONE.test(phone.replace(/[\s-]/g, ''))) errors.phone = 'Enter a 10-digit mobile number starting with 6, 7, 8 or 9, with or without +91.'
+  const location = personal.location.trim()
+  if (location && !LOCATION.test(location)) errors.location = 'Use the town, state and country only, without numbers, e.g. Kakinada, Andhra Pradesh.'
+  ;['linkedin', 'github', 'portfolio'].forEach((field) => {
+    const value = personal[field]?.trim()
+    if (value && !LINK.test(value)) errors[field] = 'Enter a web address, e.g. github.com/your-name.'
+  })
   return errors
 }

@@ -45,6 +45,7 @@ export const hodMock = {
       bySection: groupStudents(students.filter((student) => student.cgpa != null), ['year', 'section']),
       gradeBands: gradeBands(students),
       topPerformers: topBy(students, 'cgpa', 10),
+      students,
     })
   },
 

@@ -1,6 +1,6 @@
-import { Clock, MapPin } from 'lucide-react'
+import { CalendarClock, Clock, MapPin } from 'lucide-react'
 import { CollegeBadge } from '@/components/common/CollegeBadge'
-import { formatTime } from '@/lib/formatters'
+import { formatDate, formatTime } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 
 const dayFormatter = new Intl.DateTimeFormat('en-IN', { day: '2-digit' })
@@ -27,7 +27,7 @@ export function EventCard({ event, action, className }) {
           <h3 className="text-sm font-semibold">{event.title}</h3>
           <CollegeBadge college={event.college} />
         </div>
-        {event.organizer && <p className="text-muted-foreground text-xs">{event.organizer}</p>}
+        {(event.category || event.organizer) && <p className="text-muted-foreground text-xs">{[event.category, event.organizer].filter(Boolean).join(' · ')}</p>}
         <div className="text-muted-foreground mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs">
           {time && (
             <span className="inline-flex items-center gap-1">
@@ -37,6 +37,11 @@ export function EventCard({ event, action, className }) {
           {event.venue && (
             <span className="inline-flex items-center gap-1">
               <MapPin className="size-3.5" aria-hidden /> {event.venue}
+            </span>
+          )}
+          {event.registrationDeadline && event.registrationOpen && (
+            <span className="inline-flex items-center gap-1">
+              <CalendarClock className="size-3.5" aria-hidden /> Register by {formatDate(event.registrationDeadline)}
             </span>
           )}
         </div>

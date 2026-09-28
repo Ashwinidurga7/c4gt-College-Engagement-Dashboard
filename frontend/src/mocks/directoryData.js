@@ -7,9 +7,9 @@ const STAFF_NAMES = [
   'Mrs. S. Vijaya Lakshmi', 'Mr. D. Prasad', 'Dr. T. Uma Devi', 'Mr. G. Satish', 'Mrs. Y. Radha', 'Dr. R. Chandra Sekhar', 'Mrs. K. Swathi',
 ]
 const OFFERINGS = {
-  KIET: ['CSE', 'CSE-AI', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'],
-  'KIET+': ['CSE', 'ECE', 'EEE', 'MECH'],
-  KIEW: ['CSE', 'CSE-AI', 'IT', 'ECE'],
+  KIET: ['CSE', 'CAI', 'CSM', 'AID', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'],
+  'KIET+': ['CSE', 'CSM', 'ECE', 'EEE', 'MECH'],
+  KIEW: ['CSE', 'CAI', 'CSM', 'IT', 'ECE'],
 }
 const DOMAINS = { KIET: 'kiet.edu', 'KIET+': 'kietplus.edu', KIEW: 'kiew.edu' }
 

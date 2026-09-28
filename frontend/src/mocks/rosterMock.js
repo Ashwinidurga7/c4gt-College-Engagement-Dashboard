@@ -1,10 +1,9 @@
-import { attendanceBands, gradeBands, sgpaTrend, subjectAverages, summarizeStudents, topBy } from '@/lib/analytics'
-import { applyListQuery } from '@/lib/listQuery'
+import { attendanceBands, gradeBands, sgpaTrend, summarizeStudents, topBy } from '@/lib/analytics'
+import { branchesOf } from '@/lib/colleges'
+import { queryStudents } from '@/lib/rosterQuery'
 import { currentMockUser } from '@/mocks/authMock'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { rosterStudents } from '@/mocks/rosterData'
-
-const SEARCH_KEYS = ['name', 'rollNumber', 'email']
 
 /** Students the signed-in mock user may see, mirroring backend scoping. */
 export function scopedStudents(user = currentMockUser()) {
@@ -13,7 +12,7 @@ export function scopedStudents(user = currentMockUser()) {
     case 'admin':
       return rosterStudents
     case 'hod':
-      return rosterStudents.filter((student) => student.college === user.college && student.department === user.department)
+      return rosterStudents.filter((student) => student.college === user.college && branchesOf(user.department).includes(student.department))
     case 'ctpo':
       return rosterStudents.filter(
         (student) =>
@@ -21,18 +20,16 @@ export function scopedStudents(user = currentMockUser()) {
       )
     case 'faculty':
       return rosterStudents.filter(
-        (student) => student.college === user.college && student.department === user.department && (user.assignedYears ?? []).includes(student.year),
+        // Faculty teach across branches (CSE, CAI, CSM, AID and so on) in the years assigned to them.
+        (student) => student.college === user.college && (user.assignedYears ?? []).includes(student.year),
       )
     default:
       return []
   }
 }
 
-/** Supports exact filters plus `attendanceBelow` (a number). */
-function listStudents(students, { filters = {}, ...query } = {}) {
-  const { attendanceBelow, ...exact } = filters
-  const pool = attendanceBelow ? students.filter((student) => student.attendancePercentage < Number(attendanceBelow)) : students
-  const page = applyListQuery(pool, { ...query, filters: exact, searchKeys: SEARCH_KEYS, sort: query.sort ?? { key: 'rollNumber', direction: 'asc' } })
+function listStudents(students, query) {
+  const page = queryStudents(students, query)
   return { ...page, limit: page.pageSize }
 }
 
@@ -63,16 +60,6 @@ export const rosterMock = {
       gradeBands: gradeBands(students),
       lowAttendanceStudents: topBy(students, 'attendancePercentage', 5, 'asc').filter((student) => student.attendancePercentage < 75),
       topPerformers: topBy(students, 'cgpa', 5),
-    })
-  },
-
-  ctpoAttendance() {
-    const students = scopedStudents()
-    return mockResponse({
-      summary: summarizeStudents(students),
-      subjects: subjectAverages(students),
-      attendanceBands: attendanceBands(students),
-      students,
     })
   },
 

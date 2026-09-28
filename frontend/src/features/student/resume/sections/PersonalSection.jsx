@@ -4,7 +4,7 @@ import { ResumeField } from '@/features/student/resume/sections/ResumeField'
 import { useSaveProfileField } from '@/features/student/resume/useSaveProfileField'
 
 /**
- * Name and email are required. Phone can be saved back to the profile; location and links are
+ * Name and email are required; every field is checked as it is typed. Phone can be saved back to the profile; location and links are
  * kept in the resume draft only, so the full home address never has to appear on a resume.
  */
 export function PersonalSection({ model, profilePhone, actions, errors }) {
@@ -18,8 +18,8 @@ export function PersonalSection({ model, profilePhone, actions, errors }) {
       <ResumeField id="resume-name" label="Full name (required)" value={personal.name} onChange={set('name')} error={errors.name} autoComplete="name" required />
       <ResumeField id="resume-email" label="Email (required)" type="email" value={personal.email} onChange={set('email')} error={errors.email} autoComplete="email" required />
       <div className="flex flex-col gap-2">
-        <ResumeField id="resume-phone" label="Phone" type="tel" inputMode="tel" value={personal.phone} onChange={set('phone')} autoComplete="tel" />
-        {phoneChanged && profile.canSave('phone', personal.phone.trim()) && (
+        <ResumeField id="resume-phone" label="Phone" type="tel" inputMode="tel" value={personal.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
+        {phoneChanged && !errors.phone && profile.canSave('phone', personal.phone.trim()) && (
           <Button
             type="button"
             variant="outline"
@@ -38,16 +38,18 @@ export function PersonalSection({ model, profilePhone, actions, errors }) {
         label="Location"
         value={personal.location}
         onChange={set('location')}
+        error={errors.location}
         hint="Town and state only, e.g. Kakinada, Andhra Pradesh."
         autoComplete="address-level2"
       />
-      <ResumeField id="resume-linkedin" label="LinkedIn" value={personal.linkedin} onChange={set('linkedin')} placeholder="linkedin.com/in/your-name" inputMode="url" />
-      <ResumeField id="resume-github" label="GitHub" value={personal.github} onChange={set('github')} placeholder="github.com/your-name" inputMode="url" />
+      <ResumeField id="resume-linkedin" label="LinkedIn" value={personal.linkedin} onChange={set('linkedin')} error={errors.linkedin} placeholder="linkedin.com/in/your-name" inputMode="url" />
+      <ResumeField id="resume-github" label="GitHub" value={personal.github} onChange={set('github')} error={errors.github} placeholder="github.com/your-name" inputMode="url" />
       <ResumeField
         id="resume-portfolio"
         label="Portfolio website"
         value={personal.portfolio}
         onChange={set('portfolio')}
+        error={errors.portfolio}
         placeholder="your-site.dev"
         inputMode="url"
         className="sm:col-span-2"

@@ -33,6 +33,8 @@ export function ResumeWorkspace({ base, draft, actions }) {
   const printModel = useMemo(() => toPrintModel(model), [model])
   const preview = useResumePdf(printModel)
   const errors = validatePersonal(model.personal)
+  // Format problems show as the student types; missing name or email only after they try to download.
+  const shownErrors = showErrors ? errors : validatePersonal(model.personal, { required: false })
 
   /** Opens a section in the editor and focuses one of its fields. */
   const jumpTo = useCallback((target) => {
@@ -49,8 +51,8 @@ export function ResumeWorkspace({ base, draft, actions }) {
   const ensureValid = () => {
     if (Object.keys(errors).length === 0) return true
     setShowErrors(true)
-    toast.error('Add your name and a valid email before downloading.')
-    jumpTo({ section: 'personal', field: errors.name ? 'resume-name' : 'resume-email' })
+    toast.error('Fix the highlighted personal details before downloading.')
+    jumpTo({ section: 'personal', field: `resume-${Object.keys(errors)[0]}` })
     return false
   }
 
@@ -60,7 +62,7 @@ export function ResumeWorkspace({ base, draft, actions }) {
       base={base}
       draft={draft}
       actions={actions}
-      errors={showErrors ? errors : {}}
+      errors={shownErrors}
       openSections={openSections}
       onOpenChange={setOpenSections}
     />

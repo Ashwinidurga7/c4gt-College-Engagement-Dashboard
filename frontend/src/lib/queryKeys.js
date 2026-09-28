@@ -40,7 +40,6 @@ export const queryKeys = {
   ctpo: {
     dashboard: ['ctpo', 'dashboard'],
     students: (query) => ['ctpo', 'students', query],
-    attendance: ['ctpo', 'attendance'],
     academicReport: ['ctpo', 'academic-report'],
   },
 }

@@ -1,17 +1,28 @@
 import { summarizeStudents } from '@/lib/analytics'
 import { applyListQuery } from '@/lib/listQuery'
+import { defaultNotificationPreferences } from '@/lib/notificationPreferences'
+import { eligibilityGaps, withPlacementFields } from '@/lib/placement'
 import { currentMockUser } from '@/mocks/authMock'
+import { campusEvents, MOCK_TODAY } from '@/mocks/campusData'
 import { directoryUsers } from '@/mocks/directoryData'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 import { courseCatalog, examSchedule } from '@/mocks/preview/academicsData'
 import { busPass, facilities } from '@/mocks/preview/campusServicesData'
+import { examNotices } from '@/mocks/preview/examNoticesData'
 import { feePayments, studentFeeAccount } from '@/mocks/preview/feesData'
+import { placementDrives } from '@/mocks/preview/placementData'
+import { isWorkingDay, sectionKey, sectionStudents, seededDay, workingDaysIn } from '@/mocks/preview/sectionAttendanceData'
 import { buildTimetable, TIMETABLE_SECTIONS } from '@/mocks/preview/timetableData'
 import { rosterStudents } from '@/mocks/rosterData'
 import { scopedStudents } from '@/mocks/rosterMock'
+import { hashString } from '@/mocks/seededRandom'
+import { studentProfile } from '@/mocks/studentProfileData'
 
 let timetable = buildTimetable()
-let attendanceSessions = []
+/** Registers faculty saved in this session, keyed by section and date; they override the seeded history. */
+const savedDays = new Map()
+/** Notification preferences by user id; users without an entry get the defaults. */
+const notificationPreferences = new Map()
 let institutionSettings = { academicYear: '2026-27', semesterStart: '2026-07-01', semesterEnd: '2026-12-19', attendanceThreshold: 75, feeDueDate: '2026-09-30' }
 
 function pageOf(items, query, searchKeys, defaultSort) {
@@ -20,6 +31,87 @@ function pageOf(items, query, searchKeys, defaultSort) {
 }
 
 const list = (...args) => mockResponse(pageOf(...args))
+
+function withPlacementFlags(student) {
+  return {
+    ...student,
+    // A few records are still waiting on the exam cell, and not everyone has uploaded a resume.
+    recordsVerified: !student.rollNumber.endsWith('07'),
+    resumeSubmitted: student.rollNumber === studentProfile.rollNumber || hashString(student.rollNumber) % 10 < 7,
+  }
+}
+
+/** Pre-final and final years of a college: the students its placement drives draw from. */
+function placementPool(college = currentMockUser()?.college) {
+  return rosterStudents.filter((student) => student.college === college && student.year >= 3).map(withPlacementFlags)
+}
+
+/**
+ * Who took part in each event: students of the host college, drawn per event, plus the demo student's own
+ * registrations. Attendance is known only for events that are over.
+ */
+function eventParticipation(students) {
+  const demoRegistrations = registrationsOf({ id: studentProfile._id })
+  return campusEvents.flatMap((event) =>
+    students.flatMap((student) => {
+      const isDemo = student.rollNumber === studentProfile.rollNumber
+      const joined = isDemo ? Boolean(demoRegistrations[event._id]) : student.college === event.college && hashString(`${event._id}${student.rollNumber}`) % 9 === 0
+      if (!joined) return []
+      const attended = isDemo ? Boolean(demoRegistrations[event._id].attended) : hashString(`${student.rollNumber}${event._id}`) % 10 < 8
+      return [{ eventId: event._id, rollNumber: student.rollNumber, attended: event.date >= MOCK_TODAY ? null : attended }]
+    }),
+  )
+}
+
+let drives = placementDrives.map((drive) => ({ ...drive, applications: {} }))
+let drivesSeeded = false
+
+/** Some eligible students have already applied; drives that have happened have results. */
+function seedApplications() {
+  if (drivesSeeded) return
+  drivesSeeded = true
+  const pool = placementPool(placementDrives[0].college).map(withPlacementFields)
+  const today = new Date().toISOString().slice(0, 10)
+  drives = drives.map((drive) => {
+    const applications = {}
+    pool
+      .filter((student) => eligibilityGaps(student, drive.criteria).length === 0)
+      .forEach((student) => {
+        const roll = hashString(`${drive.id}${student.rollNumber}`) % 6
+        if (roll > 3) return
+        applications[student.rollNumber] = drive.driveDate < today ? (roll === 0 ? 'selected' : roll === 1 ? 'shortlisted' : 'rejected') : roll === 0 ? 'shortlisted' : 'applied'
+      })
+    return { ...drive, applications }
+  })
+}
+
+/** Each student's event registrations by event id; the demo student has some history already. */
+const eventRegistrations = new Map([
+  [
+    studentProfile._id,
+    {
+      'ev-prompt-workshop': { registeredAt: '2026-08-01T11:00:00+05:30', attended: false },
+      'ev-code-sprint': { registeredAt: '2026-08-20T18:30:00+05:30', attended: true },
+      'ev-nss-plantation': { registeredAt: '2026-09-02T09:40:00+05:30', attended: true },
+      'ev-webdev-workshop': { registeredAt: '2026-09-15T20:10:00+05:30', attended: null },
+    },
+  ],
+])
+
+function registrationsOf(user) {
+  if (!eventRegistrations.has(user.id)) eventRegistrations.set(user.id, {})
+  return eventRegistrations.get(user.id)
+}
+
+/** A section in the signed-in faculty member's college. */
+function facultySection({ department, year, section }) {
+  const college = currentMockUser()?.college
+  return college && department && year && section ? { college, department, year: Number(year), section } : null
+}
+
+function recordFor(section, date) {
+  return savedDays.get(`${sectionKey(section)}|${date}`) ?? seededDay(section, date)
+}
 
 function feeTotals(payments) {
   const sum = (status) => payments.filter((payment) => !status || payment.status === status).reduce((total, payment) => total + payment.amount, 0)
@@ -49,6 +141,12 @@ export const previewMock = {
 
   studentFees() {
     return mockResponse(studentFeeAccount)
+  },
+
+  /** Newest first, with `isNew` for notices from the last week. */
+  examNotices() {
+    const weekAgo = new Date(new Date(`${MOCK_TODAY}T00:00:00Z`).getTime() - 7 * 86400000).toISOString().slice(0, 10)
+    return mockResponse([...examNotices].sort((a, b) => b.publishedOn.localeCompare(a.publishedOn)).map((notice) => ({ ...notice, isNew: notice.publishedOn >= weekAgo })))
   },
 
   exams(query = {}) {
@@ -83,7 +181,7 @@ export const previewMock = {
   },
 
   facilities(query) {
-    return list(facilities, query, ['name', 'location', 'category'], { key: 'name', direction: 'asc' })
+    return list(facilities, query, ['name', 'location', 'category', 'description'], null)
   },
 
   busPass() {
@@ -92,30 +190,119 @@ export const previewMock = {
 
   reportSource() {
     const user = currentMockUser()
-    return mockResponse({ students: user?.role === 'hod' ? scopedStudents(user) : rosterStudents, payments: feePayments })
+    const students = user?.role === 'hod' ? scopedStudents(user) : rosterStudents
+    seedApplications()
+    return mockResponse({
+      students: students.map(withPlacementFlags),
+      payments: feePayments,
+      drives,
+      events: campusEvents,
+      participation: eventParticipation(students),
+    })
   },
 
-  facultyClasses() {
+  /** One section's register for a day: saved by a faculty member here, seeded for past days, or not taken yet. */
+  attendanceDay({ date, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    return mockResponse({ students: sectionStudents(section), record: recordFor(section, date), workingDay: isWorkingDay(date) })
+  },
+
+  saveAttendanceDay({ date, absentees, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    if (!isWorkingDay(date)) return mockError('Attendance can only be taken on working days.', 400)
+    const previous = recordFor(section, date)
     const user = currentMockUser()
-    return mockResponse(timetable.filter((entry) => entry.faculty === user?.name))
+    const record = { ...section, date, absentees, takenBy: user?.name ?? 'Faculty', submittedAt: new Date().toISOString(), corrected: Boolean(previous) }
+    savedDays.set(`${sectionKey(section)}|${date}`, record)
+    return mockResponse({ ...record, total: sectionStudents(section).length })
   },
 
-  sectionStudents(sectionKey) {
-    const section = TIMETABLE_SECTIONS.find((item) => item.value === sectionKey)
-    if (!section) return mockError('Unknown section.', 404)
-    return mockResponse(
-      rosterStudents.filter((student) => student.college === 'KIET' && student.department === 'CSE' && student.year === section.year && student.section === section.section),
-    )
+  /** Every working day of the month so far, each with its record or `null` when attendance was not taken. */
+  attendanceMonth({ month, ...params }) {
+    const section = facultySection(params)
+    if (!section) return mockError('Choose a branch, year and section.', 400)
+    const today = new Date().toISOString().slice(0, 10)
+    return mockResponse({
+      students: sectionStudents(section),
+      days: workingDaysIn(month, today).map((date) => ({ date, record: recordFor(section, date) })),
+    })
   },
 
-  submitAttendance(session) {
-    const saved = { ...session, id: `session-${attendanceSessions.length + 1}`, submittedAt: new Date().toISOString() }
-    attendanceSessions = [saved, ...attendanceSessions]
-    return mockResponse(saved)
+  /** The student's registrations, newest event first: `upcoming`, or `attended` / `absent` once the event is over. */
+  eventRegistrations() {
+    const user = currentMockUser()
+    if (user?.role !== 'student') return mockError('Only students register for events.', 403)
+    const rows = Object.entries(registrationsOf(user))
+      .map(([eventId, registration]) => ({ ...registration, event: campusEvents.find((event) => event._id === eventId) }))
+      .filter((row) => row.event)
+      .map((row) => ({ ...row, status: row.event.date >= MOCK_TODAY ? 'upcoming' : row.attended ? 'attended' : 'absent' }))
+      .sort((a, b) => b.event.date.localeCompare(a.event.date))
+    return mockResponse(rows)
   },
 
-  attendanceSessions() {
-    return mockResponse(attendanceSessions)
+  registerForEvent(eventId) {
+    const user = currentMockUser()
+    const event = campusEvents.find((entry) => entry._id === eventId)
+    if (user?.role !== 'student') return mockError('Only students register for events.', 403)
+    if (!event) return mockError('This event could not be found.', 404)
+    if ((event.registrationDeadline ?? event.date) < MOCK_TODAY) return mockError('Registration for this event has closed.', 409)
+    const registrations = registrationsOf(user)
+    if (registrations[eventId]) return mockError('You are already registered for this event.', 409)
+    registrations[eventId] = { registeredAt: new Date().toISOString(), attended: null }
+    return mockResponse({ event, ...registrations[eventId] })
+  },
+
+  cancelEventRegistration(eventId) {
+    const user = currentMockUser()
+    const event = campusEvents.find((entry) => entry._id === eventId)
+    const registrations = user ? registrationsOf(user) : {}
+    if (!event || !registrations[eventId]) return mockError('You are not registered for this event.', 404)
+    if (event.date < MOCK_TODAY) return mockError('This event is over, so the registration cannot be cancelled.', 409)
+    delete registrations[eventId]
+    return mockResponse({ event })
+  },
+
+  placementPool() {
+    return mockResponse(placementPool())
+  },
+
+  /** The drives of the signed-in user's college. */
+  placementDrives() {
+    seedApplications()
+    return mockResponse(drives.filter((drive) => drive.college === currentMockUser()?.college))
+  },
+
+  saveDriveCriteria({ id, criteria }) {
+    seedApplications()
+    if (!drives.some((drive) => drive.id === id)) return mockError('This drive could not be found.', 404)
+    drives = drives.map((drive) => (drive.id === id ? { ...drive, criteria } : drive))
+    return mockResponse(drives.find((drive) => drive.id === id))
+  },
+
+  setApplicationStatus({ driveId, rollNumber, status }) {
+    seedApplications()
+    const drive = drives.find((entry) => entry.id === driveId)
+    if (!drive) return mockError('This drive could not be found.', 404)
+    const applications = { ...drive.applications }
+    if (status === 'not-applied') delete applications[rollNumber]
+    else applications[rollNumber] = status
+    drives = drives.map((entry) => (entry.id === driveId ? { ...entry, applications } : entry))
+    return mockResponse({ driveId, rollNumber, status })
+  },
+
+  notificationPreferences() {
+    const user = currentMockUser()
+    if (!user) return mockError('Sign in to see your preferences.', 401)
+    return mockResponse({ email: user.email, preferences: notificationPreferences.get(user.id) ?? defaultNotificationPreferences() })
+  },
+
+  saveNotificationPreferences(preferences) {
+    const user = currentMockUser()
+    if (!user) return mockError('Sign in to change your preferences.', 401)
+    notificationPreferences.set(user.id, preferences)
+    return mockResponse({ email: user.email, preferences })
   },
 
   institutionSettings() {

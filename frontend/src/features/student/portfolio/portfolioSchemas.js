@@ -8,6 +8,9 @@ const optionalUrl = z
 
 const requiredDate = (message) => z.string().min(1, message)
 
+/** A date that has already happened; today counts. */
+const pastDate = (message) => requiredDate(message).refine((value) => value <= new Date().toISOString().slice(0, 10), 'The date cannot be in the future.')
+
 /** End date must not be before the start date when both are present. */
 function endAfterStart(startKey, endKey, message) {
   return (values, ctx) => {
@@ -58,6 +61,27 @@ export const projectSchema = z
       ctx.addIssue({ code: 'custom', path: ['endDate'], message: 'Completed projects need an end date.' })
     }
   })
+
+export const ACHIEVEMENT_CATEGORIES = ['Academic', 'Technical', 'Sports', 'Cultural', 'Service', 'Other']
+export const ACHIEVEMENT_LEVELS = ['College', 'University', 'State', 'National', 'International']
+
+export const achievementSchema = z.object({
+  title: z.string().trim().min(3, 'Enter what you achieved.').max(120),
+  category: z.enum(ACHIEVEMENT_CATEGORIES, { error: 'Select a category.' }),
+  level: z.enum(ACHIEVEMENT_LEVELS, { error: 'Select the level.' }),
+  date: pastDate('Select the date.'),
+  description: z.string().trim().max(400, 'Keep the description under 400 characters.'),
+})
+
+export const ACTIVITY_TYPES = ['Hackathon', 'Workshop', 'Club Activity', 'Technical Event', 'Social Service', 'Sports', 'Cultural', 'Other']
+
+export const activitySchema = z.object({
+  title: z.string().trim().min(3, 'Enter the activity name.').max(120),
+  type: z.enum(ACTIVITY_TYPES, { error: 'Select the type.' }),
+  organizer: z.string().trim().min(2, 'Enter who organised it.').max(120),
+  role: z.string().trim().min(2, 'Enter your role, such as Participant or Volunteer.').max(60),
+  date: pastDate('Select the date.'),
+})
 
 export const INTERNSHIP_MODES = ['Onsite', 'Remote', 'Hybrid']
 

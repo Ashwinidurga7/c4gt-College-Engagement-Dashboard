@@ -95,3 +95,23 @@ export function groupStudents(students, fields) {
       ...summarizeStudents(members),
     }))
 }
+
+/**
+ * Toppers of one batch for a past academic year. Students are in their current year of study, so the batch
+ * that was in `yearOfStudy` during the academic year starting `yearStart` is now `yearsSince` years further on.
+ * `semester` ranks by that semester's SGPA; without it, by the CGPA over that year's two semesters and before.
+ */
+export function batchToppers(students, { yearStart, currentStart, yearOfStudy, semester, count = 10 }) {
+  const currentYear = yearOfStudy + (currentStart - yearStart)
+  const lastSemester = semester ?? yearOfStudy * 2
+  return students
+    .filter((student) => student.year === currentYear && (student.sgpas?.length ?? 0) >= lastSemester)
+    .map((student) => {
+      const sgpas = student.sgpas.slice(0, lastSemester)
+      const score = semester ? sgpas[semester - 1] : average(sgpas)
+      return { ...student, score }
+    })
+    .filter((student) => Number.isFinite(student.score))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, count)
+}

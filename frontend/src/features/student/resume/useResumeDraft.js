@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { resumeDraftService } from '@/services/resumeDraftService'
 
 const VERSION = 1
 const SAVE_DELAY = 400
@@ -25,21 +26,46 @@ function writeDraft(userId, draft) {
   }
 }
 
+const isNewer = (candidate, current) => candidate?.version === VERSION && (!current?.updatedAt || String(candidate.updatedAt ?? '') > current.updatedAt)
+
 /**
- * The student's local resume edits (skills, summary, school marks, links, bullet edits, item
- * choices, section order and template), laid over API data by `applyDraft`. Changes are saved
- * to this browser shortly after each edit; `status` drives the "Draft saved" indicator.
+ * The student's resume edits (skills, summary, school marks, links, bullet edits, item choices, section
+ * order and template), laid over API data by `applyDraft`.
+ *
+ * The browser copy opens the builder instantly; the account copy (resumeDraftService) is what survives
+ * sign-out, refresh and a change of device. On load the newer of the two wins. Each edit is saved to both
+ * shortly after it is made; `status` drives the save indicator, and `local` means only this browser has it.
  */
 export function useResumeDraft(userId) {
   const [stored] = useState(() => readResumeDraft(userId))
   const [draft, setDraft] = useState(stored ?? { version: VERSION })
   const [status, setStatus] = useState(stored ? { state: 'saved', at: stored.updatedAt } : { state: 'idle' })
   const pending = useRef(null)
+  const edited = useRef(false)
+
+  // Take the account copy when it is newer than this browser's, unless the student has already started editing.
+  useEffect(() => {
+    let active = true
+    resumeDraftService
+      .get()
+      .then((remote) => {
+        if (!active || edited.current || !isNewer(remote, stored)) return
+        writeDraft(userId, remote)
+        setDraft(remote)
+        setStatus({ state: 'saved', at: remote.updatedAt })
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [userId, stored])
 
   // Keep an edit made just before leaving the page.
   useEffect(
     () => () => {
-      if (pending.current) writeDraft(userId, pending.current)
+      if (!pending.current) return
+      writeDraft(userId, pending.current)
+      resumeDraftService.save(pending.current).catch(() => {})
     },
     [userId],
   )
@@ -47,29 +73,38 @@ export function useResumeDraft(userId) {
   useEffect(() => {
     if (!pending.current) return undefined
     const next = pending.current
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       pending.current = null
-      setStatus(writeDraft(userId, next) ? { state: 'saved', at: next.updatedAt } : { state: 'unavailable' })
+      const local = writeDraft(userId, next)
+      try {
+        await resumeDraftService.save(next)
+        setStatus({ state: 'saved', at: next.updatedAt })
+      } catch {
+        setStatus(local ? { state: 'local', at: next.updatedAt } : { state: 'unavailable' })
+      }
     }, SAVE_DELAY)
     return () => clearTimeout(timer)
   }, [draft, userId])
 
   /** `change` receives the current draft and returns the next one. */
   const update = useCallback((change) => {
+    edited.current = true
     setDraft((current) => {
       const next = { ...change(current), version: VERSION, updatedAt: new Date().toISOString() }
       pending.current = next
       return next
     })
-    setStatus((current) => (current.state === 'unavailable' ? current : { state: 'saving' }))
+    setStatus({ state: 'saving' })
   }, [])
 
-  /** Discards local edits but remembers which saved resumes came from the builder. */
+  /** Discards the edits but remembers which saved resumes came from the builder. */
   const reset = useCallback(() => {
+    edited.current = true
     pending.current = null
     setDraft((current) => {
-      const next = current.savedResumeIds?.length ? { version: VERSION, savedResumeIds: current.savedResumeIds } : { version: VERSION }
-      writeDraft(userId, next.savedResumeIds ? next : null)
+      const next = { version: VERSION, updatedAt: new Date().toISOString(), ...(current.savedResumeIds?.length && { savedResumeIds: current.savedResumeIds }) }
+      writeDraft(userId, next)
+      resumeDraftService.save(next).catch(() => {})
       return next
     })
     setStatus({ state: 'idle' })

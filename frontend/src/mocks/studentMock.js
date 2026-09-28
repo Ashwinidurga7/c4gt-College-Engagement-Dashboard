@@ -4,7 +4,7 @@ import { applyListQuery } from '@/lib/listQuery'
 import { attendanceRecords } from '@/mocks/attendanceData'
 import { campusAnnouncements, campusEvents, clubMemberships, MOCK_TODAY, recentActivities } from '@/mocks/campusData'
 import { mockResponse } from '@/mocks/mockUtils'
-import { semesterResults } from '@/mocks/resultsData'
+import { resultBacklogs, semesterResults } from '@/mocks/resultsData'
 import { currentCourses, studentProfile } from '@/mocks/studentProfileData'
 
 /** Student endpoints in mock mode. Responses mimic the backend's `data` payload before adaptation. */
@@ -29,7 +29,7 @@ function attendancePayload() {
     attendedClasses: summary.attended,
     subjects: summary.subjects,
     monthly: summary.monthly,
-    records: attendanceRecords.slice(0, 40),
+    records: attendanceRecords,
   }
 }
 
@@ -66,7 +66,7 @@ export const studentMock = {
       .flatMap((entry) => entry.courses)
       .filter((course) => course.gradePoints > 0)
       .reduce((sum, course) => sum + course.credits, 0)
-    const backlogs = semesterResults.flatMap((entry) => entry.courses).filter((course) => course.gradePoints === 0).length
+    const backlogSubjects = resultBacklogs
     return mockResponse({
       batch: profile.batch,
       regulation: profile.regulation,
@@ -80,7 +80,8 @@ export const studentMock = {
       cgpa: reportPayload().cgpa,
       creditsEarned: earned,
       totalCredits: TOTAL_PROGRAMME_CREDITS,
-      backlogs,
+      backlogs: backlogSubjects.filter((subject) => subject.status === 'active').length,
+      backlogSubjects,
     })
   },
 

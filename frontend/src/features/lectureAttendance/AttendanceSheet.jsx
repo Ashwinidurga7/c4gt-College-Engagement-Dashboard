@@ -1,82 +1,150 @@
-import { Check, Loader2, X } from 'lucide-react'
+import { CalendarOff, Check, Download, Loader2, Pencil, UsersRound, X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { SectionCard } from '@/components/common/SectionCard'
 import { ListSkeleton } from '@/components/common/Skeleton'
+import { StatusBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
-import { useSectionStudents, useSubmitAttendance } from '@/hooks/usePreview'
+import { useAttendanceDay, useSaveAttendanceDay } from '@/hooks/usePreview'
+import { downloadText, toCsv } from '@/lib/csv'
+import { formatDate, formatDateTime } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
 
-/** Everyone starts present; tap a student to toggle. Status is shown as text and icon, not colour alone. */
-export function AttendanceSheet({ entry, date, onDone }) {
-  const students = useSectionStudents(entry.section)
-  const submit = useSubmitAttendance()
-  const [absent, setAbsent] = useState(() => new Set())
+const CSV_COLUMNS = [
+  { key: 'rollNumber', header: 'Roll number' },
+  { key: 'name', header: 'Name' },
+  { key: 'status', header: 'Status' },
+]
 
-  if (students.isPending) return <ListSkeleton rows={5} />
-  if (students.isError) return <ErrorState error={students.error} onRetry={students.refetch} />
+export function classLabel({ department, year, section }) {
+  return `${department} · Year ${year} · Section ${section}`
+}
 
-  const list = students.data
-  const present = list.length - absent.size
-  const toggle = (id) =>
-    setAbsent((current) => {
-      const next = new Set(current)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
+function downloadDay(params, students, absentees) {
+  const rows = students.map((student) => ({ ...student, status: absentees.has(student.rollNumber) ? 'Absent' : 'Present' }))
+  downloadText(`attendance-${params.department}-${params.year}${params.section}-${params.date}.csv`, toCsv(CSV_COLUMNS, rows))
+}
 
-  function save() {
-    submit.mutate(
-      { section: entry.section, subject: entry.subject, slot: entry.slot, date, present, absent: absent.size, total: list.length, absentees: [...absent] },
-      { onSuccess: onDone, onError: (error) => toast.error(error.message) },
+function StudentToggle({ student, absent, onToggle }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={absent}
+      onClick={onToggle}
+      className={cn('flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition-colors', absent ? 'bg-danger-soft border-danger' : 'hover:bg-muted')}
+    >
+      <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-full', absent ? 'bg-danger text-primary-foreground' : 'bg-success-soft text-success-text')}>
+        {absent ? <X className="size-4" aria-hidden /> : <Check className="size-4" aria-hidden />}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="text-heading block truncate text-sm font-medium">{student.name}</span>
+        <span className="text-muted-foreground block text-xs">{student.rollNumber}</span>
+      </span>
+      <span className={cn('text-xs font-semibold', absent ? 'text-danger-text' : 'text-success-text')}>{absent ? 'Absent' : 'Present'}</span>
+    </button>
+  )
+}
+
+/**
+ * The day's register for one section. A saved register opens read-only with Edit and Download;
+ * a new one starts with everyone present and the faculty member taps the absentees.
+ */
+export function AttendanceSheet({ params }) {
+  const query = useAttendanceDay(params)
+  const save = useSaveAttendanceDay()
+  const [draft, setDraft] = useState(null)
+
+  if (query.isPending) return <ListSkeleton rows={5} />
+  if (query.isError) return <ErrorState error={query.error} onRetry={query.refetch} />
+
+  const { students, record, workingDay } = query.data
+  if (!workingDay) {
+    return (
+      <SectionCard>
+        <EmptyState icon={CalendarOff} title="Not a working day" description="Sundays and holidays have no classes. Pick another date." />
+      </SectionCard>
+    )
+  }
+  if (students.length === 0) {
+    return (
+      <SectionCard>
+        <EmptyState icon={UsersRound} title="No students in this section" description="Pick another branch, year or section." />
+      </SectionCard>
     )
   }
 
+  const editing = draft !== null || !record
+  const absentees = draft ?? new Set(record?.absentees ?? [])
+  const present = students.length - absentees.size
+
+  const toggle = (rollNumber) => {
+    const next = new Set(absentees)
+    if (next.has(rollNumber)) next.delete(rollNumber)
+    else next.add(rollNumber)
+    setDraft(next)
+  }
+
+  function submit() {
+    save.mutate({ ...params, absentees: [...absentees] }, { onSuccess: () => setDraft(null), onError: (error) => toast.error(error.message) })
+  }
+
+  const status = record ? `Taken by ${record.takenBy} · ${record.corrected ? 'corrected' : 'saved'} ${formatDateTime(record.submittedAt)}` : 'Not taken yet. Everyone starts as present; tap a student to mark them absent.'
+
   return (
     <SectionCard
-      title={`${entry.subject} · Section ${entry.section}`}
-      description={`${list.length} students. Marked absent: ${absent.size}.`}
+      title={`${classLabel(params)} · ${formatDate(params.date)}`}
+      description={`${present} of ${students.length} present. ${status}`}
       action={
-        <div className="flex gap-2">
-          <Button variant="outline" size="lg" onClick={() => setAbsent(new Set())}>
-            All present
-          </Button>
-          <Button size="lg" onClick={save} disabled={submit.isPending}>
-            {submit.isPending && <Loader2 className="animate-spin" aria-hidden />}
-            Submit ({present}/{list.length})
-          </Button>
-        </div>
+        editing ? (
+          <div className="flex flex-wrap gap-2">
+            {record && (
+              <Button variant="outline" size="lg" onClick={() => setDraft(null)}>
+                Cancel
+              </Button>
+            )}
+            <Button variant="outline" size="lg" onClick={() => setDraft(new Set())}>
+              All present
+            </Button>
+            <Button size="lg" onClick={submit} disabled={save.isPending}>
+              {save.isPending && <Loader2 className="animate-spin" aria-hidden />}
+              {record ? 'Save correction' : 'Save attendance'}
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="lg" onClick={() => downloadDay(params, students, absentees)}>
+              <Download aria-hidden /> Download
+            </Button>
+            <Button size="lg" onClick={() => setDraft(new Set(record.absentees))}>
+              <Pencil aria-hidden /> Edit
+            </Button>
+          </div>
+        )
       }
     >
-      <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-        {list.map((student) => {
-          const isAbsent = absent.has(student.id)
-          return (
-            <li key={student.id}>
-              <button
-                type="button"
-                aria-pressed={isAbsent}
-                onClick={() => toggle(student.id)}
-                className={cn(
-                  'flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition-colors',
-                  isAbsent ? 'bg-danger-soft border-danger' : 'hover:bg-muted',
-                )}
-              >
-                <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-full', isAbsent ? 'bg-danger text-primary-foreground' : 'bg-success-soft text-success-text')}>
-                  {isAbsent ? <X className="size-4" aria-hidden /> : <Check className="size-4" aria-hidden />}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="text-heading block truncate text-sm font-medium">{student.name}</span>
-                  <span className="text-muted-foreground block text-xs">{student.rollNumber}</span>
-                </span>
-                <span className={cn('text-xs font-semibold', isAbsent ? 'text-danger-text' : 'text-success-text')}>{isAbsent ? 'Absent' : 'Present'}</span>
-              </button>
+      {editing ? (
+        <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          {students.map((student) => (
+            <li key={student.rollNumber}>
+              <StudentToggle student={student} absent={absentees.has(student.rollNumber)} onToggle={() => toggle(student.rollNumber)} />
             </li>
-          )
-        })}
-      </ul>
+          ))}
+        </ul>
+      ) : (
+        <ul className="grid gap-x-6 sm:grid-cols-2 xl:grid-cols-3">
+          {students.map((student) => (
+            <li key={student.rollNumber} className="flex items-center justify-between gap-3 border-b py-2 text-sm">
+              <span className="min-w-0">
+                <span className="text-heading block truncate font-medium">{student.name}</span>
+                <span className="text-muted-foreground block text-xs">{student.rollNumber}</span>
+              </span>
+              <StatusBadge status={absentees.has(student.rollNumber) ? 'absent' : 'present'} />
+            </li>
+          ))}
+        </ul>
+      )}
     </SectionCard>
   )
 }

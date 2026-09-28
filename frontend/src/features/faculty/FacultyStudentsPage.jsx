@@ -1,5 +1,5 @@
 import { RosterPage } from '@/features/roster/RosterPage'
-import { ATTENDANCE_FILTER, SECTION_FILTER, YEAR_FILTER } from '@/features/roster/rosterFilters'
+import { ATTENDANCE_FILTER, BRANCH_FILTER, SECTION_FILTER, YEAR_FILTER } from '@/features/roster/rosterFilters'
 import { useFacultyProfile, useRoster } from '@/hooks/useStaff'
 
 export function FacultyStudentsPage() {
@@ -10,9 +10,9 @@ export function FacultyStudentsPage() {
     <RosterPage
       title="Student roster"
       documentTitle="Student Roster"
-      description="Students in the years and department you are assigned to."
+      description="Students in the years you teach, by branch, year and section."
       useStudents={useRoster}
-      filterOptions={[YEAR_FILTER(years), SECTION_FILTER, ATTENDANCE_FILTER]}
+      filterOptions={[BRANCH_FILTER(), YEAR_FILTER(years), SECTION_FILTER, ATTENDANCE_FILTER]}
     />
   )
 }

@@ -37,7 +37,8 @@ export const eventsMock = {
     if (when === 'past') items = items.filter((event) => event.date < MOCK_TODAY)
     const sort = query.sort ?? { key: 'date', direction: when === 'past' ? 'desc' : 'asc' }
     const page = applyListQuery(items, { ...query, sort, filters: exact, searchKeys: ['title', 'organizer', 'venue', 'category'] })
-    return mockResponse({ ...page, limit: page.pageSize })
+    const withRegistration = page.items.map((event) => ({ ...event, registrationOpen: (event.registrationDeadline ?? event.date) >= MOCK_TODAY }))
+    return mockResponse({ ...page, items: withRegistration, limit: page.pageSize })
   },
   get(id) {
     const event = campusEvents.find((entry) => entry._id === id)

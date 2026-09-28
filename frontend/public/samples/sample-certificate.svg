@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1123" height="794" viewBox="0 0 1123 794" role="img" aria-label="Sample certificate">
+  <rect width="1123" height="794" fill="#ffffff"/>
+  <rect x="32" y="32" width="1059" height="730" fill="none" stroke="#1b4594" stroke-width="6"/>
+  <rect x="48" y="48" width="1027" height="698" fill="none" stroke="#1b4594" stroke-width="1.5"/>
+  <text x="561.5" y="150" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="20" letter-spacing="4" fill="#1b4594">KIET GROUP OF INSTITUTIONS</text>
+  <text x="561.5" y="250" text-anchor="middle" font-family="Georgia, serif" font-size="54" font-weight="bold" fill="#0f2557">Certificate</text>
+  <text x="561.5" y="330" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#55657a">This is a sample file shown in the preview.</text>
+  <text x="561.5" y="370" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#55657a">Uploaded certificates appear here in the live portal.</text>
+  <line x1="381" y1="560" x2="742" y2="560" stroke="#0f2557" stroke-width="1.5"/>
+  <text x="561.5" y="595" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#0f2557">Issuing authority</text>
+</svg>

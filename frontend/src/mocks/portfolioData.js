@@ -30,13 +30,16 @@ export const certificationsData = [
   },
 ]
 
+/** Seeded certificates share one sample file so View and Download work in the preview. */
+const SAMPLE_CERTIFICATE = '/samples/sample-certificate.svg'
+
 export const certificatesData = [
-  { _id: 'crt-hackathon', title: 'Hackathon Participation', category: 'Hackathon', issuedBy: 'AI Hackathon 2026', date: '2026-09-12', status: 'pending', fileName: 'ai-hackathon-2026.pdf' },
-  { _id: 'crt-workshop', title: 'Workshop Completion', category: 'Workshop', issuedBy: 'Web Development Workshop', date: '2026-08-20', status: 'verified', fileName: 'webdev-workshop.pdf', verifiedBy: 'Mrs. K. Sirisha' },
-  { _id: 'crt-nss', title: 'NSS Volunteer Certificate', category: 'Participation', issuedBy: 'NSS Special Camp', date: '2026-08-15', status: 'verified', fileName: 'nss-special-camp.pdf', verifiedBy: 'Dr. P. Venkata Rao' },
-  { _id: 'crt-sports', title: 'Sports Participation', category: 'Sports', issuedBy: 'Inter-College Tournament', date: '2026-04-06', status: 'verified', fileName: 'intercollege-cricket.jpg', verifiedBy: 'Mr. S. Naga Babu' },
-  { _id: 'crt-c4gt', title: 'C4GT Certification', category: 'Achievement', issuedBy: 'C4GT Summit 2026', date: '2026-03-10', status: 'pending', fileName: 'c4gt-summit.pdf' },
-  { _id: 'crt-robotics', title: 'Robotics Workshop', category: 'Workshop', issuedBy: 'KIET Robotics Lab', date: '2026-02-22', status: 'rejected', fileName: 'robotics-workshop.png', remarks: 'Certificate image is unreadable. Upload a clearer copy.' },
+  { _id: 'crt-hackathon', title: 'Hackathon Participation', category: 'Hackathon', issuedBy: 'AI Hackathon 2026', date: '2026-09-12', status: 'pending', fileName: 'ai-hackathon-2026.pdf', fileUrl: SAMPLE_CERTIFICATE },
+  { _id: 'crt-workshop', title: 'Workshop Completion', category: 'Workshop', issuedBy: 'Web Development Workshop', date: '2026-08-20', status: 'verified', fileName: 'webdev-workshop.pdf', fileUrl: SAMPLE_CERTIFICATE, verifiedBy: 'Mrs. K. Sirisha' },
+  { _id: 'crt-nss', title: 'NSS Volunteer Certificate', category: 'Participation', issuedBy: 'NSS Special Camp', date: '2026-08-15', status: 'verified', fileName: 'nss-special-camp.pdf', fileUrl: SAMPLE_CERTIFICATE, verifiedBy: 'Dr. P. Venkata Rao' },
+  { _id: 'crt-sports', title: 'Sports Participation', category: 'Sports', issuedBy: 'Inter-College Tournament', date: '2026-04-06', status: 'verified', fileName: 'intercollege-cricket.jpg', fileUrl: SAMPLE_CERTIFICATE, verifiedBy: 'Mr. S. Naga Babu' },
+  { _id: 'crt-c4gt', title: 'C4GT Certification', category: 'Achievement', issuedBy: 'C4GT Summit 2026', date: '2026-03-10', status: 'pending', fileName: 'c4gt-summit.pdf', fileUrl: SAMPLE_CERTIFICATE },
+  { _id: 'crt-robotics', title: 'Robotics Workshop', category: 'Workshop', issuedBy: 'KIET Robotics Lab', date: '2026-02-22', status: 'rejected', fileName: 'robotics-workshop.png', fileUrl: SAMPLE_CERTIFICATE, remarks: 'Certificate image is unreadable. Upload a clearer copy.' },
 ]
 
 export const projectsData = [

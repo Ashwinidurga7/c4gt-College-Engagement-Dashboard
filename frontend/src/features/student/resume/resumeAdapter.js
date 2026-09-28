@@ -1,4 +1,5 @@
 import { BRAND_NAME } from '@/lib/brand'
+import { DEPARTMENT_NAMES } from '@/lib/colleges'
 import { absoluteUrl, cleanText, toBullets, toList } from '@/features/student/resume/resumeFormat'
 
 /** Body sections in their default order. Personal details are always the header. */
@@ -22,16 +23,6 @@ export const SKILL_GROUPS = [
   { key: 'tools', label: 'Tools and platforms' },
   { key: 'other', label: 'Other skills' },
 ]
-
-const BRANCHES = {
-  CSE: 'Computer Science and Engineering',
-  'CSE-AI': 'Computer Science and Engineering (Artificial Intelligence)',
-  IT: 'Information Technology',
-  ECE: 'Electronics and Communication Engineering',
-  EEE: 'Electrical and Electronics Engineering',
-  MECH: 'Mechanical Engineering',
-  CIVIL: 'Civil Engineering',
-}
 
 const DEFAULT_PROJECTS = 3
 const byNewest = (a, b) => String(b.sortDate ?? '').localeCompare(String(a.sortDate ?? ''))
@@ -102,7 +93,7 @@ export function buildBaseModel({ profile = {}, academic = {}, report = {}, proje
         id: 'degree',
         institution: college && college !== 'KIET' ? `${BRAND_NAME} (${college})` : BRAND_NAME,
         degree: 'B.Tech',
-        branch: BRANCHES[department] ?? department ?? '',
+        branch: DEPARTMENT_NAMES[department] ?? department ?? '',
         startYear: startYear ?? '',
         endYear: endYear ?? '',
         cgpa: academic.cgpa ?? report.cgpa ?? null,

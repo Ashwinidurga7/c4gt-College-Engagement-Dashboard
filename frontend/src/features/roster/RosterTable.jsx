@@ -7,10 +7,11 @@ import { ValueBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { StudentDetailDialog } from '@/features/roster/StudentDetailDialog'
+import { BacklogDialog } from '@/features/student/academic/BacklogDialog'
 import { isLowAttendance } from '@/lib/academics'
 import { formatNumber, formatPercent } from '@/lib/formatters'
 
-function buildColumns(showScope) {
+function buildColumns(showScope, onShowBacklogs) {
   return [
     {
       key: 'name',
@@ -20,6 +21,7 @@ function buildColumns(showScope) {
         <div className="min-w-0">
           <p className="text-heading font-medium">{row.name}</p>
           <p className="text-muted-foreground text-xs">{row.rollNumber}</p>
+          {row.email && <p className="text-muted-foreground text-xs break-all">{row.email}</p>}
         </div>
       ),
     },
@@ -38,7 +40,25 @@ function buildColumns(showScope) {
       cell: (row) => (row.attendancePercentage == null ? '—' : <ValueBadge value={formatPercent(row.attendancePercentage)} warn={isLowAttendance(row.attendancePercentage)} />),
     },
     { key: 'cgpa', header: 'CGPA', sortable: true, align: 'right', cell: (row) => row.cgpa?.toFixed(2) ?? '—', className: 'tabular-nums text-heading font-medium' },
-    { key: 'backlogs', header: 'Backlogs', sortable: true, align: 'right', cell: (row) => formatNumber(row.backlogs), className: 'tabular-nums' },
+    {
+      key: 'backlogs',
+      header: 'Backlogs',
+      sortable: true,
+      align: 'right',
+      className: 'tabular-nums',
+      cell: (row) =>
+        row.backlogSubjects.length > 0 ? (
+          <button type="button" onClick={() => onShowBacklogs(row)} className="text-link font-medium hover:underline">
+            {formatNumber(row.backlogs)}
+            <span className="sr-only">
+              {' '}
+              backlogs for {row.name}. Show subjects
+            </span>
+          </button>
+        ) : (
+          formatNumber(row.backlogs)
+        ),
+    },
   ]
 }
 
@@ -66,13 +86,14 @@ function Select({ id, label, value, options, allLabel, onChange }) {
  */
 export function RosterTable({ list, query, filterOptions = [], showScope = false, caption = 'Students' }) {
   const [selected, setSelected] = useState(null)
+  const [backlogsOf, setBacklogsOf] = useState(null)
   const data = query.data
 
   return (
     <>
       <DataTable
         caption={caption}
-        columns={buildColumns(showScope)}
+        columns={buildColumns(showScope, setBacklogsOf)}
         rows={data?.items}
         isLoading={query.isPending}
         isFetching={query.isFetching && !query.isPending}
@@ -106,6 +127,7 @@ export function RosterTable({ list, query, filterOptions = [], showScope = false
         }
       />
       {selected && <StudentDetailDialog student={selected} onClose={() => setSelected(null)} />}
+      {backlogsOf && <BacklogDialog subjects={backlogsOf.backlogSubjects} studentName={backlogsOf.name} onClose={() => setBacklogsOf(null)} />}
     </>
   )
 }

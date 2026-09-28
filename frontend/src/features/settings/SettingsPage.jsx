@@ -35,7 +35,7 @@ export function SettingsPage() {
       </SectionCard>
       <PreferenceSettings />
       {user.role === 'admin' && <InstitutionSettings />}
-      <PreviewNotice>Appearance applies immediately. Other settings are stored in this preview until the settings service is available.</PreviewNotice>
+      <PreviewNotice>Appearance applies immediately. Notification choices are stored in this preview; emails start once the college mail service is connected.</PreviewNotice>
     </div>
   )
 }

@@ -16,21 +16,37 @@ function usePreviewQuery(module, fetcher, query) {
 export const useTimetable = () => usePreviewQuery('timetable', previewService.timetable)
 export const useFees = (query) => usePreviewQuery('fees', previewService.fees, query)
 export const useStudentFees = () => usePreviewQuery('student-fees', previewService.studentFees)
+export const useExamNotices = () => usePreviewQuery('exam-notices', previewService.examNotices)
 export const useExams = (query) => usePreviewQuery('exams', previewService.exams, query)
 export const useDepartments = () => usePreviewQuery('departments', previewService.departments)
 export const useCourseCatalog = (query) => usePreviewQuery('catalog', previewService.catalog, query)
 export const useFacilities = (query) => usePreviewQuery('facilities', previewService.facilities, query)
 export const useBusPass = () => usePreviewQuery('bus-pass', previewService.busPass)
 export const useReportSource = () => usePreviewQuery('report-source', previewService.reportSource)
-export const useFacultyClasses = () => usePreviewQuery('faculty-classes', previewService.facultyClasses)
-export const useAttendanceSessions = () => usePreviewQuery('attendance-sessions', previewService.attendanceSessions)
+/** Only students have registrations; pass `enabled: false` for other roles. */
+export function useEventRegistrations({ enabled = true } = {}) {
+  return useQuery({ queryKey: usePreviewKey('event-registrations'), queryFn: previewService.eventRegistrations, enabled })
+}
+export const usePlacementPool = () => usePreviewQuery('placement-pool', previewService.placementPool)
+export const usePlacementDrives = () => usePreviewQuery('placement-drives', previewService.placementDrives)
+export const useNotificationPreferences = () => usePreviewQuery('notification-preferences', previewService.notificationPreferences)
 export const useInstitutionSettings = () => usePreviewQuery('institution-settings', previewService.institutionSettings)
 
-export function useSectionStudents(section) {
+/** `params` is `{ department, year, section, date }`; nothing loads until all four are chosen. */
+export function useAttendanceDay(params) {
   return useQuery({
-    queryKey: usePreviewKey('section-students', section),
-    queryFn: () => previewService.sectionStudents(section),
-    enabled: Boolean(section),
+    queryKey: usePreviewKey('attendance', params),
+    queryFn: () => previewService.attendanceDay(params),
+    enabled: Boolean(params.department && params.year && params.section && params.date),
+  })
+}
+
+/** `params` is `{ department, year, section, month }`. */
+export function useAttendanceMonth(params) {
+  return useQuery({
+    queryKey: usePreviewKey('attendance', params),
+    queryFn: () => previewService.attendanceMonth(params),
+    enabled: Boolean(params.department && params.year && params.section && params.month),
   })
 }
 
@@ -48,6 +64,16 @@ function usePreviewMutation(module, mutationFn, message) {
 
 export const useMoveTimetableEntry = () =>
   usePreviewMutation('timetable', previewService.moveTimetableEntry, (entry) => `${entry.subject} moved to ${entry.day} ${entry.slot}`)
-export const useSubmitAttendance = () =>
-  usePreviewMutation('attendance-sessions', previewService.submitAttendance, (session) => `Attendance saved: ${session.present} of ${session.total} present`)
+export const useSaveAttendanceDay = () =>
+  usePreviewMutation('attendance', previewService.saveAttendanceDay, (record) =>
+    `Attendance ${record.corrected ? 'updated' : 'saved'}: ${record.total - record.absentees.length} of ${record.total} present`,
+  )
+export const useRegisterForEvent = () =>
+  usePreviewMutation('event-registrations', previewService.registerForEvent, (registration) => `Registered for ${registration.event.title}`)
+export const useCancelEventRegistration = () =>
+  usePreviewMutation('event-registrations', previewService.cancelEventRegistration, (event) => `Registration cancelled: ${event.title}`)
+export const useSaveDriveCriteria = () => usePreviewMutation('placement-drives', previewService.saveDriveCriteria, (drive) => `Criteria saved for ${drive.company}`)
+export const useSetApplicationStatus = () => usePreviewMutation('placement-drives', previewService.setApplicationStatus)
+export const useSaveNotificationPreferences = () =>
+  usePreviewMutation('notification-preferences', previewService.saveNotificationPreferences, 'Notification preferences saved')
 export const useSaveInstitutionSettings = () => usePreviewMutation('institution-settings', previewService.saveInstitutionSettings, 'Institution settings saved')

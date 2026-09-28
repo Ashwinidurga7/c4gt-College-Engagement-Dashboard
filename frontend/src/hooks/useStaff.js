@@ -57,10 +57,6 @@ export function useCtpoStudents(query) {
   return useQuery({ queryKey: queryKeys.ctpo.students(query), queryFn: () => ctpoService.students(query), placeholderData: keepPreviousData })
 }
 
-export function useCtpoAttendance() {
-  return useQuery({ queryKey: queryKeys.ctpo.attendance, queryFn: ctpoService.attendance })
-}
-
 export function useCtpoAcademicReport() {
   return useQuery({ queryKey: queryKeys.ctpo.academicReport, queryFn: ctpoService.academicReport })
 }

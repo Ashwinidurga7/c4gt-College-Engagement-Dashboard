@@ -1,8 +1,12 @@
 import { toPage } from '@/lib/listQuery'
+import { withPlacementFields } from '@/lib/placement'
 import { previewMock } from '@/mocks/preview/previewMock'
 import { toRosterStudent } from '@/services/rosterAdapters'
+import { toEvent } from '@/services/studentAdapters'
 
 const identity = (item) => item
+
+const toPlacementStudent = (raw) => withPlacementFields({ ...toRosterStudent(raw), recordsVerified: raw.recordsVerified, resumeSubmitted: raw.resumeSubmitted })
 
 /**
  * Modules with no backend endpoint (plan section 11). They always use the mock layer,
@@ -19,6 +23,7 @@ export const previewService = {
   },
   studentFees: () => previewMock.studentFees(),
 
+  examNotices: () => previewMock.examNotices(),
   exams: async (query) => toPage(await previewMock.exams(query), query, identity),
   departments: () => previewMock.departments(),
   catalog: async (query) => toPage(await previewMock.catalog(query), query, identity),
@@ -27,13 +32,41 @@ export const previewService = {
 
   async reportSource() {
     const raw = await previewMock.reportSource()
-    return { students: raw.students.map(toRosterStudent), payments: raw.payments }
+    return {
+      students: raw.students.map(toPlacementStudent),
+      payments: raw.payments,
+      drives: raw.drives,
+      events: raw.events.map(toEvent),
+      participation: raw.participation,
+    }
   },
 
-  facultyClasses: () => previewMock.facultyClasses(),
-  sectionStudents: async (section) => (await previewMock.sectionStudents(section)).map(toRosterStudent),
-  submitAttendance: (session) => previewMock.submitAttendance(session),
-  attendanceSessions: () => previewMock.attendanceSessions(),
+  async attendanceDay(params) {
+    const raw = await previewMock.attendanceDay(params)
+    return { students: raw.students.map(toRosterStudent), record: raw.record, workingDay: raw.workingDay !== false }
+  },
+  saveAttendanceDay: (values) => previewMock.saveAttendanceDay(values),
+  async attendanceMonth(params) {
+    const raw = await previewMock.attendanceMonth(params)
+    return { students: raw.students.map(toRosterStudent), days: raw.days }
+  },
+
+  async eventRegistrations() {
+    return (await previewMock.eventRegistrations()).map((row) => ({ ...row, event: toEvent(row.event) }))
+  },
+  registerForEvent: async (eventId) => {
+    const raw = await previewMock.registerForEvent(eventId)
+    return { ...raw, event: toEvent(raw.event) }
+  },
+  cancelEventRegistration: async (eventId) => toEvent((await previewMock.cancelEventRegistration(eventId)).event),
+
+  placementPool: async () => (await previewMock.placementPool()).map(toPlacementStudent),
+  placementDrives: () => previewMock.placementDrives(),
+  saveDriveCriteria: (values) => previewMock.saveDriveCriteria(values),
+  setApplicationStatus: (values) => previewMock.setApplicationStatus(values),
+
+  notificationPreferences: () => previewMock.notificationPreferences(),
+  saveNotificationPreferences: (preferences) => previewMock.saveNotificationPreferences(preferences),
 
   institutionSettings: () => previewMock.institutionSettings(),
   saveInstitutionSettings: (values) => previewMock.saveInstitutionSettings(values),

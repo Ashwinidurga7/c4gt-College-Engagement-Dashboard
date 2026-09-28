@@ -3,8 +3,8 @@ import { PageHeader } from '@/components/common/PageHeader'
 import { QueryView } from '@/components/common/QueryView'
 import { ChartSkeleton, StatGridSkeleton } from '@/components/common/Skeleton'
 import { AttendanceOverview } from '@/features/student/attendance/AttendanceOverview'
-import { RecentAttendanceTable, SubjectAttendanceTable } from '@/features/student/attendance/AttendanceTables'
 import { LowAttendanceAlert } from '@/features/student/attendance/LowAttendanceAlert'
+import { MonthlyAttendance } from '@/features/student/attendance/MonthlyAttendance'
 import { MonthlyAttendanceChart } from '@/features/student/attendance/MonthlyAttendanceChart'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useStudentAttendance } from '@/hooks/useStudent'
@@ -33,13 +33,12 @@ export function AttendancePage() {
             <AttendanceOverview attendance={attendance} />
             <div className="grid gap-6 xl:grid-cols-5">
               <div className="min-w-0 xl:col-span-3">
-                <SubjectAttendanceTable subjects={attendance.subjects} />
+                <MonthlyAttendance days={attendance.days} />
               </div>
               <div className="min-w-0 xl:col-span-2">
                 <MonthlyAttendanceChart monthly={attendance.monthly} />
               </div>
             </div>
-            <RecentAttendanceTable records={attendance.records} />
           </>
         )}
       </QueryView>
