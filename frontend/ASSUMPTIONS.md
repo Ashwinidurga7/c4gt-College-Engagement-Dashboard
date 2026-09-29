@@ -191,9 +191,11 @@ Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for
 - Deactivating a club hides it from students without deleting it; deleting is permanent. Both are confirmed, and the dialogs explain the difference.
 - "Join club" is shown only to students. The admin can open any club's detail page from the clubs table.
 - The Events page is shared with students; the admin sees the same filters plus Create event, and Edit and Delete on each event. Deleting is confirmed. Photos show as a cover thumbnail on event cards (events page, student dashboard, club pages) and as a photo viewer in the event details.
+- The admin edits club gallery photos in the club form, and publishes campus announcements on the Announcements page (shown under Campus updates on the student dashboard, newest three).
+- JNTUK Notices and Facilities are preview modules with no backend, so the admin's add, edit and delete run on the mock data only, until those endpoints exist. The admin sees every notice (students see theirs first); facility cards show the first photo to everyone.
 
 ### Mock data
-The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, club and event changes) persist in memory until a full page reload.
+The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, and changes to clubs, events, announcements, notices and facilities) persist in memory until a full page reload.
 
 ## Phase 6: Preview modules
 

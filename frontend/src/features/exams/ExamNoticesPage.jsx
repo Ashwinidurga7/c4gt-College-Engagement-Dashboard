@@ -1,5 +1,6 @@
-import { BellRing, CalendarClock, ExternalLink, Megaphone } from 'lucide-react'
+import { BellRing, CalendarClock, ExternalLink, Megaphone, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { FilterChips } from '@/components/common/FilterChips'
@@ -10,19 +11,14 @@ import { ListSkeleton } from '@/components/common/Skeleton'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
+import { NoticeFormModal } from '@/features/exams/NoticeFormModal'
+import { NOTICE_CATEGORIES } from '@/features/exams/noticeCategories'
+import { useAuth } from '@/hooks/useAuth'
+import { useConfirmAction } from '@/hooks/useConfirmAction'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
-import { useExamNotices } from '@/hooks/usePreview'
+import { useDeleteExamNotice, useExamNotices } from '@/hooks/usePreview'
 import { useStudentAcademic } from '@/hooks/useStudent'
 import { formatDate } from '@/lib/formatters'
-
-const NOTICE_CATEGORIES = {
-  timetable: 'Time table',
-  fees: 'Exam fee',
-  hallTicket: 'Hall ticket',
-  results: 'Results',
-  postponement: 'Postponement',
-  circular: 'Circular',
-}
 
 /** Every student here is on the B.Tech programme; other programmes appear under All notices. */
 const STUDENT_COURSE = 'B.Tech'
@@ -147,9 +143,78 @@ function NoticeList({ notices, academic }) {
   )
 }
 
+/** Who a notice is for, as the admin list shows it. */
+function audience(notice) {
+  return [notice.course === 'All' ? 'All courses' : notice.course, notice.regulation, notice.semester && `Semester ${notice.semester}`, notice.examType].filter(Boolean).join(' · ')
+}
+
+/** Every notice, newest first, with add, edit and delete. */
+function AdminNotices() {
+  const notices = useExamNotices()
+  const [editor, setEditor] = useState(null)
+  const remove = useConfirmAction(useDeleteExamNotice(), (notice) => notice)
+
+  return (
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="JNTUK exam notices"
+        description="Add, edit and remove the examination notices students see. Each student sees the ones for their course, regulation and semester first."
+        icon={Megaphone}
+        preview
+        actions={
+          <Button size="lg" onClick={() => setEditor({ notice: null })}>
+            <Plus aria-hidden /> Add notice
+          </Button>
+        }
+      />
+      <QueryView query={notices} skeleton={<ListSkeleton rows={4} />} isEmpty={(items) => items.length === 0} empty={{ icon: Megaphone, title: 'No notices yet', description: 'Add one and students see it straight away.' }}>
+        {(items) => (
+          <ul className="bg-card shadow-soft divide-y rounded-xl border">
+            {items.map((notice) => (
+              <li key={notice.id} className="flex flex-wrap items-start gap-4 p-4 sm:p-5">
+                <div className="min-w-60 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusBadge status="important" label={NOTICE_CATEGORIES[notice.category]} />
+                    <span className="text-muted-foreground text-xs">{audience(notice)}</span>
+                  </div>
+                  <h2 className="text-heading mt-2 text-sm font-semibold">{notice.title}</h2>
+                  <p className="text-muted-foreground mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                    <span>Published {formatDate(notice.publishedOn)}</span>
+                    {notice.deadline && <span>Last date {formatDate(notice.deadline)}</span>}
+                  </p>
+                </div>
+                <div className="flex gap-1">
+                  <Button variant="outline" size="lg" onClick={() => setEditor({ notice })}>
+                    <Pencil aria-hidden /> Edit<span className="sr-only">: {notice.title}</span>
+                  </Button>
+                  <Button variant="ghost" size="icon-lg" className="text-danger-text" aria-label={`Delete ${notice.title}`} onClick={() => remove.request(notice)}>
+                    <Trash2 />
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </QueryView>
+      {editor && <NoticeFormModal notice={editor.notice} open onOpenChange={(open) => !open && setEditor(null)} />}
+      <ConfirmDialog
+        {...remove.dialogProps}
+        title="Delete this notice?"
+        description={remove.target && `"${remove.target.title}" is removed for every student.`}
+        confirmLabel="Delete"
+        pendingLabel="Deleting…"
+      />
+    </div>
+  )
+}
+
 /** JNTUK examination notices, narrowed to the student's course, regulation, semester and backlogs by default. */
 export function ExamNoticesPage() {
   useDocumentTitle('Exam Notices')
+  return useAuth().user?.role === 'admin' ? <AdminNotices /> : <StudentNotices />
+}
+
+function StudentNotices() {
   const notices = useExamNotices()
   const academic = useStudentAcademic()
 

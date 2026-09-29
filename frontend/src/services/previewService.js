@@ -1,4 +1,5 @@
 import { toPage } from '@/lib/listQuery'
+import { toMockPhotos } from '@/lib/photos'
 import { withPlacementFields } from '@/lib/placement'
 import { previewMock } from '@/mocks/preview/previewMock'
 import { toRosterStudent } from '@/services/rosterAdapters'
@@ -24,10 +25,42 @@ export const previewService = {
   studentFees: () => previewMock.studentFees(),
 
   examNotices: () => previewMock.examNotices(),
+  /** Admin edits; empty optional fields are stored as null, which the student filters treat as "applies to all". */
+  saveExamNotice: (values) =>
+    previewMock.saveExamNotice({
+      id: values.id,
+      title: values.title.trim(),
+      category: values.category,
+      course: values.course,
+      regulation: values.regulation || null,
+      semester: values.semester ? Number(values.semester) : null,
+      examType: values.examType || null,
+      publishedOn: values.publishedOn,
+      deadline: values.deadline || null,
+      summary: values.summary.trim() || null,
+      sourceUrl: values.sourceUrl.trim(),
+    }),
+  deleteExamNotice: (notice) => previewMock.deleteExamNotice(notice.id).then(() => notice),
   exams: async (query) => toPage(await previewMock.exams(query), query, identity),
   departments: () => previewMock.departments(),
   catalog: async (query) => toPage(await previewMock.catalog(query), query, identity),
   facilities: async (query) => toPage(await previewMock.facilities(query), query, identity),
+  /** Admin edits; `values` come from the facility form. Details are one per line. */
+  saveFacility: (values) =>
+    previewMock.saveFacility({
+      id: values.id,
+      name: values.name.trim(),
+      category: values.category,
+      description: values.description.trim(),
+      details: values.details.split('\n').map((line) => line.trim()).filter(Boolean),
+      location: values.location.trim(),
+      opens: values.alwaysOpen ? null : values.opens,
+      closes: values.alwaysOpen ? null : values.closes,
+      days: values.days.map(Number).sort(),
+      contact: values.contact.trim(),
+      photos: toMockPhotos(values.photos),
+    }),
+  deleteFacility: (facility) => previewMock.deleteFacility(facility.id).then(() => facility),
   busPass: () => previewMock.busPass(),
 
   async reportSource() {

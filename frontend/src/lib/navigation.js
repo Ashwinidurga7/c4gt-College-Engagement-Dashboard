@@ -21,6 +21,7 @@ import {
   Megaphone,
   NotebookPen,
   PieChart,
+  ScrollText,
   Settings,
   ShieldCheck,
   UserCheck,
@@ -159,6 +160,8 @@ export const NAVIGATION = {
         { path: 'clubs', label: 'Clubs', icon: UsersRound, phase: 5 },
         { path: 'events', label: 'Events', icon: CalendarDays, phase: 5 },
         { path: 'announcements', label: 'Announcements', icon: Megaphone, phase: 5 },
+        { path: 'exam-notices', label: 'JNTUK Notices', icon: ScrollText, phase: 6, preview: true },
+        { path: 'facilities', label: 'Facilities', icon: MapPin, phase: 6, preview: true },
       ],
     },
     {
