@@ -1,5 +1,6 @@
 import { Loader2, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { LIMITS, phoneChars } from '@/features/student/resume/resumeValidation'
 import { ResumeField } from '@/features/student/resume/sections/ResumeField'
 import { useSaveProfileField } from '@/features/student/resume/useSaveProfileField'
 
@@ -15,10 +16,10 @@ export function PersonalSection({ model, profilePhone, actions, errors }) {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <ResumeField id="resume-name" label="Full name (required)" value={personal.name} onChange={set('name')} error={errors.name} autoComplete="name" required />
+      <ResumeField id="resume-name" label="Full name (required)" value={personal.name} onChange={set('name')} error={errors.name} maxLength={LIMITS.name} autoComplete="name" required />
       <ResumeField id="resume-email" label="Email (required)" type="email" value={personal.email} onChange={set('email')} error={errors.email} autoComplete="email" required />
       <div className="flex flex-col gap-2">
-        <ResumeField id="resume-phone" label="Phone" type="tel" inputMode="tel" value={personal.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
+        <ResumeField id="resume-phone" label="Phone" type="tel" inputMode="tel" value={personal.phone} onChange={(value) => set('phone')(phoneChars(value))} error={errors.phone} maxLength={LIMITS.phone} autoComplete="tel" />
         {phoneChanged && !errors.phone && profile.canSave('phone', personal.phone.trim()) && (
           <Button
             type="button"
@@ -39,17 +40,19 @@ export function PersonalSection({ model, profilePhone, actions, errors }) {
         value={personal.location}
         onChange={set('location')}
         error={errors.location}
+        maxLength={LIMITS.location}
         hint="Town and state only, e.g. Kakinada, Andhra Pradesh."
         autoComplete="address-level2"
       />
-      <ResumeField id="resume-linkedin" label="LinkedIn" value={personal.linkedin} onChange={set('linkedin')} error={errors.linkedin} placeholder="linkedin.com/in/your-name" inputMode="url" />
-      <ResumeField id="resume-github" label="GitHub" value={personal.github} onChange={set('github')} error={errors.github} placeholder="github.com/your-name" inputMode="url" />
+      <ResumeField id="resume-linkedin" label="LinkedIn" value={personal.linkedin} onChange={set('linkedin')} error={errors.linkedin} maxLength={LIMITS.link} placeholder="linkedin.com/in/your-name" inputMode="url" />
+      <ResumeField id="resume-github" label="GitHub" value={personal.github} onChange={set('github')} error={errors.github} maxLength={LIMITS.link} placeholder="github.com/your-name" inputMode="url" />
       <ResumeField
         id="resume-portfolio"
         label="Portfolio website"
         value={personal.portfolio}
         onChange={set('portfolio')}
         error={errors.portfolio}
+        maxLength={LIMITS.link}
         placeholder="your-site.dev"
         inputMode="url"
         className="sm:col-span-2"
