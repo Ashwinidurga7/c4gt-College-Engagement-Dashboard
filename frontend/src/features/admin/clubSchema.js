@@ -1,5 +1,8 @@
 import { z } from 'zod'
 import { CLUB_CATEGORIES } from '@/lib/campus'
+import { photoDefaults, photoListSchema } from '@/lib/photos'
+
+export const MAX_CLUB_PHOTOS = 12
 
 const currentYear = new Date().getFullYear()
 
@@ -15,6 +18,7 @@ export const clubSchema = z.object({
     .refine((value) => value === '' || (/^\d{4}$/.test(value) && Number(value) >= 1990 && Number(value) <= currentYear), `Enter a year between 1990 and ${currentYear}.`),
   description: z.string().trim().min(20, 'Describe the club in at least 20 characters.').max(600),
   focusAreas: z.string().trim().max(200),
+  photos: photoListSchema(MAX_CLUB_PHOTOS),
 })
 
 export function clubDefaults(club) {
@@ -28,5 +32,6 @@ export function clubDefaults(club) {
     founded: club?.founded ? String(club.founded) : '',
     description: club?.description ?? '',
     focusAreas: club?.focusAreas?.join(', ') ?? '',
+    photos: photoDefaults(club?.photos),
   }
 }

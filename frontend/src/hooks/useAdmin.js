@@ -48,6 +48,8 @@ function useClubMutation(mutationFn, message) {
     mutationFn,
     onSuccess: (club) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.clubs('admin') })
+      // Detail pages too, so an edited gallery shows straight away.
+      queryClient.invalidateQueries({ queryKey: ['admin', 'club'] })
       queryClient.invalidateQueries({ queryKey: keys.dashboard })
       toast.success(typeof message === 'function' ? message(club) : message)
     },
@@ -55,7 +57,7 @@ function useClubMutation(mutationFn, message) {
 }
 
 export const useCreateClub = () => useClubMutation(clubService.create, (club) => `${club.name} created`)
-export const useUpdateClub = () => useClubMutation(({ id, values }) => clubService.update(id, values), (club) => `${club.name} updated`)
+export const useUpdateClub = () => useClubMutation(({ id, values, photosChanged }) => clubService.update(id, values, { photosChanged }), (club) => `${club.name} updated`)
 export const useDeleteClub = () => useClubMutation(clubService.remove, 'Club deleted')
 export const useSetClubActive = () =>
   useClubMutation(({ id, active }) => clubService.setActive(id, active), (club) => `${club.name} ${club.status === 'active' ? 'activated' : 'deactivated'}`)

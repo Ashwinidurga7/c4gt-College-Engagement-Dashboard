@@ -1,5 +1,6 @@
 import { env } from '@/lib/env'
 import { toListParams, toPage } from '@/lib/listQuery'
+import { appendPhotos, toMockPhotos } from '@/lib/photos'
 import { eventsMock } from '@/mocks/campusMock'
 import { apiClient } from '@/services/apiClient'
 import { toEvent } from '@/services/studentAdapters'
@@ -22,22 +23,11 @@ function toEventFields(values) {
   }
 }
 
-/**
- * `values.images` mixes photos already on the event ({ url }) with new ones ({ file }).
- * Mock mode keeps new photos as object URLs, so they last until the page reloads.
- * The API gets multipart: the event fields, the kept URLs as JSON in `keepImages`,
- * and each new file under `images` (see ASSUMPTIONS.md).
- */
-function toMockImages(images) {
-  return images.map((image) => ({ url: image.file ? URL.createObjectURL(image.file) : image.url, caption: image.caption ?? '' }))
-}
-
+/** Multipart body for the API: the event fields plus its photos (see ASSUMPTIONS.md). */
 function toEventForm(values) {
   const form = new FormData()
   Object.entries(toEventFields(values)).forEach(([key, value]) => form.append(key, value ?? ''))
-  form.append('keepImages', JSON.stringify(values.images.filter((image) => !image.file).map((image) => image.url)))
-  values.images.filter((image) => image.file).forEach((image) => form.append('images', image.file))
-  return form
+  return appendPhotos(form, values.images)
 }
 
 export const eventService = {
@@ -53,14 +43,14 @@ export const eventService = {
   /** Create, edit and delete are admin-only on the backend. */
   async create(values) {
     const data = env.useMock
-      ? await eventsMock.create({ ...toEventFields(values), images: toMockImages(values.images) })
+      ? await eventsMock.create({ ...toEventFields(values), images: toMockPhotos(values.images) })
       : await apiClient.post('/events', toEventForm(values))
     return toEvent(data)
   },
 
   async update(id, values) {
     const data = env.useMock
-      ? await eventsMock.update(id, { ...toEventFields(values), images: toMockImages(values.images) })
+      ? await eventsMock.update(id, { ...toEventFields(values), images: toMockPhotos(values.images) })
       : await apiClient.put(`/events/${id}`, toEventForm(values))
     return toEvent(data)
   },
