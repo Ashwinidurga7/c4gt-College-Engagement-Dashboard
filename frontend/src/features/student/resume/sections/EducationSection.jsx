@@ -2,11 +2,12 @@ import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
+import { LIMITS, digitsOnly } from '@/features/student/resume/resumeValidation'
 import { ResumeField } from '@/features/student/resume/sections/ResumeField'
 
 const LEVELS = ['Class 10', 'Class 12', 'Diploma']
 
-function SchoolRow({ row, index, onChange, onRemove }) {
+function SchoolRow({ row, index, errors, onChange, onRemove }) {
   const id = `resume-school-${row.id}`
   const set = (field) => (value) => onChange({ ...row, [field]: value })
   return (
@@ -24,10 +25,10 @@ function SchoolRow({ row, index, onChange, onRemove }) {
           ))}
         </NativeSelect>
       </div>
-      <ResumeField id={`${id}-board`} label="Board" value={row.board} onChange={set('board')} placeholder="e.g. BIEAP, CBSE, SSC" />
-      <ResumeField id={`${id}-institution`} label="School or college" value={row.institution} onChange={set('institution')} className="sm:col-span-2" />
-      <ResumeField id={`${id}-year`} label="Year of passing" value={row.year} onChange={set('year')} inputMode="numeric" maxLength={4} />
-      <ResumeField id={`${id}-score`} label="Score" value={row.score} onChange={set('score')} placeholder="e.g. 95.4% or 9.8 CGPA" />
+      <ResumeField id={`${id}-board`} label="Board" value={row.board} onChange={set('board')} error={errors.board} maxLength={LIMITS.board} placeholder="e.g. BIEAP, CBSE, SSC" />
+      <ResumeField id={`${id}-institution`} label="School or college" value={row.institution} onChange={set('institution')} error={errors.institution} maxLength={LIMITS.institution} className="sm:col-span-2" />
+      <ResumeField id={`${id}-year`} label="Year of passing" value={row.year} onChange={(value) => set('year')(digitsOnly(value))} error={errors.year} inputMode="numeric" maxLength={4} />
+      <ResumeField id={`${id}-score`} label="Score" value={row.score} onChange={set('score')} error={errors.score} maxLength={LIMITS.score} placeholder="e.g. 95.4% or 9.8 CGPA" />
       <Button type="button" variant="ghost" size="sm" className="text-danger-text self-start sm:col-span-2" onClick={onRemove}>
         <Trash2 aria-hidden /> Remove {row.level}
       </Button>
@@ -36,7 +37,7 @@ function SchoolRow({ row, index, onChange, onRemove }) {
 }
 
 /** Degree details come from the academic record; school marks are entered here and kept in the draft. */
-export function EducationSection({ model, actions }) {
+export function EducationSection({ model, actions, errors }) {
   const degree = model.education[0]
   const rows = model.school
   const has = (...levels) => rows.some((row) => levels.includes(row.level))
@@ -46,11 +47,11 @@ export function EducationSection({ model, actions }) {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid gap-4 sm:grid-cols-2">
-        <ResumeField id="resume-institution" label="Institution" value={degree.institution} onChange={set('institution')} className="sm:col-span-2" />
-        <ResumeField id="resume-degree" label="Degree" value={degree.degree} onChange={set('degree')} />
-        <ResumeField id="resume-branch" label="Branch" value={degree.branch} onChange={set('branch')} />
-        <ResumeField id="resume-start-year" label="Start year" value={degree.startYear} onChange={set('startYear')} inputMode="numeric" maxLength={4} />
-        <ResumeField id="resume-end-year" label="End year (expected)" value={degree.endYear} onChange={set('endYear')} inputMode="numeric" maxLength={4} />
+        <ResumeField id="resume-institution" label="Institution" value={degree.institution} onChange={set('institution')} error={errors.education.institution} maxLength={LIMITS.institution} className="sm:col-span-2" />
+        <ResumeField id="resume-degree" label="Degree" value={degree.degree} onChange={set('degree')} error={errors.education.degree} maxLength={LIMITS.degree} />
+        <ResumeField id="resume-branch" label="Branch" value={degree.branch} onChange={set('branch')} error={errors.education.branch} maxLength={LIMITS.branch} />
+        <ResumeField id="resume-start-year" label="Start year" value={degree.startYear} onChange={(value) => set('startYear')(digitsOnly(value))} error={errors.education.startYear} inputMode="numeric" maxLength={4} />
+        <ResumeField id="resume-end-year" label="End year (expected)" value={degree.endYear} onChange={(value) => set('endYear')(digitsOnly(value))} error={errors.education.endYear} inputMode="numeric" maxLength={4} />
       </div>
       <div className="bg-info-soft text-info-text rounded-lg px-3 py-2 text-sm">
         {degree.cgpa !== null
@@ -73,6 +74,7 @@ export function EducationSection({ model, actions }) {
             key={row.id}
             row={row}
             index={index}
+            errors={errors.school[row.id] ?? {}}
             onChange={(next) => actions.setSchool(rows.map((entry) => (entry.id === row.id ? next : entry)))}
             onRemove={() => actions.setSchool(rows.filter((entry) => entry.id !== row.id))}
           />

@@ -1,10 +1,11 @@
 import { Loader2, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { LIMITS } from '@/features/student/resume/resumeValidation'
 import { ResumeField } from '@/features/student/resume/sections/ResumeField'
 import { useSaveProfileField } from '@/features/student/resume/useSaveProfileField'
 
 /** Starts from the profile bio; edits stay in the draft unless saved back as the bio. */
-export function SummarySection({ model, profileBio, actions }) {
+export function SummarySection({ model, profileBio, actions, errors }) {
   const profile = useSaveProfileField()
   const summary = model.summary
   const changed = summary.trim() !== (profileBio ?? '')
@@ -18,7 +19,9 @@ export function SummarySection({ model, profileBio, actions }) {
         rows={4}
         value={summary}
         onChange={actions.setSummary}
-        hint={`Two or three lines on what you are studying, your strengths and the role you want. ${summary.length} characters.`}
+        error={errors.summary}
+        maxLength={LIMITS.summary}
+        hint={`Two or three lines on what you are studying, your strengths and the role you want. ${summary.length} of ${LIMITS.summary} characters.`}
       />
       {changed && summary.trim() && (
         profile.canSave('bio', summary.trim()) ? (

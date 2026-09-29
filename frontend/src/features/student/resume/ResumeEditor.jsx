@@ -71,7 +71,7 @@ export function ResumeEditor({ model, base, draft, actions, errors, openSections
         <AccordionItem value="personal">
           <AccordionTrigger>{SECTION_LABELS.personal}</AccordionTrigger>
           <AccordionContent>
-            <PersonalSection model={model} actions={actions} errors={errors} {...extra.personal} />
+            <PersonalSection model={model} actions={actions} errors={errors.personal} {...extra.personal} />
           </AccordionContent>
         </AccordionItem>
 
@@ -94,7 +94,7 @@ export function ResumeEditor({ model, base, draft, actions, errors, openSections
                 <SectionControls id={id} label={label} index={index} count={order.length} visible={visible} actions={actions} order={order} onMoved={setAnnouncement} />
               </div>
               <AccordionContent>
-                <Editor model={model} actions={actions} {...extra[id]} />
+                <Editor model={model} actions={actions} errors={errors} {...extra[id]} />
               </AccordionContent>
             </AccordionItem>
           )

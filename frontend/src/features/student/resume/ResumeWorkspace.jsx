@@ -6,7 +6,7 @@ import { ResumeActions } from '@/features/student/resume/ResumeActions'
 import { ResumeEditor } from '@/features/student/resume/ResumeEditor'
 import { ResumePreview } from '@/features/student/resume/ResumePreview'
 import { applyDraft, toPrintModel } from '@/features/student/resume/resumeAdapter'
-import { validatePersonal } from '@/features/student/resume/resumeDraftActions'
+import { firstProblem, hasProblems, validateResume, withoutInvalid } from '@/features/student/resume/resumeValidation'
 import { useResumePdf } from '@/features/student/resume/useResumePdf'
 
 const DESKTOP = '(min-width: 1024px)'
@@ -30,11 +30,13 @@ export function ResumeWorkspace({ base, draft, actions }) {
   const [showErrors, setShowErrors] = useState(false)
 
   const model = useMemo(() => applyDraft(base, draft), [base, draft])
-  const printModel = useMemo(() => toPrintModel(model), [model])
-  const preview = useResumePdf(printModel)
-  const errors = validatePersonal(model.personal)
   // Format problems show as the student types; missing name or email only after they try to download.
-  const shownErrors = showErrors ? errors : validatePersonal(model.personal, { required: false })
+  const typingErrors = useMemo(() => validateResume(model, { required: false }), [model])
+  const errors = useMemo(() => validateResume(model), [model])
+  const shownErrors = showErrors ? errors : typingErrors
+  // Invalid values are left out, so the preview and PDF never show them.
+  const printModel = useMemo(() => toPrintModel(withoutInvalid(model, typingErrors)), [model, typingErrors])
+  const preview = useResumePdf(printModel)
 
   /** Opens a section in the editor and focuses one of its fields. */
   const jumpTo = useCallback((target) => {
@@ -49,10 +51,10 @@ export function ResumeWorkspace({ base, draft, actions }) {
   }, [])
 
   const ensureValid = () => {
-    if (Object.keys(errors).length === 0) return true
+    if (!hasProblems(errors)) return true
     setShowErrors(true)
-    toast.error('Fix the highlighted personal details before downloading.')
-    jumpTo({ section: 'personal', field: `resume-${Object.keys(errors)[0]}` })
+    toast.error('Fix the highlighted fields before downloading.')
+    jumpTo(firstProblem(errors))
     return false
   }
 

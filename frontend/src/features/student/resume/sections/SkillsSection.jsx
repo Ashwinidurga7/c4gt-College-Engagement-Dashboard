@@ -1,13 +1,14 @@
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SKILL_GROUPS } from '@/features/student/resume/resumeAdapter'
+import { LIMITS } from '@/features/student/resume/resumeValidation'
 import { ResumeField } from '@/features/student/resume/sections/ResumeField'
 
 /**
  * Skills are not in the API, so the student types them. Technologies from their own projects
  * are offered as one-click suggestions; nothing is added without the student choosing it.
  */
-export function SkillsSection({ model, skillText, actions }) {
+export function SkillsSection({ model, skillText, actions, errors }) {
   const known = new Set(Object.values(model.skills).flat().map((skill) => skill.toLowerCase()))
   const suggestions = [...new Set(model.projects.flatMap((project) => project.techStack))].filter((skill) => !known.has(skill.toLowerCase()))
   const textOf = (key) => skillText?.[key] ?? model.skills[key].join(', ')
@@ -26,6 +27,8 @@ export function SkillsSection({ model, skillText, actions }) {
           label={group.label}
           value={textOf(group.key)}
           onChange={(text) => actions.setSkillText(group.key, text)}
+          error={errors.skills[group.key]}
+          maxLength={LIMITS.skillGroup}
           hint="Separate skills with commas."
         />
       ))}
