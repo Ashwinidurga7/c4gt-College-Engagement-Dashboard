@@ -1,5 +1,12 @@
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
 
+/** A photo may arrive as a bare URL string or as { url, caption }. */
+export function toPhotos(raw) {
+  return toList(raw)
+    .map((photo) => (typeof photo === 'string' ? { url: photo, caption: '' } : { url: pick(photo?.url, photo?.src), caption: photo?.caption ?? '' }))
+    .filter((photo) => photo.url)
+}
+
 export function toClub(raw = {}) {
   const status = pick(raw.status, raw.isActive === false ? 'inactive' : raw.isActive === true ? 'active' : null, 'active')
   return {
@@ -38,10 +45,7 @@ export function toClub(raw = {}) {
       date: item?.date ?? null,
     })),
     logoUrl: pick(raw.logoUrl, raw.logo),
-    // A photo may arrive as a bare URL string or as { url, caption }.
-    photos: toList(pick(raw.photos, raw.gallery, raw.images))
-      .map((photo) => (typeof photo === 'string' ? { url: photo, caption: '' } : { url: pick(photo?.url, photo?.src), caption: photo?.caption ?? '' }))
-      .filter((photo) => photo.url),
+    photos: toPhotos(pick(raw.photos, raw.gallery, raw.images)),
     projects: toList(raw.projects).map((item, index) => ({
       id: pick(item?.id, item?._id, `project-${index}`),
       name: pick(item?.name, item?.title, 'Untitled project'),

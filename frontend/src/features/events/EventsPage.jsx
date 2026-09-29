@@ -1,5 +1,6 @@
-import { CalendarCheck, CalendarDays, History } from 'lucide-react'
+import { CalendarCheck, CalendarDays, History, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { EventCard } from '@/components/common/EventCard'
@@ -12,9 +13,12 @@ import { TablePagination } from '@/components/common/TablePagination'
 import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { EventDetailsDialog } from '@/features/events/EventDetailsDialog'
+import { EventFormModal } from '@/features/events/EventFormModal'
 import { ParticipationHistory, RegisterButton, UpcomingRegistrations } from '@/features/events/MyEvents'
+import { useDeleteEvent } from '@/hooks/useAdmin'
 import { useAuth } from '@/hooks/useAuth'
 import { useEvents } from '@/hooks/useCampus'
+import { useConfirmAction } from '@/hooks/useConfirmAction'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useListQuery } from '@/hooks/useListQuery'
 import { useEventRegistrations } from '@/hooks/usePreview'
@@ -35,7 +39,7 @@ function useRegistrationLookup(enabled) {
   return new Map((query.data ?? []).map((row) => [row.event.id, row]))
 }
 
-function EventBrowser({ canRegister }) {
+function EventBrowser({ canRegister, onEdit, onDelete }) {
   const list = useListQuery({ pageSize: PAGE_SIZE, initialFilters: { when: 'upcoming', category: '', college: '' } })
   const query = useEvents(list.query)
   const registrations = useRegistrationLookup(canRegister)
@@ -60,6 +64,16 @@ function EventBrowser({ canRegister }) {
                     Details<span className="sr-only">: {event.title}</span>
                   </Button>
                   {canRegister && <RegisterButton event={event} registration={registrations.get(event.id)} />}
+                  {onEdit && (
+                    <Button variant="outline" size="lg" onClick={() => onEdit(event)}>
+                      <Pencil aria-hidden /> Edit<span className="sr-only">: {event.title}</span>
+                    </Button>
+                  )}
+                  {onDelete && (
+                    <Button variant="ghost" size="icon-lg" className="text-danger-text" aria-label={`Delete ${event.title}`} onClick={() => onDelete(event)}>
+                      <Trash2 />
+                    </Button>
+                  )}
                 </div>
               }
             />
@@ -109,15 +123,49 @@ function EventBrowser({ canRegister }) {
   )
 }
 
+const DESCRIPTION = 'Hackathons, workshops, AI summits, club activities and technical events across all three colleges.'
+
+/** The admin's view: the same browser, plus create, edit and delete with photos. */
+function AdminEvents() {
+  const [editor, setEditor] = useState(null)
+  const remove = useConfirmAction(useDeleteEvent())
+
+  return (
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Events"
+        description="Create, edit and delete events and their photos. Changes are visible to students and staff immediately."
+        icon={CalendarDays}
+        actions={
+          <Button size="lg" onClick={() => setEditor({ event: null })}>
+            <Plus aria-hidden /> Create event
+          </Button>
+        }
+      />
+      <EventBrowser canRegister={false} onEdit={(event) => setEditor({ event })} onDelete={remove.request} />
+      {editor && <EventFormModal event={editor.event} open onOpenChange={(open) => !open && setEditor(null)} />}
+      <ConfirmDialog
+        {...remove.dialogProps}
+        title={remove.target && `Delete ${remove.target.title}?`}
+        description="The event, its photos and its details are removed for everyone. This cannot be undone."
+        confirmLabel="Delete event"
+        pendingLabel="Deleting…"
+      />
+    </div>
+  )
+}
+
 export function EventsPage() {
   useDocumentTitle('Events')
   const { user } = useAuth()
   const [tab, setTab] = useState('browse')
   const isStudent = user?.role === 'student'
 
+  if (user?.role === 'admin') return <AdminEvents />
+
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Events" description="Hackathons, workshops, AI summits, club activities and technical events across all three colleges." icon={CalendarDays} />
+      <PageHeader title="Events" description={DESCRIPTION} icon={CalendarDays} />
       {isStudent ? (
         <PageTabs label="Events" tabs={STUDENT_TABS} value={tab} onValueChange={setTab}>
           {(current) => (current === 'browse' ? <EventBrowser canRegister /> : current === 'mine' ? <UpcomingRegistrations /> : <ParticipationHistory />)}

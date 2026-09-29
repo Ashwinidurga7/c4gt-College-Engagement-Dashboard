@@ -1,6 +1,7 @@
 import { percentage, weightedAverage } from '@/lib/academics'
 import { summarizeAttendance, summarizeDays } from '@/lib/attendanceSummary'
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
+import { toPhotos } from '@/services/campusAdapters'
 
 export function toProfile(raw = {}) {
   const source = raw?.student ?? raw?.profile ?? raw ?? {}
@@ -74,6 +75,7 @@ export function toEvent(raw) {
     college: raw.college ?? null,
     description: pick(raw.description, ''),
     clubId: pick(raw.clubId, raw.club?._id, typeof raw.club === 'string' ? raw.club : null),
+    images: toPhotos(pick(raw.images, raw.photos, raw.gallery)),
   }
 }
 

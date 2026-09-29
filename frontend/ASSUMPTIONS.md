@@ -174,7 +174,7 @@ Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for
 ## Phase 5: Admin
 
 ### Endpoints used
-`GET /api/admin/dashboard`, `/users`, `/hods/pending`, `/faculty/pending`, `/pending`; clubs `POST /api/clubs`, `PUT /:id`, `DELETE /:id`, `PUT /:id/activate`, `PUT /:id/deactivate`; `GET /api/events`; certificate verification through `PUT /api/certificates/:id/verify`.
+`GET /api/admin/dashboard`, `/users`, `/hods/pending`, `/faculty/pending`, `/pending`; clubs `POST /api/clubs`, `PUT /:id`, `DELETE /:id`, `PUT /:id/activate`, `PUT /:id/deactivate`; events `GET /api/events`, `POST /api/events`, `PUT /:id`, `DELETE /:id`; certificate verification through `PUT /api/certificates/:id/verify`.
 
 ### Decisions to confirm against Postman
 - **Approval mutations** (the plan only says "approval mutations for HODs and Faculty"): assumed `PUT /api/admin/hods/:id/approve|reject` and `PUT /api/admin/faculty/:id/approve|reject` with no body. The paths live in one map (`APPROVAL_PATHS` in `adminService.js`).
@@ -182,15 +182,16 @@ Pending registrations: two CTPOs for KIET CSE (visible to the HOD), one CTPO for
 - **Dashboard fields** are read from `totals`/`stats` or the top level: `students, faculty, hods, ctpos, activeClubs, upcomingEvents, pendingApprovals, pendingVerifications`, plus optional `byCollege` and `recentRegistrations` arrays.
 - **Users list parameters**: `search`, `role`, `college`, `approvalStatus`, `sortBy`/`order`, `page`/`limit`. Status is shown as Active, Pending or Rejected.
 - **Club payload**: `name, fullName, tagline, category, college, coordinator, email, founded, description, focusAreas[]`. Activation uses the dedicated `activate`/`deactivate` endpoints; `PATCH /:id/status` is not used.
+- **Event create and edit** (not in the plan's endpoint list): assumed `POST /api/events` and `PUT /api/events/:id` as multipart with the fields `title, category, college, clubId, organizer, date, startTime, endTime, registrationDeadline, venue, description` (empty optional fields are sent empty so an edit can clear them), `keepImages` (a JSON array of the existing photo URLs to keep, in order) and each new photo as a file under `images`. The first photo is the cover. Photos are read back from `images`, `photos` or `gallery`, as URL strings or `{ url, caption }`. UI limits: 6 photos, JPG/PNG/WebP, 5 MB each.
 
 ### Behaviour
 - Admin approves faculty and HOD registrations (tabs, with the tab in the URL). CTPO approvals stay with the HOD.
 - Deactivating a club hides it from students without deleting it; deleting is permanent. Both are confirmed, and the dialogs explain the difference.
 - "Join club" is shown only to students. The admin can open any club's detail page from the clubs table.
-- The Events page is shared with students; the admin sees the same filters.
+- The Events page is shared with students; the admin sees the same filters plus Create event, and Edit and Delete on each event. Deleting is confirmed. Photos show as a cover thumbnail on event cards (events page, student dashboard, club pages) and as a photo viewer in the event details.
 
 ### Mock data
-The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, club changes) persist in memory until a full page reload.
+The institution directory holds 1,098 users: 984 students, generated approved staff (a HOD per college department, three faculty and three CTPOs each), the demo accounts and the pending registrations. Admin actions (approvals, verifications, club and event changes) persist in memory until a full page reload.
 
 ## Phase 6: Preview modules
 

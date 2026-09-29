@@ -1,10 +1,12 @@
 import { CalendarDays, Clock, MapPin, UsersRound } from 'lucide-react'
+import { useState } from 'react'
 import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { ErrorState } from '@/components/common/ErrorState'
 import { ListSkeleton } from '@/components/common/Skeleton'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useEvent } from '@/hooks/useCampus'
 import { formatDate, formatTime } from '@/lib/formatters'
+import { cn } from '@/lib/utils'
 
 function Row({ icon: Icon, children }) {
   return (
@@ -15,6 +17,48 @@ function Row({ icon: Icon, children }) {
   )
 }
 
+/** The selected photo large, with thumbnails to switch between them. Photos that fail to load are dropped. */
+function EventPhotos({ event }) {
+  const [broken, setBroken] = useState(() => new Set())
+  const [selected, setSelected] = useState(0)
+  const photos = (event.images ?? []).filter((photo) => !broken.has(photo.url))
+  if (photos.length === 0) return null
+  const active = photos[Math.min(selected, photos.length - 1)]
+  const drop = (url) => setBroken((current) => new Set(current).add(url))
+
+  return (
+    <figure className="flex flex-col gap-2">
+      <img
+        src={active.url}
+        alt={active.caption || `${event.title} photo`}
+        onError={() => drop(active.url)}
+        className="bg-sunken aspect-video w-full rounded-lg border object-cover"
+      />
+      {photos.length > 1 && (
+        <ul className="flex gap-2 overflow-x-auto pb-1" aria-label="Event photos">
+          {photos.map((photo, index) => (
+            <li key={photo.url} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => setSelected(index)}
+                aria-label={`Show photo ${index + 1} of ${photos.length}`}
+                aria-pressed={photo === active}
+                className={cn(
+                  'focus-visible:ring-ring block overflow-hidden rounded-md border-2 focus-visible:ring-2 focus-visible:outline-none',
+                  photo === active ? 'border-brand' : 'border-transparent opacity-70 hover:opacity-100',
+                )}
+              >
+                <img src={photo.url} alt="" loading="lazy" onError={() => drop(photo.url)} className="aspect-[4/3] w-16 object-cover" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {active.caption && <figcaption className="text-muted-foreground text-xs">{active.caption}</figcaption>}
+    </figure>
+  )
+}
+
 /** Loads the full event from GET /events/:id; `preview` fills the header while it loads. */
 export function EventDetailsDialog({ eventId, preview, onClose }) {
   const query = useEvent(eventId)
@@ -22,7 +66,7 @@ export function EventDetailsDialog({ eventId, preview, onClose }) {
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <div className="flex flex-wrap gap-2">
             {event?.category && <span className="bg-tone-blue text-tone-blue-fg rounded-full px-2 py-0.5 text-xs font-semibold">{event.category}</span>}
@@ -35,6 +79,7 @@ export function EventDetailsDialog({ eventId, preview, onClose }) {
           <ErrorState error={query.error} onRetry={query.refetch} />
         ) : (
           <>
+            {event && <EventPhotos event={event} />}
             <ul className="flex flex-col gap-2">
               <Row icon={CalendarDays}>{formatDate(event?.date)}</Row>
               {(event?.startTime || event?.endTime) && (

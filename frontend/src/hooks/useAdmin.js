@@ -5,6 +5,7 @@ import { roleLabel } from '@/lib/roles'
 import { adminService } from '@/services/adminService'
 import { certificateService } from '@/services/certificateService'
 import { clubService } from '@/services/clubService'
+import { eventService } from '@/services/eventService'
 
 const keys = queryKeys.admin
 
@@ -58,3 +59,22 @@ export const useUpdateClub = () => useClubMutation(({ id, values }) => clubServi
 export const useDeleteClub = () => useClubMutation(clubService.remove, 'Club deleted')
 export const useSetClubActive = () =>
   useClubMutation(({ id, active }) => clubService.setActive(id, active), (club) => `${club.name} ${club.status === 'active' ? 'activated' : 'deactivated'}`)
+
+/** Events appear on many pages (lists, details, dashboards, registrations), so every event query is refreshed. */
+const isEventQuery = (query) => query.queryKey.some((part) => typeof part === 'string' && part.includes('event'))
+
+function useEventMutation(mutationFn, message) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn,
+    onSuccess: (event) => {
+      queryClient.invalidateQueries({ predicate: isEventQuery })
+      queryClient.invalidateQueries({ queryKey: keys.dashboard })
+      toast.success(typeof message === 'function' ? message(event) : message)
+    },
+  })
+}
+
+export const useCreateEvent = () => useEventMutation(eventService.create, (event) => `${event.title} created`)
+export const useUpdateEvent = () => useEventMutation(({ id, values }) => eventService.update(id, values), (event) => `${event.title} updated`)
+export const useDeleteEvent = () => useEventMutation(eventService.remove, 'Event deleted')

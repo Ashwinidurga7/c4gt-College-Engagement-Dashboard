@@ -44,6 +44,25 @@ export const eventsMock = {
     const event = campusEvents.find((entry) => entry._id === id)
     return event ? mockResponse(event) : mockError('This event could not be found.', 404)
   },
+
+  // Edits change `campusEvents` in place so the dashboard, club pages and registrations see them too.
+  create(data) {
+    const event = { _id: `ev-${Date.now().toString(36)}`, createdAt: new Date().toISOString(), ...data }
+    campusEvents.unshift(event)
+    return mockResponse(event)
+  },
+  update(id, changes) {
+    const index = campusEvents.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This event could not be found.', 404)
+    campusEvents[index] = { ...campusEvents[index], ...changes, updatedAt: new Date().toISOString() }
+    return mockResponse(campusEvents[index])
+  },
+  remove(id) {
+    const index = campusEvents.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This event could not be found.', 404)
+    campusEvents.splice(index, 1)
+    return mockResponse({ _id: id })
+  },
 }
 
 const notifications = createMockCollection(notificationsData, {
