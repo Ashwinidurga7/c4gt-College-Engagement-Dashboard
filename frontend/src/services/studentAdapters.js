@@ -50,7 +50,7 @@ function toActivity(raw) {
   }
 }
 
-function toAnnouncement(raw) {
+export function toAnnouncement(raw) {
   return {
     id: toId(raw),
     title: pick(raw.title, 'Announcement'),

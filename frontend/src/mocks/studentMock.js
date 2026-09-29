@@ -48,7 +48,7 @@ export const studentMock = {
         upcomingEvents: upcomingEvents().length,
       },
       recentActivities,
-      announcements: campusAnnouncements,
+      announcements: [...campusAnnouncements].sort((a, b) => b.date.localeCompare(a.date)),
     })
   },
 

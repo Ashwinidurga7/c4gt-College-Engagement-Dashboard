@@ -158,6 +158,7 @@ export const NAVIGATION = {
       items: [
         { path: 'clubs', label: 'Clubs', icon: UsersRound, phase: 5 },
         { path: 'events', label: 'Events', icon: CalendarDays, phase: 5 },
+        { path: 'announcements', label: 'Announcements', icon: Megaphone, phase: 5 },
       ],
     },
     {

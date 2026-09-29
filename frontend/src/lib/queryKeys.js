@@ -27,6 +27,7 @@ export const queryKeys = {
     dashboard: ['admin', 'dashboard'],
     users: (query) => ['admin', 'users', query],
     pending: (role) => ['admin', 'pending', role],
+    announcements: (query) => (query === undefined ? ['admin', 'announcements'] : ['admin', 'announcements', query]),
     verifications: (query) => (query === undefined ? ['admin', 'verifications'] : ['admin', 'verifications', query]),
   },
   hod: {

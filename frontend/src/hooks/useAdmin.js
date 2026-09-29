@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { queryKeys } from '@/lib/queryKeys'
 import { roleLabel } from '@/lib/roles'
 import { adminService } from '@/services/adminService'
+import { announcementService } from '@/services/announcementService'
 import { certificateService } from '@/services/certificateService'
 import { clubService } from '@/services/clubService'
 import { eventService } from '@/services/eventService'
@@ -80,3 +81,23 @@ function useEventMutation(mutationFn, message) {
 export const useCreateEvent = () => useEventMutation(eventService.create, (event) => `${event.title} created`)
 export const useUpdateEvent = () => useEventMutation(({ id, values }) => eventService.update(id, values), (event) => `${event.title} updated`)
 export const useDeleteEvent = () => useEventMutation(eventService.remove, 'Event deleted')
+
+export const useAdminAnnouncements = (query) =>
+  useQuery({ queryKey: keys.announcements(query), queryFn: () => announcementService.list(query), placeholderData: keepPreviousData })
+
+/** Announcements show on the student dashboard, so its cache is refreshed with the admin list. */
+function useAnnouncementMutation(mutationFn, message) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: keys.announcements() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.student.dashboard })
+      toast.success(message)
+    },
+  })
+}
+
+export const useCreateAnnouncement = () => useAnnouncementMutation(announcementService.create, 'Announcement published')
+export const useUpdateAnnouncement = () => useAnnouncementMutation(({ id, values }) => announcementService.update(id, values), 'Announcement updated')
+export const useDeleteAnnouncement = () => useAnnouncementMutation(announcementService.remove, 'Announcement deleted')
