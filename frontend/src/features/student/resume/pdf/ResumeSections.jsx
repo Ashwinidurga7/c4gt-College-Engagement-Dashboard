@@ -2,7 +2,14 @@ import { Link, Text, View } from '@react-pdf/renderer'
 import { SECTION_LABELS } from '@/features/student/resume/resumeAdapter'
 import { dateRange, displayUrl, monthYear } from '@/features/student/resume/resumeFormat'
 
-/** Section bodies shared by both templates; `s` is the template's stylesheet. Single column, no tables. */
+/** Section bodies shared by every template; `s` is the template's stylesheet. No tables, so text extraction stays in reading order. */
+
+/**
+ * The PDF engine may break a line anywhere that is not a single space, and draws a hyphen when it does, so
+ * "2026  |" could print as "2026  |-". The separator's own spacing is non-breaking, and every other
+ * boundary between styled pieces of text falls on a single space.
+ */
+const SEP = '  |  '
 
 /** The bullet is drawn, not typed, so text extraction (and applicant tracking systems) see only the sentence. */
 function Bullets({ items, s }) {
@@ -30,7 +37,7 @@ function MetaLine({ parts, url, s }) {
   return (
     <Text style={s.meta}>
       {text}
-      {text && url ? '  |  ' : ''}
+      {text && url ? SEP : ''}
       {url ? (
         <Link src={url} style={s.link}>
           {displayUrl(url)}
@@ -61,7 +68,7 @@ function Education({ resume, s }) {
         <View key={row.id} style={s.schoolRow} wrap={false}>
           <Text style={s.entryTitle}>
             {row.level}
-            <Text style={s.plain}>{[row.board, row.institution, row.score && `Score: ${row.score}`].filter(Boolean).map((part) => `  |  ${part}`).join('')}</Text>
+            <Text style={s.plain}>{[row.board, row.institution, row.score && `Score: ${row.score}`].filter(Boolean).map((part) => `${SEP}${part}`).join('')}</Text>
           </Text>
           {row.year ? <Text style={s.entryRight}>{row.year}</Text> : null}
         </View>
@@ -76,7 +83,7 @@ const BODIES = {
   skills: ({ resume, s }) =>
     resume.skills.map((group) => (
       <Text key={group.key} style={s.skillLine}>
-        <Text style={s.bold}>{group.label}: </Text>
+        <Text style={s.bold}>{`${group.label}: `}</Text>
         {group.items.join(', ')}
       </Text>
     )),
@@ -96,20 +103,23 @@ const BODIES = {
       </View>
     )),
   certifications: ({ resume, s }) =>
-    resume.certifications.map((item) => (
-      <View key={item.id} style={s.listItem} wrap={false}>
-        <Text style={s.text}>
-          <Text style={s.bold}>{item.title}</Text>
-          {[item.issuer, monthYear(item.date), item.verified ? 'Verified by the college' : null].filter(Boolean).map((part) => `, ${part}`).join('')}
-          {item.url ? '  |  ' : ''}
-          {item.url ? (
-            <Link src={item.url} style={s.link}>
-              {displayUrl(item.url)}
-            </Link>
-          ) : null}
-        </Text>
-      </View>
-    )),
+    resume.certifications.map((item) => {
+      const details = [item.issuer, monthYear(item.date), item.verified ? 'Verified by the college' : null].filter(Boolean)
+      return (
+        <View key={item.id} style={s.listItem} wrap={false}>
+          <Text style={s.text}>
+            <Text style={s.bold}>{details.length ? `${item.title},` : item.title}</Text>
+            {details.length ? ` ${details.join(', ')}` : ''}
+            {item.url ? SEP : ''}
+            {item.url ? (
+              <Link src={item.url} style={s.link}>
+                {displayUrl(item.url)}
+              </Link>
+            ) : null}
+          </Text>
+        </View>
+      )
+    }),
   achievements: ({ resume, s }) => <Bullets items={resume.achievements} s={s} />,
   extracurricular: ({ resume, s }) => (
     <Bullets
@@ -119,16 +129,22 @@ const BODIES = {
   ),
 }
 
-/** Every visible section in the student's order. The heading stays with at least a line of its body. */
-export function ResumeSections({ resume, s }) {
-  return resume.sections.map((id) => {
+/**
+ * Every visible section in the student's order, or only `ids` (for a template that splits sections into
+ * columns). The heading stays with at least a line of its body. `s.section` with a row direction and
+ * `s.sectionBody` with flex 1 put the heading beside its body instead of above it.
+ */
+export function ResumeSections({ resume, s, ids = resume.sections }) {
+  return ids.map((id) => {
     const Body = BODIES[id]
     return (
       <View key={id} style={s.section}>
         <Text style={s.heading} minPresenceAhead={28}>
           {SECTION_LABELS[id]}
         </Text>
-        <Body resume={resume} s={s} />
+        <View style={s.sectionBody}>
+          <Body resume={resume} s={s} />
+        </View>
       </View>
     )
   })
@@ -147,7 +163,7 @@ export function ContactLine({ personal, s }) {
     <Text style={s.contact}>
       {parts.map((part, index) => (
         <Text key={part.text}>
-          {index > 0 ? '  |  ' : ''}
+          {index > 0 ? SEP : ''}
           {part.url ? (
             <Link src={part.url} style={s.contactLink}>
               {part.text}
@@ -159,4 +175,26 @@ export function ContactLine({ personal, s }) {
       ))}
     </Text>
   )
+}
+
+/** The same contact details one per line, for a narrow sidebar. */
+export function ContactList({ personal, s }) {
+  const parts = [
+    personal.phone && { text: personal.phone },
+    personal.email && { text: personal.email, url: `mailto:${personal.email}` },
+    personal.location && { text: personal.location },
+    ...personal.links.map((link) => ({ text: displayUrl(link.text), url: link.url })),
+  ].filter(Boolean)
+
+  return parts.map((part) => (
+    <Text key={part.text} style={s.contact}>
+      {part.url ? (
+        <Link src={part.url} style={s.contactLink}>
+          {part.text}
+        </Link>
+      ) : (
+        part.text
+      )}
+    </Text>
+  ))
 }
