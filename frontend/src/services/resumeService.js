@@ -1,5 +1,6 @@
 import { env } from '@/lib/env'
 import { toList } from '@/services/adapterUtils'
+import { fileToDataUrl } from '@/mocks/mockUtils'
 import { resumesMock } from '@/mocks/portfolioMock'
 import { apiClient } from '@/services/apiClient'
 import { toResume } from '@/services/portfolioAdapters'
@@ -13,7 +14,7 @@ export const resumeService = {
 
   async upload(file) {
     if (env.useMock) {
-      return toResume(await resumesMock.create({ fileName: file.name, size: file.size, uploadedAt: new Date().toISOString(), fileUrl: URL.createObjectURL(file) }))
+      return toResume(await resumesMock.create({ fileName: file.name, size: file.size, uploadedAt: new Date().toISOString(), fileUrl: await fileToDataUrl(file) }))
     }
     return toResume(await apiClient.post('/resumes', toFormData({}, file, 'resume')))
   },

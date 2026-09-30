@@ -33,8 +33,9 @@ const isNewer = (candidate, current) => candidate?.version === VERSION && (!curr
  * order and template), laid over API data by `applyDraft`.
  *
  * The browser copy opens the builder instantly; the account copy (resumeDraftService) is what survives
- * sign-out, refresh and a change of device. On load the newer of the two wins. Each edit is saved to both
- * shortly after it is made; `status` drives the save indicator, and `local` means only this browser has it.
+ * sign-out, refresh and a change of device. On load the newer of the two wins, and a browser copy the account
+ * missed (say, an edit made as the session ended) is sent up. Each edit is written to the browser at once and to
+ * the account shortly after; `status` drives the save indicator, and `local` means only this browser has it.
  */
 export function useResumeDraft(userId) {
   const [stored] = useState(() => readResumeDraft(userId))
@@ -49,7 +50,11 @@ export function useResumeDraft(userId) {
     resumeDraftService
       .get()
       .then((remote) => {
-        if (!active || edited.current || !isNewer(remote, stored)) return
+        if (!active || edited.current) return
+        if (!isNewer(remote, stored)) {
+          if (stored?.updatedAt && stored.updatedAt !== remote?.updatedAt) resumeDraftService.save(stored).catch(() => {})
+          return
+        }
         writeDraft(userId, remote)
         setDraft(remote)
         setStatus({ state: 'saved', at: remote.updatedAt })
@@ -60,22 +65,26 @@ export function useResumeDraft(userId) {
     }
   }, [userId, stored])
 
-  // Keep an edit made just before leaving the page.
-  useEffect(
-    () => () => {
+  // Send an edit made just before leaving the builder, signing out, or closing or reloading the tab.
+  useEffect(() => {
+    const flush = () => {
       if (!pending.current) return
-      writeDraft(userId, pending.current)
       resumeDraftService.save(pending.current).catch(() => {})
-    },
-    [userId],
-  )
+      pending.current = null
+    }
+    window.addEventListener('pagehide', flush)
+    return () => {
+      window.removeEventListener('pagehide', flush)
+      flush()
+    }
+  }, [userId])
 
   useEffect(() => {
     if (!pending.current) return undefined
     const next = pending.current
     const timer = setTimeout(async () => {
       pending.current = null
-      const local = writeDraft(userId, next)
+      const local = readResumeDraft(userId)?.updatedAt === next.updatedAt
       try {
         await resumeDraftService.save(next)
         setStatus({ state: 'saved', at: next.updatedAt })
@@ -87,15 +96,20 @@ export function useResumeDraft(userId) {
   }, [draft, userId])
 
   /** `change` receives the current draft and returns the next one. */
-  const update = useCallback((change) => {
-    edited.current = true
-    setDraft((current) => {
-      const next = { ...change(current), version: VERSION, updatedAt: new Date().toISOString() }
-      pending.current = next
-      return next
-    })
-    setStatus({ state: 'saving' })
-  }, [])
+  const update = useCallback(
+    (change) => {
+      edited.current = true
+      setDraft((current) => {
+        const next = { ...change(current), version: VERSION, updatedAt: new Date().toISOString() }
+        // The browser copy is written at once, so no edit is lost to a reload; the account copy follows shortly.
+        writeDraft(userId, next)
+        pending.current = next
+        return next
+      })
+      setStatus({ state: 'saving' })
+    },
+    [userId],
+  )
 
   /** Discards the edits but remembers which saved resumes came from the builder. */
   const reset = useCallback(() => {

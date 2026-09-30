@@ -11,17 +11,29 @@ export const RESUME_COLORS = {
   navy: '#0f2557',
   blue: '#1b4594',
   blueRule: '#8fa8d8',
+  band: '#e6e6e6',
+  sidebar: '#eef2f8',
+  onNavy: '#dbe4f5',
 }
 
+/** `columns` marks a two-column layout, which some applicant tracking systems read less reliably. */
 export const TEMPLATES = [
   { value: 'classic', label: 'Classic' },
   { value: 'modern', label: 'KIET Modern' },
+  { value: 'executive', label: 'Executive' },
+  { value: 'sidebar', label: 'Sidebar (two-column)', columns: true },
+  { value: 'bold', label: 'Bold' },
+  { value: 'sideHeadings', label: 'Side headings' },
 ]
 
 /** Built-in PDF fonts keep text selectable and parseable by applicant tracking systems. */
 export const FONT_FAMILIES = {
   classic: 'Times-Roman',
   modern: 'Helvetica',
+  executive: 'Times-Roman',
+  sidebar: 'Helvetica',
+  bold: 'Helvetica',
+  sideHeadings: 'Helvetica',
   unicode: 'NotoSans',
 }
 

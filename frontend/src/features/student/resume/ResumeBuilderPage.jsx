@@ -1,5 +1,6 @@
-import { Check, CloudOff, FileUser, Loader2, RotateCcw } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { Check, CloudOff, FileUser, History, Loader2, RotateCcw } from 'lucide-react'
+import { useCallback, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { ErrorState } from '@/components/common/ErrorState'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -8,9 +9,11 @@ import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { TEMPLATES } from '@/features/student/resume/pdf/resumeTheme'
 import { createDraftActions } from '@/features/student/resume/resumeDraftActions'
+import { ResumeHistory } from '@/features/student/resume/ResumeHistory'
 import { ResumeWorkspace } from '@/features/student/resume/ResumeWorkspace'
 import { useResumeData } from '@/features/student/resume/useResumeData'
 import { useResumeDraft } from '@/features/student/resume/useResumeDraft'
+import { useHistoryRecorder, useResumeVersions } from '@/features/student/resume/useResumeVersions'
 import { useAuth } from '@/hooks/useAuth'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { formatDateTime } from '@/lib/formatters'
@@ -33,15 +36,28 @@ function DraftStatus({ status }) {
 
 /**
  * Resume Builder: reads the student's profile, academics and portfolio, lets them adjust it,
- * and produces a PDF. Edits are saved to the student's account as they go (see useResumeDraft).
+ * and produces a PDF. Edits are saved to the student's account as they go (see useResumeDraft),
+ * and past resumes are kept in the student's history (see useResumeVersions): the resume as it was
+ * before the first edit of each visit, each download or save, and before a restore or reset.
  */
 export function ResumeBuilderPage() {
   useDocumentTitle('Resume Builder')
   const { user } = useAuth()
   const data = useResumeData()
   const { draft, update, reset, status } = useResumeDraft(user.id)
-  const actions = useMemo(() => createDraftActions(update), [update])
+  const history = useResumeVersions()
   const [confirmReset, setConfirmReset] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
+
+  const { record, edit, restore } = useHistoryRecorder({ base: data.base, draft, update, snapshot: history.snapshot })
+  const actions = useMemo(() => createDraftActions(edit), [edit])
+  const onExported = useCallback((reason) => record(reason).catch(() => {}), [record])
+
+  async function restoreVersion(version) {
+    await restore(version)
+    setHistoryOpen(false)
+    toast.success(`Restored your resume from ${formatDateTime(version.createdAt)}. The one you had is kept in your history.`)
+  }
   const template = draft.template ?? 'classic'
 
   return (
@@ -65,6 +81,9 @@ export function ResumeBuilderPage() {
                   ))}
                 </NativeSelect>
               </div>
+              <Button variant="outline" size="lg" onClick={() => setHistoryOpen(true)}>
+                <History aria-hidden /> History
+              </Button>
               <Button variant="outline" size="lg" onClick={() => setConfirmReset(true)}>
                 <RotateCcw aria-hidden /> Reset to profile data
               </Button>
@@ -84,15 +103,18 @@ export function ResumeBuilderPage() {
           </Button>
         </p>
       )}
-      {data.base && <ResumeWorkspace base={data.base} draft={draft} actions={actions} />}
+      {data.base && <ResumeWorkspace base={data.base} draft={draft} actions={actions} onExported={onExported} />}
+
+      <ResumeHistory open={historyOpen} onOpenChange={setHistoryOpen} history={history} onSaveNow={() => record('manual')} onRestore={restoreVersion} />
 
       <ConfirmDialog
         open={confirmReset}
         onOpenChange={setConfirmReset}
         title="Reset to profile data?"
-        description="Your edits (skills, summary, school marks, links, bullet points, choices, section order and template) will be discarded here and in your account. Your profile and portfolio are not changed."
+        description="Your edits (skills, summary, school marks, links, bullet points, choices, section order and template) will be discarded. The current resume is kept in your history, so you can restore it. Your profile and portfolio are not changed."
         confirmLabel="Reset"
         onConfirm={() => {
+          record('reset').catch(() => {})
           reset()
           setConfirmReset(false)
         }}

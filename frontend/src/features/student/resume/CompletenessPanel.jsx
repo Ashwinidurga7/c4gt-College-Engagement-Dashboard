@@ -1,4 +1,4 @@
-import { CircleCheck, ListChecks } from 'lucide-react'
+import { ChevronDown, CircleCheck, ListChecks } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { resumeCompleteness } from '@/features/student/resume/resumeCompleteness'
@@ -23,11 +23,35 @@ function MissingItem({ check, onJump }) {
   )
 }
 
-/** Percentage plus the missing items, each with a one-click way to fix it. */
-export function CompletenessPanel({ model, onJump }) {
+function MissingList({ title, checks, onJump }) {
+  if (checks.length === 0) return null
+  return (
+    <div>
+      <p className="text-muted-foreground text-sm">{title}</p>
+      <ul className="divide-y">
+        {checks.map((check) => (
+          <MissingItem key={check.id} check={check} onJump={onJump} />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/**
+ * Percentage plus the missing items, each with a one-click way to fix it. `collapsible` folds the list
+ * behind a toggle (on phones), so it does not push the editor below the fold.
+ */
+export function CompletenessPanel({ model, onJump, collapsible = false }) {
   const { percent, missing } = resumeCompleteness(model)
   const required = missing.filter((check) => !check.optional)
   const optional = missing.filter((check) => check.optional)
+
+  const lists = (
+    <>
+      <MissingList title="Missing from your resume:" checks={required} onJump={onJump} />
+      <MissingList title="Optional, and they do not lower your score:" checks={optional} onJump={onJump} />
+    </>
+  )
 
   return (
     <section aria-labelledby="resume-completeness-title" className="bg-card shadow-soft flex flex-col gap-3 rounded-xl border p-5">
@@ -49,30 +73,23 @@ export function CompletenessPanel({ model, onJump }) {
         <div className={percent === 100 ? 'bg-success h-full' : 'bg-primary h-full'} style={{ width: `${percent}%` }} />
       </div>
 
-      {required.length === 0 ? (
+      {required.length === 0 && (
         <p className="text-success-text flex items-center gap-2 text-sm font-medium">
           <CircleCheck className="size-4" aria-hidden /> Every key section is filled in.
         </p>
-      ) : (
-        <div>
-          <p className="text-muted-foreground text-sm">Missing from your resume:</p>
-          <ul className="divide-y">
-            {required.map((check) => (
-              <MissingItem key={check.id} check={check} onJump={onJump} />
-            ))}
-          </ul>
-        </div>
       )}
-      {optional.length > 0 && (
-        <div>
-          <p className="text-muted-foreground text-sm">Optional, and they do not lower your score:</p>
-          <ul className="divide-y">
-            {optional.map((check) => (
-              <MissingItem key={check.id} check={check} onJump={onJump} />
-            ))}
-          </ul>
-        </div>
-      )}
+      {missing.length > 0 &&
+        (collapsible ? (
+          <details className="group">
+            <summary className="text-link flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium [&::-webkit-details-marker]:hidden">
+              {missing.length} {missing.length === 1 ? 'item' : 'items'} to add
+              <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden />
+            </summary>
+            <div className="flex flex-col gap-3 pt-1">{lists}</div>
+          </details>
+        ) : (
+          lists
+        ))}
     </section>
   )
 }

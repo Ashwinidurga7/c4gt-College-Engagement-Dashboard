@@ -1,4 +1,4 @@
-import { SKILL_GROUPS } from '@/features/student/resume/resumeAdapter'
+import { applyDraft, SKILL_GROUPS, toPrintModel } from '@/features/student/resume/resumeAdapter'
 import { validatePersonal } from '@/features/student/resume/resumeDraftActions'
 
 /** Longest value each editor field accepts, used both as the input's maxLength and in the checks. */
@@ -187,4 +187,10 @@ export function withoutInvalid(model, errors) {
       }),
     ),
   }
+}
+
+/** The resume as it prints for this draft: the draft over `base`, with invalid values left out. */
+export function printModelFor(base, draft) {
+  const model = applyDraft(base, draft)
+  return toPrintModel(withoutInvalid(model, validateResume(model, { required: false })))
 }

@@ -19,6 +19,7 @@ const newestFirst = { key: 'date', direction: 'desc' }
 
 export const certificationsMock = createMockCollection(certificationsData, {
   prefix: 'cert',
+  persist: 'certifications',
   searchKeys: ['name', 'issuer', 'credentialId'],
   defaultSort: { key: 'issueDate', direction: 'desc' },
 })
@@ -61,7 +62,7 @@ function buildCertificates() {
   return [...own, ...queue]
 }
 
-const certificates = createMockCollection(buildCertificates(), { prefix: 'crt' })
+const certificates = createMockCollection(buildCertificates(), { prefix: 'crt', persist: 'certificates' })
 
 /** Students see their own certificates; faculty see those of students in their scope. */
 export const certificatesMock = {
@@ -84,20 +85,22 @@ export const certificatesMock = {
 
 export const projectsMock = createMockCollection(projectsData, {
   prefix: 'proj',
+  persist: 'projects',
   searchKeys: ['title', 'description'],
   defaultSort: { key: 'startDate', direction: 'desc' },
 })
 
 export const internshipsMock = createMockCollection(internshipsData, {
   prefix: 'intern',
+  persist: 'internships',
   searchKeys: ['company', 'role'],
   defaultSort: { key: 'startDate', direction: 'desc' },
 })
 
-export const achievementsMock = createMockCollection(achievementsData, { prefix: 'ach', defaultSort: newestFirst })
-export const activitiesMock = createMockCollection(activitiesData, { prefix: 'actv', defaultSort: newestFirst })
+export const achievementsMock = createMockCollection(achievementsData, { prefix: 'ach', persist: 'achievements', defaultSort: newestFirst })
+export const activitiesMock = createMockCollection(activitiesData, { prefix: 'actv', persist: 'activities', defaultSort: newestFirst })
 
-const resumes = createMockCollection(resumesData, { prefix: 'res', defaultSort: { key: 'uploadedAt', direction: 'desc' } })
+const resumes = createMockCollection(resumesData, { prefix: 'res', persist: 'resumes', defaultSort: { key: 'uploadedAt', direction: 'desc' } })
 
 export const resumesMock = {
   ...resumes,

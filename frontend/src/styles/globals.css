@@ -228,7 +228,7 @@
   }
 
   .glass-header {
-    background-color: var(--glass-bg);
+    background-color: var(--glass-bar-bg);
     backdrop-filter: blur(20px) saturate(190%);
     -webkit-backdrop-filter: blur(20px) saturate(190%);
     border-bottom: 1px solid var(--glass-border);

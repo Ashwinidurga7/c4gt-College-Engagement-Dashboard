@@ -10,6 +10,8 @@ export const queryKeys = {
     attendance: ['student', 'attendance'],
     academicReport: ['student', 'academic-report'],
     upcomingEvents: ['student', 'upcoming-events'],
+    /** The resume builder's saved versions, newest first. */
+    resumeVersions: ['student', 'resume-versions'],
     /** Portfolio resources: certifications, certificates, projects, internships, resumes, achievements, activities. */
     resource: (name, query) => (query === undefined ? ['student', name] : ['student', name, query]),
   },

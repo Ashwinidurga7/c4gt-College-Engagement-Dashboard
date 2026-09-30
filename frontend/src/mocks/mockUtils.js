@@ -14,3 +14,13 @@ export function mockError(message, status, latency = LATENCY_MS) {
     setTimeout(() => reject(new ApiError(message, { status })), latency)
   })
 }
+
+/** The file as a data: URL, so a mock upload still opens after a reload (blob: URLs die with the page). */
+export function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
