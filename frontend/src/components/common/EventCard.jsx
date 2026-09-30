@@ -1,4 +1,5 @@
 import { CalendarClock, Clock, MapPin } from 'lucide-react'
+import { useState } from 'react'
 import { CollegeBadge } from '@/components/common/CollegeBadge'
 import { formatDate, formatTime } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
@@ -10,6 +11,9 @@ const monthFormatter = new Intl.DateTimeFormat('en-IN', { month: 'short' })
 export function EventCard({ event, action, className }) {
   const date = event.date ? new Date(event.date) : null
   const time = [formatTime(event.startTime), formatTime(event.endTime)].filter(Boolean).join(' – ')
+  const [broken, setBroken] = useState(false)
+  // The cover photo is decorative here; the details dialog shows every photo with a description.
+  const cover = broken ? null : event.images?.[0]
 
   return (
     <article className={cn('flex flex-wrap items-start gap-4', className)}>
@@ -21,6 +25,16 @@ export function EventCard({ event, action, className }) {
           <span className="text-xl font-bold">{dayFormatter.format(date)}</span>
           <span className="text-xs font-semibold uppercase">{monthFormatter.format(date)}</span>
         </time>
+      )}
+      {cover && (
+        <img
+          src={cover.url}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setBroken(true)}
+          className="bg-sunken aspect-[4/3] w-20 shrink-0 rounded-lg border object-cover max-sm:hidden"
+        />
       )}
       <div className="min-w-48 flex-1">
         <div className="flex flex-wrap items-center gap-2">

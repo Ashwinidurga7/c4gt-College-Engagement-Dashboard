@@ -119,6 +119,23 @@ function feeTotals(payments) {
 }
 
 /** Mock-only modules. They stay on this layer even when VITE_USE_MOCK=false. */
+/** Admin edits change the seeded arrays in place, so every page and role sees them until a reload. */
+function saveIn(items, prefix, { id, ...data }) {
+  const index = id ? items.findIndex((item) => item.id === id) : -1
+  if (id && index === -1) return mockError('The requested record was not found.', 404)
+  const saved = index === -1 ? { id: `${prefix}-${Date.now().toString(36)}`, ...data } : { ...items[index], ...data }
+  if (index === -1) items.unshift(saved)
+  else items[index] = saved
+  return mockResponse(saved)
+}
+
+function removeFrom(items, id) {
+  const index = items.findIndex((item) => item.id === id)
+  if (index === -1) return mockError('The requested record was not found.', 404)
+  items.splice(index, 1)
+  return mockResponse({ id })
+}
+
 export const previewMock = {
   timetable() {
     return mockResponse({ sections: TIMETABLE_SECTIONS, entries: timetable })
@@ -148,6 +165,9 @@ export const previewMock = {
     const weekAgo = new Date(new Date(`${MOCK_TODAY}T00:00:00Z`).getTime() - 7 * 86400000).toISOString().slice(0, 10)
     return mockResponse([...examNotices].sort((a, b) => b.publishedOn.localeCompare(a.publishedOn)).map((notice) => ({ ...notice, isNew: notice.publishedOn >= weekAgo })))
   },
+
+  saveExamNotice: (notice) => saveIn(examNotices, 'notice', notice),
+  deleteExamNotice: (id) => removeFrom(examNotices, id),
 
   exams(query = {}) {
     const user = currentMockUser()
@@ -183,6 +203,8 @@ export const previewMock = {
   facilities(query) {
     return list(facilities, query, ['name', 'location', 'category', 'description'], null)
   },
+  saveFacility: (facility) => saveIn(facilities, 'fac', facility),
+  deleteFacility: (id) => removeFrom(facilities, id),
 
   busPass() {
     return mockResponse(busPass)

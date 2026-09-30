@@ -3,6 +3,9 @@ export const CLUB_CATEGORIES = ['Technical', 'Innovation', 'Cultural', 'Service'
 
 export const EVENT_CATEGORIES = ['Hackathon', 'Workshop', 'AI Summit', 'Club Activity', 'Technical Event', 'Tech Talk', 'Drive', 'Social Service', 'Sports', 'Cultural']
 
+/** Announcement categories; each has a matching StatusBadge tone. */
+export const ANNOUNCEMENT_CATEGORIES = ['General', 'Important', 'Urgent']
+
 export const EVENT_WINDOWS = [
   { value: 'upcoming', label: 'Upcoming' },
   { value: 'past', label: 'Past' },

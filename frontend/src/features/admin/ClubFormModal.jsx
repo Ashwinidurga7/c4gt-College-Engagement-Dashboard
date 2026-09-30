@@ -1,14 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormField } from '@/components/common/FormField'
 import { FormModal } from '@/components/common/FormModal'
+import { PhotoListField } from '@/components/common/PhotoListField'
 import { TextArea } from '@/components/common/TextArea'
 import { Input } from '@/components/ui/input'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
-import { clubDefaults, clubSchema } from '@/features/admin/clubSchema'
+import { MAX_CLUB_PHOTOS, clubDefaults, clubSchema } from '@/features/admin/clubSchema'
 import { useCreateClub, useUpdateClub } from '@/hooks/useAdmin'
 import { CLUB_CATEGORIES } from '@/lib/campus'
 import { fieldProps } from '@/lib/fieldProps'
+import { photoListError } from '@/lib/photos'
 
 const inputClass = 'bg-card h-11'
 
@@ -32,12 +34,15 @@ export function ClubFormModal({ club, open, onOpenChange }) {
   const create = useCreateClub()
   const update = useUpdateClub()
   const mutation = club ? update : create
-  const { register, handleSubmit, formState } = useForm({ resolver: zodResolver(clubSchema), defaultValues: clubDefaults(club) })
-  const { errors } = formState
+  const { register, handleSubmit, control, formState } = useForm({ resolver: zodResolver(clubSchema), defaultValues: clubDefaults(club) })
+  const { errors, dirtyFields } = formState
+  const photoError = photoListError(errors.photos)
 
   const onSubmit = handleSubmit((values) => {
     const done = { onSuccess: () => onOpenChange(false) }
-    if (club) update.mutate({ id: club.id, values }, done)
+    // Photos upload separately, so they are only sent when the admin changed them.
+    const photosChanged = Boolean(dirtyFields.photos)
+    if (club) update.mutate({ id: club.id, values, photosChanged }, done)
     else create.mutate(values, done)
   })
 
@@ -78,6 +83,24 @@ export function ClubFormModal({ club, open, onOpenChange }) {
         </FormField>
         <FormField id="club-description" label="Description" error={errors.description?.message} className="sm:col-span-2">
           <TextArea rows={4} {...fieldProps('club-description', errors.description)} {...register('description')} />
+        </FormField>
+        <FormField id="club-photos" label="Gallery photos (optional)" error={photoError} hint="Photos of the club's space and activities, shown in the club's gallery." className="sm:col-span-2">
+          <Controller
+            name="photos"
+            control={control}
+            render={({ field }) => (
+              <PhotoListField
+                id="club-photos"
+                value={field.value}
+                onChange={field.onChange}
+                max={MAX_CLUB_PHOTOS}
+                altPrefix="Club photo"
+                markCover={false}
+                invalid={Boolean(photoError)}
+                describedBy={photoError ? 'club-photos-error' : 'club-photos-hint'}
+              />
+            )}
+          />
         </FormField>
       </div>
     </FormModal>

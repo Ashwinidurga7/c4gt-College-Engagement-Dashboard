@@ -1,4 +1,6 @@
-import { Clock, MapPin, Phone } from 'lucide-react'
+import { Clock, MapPin, Pencil, Phone, Plus, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { FilterBar } from '@/components/common/FilterBar'
@@ -7,9 +9,13 @@ import { PageHeader } from '@/components/common/PageHeader'
 import { PreviewNotice } from '@/components/common/PreviewNotice'
 import { ListSkeleton } from '@/components/common/Skeleton'
 import { StatusBadge } from '@/components/common/StatusBadge'
+import { Button } from '@/components/ui/button'
+import { FacilityFormModal } from '@/features/facilities/FacilityFormModal'
+import { useAuth } from '@/hooks/useAuth'
+import { useConfirmAction } from '@/hooks/useConfirmAction'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useListQuery } from '@/hooks/useListQuery'
-import { useFacilities } from '@/hooks/usePreview'
+import { useDeleteFacility, useFacilities } from '@/hooks/usePreview'
 import { FACILITY_CATEGORIES } from '@/lib/campus'
 import { formatTime } from '@/lib/formatters'
 
@@ -30,10 +36,30 @@ function dayRange(days) {
   return days.map((day) => DAY_NAMES[day]).join(', ')
 }
 
+/** The first photo, dropped if it fails to load so the card falls back to text only. */
+function FacilityPhoto({ facility }) {
+  const [broken, setBroken] = useState(false)
+  const photo = facility.photos?.[0]
+  if (!photo || broken) return null
+  return (
+    <img
+      src={photo.url}
+      alt={photo.caption || facility.name}
+      loading="lazy"
+      decoding="async"
+      onError={() => setBroken(true)}
+      className="bg-sunken -mx-5 -mt-5 mb-1 aspect-video w-[calc(100%+2.5rem)] max-w-none rounded-t-xl object-cover"
+    />
+  )
+}
+
 export function FacilitiesPage() {
   useDocumentTitle('Facilities')
+  const isAdmin = useAuth().user?.role === 'admin'
   const list = useListQuery({ pageSize: 50, initialFilters: { category: '' } })
   const query = useFacilities(list.query)
+  const [editor, setEditor] = useState(null)
+  const remove = useConfirmAction(useDeleteFacility(), (facility) => facility)
 
   let body
   if (query.isPending) body = <ListSkeleton rows={4} />
@@ -46,6 +72,7 @@ export function FacilitiesPage() {
           const open = isOpen(facility)
           return (
             <li key={facility.id} className="bg-card shadow-soft flex flex-col gap-2 rounded-xl border p-5">
+              <FacilityPhoto facility={facility} />
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="font-semibold">{facility.name}</h2>
@@ -74,6 +101,16 @@ export function FacilitiesPage() {
                   ))}
                 </ul>
               )}
+              {isAdmin && (
+                <div className="mt-auto flex justify-end gap-1 border-t pt-3">
+                  <Button variant="outline" size="lg" onClick={() => setEditor({ facility })}>
+                    <Pencil aria-hidden /> Edit<span className="sr-only">: {facility.name}</span>
+                  </Button>
+                  <Button variant="ghost" size="icon-lg" className="text-danger-text" aria-label={`Remove ${facility.name}`} onClick={() => remove.request(facility)}>
+                    <Trash2 />
+                  </Button>
+                </div>
+              )}
             </li>
           )
         })}
@@ -83,11 +120,31 @@ export function FacilitiesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Facilities" description="What the campus offers, where it is and when it is open." icon={MapPin} preview />
+      <PageHeader
+        title="Facilities"
+        description={isAdmin ? 'Add, edit and remove facilities and their photos. Changes show for students and staff.' : 'What the campus offers, where it is and when it is open.'}
+        icon={MapPin}
+        preview
+        actions={
+          isAdmin && (
+            <Button size="lg" onClick={() => setEditor({ facility: null })}>
+              <Plus aria-hidden /> Add facility
+            </Button>
+          )
+        }
+      />
       <FilterBar search={list.search} onSearchChange={list.setSearch} searchPlaceholder="Search facilities or locations" searchLabel="Search facilities" />
       <FilterChips label="Category" options={CATEGORY_OPTIONS} value={list.filters.category} onChange={(value) => list.setFilter('category', value)} />
       <div aria-busy={query.isFetching || undefined}>{body}</div>
       <PreviewNotice>Hours, contact numbers and some details are placeholders until the college office confirms them.</PreviewNotice>
+      {editor && <FacilityFormModal facility={editor.facility} open onOpenChange={(open) => !open && setEditor(null)} />}
+      <ConfirmDialog
+        {...remove.dialogProps}
+        title={remove.target && `Remove ${remove.target.name}?`}
+        description="The facility and its photos are removed from the Facilities page for everyone."
+        confirmLabel="Remove"
+        pendingLabel="Removing…"
+      />
     </div>
   )
 }

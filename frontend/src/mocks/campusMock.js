@@ -1,5 +1,5 @@
 import { applyListQuery } from '@/lib/listQuery'
-import { campusEvents, clubMemberships, MOCK_TODAY } from '@/mocks/campusData'
+import { campusAnnouncements, campusEvents, clubMemberships, MOCK_TODAY } from '@/mocks/campusData'
 import { clubsData } from '@/mocks/clubsData'
 import { createMockCollection } from '@/mocks/mockStore'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
@@ -43,6 +43,50 @@ export const eventsMock = {
   get(id) {
     const event = campusEvents.find((entry) => entry._id === id)
     return event ? mockResponse(event) : mockError('This event could not be found.', 404)
+  },
+
+  // Edits change `campusEvents` in place so the dashboard, club pages and registrations see them too.
+  create(data) {
+    const event = { _id: `ev-${Date.now().toString(36)}`, createdAt: new Date().toISOString(), ...data }
+    campusEvents.unshift(event)
+    return mockResponse(event)
+  },
+  update(id, changes) {
+    const index = campusEvents.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This event could not be found.', 404)
+    campusEvents[index] = { ...campusEvents[index], ...changes, updatedAt: new Date().toISOString() }
+    return mockResponse(campusEvents[index])
+  },
+  remove(id) {
+    const index = campusEvents.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This event could not be found.', 404)
+    campusEvents.splice(index, 1)
+    return mockResponse({ _id: id })
+  },
+}
+
+// Edits change `campusAnnouncements` in place so the student dashboard sees them too.
+export const announcementsMock = {
+  list(query = {}) {
+    const page = applyListQuery(campusAnnouncements, { ...query, sort: query.sort ?? { key: 'date', direction: 'desc' }, searchKeys: ['title', 'body', 'category'] })
+    return mockResponse({ ...page, limit: page.pageSize })
+  },
+  create(data) {
+    const notice = { _id: `notice-${Date.now().toString(36)}`, createdAt: new Date().toISOString(), ...data }
+    campusAnnouncements.unshift(notice)
+    return mockResponse(notice)
+  },
+  update(id, changes) {
+    const index = campusAnnouncements.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This announcement could not be found.', 404)
+    campusAnnouncements[index] = { ...campusAnnouncements[index], ...changes, updatedAt: new Date().toISOString() }
+    return mockResponse(campusAnnouncements[index])
+  },
+  remove(id) {
+    const index = campusAnnouncements.findIndex((entry) => entry._id === id)
+    if (index === -1) return mockError('This announcement could not be found.', 404)
+    campusAnnouncements.splice(index, 1)
+    return mockResponse({ _id: id })
   },
 }
 

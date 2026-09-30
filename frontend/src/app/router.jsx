@@ -36,6 +36,7 @@ const PAGES = {
   'admin/verifications': page(() => import('@/features/admin/VerificationsPage'), 'VerificationsPage'),
   'admin/clubs': page(() => import('@/features/admin/AdminClubsPage'), 'AdminClubsPage'),
   'admin/events': page(() => import('@/features/events/EventsPage'), 'EventsPage'),
+  'admin/announcements': page(() => import('@/features/admin/AdminAnnouncementsPage'), 'AdminAnnouncementsPage'),
   'hod/dashboard': page(() => import('@/features/hod/HodDashboardPage'), 'HodDashboardPage'),
   'hod/students': page(() => import('@/features/hod/HodStudentsPage'), 'HodStudentsPage'),
   'hod/attendance': page(() => import('@/features/hod/AttendanceAnalyticsPage'), 'AttendanceAnalyticsPage'),

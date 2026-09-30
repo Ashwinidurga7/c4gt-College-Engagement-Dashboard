@@ -77,3 +77,8 @@ export const useSetApplicationStatus = () => usePreviewMutation('placement-drive
 export const useSaveNotificationPreferences = () =>
   usePreviewMutation('notification-preferences', previewService.saveNotificationPreferences, 'Notification preferences saved')
 export const useSaveInstitutionSettings = () => usePreviewMutation('institution-settings', previewService.saveInstitutionSettings, 'Institution settings saved')
+
+export const useSaveFacility = () => usePreviewMutation('facilities', previewService.saveFacility, (facility) => `${facility.name} saved`)
+export const useDeleteFacility = () => usePreviewMutation('facilities', previewService.deleteFacility, (facility) => `${facility.name} removed`)
+export const useSaveExamNotice = () => usePreviewMutation('exam-notices', previewService.saveExamNotice, 'Notice saved')
+export const useDeleteExamNotice = () => usePreviewMutation('exam-notices', previewService.deleteExamNotice, 'Notice deleted')
