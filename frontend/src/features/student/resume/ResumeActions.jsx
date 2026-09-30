@@ -5,22 +5,15 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { renderResumePdf } from '@/features/student/resume/pdf/renderResumePdf'
 import { resumeFileName } from '@/features/student/resume/resumeFormat'
+import { saveBlob } from '@/features/student/resume/saveBlob'
 import { useSetPrimaryResume, useUploadResume } from '@/hooks/usePortfolio'
-
-function saveBlob(blob, fileName) {
-  const url = URL.createObjectURL(blob)
-  const link = Object.assign(document.createElement('a'), { href: url, download: fileName })
-  document.body.append(link)
-  link.click()
-  link.remove()
-  setTimeout(() => URL.revokeObjectURL(url), 10000)
-}
 
 /**
  * Download (always available) and "Save to my resumes" (uploads to POST /api/resumes). A failed
  * upload never affects downloading. `ensureValid` shows the name and email errors when missing.
+ * `onExported` is told after each download or save, so the resume can be kept in the history.
  */
-export function ResumeActions({ printModel, ensureValid, onSaved }) {
+export function ResumeActions({ printModel, ensureValid, onSaved, onExported }) {
   const [busy, setBusy] = useState(null)
   const [saved, setSaved] = useState(null)
   const upload = useUploadResume()
@@ -38,6 +31,7 @@ export function ResumeActions({ printModel, ensureValid, onSaved }) {
     try {
       saveBlob(await build(), fileName)
       toast.success(`Downloaded ${fileName}`)
+      onExported('download')
     } catch {
       toast.error('The PDF could not be created. Please try again.')
     } finally {
@@ -53,6 +47,7 @@ export function ResumeActions({ printModel, ensureValid, onSaved }) {
       const resume = await upload.mutateAsync(file)
       setSaved(resume)
       onSaved(resume.id)
+      onExported('saved')
     } catch (error) {
       toast.error(`${error.message ?? 'The resume could not be saved.'} You can still download the PDF.`)
     } finally {

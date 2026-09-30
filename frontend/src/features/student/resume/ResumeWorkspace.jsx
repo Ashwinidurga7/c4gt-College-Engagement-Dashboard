@@ -23,7 +23,7 @@ const TABS = [
 ]
 
 /** Split view on desktop; on tablets and phones, Edit and Preview tabs that stay under the top bar while scrolling. */
-export function ResumeWorkspace({ base, draft, actions }) {
+export function ResumeWorkspace({ base, draft, actions, onExported }) {
   const isDesktop = useIsDesktop()
   const [tab, setTab] = useState('edit')
   const [openSections, setOpenSections] = useState(['personal'])
@@ -71,7 +71,7 @@ export function ResumeWorkspace({ base, draft, actions }) {
   )
   const panel = (
     <>
-      <ResumeActions printModel={printModel} ensureValid={ensureValid} onSaved={actions.addSavedResume} />
+      <ResumeActions printModel={printModel} ensureValid={ensureValid} onSaved={actions.addSavedResume} onExported={onExported} />
       <ResumePreview preview={preview} resume={printModel} />
     </>
   )
