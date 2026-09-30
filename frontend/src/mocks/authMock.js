@@ -129,3 +129,29 @@ export function setApproval(id, approvalStatus) {
 export function allAccounts() {
   return users.map(publicUser)
 }
+
+export function mockForgotPassword(email) {
+  const user = users.find((entry) => entry.email.toLowerCase() === email.trim().toLowerCase())
+  if (!user) {
+    return mockError('No account is registered with this email address.', 404)
+  }
+  const token = 'mock-reset-token-' + Date.now()
+  user.resetPasswordToken = token
+  return mockResponse({
+    message: 'Password reset link has been sent to your registered email address.',
+    resetUrl: `/reset-password?token=${token}`,
+    emailDelivered: false,
+  })
+}
+
+export function mockResetPassword({ token, newPassword, confirmPassword }) {
+  if (!token) return mockError('Missing password reset token. Please request a new reset link.', 400)
+  if (!newPassword || newPassword !== confirmPassword) return mockError('Passwords do not match.', 400)
+  if (newPassword.length < 8) return mockError('Password must be at least 8 characters long.', 400)
+  const user = users.find((entry) => entry.resetPasswordToken === token)
+  if (!user) return mockError('Invalid or expired password reset token.', 400)
+  user.password = newPassword
+  delete user.resetPasswordToken
+  return mockResponse({ message: 'Password reset successful. You can now log in with your new password.' })
+}
+

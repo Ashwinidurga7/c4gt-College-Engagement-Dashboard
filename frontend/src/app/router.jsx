@@ -116,6 +116,9 @@ export const router = createBrowserRouter([
           { path: '/register', lazy: page(() => import('@/features/auth/RegisterPage'), 'RegisterPage') },
         ],
       },
+      // Password reset: isolated standalone screens that never redirect to dashboard
+      { path: '/forgot-password', lazy: page(() => import('@/features/auth/ForgotPasswordPage'), 'ForgotPasswordPage') },
+      { path: '/reset-password', lazy: page(() => import('@/features/auth/ResetPasswordPage'), 'ResetPasswordPage') },
       // Public: linked from the login page and readable whether or not you are signed in.
       { path: '/about', lazy: page(() => import('@/features/about/AboutPage'), 'AboutPage') },
       { path: '/awaiting-approval', lazy: page(() => import('@/features/auth/AwaitingApprovalPage'), 'AwaitingApprovalPage') },

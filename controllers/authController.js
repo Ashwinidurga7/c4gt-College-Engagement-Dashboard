@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const dotenv = require('dotenv');
+const path = require('path');
+const emailService = require('../services/emailService');
 const User = require('../models/User');
+const PasswordResetToken = require('../models/PasswordResetToken');
 const Student = require('../models/Student');
 const Faculty = require('../models/Faculty');
 const Hod = require('../models/Hod');
@@ -620,6 +625,258 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
+// @desc    Request password reset email
+// @route   POST /api/auth/forgot-password
+// @desc    Request password reset email
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res, next) => {
+  try {
+    const rawEmail = req.body && req.body.email;
+    if (!rawEmail || String(rawEmail).trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide an email address',
+      });
+    }
+
+    const email = String(rawEmail).trim().toLowerCase();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address format (e.g. student@kiet.edu)',
+      });
+    }
+
+    const genericSuccessMessage = 'If an account exists for this email, a password reset link has been sent.';
+
+    const user = await User.findOne({ email });
+    // Anti-enumeration: if user doesn't exist, return generic success without revealing existence
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: genericSuccessMessage,
+        data: { message: genericSuccessMessage },
+      });
+    }
+
+    // Generate 32-byte cryptographically secure random reset token
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+    // Configurable expiry (default 30 minutes)
+    const expiryMinutes = Number(process.env.RESET_TOKEN_EXPIRY_MINUTES) || 30;
+    const expiresAt = new Date(Date.now() + expiryMinutes * 60 * 1000);
+
+    // Invalidate previous unused reset tokens for this user
+    await PasswordResetToken.updateMany(
+      { userId: user._id, usedAt: null },
+      { usedAt: new Date() }
+    );
+
+    // Store secure token record in dedicated password_reset_tokens collection
+    await PasswordResetToken.create({
+      userId: user._id,
+      tokenHash: hashedToken,
+      expiresAt,
+      usedAt: null,
+    });
+
+    // Also update User document for backward compatibility
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = expiresAt;
+    await user.save({ validateBeforeSave: false });
+
+    // Reload dotenv dynamically to capture updated host configuration
+    dotenv.config({ path: path.join(__dirname, '../.env'), override: true });
+
+    let frontendUrl = (process.env.FRONTEND_URL || '').trim();
+    if (!frontendUrl) {
+      frontendUrl = 'http://10.228.3.65:5173';
+    }
+    frontendUrl = frontendUrl.replace(/\/+$/, '');
+    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
+
+    let emailDelivered = false;
+    try {
+      await emailService.sendPasswordResetEmail({
+        to: user.email,
+        resetUrl,
+        minutesToExpire: expiryMinutes,
+        name: user.name || 'User',
+      });
+      emailDelivered = true;
+    } catch (emailErr) {
+      console.warn('⚠️ [Email Delivery Warning]:', emailErr.message);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: genericSuccessMessage,
+      data: {
+        message: genericSuccessMessage,
+        emailDelivered,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Validate password reset token
+// @route   GET /api/auth/validate-reset-token
+// @access  Public
+const validateResetToken = async (req, res, next) => {
+  try {
+    const rawToken = req.query.token;
+    if (!rawToken || String(rawToken).trim() === '') {
+      return res.status(400).json({
+        success: false,
+        detail: 'This password reset link is invalid or has expired.',
+      });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(String(rawToken).trim()).digest('hex');
+
+    // 1. Check dedicated password_reset_tokens collection
+    let tokenDoc = await PasswordResetToken.findOne({
+      tokenHash: hashedToken,
+      usedAt: null,
+      expiresAt: { $gt: new Date() },
+    });
+
+    // 2. Fallback check User collection for backward compatibility
+    let user = null;
+    if (tokenDoc) {
+      user = await User.findById(tokenDoc.userId);
+    } else {
+      user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: new Date() },
+      });
+    }
+
+    if (!user || (!tokenDoc && !user.resetPasswordToken)) {
+      return res.status(400).json({
+        success: false,
+        detail: 'This password reset link is invalid or has expired.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Token is valid.',
+      data: { valid: true },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Reset password using reset token
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res, next) => {
+  try {
+    const { token, new_password, newPassword, confirm_password, confirmPassword, password } = req.body;
+    const finalPassword = new_password || newPassword || password;
+    const finalConfirm = confirm_password || confirmPassword;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing password reset token. Please request a new reset link.',
+        detail: 'This password reset link is invalid or has expired.',
+      });
+    }
+
+    if (!finalPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a new password.',
+      });
+    }
+
+    if (finalConfirm && finalPassword !== finalConfirm) {
+      return res.status(400).json({
+        success: false,
+        message: 'Passwords do not match.',
+      });
+    }
+
+    // Industrial password strength requirements
+    const isMinLength = finalPassword.length >= 8;
+    const hasUpper = /[A-Z]/.test(finalPassword);
+    const hasLower = /[a-z]/.test(finalPassword);
+    const hasDigit = /\d/.test(finalPassword);
+    const hasSpecial = /[^A-Za-z0-9]/.test(finalPassword);
+
+    if (!isMinLength || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+      });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(String(token).trim()).digest('hex');
+
+    // 1. Search in dedicated PasswordResetToken collection
+    let tokenDoc = await PasswordResetToken.findOne({
+      tokenHash: hashedToken,
+      usedAt: null,
+      expiresAt: { $gt: new Date() },
+    });
+
+    let user = null;
+    if (tokenDoc) {
+      user = await User.findById(tokenDoc.userId);
+    } else {
+      // 2. Fallback search on User document
+      user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: new Date() },
+      });
+    }
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        detail: 'This password reset link is invalid or has expired.',
+        message: 'Invalid or expired password reset token.',
+      });
+    }
+
+    // Update password (pre-save hook will hash it with bcrypt)
+    user.password = finalPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    // Mark token as used
+    if (tokenDoc) {
+      tokenDoc.usedAt = new Date();
+      await tokenDoc.save();
+    }
+
+    // Invalidate all other active tokens for this user
+    await PasswordResetToken.updateMany(
+      { userId: user._id, usedAt: null },
+      { usedAt: new Date() }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully.',
+      data: {
+        message: 'Password has been reset successfully.',
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   registerHod,
@@ -627,4 +884,8 @@ module.exports = {
   loginUser,
   getMe,
   updatePassword,
+  forgotPassword,
+  validateResetToken,
+  resetPassword,
 };
+

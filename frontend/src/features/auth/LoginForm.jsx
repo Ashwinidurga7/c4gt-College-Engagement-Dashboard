@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { DemoAccounts } from '@/features/auth/DemoAccounts'
-import { ForgotPasswordDialog } from '@/features/auth/ForgotPasswordDialog'
 import { LoginErrorNotice, PendingApprovalNotice, PortalMismatchNotice } from '@/features/auth/LoginNotices'
 import { PortalSelector } from '@/features/auth/PortalSelector'
 import { loginSchema } from '@/features/auth/authSchemas'
@@ -114,7 +113,12 @@ export function LoginForm() {
             Remember me
           </Label>
         </div>
-        <ForgotPasswordDialog />
+        <Link
+          to="/forgot-password"
+          className="text-link rounded-sm text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Forgot password?
+        </Link>
       </div>
 
       <PortalSelector register={register} />

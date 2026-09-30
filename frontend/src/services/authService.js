@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import { isRole } from '@/lib/roles'
-import { mockLogin, mockMe, mockRegister } from '@/mocks/authMock'
+import { mockLogin, mockMe, mockRegister, mockForgotPassword, mockResetPassword } from '@/mocks/authMock'
 import { nameOf } from '@/services/adapterUtils'
 import { apiClient, ApiError } from '@/services/apiClient'
 
@@ -64,5 +64,38 @@ export const authService = {
     const body = path === REGISTER_PATHS.student ? payload : fields
     const data = env.useMock ? await mockRegister({ role, ...fields }) : await apiClient.post(path, body)
     return toRegistration(data)
+  },
+
+  async forgotPassword(email) {
+    if (env.useMock) {
+      return mockForgotPassword(email)
+    }
+    const data = await apiClient.post('/auth/forgot-password', { email })
+    return data
+  },
+
+  async validateResetToken(token) {
+    if (env.useMock) {
+      return { valid: true, message: 'Token is valid' }
+    }
+    const data = await apiClient.get('/auth/validate-reset-token', {
+      params: { token },
+    })
+    return data
+  },
+
+  async resetPassword({ token, newPassword, confirmPassword, new_password }) {
+    const password = new_password || newPassword
+    if (env.useMock) {
+      return mockResetPassword({ token, newPassword: password, confirmPassword })
+    }
+    const data = await apiClient.post('/auth/reset-password', {
+      token,
+      new_password: password,
+      newPassword: password,
+      confirmPassword,
+      confirm_password: confirmPassword,
+    })
+    return data
   },
 }
