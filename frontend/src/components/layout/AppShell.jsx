@@ -32,7 +32,7 @@ export function AppShell() {
   }
 
   return (
-    <div className="bg-canvas relative min-h-dvh overflow-x-hidden">
+    <div className="bg-canvas relative min-h-dvh overflow-x-clip">
       {/* Ambient background glowing gradient blobs and floating glass spheres for Glassmorphism depth */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="animate-ambient-1 absolute -top-32 -left-20 size-[550px] rounded-full bg-gradient-to-tr from-blue-600/20 via-indigo-600/15 to-sky-400/10 blur-3xl dark:from-blue-600/30 dark:via-indigo-800/25" />

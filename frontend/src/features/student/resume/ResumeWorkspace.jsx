@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { toast } from 'sonner'
-import { PageTabs } from '@/components/common/PageTabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CompletenessPanel } from '@/features/student/resume/CompletenessPanel'
 import { ResumeActions } from '@/features/student/resume/ResumeActions'
 import { ResumeEditor } from '@/features/student/resume/ResumeEditor'
@@ -22,7 +22,7 @@ const TABS = [
   { value: 'preview', label: 'Preview' },
 ]
 
-/** Split view on desktop; Edit and Preview tabs on tablets and phones. */
+/** Split view on desktop; on tablets and phones, Edit and Preview tabs that stay under the top bar while scrolling. */
 export function ResumeWorkspace({ base, draft, actions }) {
   const isDesktop = useIsDesktop()
   const [tab, setTab] = useState('edit')
@@ -78,16 +78,30 @@ export function ResumeWorkspace({ base, draft, actions }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <CompletenessPanel model={model} onJump={jumpTo} />
+      <CompletenessPanel model={model} onJump={jumpTo} collapsible={!isDesktop} />
       {isDesktop ? (
         <div className="grid grid-cols-2 items-start gap-6">
           <div className="min-w-0">{editor}</div>
           <div className="sticky top-20 flex min-w-0 flex-col gap-4">{panel}</div>
         </div>
       ) : (
-        <PageTabs label="Resume builder view" tabs={TABS} value={tab} onValueChange={setTab}>
-          {(value) => (value === 'edit' ? editor : <div className="flex flex-col gap-4">{panel}</div>)}
-        </PageTabs>
+        <Tabs value={tab} onValueChange={setTab} className="flex flex-col gap-4">
+          <div className="sticky top-16 z-10 -mx-4 bg-[var(--glass-bar-bg)] px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6">
+            <TabsList aria-label="Resume builder view" className="grid h-11 w-full grid-cols-2">
+              {TABS.map((option) => (
+                <TabsTrigger key={option.value} value={option.value} className="h-full font-semibold">
+                  {option.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+          <TabsContent value="edit" className="outline-none">
+            {tab === 'edit' && editor}
+          </TabsContent>
+          <TabsContent value="preview" className="flex flex-col gap-4 outline-none">
+            {tab === 'preview' && panel}
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   )

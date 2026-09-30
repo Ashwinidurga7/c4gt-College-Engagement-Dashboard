@@ -62,7 +62,7 @@ export function ResumeActions({ printModel, ensureValid, onSaved }) {
 
   return (
     <section aria-label="Download or save" className="bg-card shadow-soft flex flex-col gap-3 rounded-xl border p-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <Button size="lg" onClick={download} disabled={busy !== null}>
           {busy === 'download' ? <Loader2 className="animate-spin" aria-hidden /> : <Download aria-hidden />}
           {busy === 'download' ? 'Creating PDF…' : 'Download PDF'}
