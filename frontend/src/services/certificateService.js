@@ -1,5 +1,6 @@
 import { env } from '@/lib/env'
 import { currentMockUser } from '@/mocks/authMock'
+import { fileToDataUrl } from '@/mocks/mockUtils'
 import { certificatesMock } from '@/mocks/portfolioMock'
 import { apiClient } from '@/services/apiClient'
 import { toCertificate } from '@/services/portfolioAdapters'
@@ -25,7 +26,7 @@ export const certificateService = {
         ...fields,
         status: 'pending',
         fileName: file.name,
-        fileUrl: URL.createObjectURL(file),
+        fileUrl: await fileToDataUrl(file),
       })
       return toCertificate(created)
     }

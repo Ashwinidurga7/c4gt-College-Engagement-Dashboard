@@ -3,6 +3,7 @@ import { summarizeAttendance } from '@/lib/attendanceSummary'
 import { applyListQuery } from '@/lib/listQuery'
 import { attendanceRecords } from '@/mocks/attendanceData'
 import { campusAnnouncements, campusEvents, clubMemberships, MOCK_TODAY, recentActivities } from '@/mocks/campusData'
+import { loadPersisted, savePersisted } from '@/mocks/mockStore'
 import { mockResponse } from '@/mocks/mockUtils'
 import { resultBacklogs, semesterResults } from '@/mocks/resultsData'
 import { currentCourses, studentProfile } from '@/mocks/studentProfileData'
@@ -10,7 +11,7 @@ import { currentCourses, studentProfile } from '@/mocks/studentProfileData'
 /** Student endpoints in mock mode. Responses mimic the backend's `data` payload before adaptation. */
 
 const TOTAL_PROGRAMME_CREDITS = 160
-let profile = { ...studentProfile }
+let profile = loadPersisted('studentProfile', { ...studentProfile })
 
 function reportPayload() {
   const semesters = semesterResults.map((entry) => ({
@@ -58,6 +59,7 @@ export const studentMock = {
 
   updateProfile(changes) {
     profile = { ...profile, ...changes }
+    savePersisted('studentProfile', profile)
     return mockResponse(profile)
   },
 
