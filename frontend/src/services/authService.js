@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import { isRole } from '@/lib/roles'
-import { mockLogin, mockMe, mockRegister } from '@/mocks/authMock'
+import { mockLogin, mockMe, mockRegister, setMockPersona } from '@/mocks/authMock'
 import { nameOf } from '@/services/adapterUtils'
 import { apiClient, ApiError } from '@/services/apiClient'
 
@@ -43,16 +43,21 @@ const REGISTER_PATHS = {
   ctpo: '/auth/register/ctpo',
 }
 
+const mocked = env.useMockFor('auth')
+
 export const authService = {
   async login(credentials) {
-    const data = env.useMock ? await mockLogin(credentials) : await apiClient.post('/auth/login', credentials)
-    return toSession(data)
+    const data = mocked ? await mockLogin(credentials) : await apiClient.post('/auth/login', credentials)
+    const session = toSession(data)
+    if (!mocked) setMockPersona(session.user.role)
+    return session
   },
 
   async me(token) {
-    const data = env.useMock ? await mockMe(token) : await apiClient.get('/auth/me')
+    const data = mocked ? await mockMe(token) : await apiClient.get('/auth/me')
     const user = toUser(data)
     if (!user?.role) throw new ApiError('Could not restore your session.', { status: 401 })
+    if (!mocked) setMockPersona(user.role)
     return user
   },
 
@@ -62,7 +67,7 @@ export const authService = {
     // Dedicated HOD and CTPO endpoints imply the role, so it is only sent to the shared endpoint.
     const { role, ...fields } = payload
     const body = path === REGISTER_PATHS.student ? payload : fields
-    const data = env.useMock ? await mockRegister({ role, ...fields }) : await apiClient.post(path, body)
+    const data = mocked ? await mockRegister({ role, ...fields }) : await apiClient.post(path, body)
     return toRegistration(data)
   },
 }

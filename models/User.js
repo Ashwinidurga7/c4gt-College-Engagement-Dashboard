@@ -36,27 +36,13 @@ if (mongoose.models.User) {
 
   // Compare entered password with stored password
   userSchema.methods.matchPassword = async function (enteredPassword) {
-    const pass = String(enteredPassword || '').trim();
-    const demoPasswords = [
-      'password123',
-      'student123',
-      'faculty123',
-      'hod123',
-      'admin123',
-      ' ',
-      this.password,
-      this.rollNumber,
-    ];
-    if (
-      demoPasswords.includes(pass) ||
-      (this.rollNumber && pass.toLowerCase() === String(this.rollNumber).toLowerCase())
-    ) {
-      return true;
+    if (typeof enteredPassword !== 'string' || !enteredPassword || !this.password) {
+      return false;
     }
     try {
-      return await bcrypt.compare(pass, this.password);
+      return await bcrypt.compare(enteredPassword, this.password);
     } catch (e) {
-      return pass === this.password;
+      return false;
     }
   };
 

@@ -1,3 +1,4 @@
+import { env } from '@/lib/env'
 import { tokenStorage } from '@/lib/tokenStorage'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 
@@ -87,10 +88,23 @@ export function mockLogin({ email, password }) {
   return mockResponse({ user: publicUser(user), token: `${TOKEN_PREFIX}${user._id}` })
 }
 
+let realSessionRole = null
+
+/**
+ * With real sign-in there is no mock token, so authService reports the signed-in role here and the
+ * modules still on mock data act as the demo account of that role.
+ */
+export function setMockPersona(role) {
+  realSessionRole = role
+}
+
 /** The signed-in mock user, used by other mocks to scope data by role. */
 export function currentMockUser() {
   const token = tokenStorage.get()
-  const user = users.find((entry) => `${TOKEN_PREFIX}${entry._id}` === token)
+  if (!token) return null
+  const user = env.useMockFor('auth')
+    ? users.find((entry) => `${TOKEN_PREFIX}${entry._id}` === token)
+    : users.find((entry) => entry.role === realSessionRole && entry.approvalStatus === 'approved')
   return user ? publicUser(user) : null
 }
 

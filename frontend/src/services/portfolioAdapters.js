@@ -1,7 +1,10 @@
+import { env } from '@/lib/env'
 import { nameOf, pick, toId, toNumber } from '@/services/adapterUtils'
 
 const lower = (value, fallback) => String(pick(value, fallback) ?? '').toLowerCase()
 const blankToNull = (value) => (value === '' || value === undefined ? null : value)
+/** File links the API returns as paths ("/api/...") are served by the API host, not the frontend's. */
+const apiUrlOf = (url) => (typeof url === 'string' && url.startsWith('/api/') ? `${env.apiUrl}${url}` : url)
 
 export function toCertification(raw = {}) {
   return {
@@ -108,7 +111,7 @@ export function toResume(raw = {}) {
   return {
     id: toId(raw),
     fileName: pick(raw.fileName, raw.originalName, raw.name, 'Resume.pdf'),
-    fileUrl: pick(raw.fileUrl, raw.url),
+    fileUrl: apiUrlOf(pick(raw.fileUrl, raw.url)),
     size: toNumber(raw.size),
     uploadedAt: pick(raw.uploadedAt, raw.createdAt),
     isPrimary: Boolean(raw.isPrimary ?? raw.primary),

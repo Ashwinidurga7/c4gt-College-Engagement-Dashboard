@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Route imports
@@ -35,17 +36,40 @@ const swaggerDocument = require('./config/swagger.json');
 
 const app = express();
 
+// Behind nginx on the same machine, so req.ip is the client and not the proxy.
+// Set TRUST_PROXY (a hop count or address list) when the proxy is elsewhere.
+const trustProxy = process.env.TRUST_PROXY || 'loopback';
+app.set('trust proxy', /^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProxy);
+
+// CORS: only the frontends listed in CORS_ORIGIN (comma separated) may call the API from a browser.
+// Requests without an Origin header (curl, server to server, same origin) are not affected.
+const DEV_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+if (!allowedOrigins.length) {
+  if (process.env.NODE_ENV === 'production') {
+    console.warn('⚠️  CORS_ORIGIN is not set, so browsers on other origins cannot call this API.');
+  } else {
+    allowedOrigins.push(...DEV_ORIGINS);
+  }
+}
+
 // Standard Middlewares
-app.use(cors());
+app.use(cors({ origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin)) }));
+// Resume builder drafts and versions are larger than the default 100kb body limit.
+app.use('/api/resumes', express.json({ limit: '1mb' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request Logging Middleware (logs every request to terminal)
+// Request Logging Middleware (logs every request to terminal, without signed link tokens)
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
-    console.log(`📡 [${new Date().toLocaleTimeString()}] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`);
+    const url = req.originalUrl.replace(/([?&]token=)[^&]+/, '$1***');
+    console.log(`📡 [${new Date().toLocaleTimeString()}] ${req.method} ${url} -> ${res.statusCode} (${duration}ms)`);
   });
   next();
 });
@@ -64,9 +88,12 @@ app.get('/', (req, res) => {
   });
 });
 
+// 503 while MongoDB is unreachable, so uptime checks notice a server that cannot serve data.
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'UP',
+  const database = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.status(database === 'connected' ? 200 : 503).json({
+    status: database === 'connected' ? 'UP' : 'DEGRADED',
+    database,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
   });

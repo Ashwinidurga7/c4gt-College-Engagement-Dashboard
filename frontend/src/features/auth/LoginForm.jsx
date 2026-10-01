@@ -142,7 +142,7 @@ export function LoginForm() {
         <Landmark className="size-4" aria-hidden /> About the college
       </Link>
 
-      {env.useMock && (
+      {env.useMockFor('auth') && (
         <DemoAccounts
           onPick={(account) => {
             setValue('email', account.email, { shouldValidate: true })

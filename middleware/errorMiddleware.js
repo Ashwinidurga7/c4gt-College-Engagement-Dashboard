@@ -7,11 +7,18 @@ const notFound = (req, res, next) => {
 
 // Global Error Handler
 const errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  // Body parser errors (invalid JSON, body too large) carry their own 4xx status.
+  const errStatus = err.status || err.statusCode;
+  const statusCode = res.statusCode !== 200 ? res.statusCode : errStatus >= 400 && errStatus < 500 ? errStatus : 500;
+  const isProduction = process.env.NODE_ENV === 'production';
+  if (statusCode >= 500) {
+    console.error(err);
+  }
   res.status(statusCode).json({
     success: false,
-    message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+    // Internal error details stay in the server log in production.
+    message: statusCode >= 500 && isProduction ? 'Internal Server Error' : err.message || 'Internal Server Error',
+    stack: isProduction ? null : err.stack,
   });
 };
 
