@@ -10,12 +10,13 @@ const {
 } = require('../controllers/certificateController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
+const { acceptCertificateFile } = require('../middleware/uploadMiddleware');
 
 router.use(protect);
 
 router.route('/')
   .get(getCertificates)
-  .post(authorize('student'), createCertificate);
+  .post(authorize('student'), acceptCertificateFile, createCertificate);
 
 router.route('/:id')
   .get(getCertificateById)

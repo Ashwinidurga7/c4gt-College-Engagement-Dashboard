@@ -31,6 +31,8 @@ const feeRoutes = require('./routes/feeRoutes');
 const transportRoutes = require('./routes/transportRoutes');
 const placementRoutes = require('./routes/placementRoutes');
 const workerRoutes = require('./routes/workerRoutes');
+const announcementRoutes = require('./routes/announcementRoutes');
+const mediaRoutes = require('./routes/mediaRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 
@@ -127,6 +129,8 @@ app.use('/api/fees', feeRoutes);
 app.use('/api/transport', transportRoutes);
 app.use('/api/placements', placementRoutes);
 app.use('/api/workers', workerRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/media', mediaRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);

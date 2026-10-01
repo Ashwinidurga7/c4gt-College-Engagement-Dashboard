@@ -9,16 +9,14 @@ import { PasswordInput } from '@/components/common/PasswordInput'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { DemoAccounts } from '@/features/auth/DemoAccounts'
 import { ForgotPasswordDialog } from '@/features/auth/ForgotPasswordDialog'
 import { LoginErrorNotice, PendingApprovalNotice, PortalMismatchNotice } from '@/features/auth/LoginNotices'
 import { PortalSelector } from '@/features/auth/PortalSelector'
 import { loginSchema } from '@/features/auth/authSchemas'
 import { useAuth } from '@/hooks/useAuth'
 import { useLoginMutation } from '@/hooks/useAuthMutations'
-import { env } from '@/lib/env'
 import { fieldProps } from '@/lib/fieldProps'
-import { dashboardPath } from '@/lib/roles'
+import { dashboardPath, SET_PASSWORD_PATH } from '@/lib/roles'
 
 const PENDING_PATTERN = /pending|approv/i
 
@@ -29,7 +27,7 @@ export function LoginForm() {
   const login = useLoginMutation()
   const [mismatch, setMismatch] = useState(null)
 
-  const { register, handleSubmit, control, setValue, formState } = useForm({
+  const { register, handleSubmit, control, formState } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '', remember: false, portal: 'student' },
   })
@@ -37,6 +35,11 @@ export function LoginForm() {
 
   function complete(session, remember) {
     signIn(session, remember)
+    // Accounts still on their issued password (a student's roll number) set their own first.
+    if (session.user.mustChangePassword) {
+      navigate(SET_PASSWORD_PATH, { replace: true })
+      return
+    }
     const from = location.state?.from
     const target = from?.startsWith(`/${session.user.role}/`) ? from : dashboardPath(session.user.role)
     navigate(target, { replace: true })
@@ -80,23 +83,29 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
       {error && (isPending ? <PendingApprovalNotice message={error.message} /> : <LoginErrorNotice message={error.message} />)}
 
-      <FormField id="login-email" label="Institutional email" error={errors.email?.message}>
+      <FormField id="login-email" label="Email or roll number" error={errors.email?.message}>
         <IconInput
           icon={Mail}
-          type="email"
+          type="text"
           autoComplete="username"
-          inputMode="email"
-          placeholder="yourname@kiet.edu"
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="yourname@kiet.edu or 24B21A4345"
           {...fieldProps('login-email', errors.email)}
           {...register('email')}
         />
       </FormField>
 
-      <FormField id="login-password" label="Password" error={errors.password?.message}>
+      <FormField
+        id="login-password"
+        label="Password"
+        error={errors.password?.message}
+        hint="Signing in for the first time? Students use their roll number, then choose their own password."
+      >
         <PasswordInput
           autoComplete="current-password"
           placeholder="Enter your password"
-          {...fieldProps('login-password', errors.password)}
+          {...fieldProps('login-password', errors.password, true)}
           {...register('password')}
         />
       </FormField>
@@ -141,16 +150,6 @@ export function LoginForm() {
       <Link to="/about" className="text-link inline-flex items-center justify-center gap-1.5 self-center text-sm font-semibold hover:underline">
         <Landmark className="size-4" aria-hidden /> About the college
       </Link>
-
-      {env.useMockFor('auth') && (
-        <DemoAccounts
-          onPick={(account) => {
-            setValue('email', account.email, { shouldValidate: true })
-            setValue('password', account.password, { shouldValidate: true })
-            setValue('portal', account.role)
-          }}
-        />
-      )}
     </form>
   )
 }

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { apiPathOf } from '@/lib/env'
 
 export const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024
@@ -28,7 +29,7 @@ export function toMockPhotos(photos) {
  * new file under `images` (see ASSUMPTIONS.md).
  */
 export function appendPhotos(form, photos) {
-  form.append('keepImages', JSON.stringify(photos.filter((photo) => !photo.file).map((photo) => photo.url)))
+  form.append('keepImages', JSON.stringify(photos.filter((photo) => !photo.file).map((photo) => apiPathOf(photo.url))))
   photos.filter((photo) => photo.file).forEach((photo) => form.append('images', photo.file))
   return form
 }

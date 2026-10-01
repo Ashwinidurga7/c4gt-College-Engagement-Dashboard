@@ -19,6 +19,7 @@ function toUser(raw) {
     section: source.section ?? null,
     rollNumber: source.rollNumber ?? source.rollNo ?? null,
     approvalStatus: source.approvalStatus ?? 'approved',
+    mustChangePassword: source.mustChangePassword === true,
   }
 }
 
@@ -49,7 +50,7 @@ export const authService = {
   async login(credentials) {
     const data = mocked ? await mockLogin(credentials) : await apiClient.post('/auth/login', credentials)
     const session = toSession(data)
-    if (!mocked) setMockPersona(session.user.role)
+    if (!mocked) setMockPersona(session.user)
     return session
   },
 
@@ -57,8 +58,16 @@ export const authService = {
     const data = mocked ? await mockMe(token) : await apiClient.get('/auth/me')
     const user = toUser(data)
     if (!user?.role) throw new ApiError('Could not restore your session.', { status: 401 })
-    if (!mocked) setMockPersona(user.role)
+    if (!mocked) setMockPersona(user)
     return user
+  },
+
+  /** Replaces the signed-in user's password. Resolves to the new session token. */
+  async changePassword({ currentPassword, newPassword }) {
+    if (mocked) throw new ApiError('Password changes need the real API.', { status: 400 })
+    const data = await apiClient.put('/auth/updatepassword', { currentPassword, newPassword })
+    if (!data?.token) throw new ApiError('The password could not be changed. Please try again.', { status: 500 })
+    return data.token
   },
 
   async register(payload) {

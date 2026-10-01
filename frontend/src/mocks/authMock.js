@@ -3,7 +3,7 @@ import { tokenStorage } from '@/lib/tokenStorage'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 
 /** Shared demo password for every mock account. Mock mode only; never used against the real API. */
-export const MOCK_PASSWORD = 'Kiet@2026'
+const MOCK_PASSWORD = 'Kiet@2026'
 
 const users = [
   {
@@ -66,7 +66,6 @@ const users = [
   { _id: 'u-hod-p1', name: 'Dr. V. Ramana Murthy', email: 'hod.mech@kietplus.edu', role: 'hod', college: 'KIET+', department: 'MECH', academicYear: '2026-27', approvalStatus: 'pending', createdAt: '2026-09-14T16:45:00+05:30' },
 ]
 
-export const MOCK_ACCOUNTS = users.filter((user) => user.approvalStatus === 'approved').map(({ email, role }) => ({ email, role }))
 
 const TOKEN_PREFIX = 'mock.'
 
@@ -75,7 +74,8 @@ function publicUser({ _id, password: _password, ...rest }) {
 }
 
 export function mockLogin({ email, password }) {
-  const user = users.find((entry) => entry.email.toLowerCase() === email.trim().toLowerCase())
+  const id = email.trim().toLowerCase()
+  const user = users.find((entry) => entry.email.toLowerCase() === id || entry.rollNumber?.toLowerCase() === id)
   if (!user || password !== (user.password ?? MOCK_PASSWORD)) {
     return mockError('Invalid email or password.', 401)
   }
@@ -88,24 +88,31 @@ export function mockLogin({ email, password }) {
   return mockResponse({ user: publicUser(user), token: `${TOKEN_PREFIX}${user._id}` })
 }
 
-let realSessionRole = null
+let realSessionUser = null
+
+/** Who the signed-in person is, shown on pages that still use sample data (name on the bus pass, college, …). */
+const IDENTITY_FIELDS = ['name', 'email', 'rollNumber', 'college', 'department', 'year', 'section']
 
 /**
- * With real sign-in there is no mock token, so authService reports the signed-in role here and the
- * modules still on mock data act as the demo account of that role.
+ * With real sign-in there is no mock token, so authService reports the signed-in user here. The modules still
+ * on mock data use the demo account of that role for their sample records, under the real person's identity.
  */
-export function setMockPersona(role) {
-  realSessionRole = role
+export function setMockPersona(user) {
+  realSessionUser = user
 }
 
 /** The signed-in mock user, used by other mocks to scope data by role. */
 export function currentMockUser() {
   const token = tokenStorage.get()
   if (!token) return null
-  const user = env.useMockFor('auth')
-    ? users.find((entry) => `${TOKEN_PREFIX}${entry._id}` === token)
-    : users.find((entry) => entry.role === realSessionRole && entry.approvalStatus === 'approved')
-  return user ? publicUser(user) : null
+  if (env.useMockFor('auth')) {
+    const user = users.find((entry) => `${TOKEN_PREFIX}${entry._id}` === token)
+    return user ? publicUser(user) : null
+  }
+  const persona = users.find((entry) => entry.role === realSessionUser?.role && entry.approvalStatus === 'approved')
+  if (!persona) return null
+  const identity = Object.fromEntries(IDENTITY_FIELDS.filter((field) => realSessionUser[field] != null).map((field) => [field, realSessionUser[field]]))
+  return { ...publicUser(persona), ...identity }
 }
 
 export function mockMe(token) {

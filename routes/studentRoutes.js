@@ -404,14 +404,8 @@ router.get('/academic-report', authorize('student'), async (req, res, next) => {
 router.get('/results', authorize('student'), async (req, res, next) => {
   try {
     const student = await Student.findOne({ user: req.user.id });
-    const results = (student && student.results) || [
-      { semester: 'I', sgpa: '8.42', credits: 21.5, status: 'Pass', backlogs: 0 },
-      { semester: 'II', sgpa: '8.65', credits: 21.5, status: 'Pass', backlogs: 0 },
-      { semester: 'III', sgpa: '8.80', credits: 22.0, status: 'Pass', backlogs: 0 },
-      { semester: 'IV', sgpa: '8.75', credits: 22.0, status: 'Pass', backlogs: 0 },
-      { semester: 'V', sgpa: '8.92', credits: 21.0, status: 'Pass', backlogs: 0 },
-      { semester: 'VI', sgpa: '8.85', credits: 21.0, status: 'Pass', backlogs: 0 },
-    ];
+    // Empty until results are published (no made-up grades)
+    const results = (student && student.results) || [];
     res.status(200).json({ success: true, data: results });
   } catch (error) {
     next(error);
@@ -470,7 +464,7 @@ router.get('/upcoming-events', authorize('student'), async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Student profile not found' });
     }
 
-    const events = await studentDashboardService.getNearbyActivitiesForStudent(student, { ...req.query, upcoming: 'true' });
+    const events = await studentDashboardService.getUpcomingEventsForStudent(student);
     res.status(200).json({ success: true, count: events.length, data: events });
   } catch (error) {
     next(error);

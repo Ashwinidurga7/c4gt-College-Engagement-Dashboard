@@ -19,6 +19,12 @@ export const tokenStorage = {
     safe(remember ? 'localStorage' : 'sessionStorage')?.setItem(TOKEN_KEY, token)
   },
 
+  /** Swaps in a new token (e.g. after a password change), keeping the session where it was stored. */
+  replace(token) {
+    const remembered = Boolean(safe('localStorage')?.getItem(TOKEN_KEY))
+    this.set(token, remembered)
+  },
+
   clear() {
     safe('localStorage')?.removeItem(TOKEN_KEY)
     safe('sessionStorage')?.removeItem(TOKEN_KEY)

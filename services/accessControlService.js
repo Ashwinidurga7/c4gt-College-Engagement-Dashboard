@@ -81,9 +81,14 @@ const canHodAccessStudent = (hod, student) => {
 
   if (!doesDepartmentMatch(hod.department, student.department)) return false;
 
-  const hodYear = normalizeYear(hod.academicYear || hod.year);
-  const studentYear = normalizeYear(student.year || student.academicYear);
-  if (hodYear !== studentYear) return false;
+  // A HOD registered for an academic session ("2026-27") heads the whole department, every year
+  // of study. Only a HOD limited to one year of study (1-4) is filtered by year.
+  const hodYearValue = String(hod.academicYear || hod.year || '').trim();
+  if (hodYearValue && !/^\d{4}\s*[-–]\s*\d{2,4}$/.test(hodYearValue)) {
+    const hodYear = normalizeYear(hodYearValue);
+    const studentYear = normalizeYear(student.year || student.academicYear);
+    if (hodYear !== studentYear) return false;
+  }
 
   return true;
 };
@@ -128,9 +133,13 @@ const canHodApproveCtpo = (hod, ctpo) => {
 
   if (!doesDepartmentMatch(hod.department, ctpo.department)) return false;
 
-  const hodYear = normalizeYear(hod.academicYear || hod.year);
-  const ctpoYear = normalizeYear(ctpo.academicYear || ctpo.year);
-  if (hodYear !== ctpoYear) return false;
+  // As for students: a HOD for an academic session ("2026-27") approves CTPOs of every year.
+  const hodYearValue = String(hod.academicYear || hod.year || '').trim();
+  if (hodYearValue && !/^\d{4}\s*[-–]\s*\d{2,4}$/.test(hodYearValue)) {
+    const hodYear = normalizeYear(hodYearValue);
+    const ctpoYear = normalizeYear(ctpo.academicYear || ctpo.year);
+    if (hodYear !== ctpoYear) return false;
+  }
 
   return true;
 };

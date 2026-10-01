@@ -469,6 +469,7 @@ const loginUser = async (req, res, next) => {
         campus: user.college || 'KIET',
         approvalStatus: resolvedApprovalStatus,
         isActive: user.isActive !== false,
+        mustChangePassword: user.mustChangePassword === true,
         ...roleData,
         token: generateToken(user._id),
       },
@@ -596,24 +597,38 @@ const getMe = async (req, res, next) => {
 const updatePassword = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select('+password');
-    const { currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body || {};
 
-    if (!currentPassword || !newPassword) {
+    if (typeof currentPassword !== 'string' || typeof newPassword !== 'string' || !currentPassword || !newPassword) {
       return res.status(400).json({ success: false, message: 'Please provide current and new password' });
     }
 
+    // 400, not 401: a mistyped current password must not end the session.
     const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+    }
+
+    const problem =
+      newPassword.length < 8 ? 'Use at least 8 characters.'
+      : !/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword) ? 'Include at least one letter and one number.'
+      : newPassword === currentPassword ? 'Choose a password different from the current one.'
+      : user.rollNumber && newPassword.trim().toLowerCase() === String(user.rollNumber).toLowerCase() ? 'Your roll number cannot be your password.'
+      : null;
+    if (problem) {
+      return res.status(400).json({ success: false, message: problem });
     }
 
     user.password = newPassword;
+    user.mustChangePassword = false;
     await user.save();
 
+    const token = generateToken(user._id);
     res.status(200).json({
       success: true,
       message: 'Password updated successfully',
-      token: generateToken(user._id),
+      data: { token, mustChangePassword: false },
+      token,
     });
   } catch (error) {
     next(error);

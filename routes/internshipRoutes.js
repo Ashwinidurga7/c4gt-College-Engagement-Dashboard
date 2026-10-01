@@ -38,13 +38,16 @@ router.post('/', authorize('student'), async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Student profile not found' });
     }
 
-    const { companyName, role, mode, startDate, endDate, stipend, description } = req.body;
+    const { role, mode, startDate, endDate, stipend, description } = req.body || {};
+    // The portal's form sends "company".
+    const companyName = (req.body || {}).companyName || (req.body || {}).company;
     if (!companyName || !role) {
       return res.status(400).json({ success: false, message: 'companyName and role are required' });
     }
 
     const newInternship = await Internship.create({
       student: studentProfile._id,
+      company: companyName,
       companyName,
       role,
       mode: mode || 'remote',
@@ -95,7 +98,18 @@ router.put('/:id', async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Only the owning student or an admin can update this internship' });
     }
 
-    const updated = await Internship.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    // Details only: a student cannot approve their own internship through an edit.
+    const body = req.body || {};
+    const changes = {};
+    ['role', 'mode', 'startDate', 'endDate', 'stipend', 'description'].forEach((field) => {
+      if (body[field] !== undefined) changes[field] = body[field];
+    });
+    if (body.company !== undefined || body.companyName !== undefined) {
+      changes.companyName = body.companyName || body.company;
+      changes.company = changes.companyName;
+    }
+    if (req.user.role === 'admin' && body.status !== undefined) changes.status = body.status;
+    const updated = await Internship.findByIdAndUpdate(req.params.id, { $set: changes }, { returnDocument: 'after' });
     res.status(200).json({ success: true, message: 'Internship updated successfully', data: updated });
   } catch (error) {
     next(error);

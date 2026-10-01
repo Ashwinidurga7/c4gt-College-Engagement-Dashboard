@@ -6,8 +6,28 @@ const notificationService = require('./notificationService');
 /**
  * Validate event creation payload.
  */
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+// Fields the admin event form sends. Multipart values arrive as strings; blank means "clear it".
+const EVENT_FIELDS = ['title', 'category', 'college', 'clubId', 'organizer', 'date', 'startTime', 'endTime', 'registrationDeadline', 'venue', 'description'];
+
+const eventFieldsFrom = (body = {}) => {
+  const fields = {};
+  EVENT_FIELDS.forEach((field) => {
+    if (body[field] === undefined) return;
+    const value = typeof body[field] === 'string' ? body[field].trim() : body[field];
+    fields[field] = value === '' ? null : value;
+  });
+  ['date', 'registrationDeadline'].forEach((field) => {
+    if (fields[field] && !DATE_PATTERN.test(fields[field])) {
+      throw new Error(`${field} is required in YYYY-MM-DD format`);
+    }
+  });
+  return fields;
+};
+
 const validateEventPayload = ({ title, date, targetType, targetYear, targetDepartment, department }) => {
-  if (!title || !title.trim()) {
+  if (!title || !String(title).trim()) {
     throw new Error('Event title is required');
   }
   if (!date) {
@@ -24,15 +44,12 @@ const validateEventPayload = ({ title, date, targetType, targetYear, targetDepar
 /**
  * Create a new event and trigger notifications to target audience.
  */
-const createEvent = async (eventData, creatorUser) => {
+const createEvent = async (eventData, creatorUser, images = []) => {
   validateEventPayload(eventData);
 
+  const fields = eventFieldsFrom(eventData);
   const {
-    title,
-    description = '',
-    date,
     time = '',
-    venue = '',
     targetType,
     targetYear,
     targetDepartment,
@@ -46,12 +63,13 @@ const createEvent = async (eventData, creatorUser) => {
     targetType ||
     (resolvedYear && resolvedYear !== 'all' ? 'specific_year' : 'all_years');
 
+  // Dates stay as YYYY-MM-DD strings, like the rest of the events, so they sort and compare as text.
   const newEvent = await Event.create({
-    title: title.trim(),
-    description: description.trim(),
-    date: new Date(date),
-    time: time.trim(),
-    venue: venue.trim(),
+    ...fields,
+    description: fields.description || '',
+    venue: fields.venue || '',
+    time: String(time).trim(),
+    images,
     createdBy: creatorUser ? creatorUser.id || creatorUser._id : null,
     targetType: derivedTargetType,
     targetYear: resolvedYear && resolvedYear !== 'all' ? String(resolvedYear).trim() : 'all',
@@ -187,6 +205,7 @@ const deleteEvent = async (id) => {
 };
 
 module.exports = {
+  eventFieldsFrom,
   createEvent,
   getEvents,
   getEventById,

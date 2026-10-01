@@ -9,9 +9,11 @@ const {
   toggleClubStatus,
   activateClub,
   deactivateClub,
+  updateClubPhotos,
 } = require('../controllers/clubController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
+const { acceptPhotos } = require('../middleware/uploadMiddleware');
 
 // All club routes require authentication
 router.use(protect);
@@ -32,5 +34,6 @@ router.route('/:id')
 router.patch('/:id/status', authorize('admin'), toggleClubStatus);
 router.put('/:id/activate', authorize('admin'), activateClub);
 router.put('/:id/deactivate', authorize('admin'), deactivateClub);
+router.put('/:id/photos', authorize('admin'), acceptPhotos, updateClubPhotos);
 
 module.exports = router;

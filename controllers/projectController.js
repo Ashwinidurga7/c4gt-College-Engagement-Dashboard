@@ -64,15 +64,16 @@ const createProject = async (req, res, next) => {
     const {
       title,
       description,
-      technologies,
-      githubUrl,
       liveUrl,
       startDate,
       endDate,
       status,
       teamMembers,
       guideFaculty,
-    } = req.body;
+    } = req.body || {};
+    // The portal's form sends techStack and repoUrl.
+    const technologies = req.body.technologies || req.body.techStack;
+    const githubUrl = req.body.githubUrl || req.body.repoUrl;
 
     if (!title) {
       return res.status(400).json({ success: false, message: 'Project title is required' });
@@ -96,6 +97,7 @@ const createProject = async (req, res, next) => {
       title,
       description: description || '',
       technologies: techList,
+      techStack: techList,
       githubUrl: githubUrl || '',
       liveUrl: liveUrl || '',
       startDate: startDate ? new Date(startDate) : new Date(),
@@ -125,15 +127,34 @@ const updateProject = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Project not found' });
     }
 
-    const updateData = { ...req.body };
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      if (!studentProfile || String(project.student) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to update this project' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the project owner or an admin can update this project' });
+    }
+
+    // Details only: approval stays with faculty, and the owner never changes.
+    const body = req.body || {};
+    const updateData = {};
+    ['title', 'description', 'liveUrl', 'startDate', 'endDate', 'status', 'teamMembers', 'guideFaculty'].forEach((field) => {
+      if (body[field] !== undefined) updateData[field] = body[field];
+    });
+    if (body.technologies !== undefined || body.techStack !== undefined) updateData.technologies = body.technologies || body.techStack;
+    if (body.githubUrl !== undefined || body.repoUrl !== undefined) updateData.githubUrl = body.githubUrl || body.repoUrl;
     if (updateData.technologies && typeof updateData.technologies === 'string') {
       updateData.technologies = updateData.technologies.split(',').map((t) => t.trim());
+    }
+    if (updateData.technologies) {
+      updateData.techStack = updateData.technologies;
     }
     if (updateData.teamMembers && typeof updateData.teamMembers === 'string') {
       updateData.teamMembers = updateData.teamMembers.split(',').map((m) => m.trim());
     }
 
-    const updated = await Project.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const updated = await Project.findByIdAndUpdate(req.params.id, { $set: updateData }, { returnDocument: 'after' });
     res.status(200).json({
       success: true,
       message: 'Project updated successfully',

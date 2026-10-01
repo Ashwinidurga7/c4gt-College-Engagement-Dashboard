@@ -47,7 +47,15 @@ Create the login accounts once (safe to re-run; it never deletes data):
 npm run seed:users
 ```
 
-It prints each account's password once. Share them privately, then clear the terminal. Run with `-- --reset-passwords` to issue new ones.
+It prints each account's password once. Share them privately, then clear the terminal. Run with `-- --reset-passwords` to issue new ones, and add `-- --save ~/kiet-logins.csv` to also get them as a spreadsheet (saved outside the repository only; delete it once everyone has their password).
+
+Load the campus content (clubs, events, announcements) the portal ships with. It only adds what is missing, so admin edits are never overwritten:
+
+```bash
+npm run seed:campus
+```
+
+Uploaded files (resumes, certificates, event and club photos) are stored in MongoDB itself, so there is no upload folder to back up or keep on the server.
 
 ## 3. Run with pm2
 
@@ -125,10 +133,11 @@ Project → Settings → Environment Variables (Production), then redeploy:
 | Variable | Value |
 | --- | --- |
 | `VITE_API_URL` | `https://api.example.com` (no `/api`, no trailing slash) |
-| `VITE_USE_MOCK` | `true` |
-| `VITE_REAL_MODULES` | `auth,resume` |
+| `VITE_USE_MOCK` | `false` |
 
-Sign-in and the resume module (uploads, builder draft, history) then use the database, and the other modules keep their mock data until their endpoints are ready. Once every module is real, set `VITE_USE_MOCK=false` and drop `VITE_REAL_MODULES`.
+Every page with a backend endpoint then reads and saves through the API and MongoDB. The pages marked **Preview** (timetable, exams, JNTUK notices, fees, bus pass, facilities, departments, course catalog, reports, settings, take attendance) have no endpoints yet and keep their sample data, under the signed-in user's name.
+
+`VITE_REAL_MODULES=auth,resume` with `VITE_USE_MOCK=true` is still available for a partial switch (only sign-in and resume on the API).
 
 `CORS_ORIGIN` on the server must match the Vercel URL exactly (scheme and host, no trailing slash). Add preview or custom domains comma separated.
 

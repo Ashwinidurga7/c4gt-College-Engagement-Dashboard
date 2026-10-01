@@ -152,6 +152,19 @@ const getNearbyActivitiesForStudent = async (student, query = {}) => {
 };
 
 /**
+ * Upcoming events the student is in the audience for, soonest first. Unlike the nearby
+ * list this needs no location, so campus events without coordinates are included.
+ */
+const getUpcomingEventsForStudent = async (student) => {
+  if (!student) return [];
+  const today = new Date().toISOString().slice(0, 10);
+  const events = await Event.find().lean();
+  return events
+    .filter((event) => doesStudentMatchAudience(student, event) && String(event.date || '').slice(0, 10) >= today)
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+};
+
+/**
  * Compiles the complete consolidated Student Dashboard dataset.
  */
 const getStudentDashboard = async (userId, query = {}) => {
@@ -227,24 +240,26 @@ const getStudentDashboard = async (userId, query = {}) => {
   // Default resume
   const defaultResume = resumes.find((r) => r.isDefault) || resumes[0] || null;
 
-  // Attendance record
+  // Attendance record: empty until classes are recorded (no made-up figures)
   const studentAttendance = attendanceList[0] || {
-    overallPercentage: 86.4,
-    totalWorkingDays: 24,
-    daysPresent: 21,
-    daysAbsent: 3,
+    overallPercentage: null,
+    totalWorkingDays: 0,
+    daysPresent: 0,
+    daysAbsent: 0,
   };
 
-  // Academic report
+  // Academic report: empty until results are published
   const studentAcademic = academicReports[0] || {
-    regulation: student.regulation || 'R20',
+    regulation: student.regulation || 'R23',
     year: student.year,
     semester: student.semester,
-    sgpa: 8.85,
-    cgpa: student.cgpa,
-    totalCredits: 21.5,
+    sgpa: null,
+    cgpa: student.cgpa ?? null,
+    totalCredits: null,
     subjects: [],
   };
+
+  const upcomingEvents = await getUpcomingEventsForStudent(student);
 
   const studentName = studentUser?.name || student.user?.name || 'Student';
   const studentEmail = studentUser?.email || student.user?.email || '';
@@ -262,7 +277,7 @@ const getStudentDashboard = async (userId, query = {}) => {
       section: student.section,
       cgpa: student.cgpa,
       batch: student.batch,
-      regulation: student.regulation || 'R20',
+      regulation: student.regulation || 'R23',
     },
     profile: {
       rollNumber: student.rollNumber,
@@ -279,7 +294,7 @@ const getStudentDashboard = async (userId, query = {}) => {
       year: student.year,
       section: student.section,
       batch: student.batch,
-      regulation: student.regulation || 'R20',
+      regulation: student.regulation || 'R23',
       linkedinUrl: student.linkedinUrl,
       githubUrl: student.githubUrl,
       portfolioUrl: student.portfolioUrl,
@@ -289,7 +304,7 @@ const getStudentDashboard = async (userId, query = {}) => {
       departmentName: student.department?.name || '',
       branch: student.branch || student.department?.name,
       batch: student.batch,
-      regulation: student.regulation || 'R20',
+      regulation: student.regulation || 'R23',
       year: student.year,
       section: student.section,
       currentSemester: student.semester,
@@ -358,7 +373,7 @@ const getStudentDashboard = async (userId, query = {}) => {
       clubs: activeClubs,
     },
     nearbyActivities,
-    upcomingEvents: nearbyActivities,
+    upcomingEvents,
   };
 };
 
@@ -379,11 +394,12 @@ const getStudentAttendance = async (userId, query = {}) => {
   }
 
   const attendanceRecords = await Attendance.find({ student: student._id });
+  // Empty until classes are recorded (no made-up figures)
   const baseRecord = attendanceRecords[0] || {
-    overallPercentage: 86.4,
-    totalWorkingDays: 24,
-    daysPresent: 21,
-    daysAbsent: 3,
+    overallPercentage: null,
+    totalWorkingDays: 0,
+    daysPresent: 0,
+    daysAbsent: 0,
     subjectWise: [],
     monthlyRecords: {},
   };
@@ -458,15 +474,16 @@ const getStudentAcademicReport = async (userId, query = {}) => {
 
   if (!report) {
     report = {
-      regulation: student.regulation || 'R20',
-      batch: student.batch || '2022-2026',
-      department: 'Computer Science and Engineering',
+      regulation: student.regulation || 'R23',
+      batch: student.batch || null,
+      department: student.department?.name || student.department || null,
       year: student.year,
       semester: student.semester,
       semesterName: `Semester ${student.semester}`,
-      cgpa: student.cgpa,
-      sgpa: 8.85,
-      totalCredits: 21.5,
+      // Empty until results are published (no made-up figures)
+      cgpa: student.cgpa ?? null,
+      sgpa: null,
+      totalCredits: null,
       subjects: [],
     };
   }
@@ -492,6 +509,7 @@ module.exports = {
   calculateDistanceKm,
   doesStudentMatchAudience,
   getNearbyActivitiesForStudent,
+  getUpcomingEventsForStudent,
   getStudentDashboard,
   getStudentAttendance,
   getStudentAcademicReport,

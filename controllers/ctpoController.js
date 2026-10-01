@@ -68,6 +68,9 @@ const getCtpoDashboard = async (req, res, next) => {
         academicOverview: {
           averageCgpa: Number(avgCgpa),
         },
+        // The portal builds its totals and bands from the roster.
+        section: ctpo.section || ctpo.class,
+        students: scopedStudents,
       },
     });
   } catch (error) {

@@ -2,12 +2,40 @@ import { z } from 'zod'
 import { COLLEGES, DEPARTMENTS } from '@/lib/colleges'
 import { ROLE_LIST } from '@/lib/roles'
 
+/** JNTUK roll numbers: two-digit batch then eight letters and digits, e.g. 24B21A4345. */
+const ROLL_NUMBER = /^\d{2}[A-Z0-9]{8}$/i
+
 export const loginSchema = z.object({
-  email: z.string().trim().min(1, 'Enter your institutional email.').pipe(z.email('Enter a valid email address.')),
+  // Students may sign in with their roll number instead of their email.
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Enter your institutional email or roll number.')
+    .refine((value) => ROLL_NUMBER.test(value) || z.email().safeParse(value).success, 'Enter a valid email address or roll number.'),
   password: z.string().min(1, 'Enter your password.'),
   remember: z.boolean(),
   portal: z.enum(ROLE_LIST),
 })
+
+/** Setting your own password after signing in with the issued one (a student's roll number). */
+export const setPasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Enter your current password.'),
+    newPassword: z
+      .string()
+      .min(8, 'Use at least 8 characters.')
+      .regex(/[A-Za-z]/, 'Include at least one letter.')
+      .regex(/\d/, 'Include at least one number.'),
+    confirmPassword: z.string().min(1, 'Re-enter your new password.'),
+  })
+  .superRefine((values, ctx) => {
+    if (values.newPassword !== values.confirmPassword) {
+      ctx.addIssue({ code: 'custom', path: ['confirmPassword'], message: 'Passwords do not match.' })
+    }
+    if (values.newPassword && values.newPassword === values.currentPassword) {
+      ctx.addIssue({ code: 'custom', path: ['newPassword'], message: 'Choose a password different from the current one.' })
+    }
+  })
 
 export const REGISTRABLE_ROLES = ['student', 'faculty', 'hod', 'ctpo']
 

@@ -10,8 +10,16 @@ const realModules = new Set(
     .filter(Boolean),
 )
 
+const apiUrl = rawApiUrl.replace(/\/+$/, '')
+
+/** Files the API returns as paths ("/api/media/…") are served by the API host, not the frontend's. */
+export const apiUrlOf = (url) => (typeof url === 'string' && url.startsWith('/api/') ? `${apiUrl}${url}` : url)
+
+/** The reverse of apiUrlOf, for sending a stored file's URL back to the API (e.g. photos kept in a gallery). */
+export const apiPathOf = (url) => (typeof url === 'string' && url.startsWith(`${apiUrl}/api/`) ? url.slice(apiUrl.length) : url)
+
 export const env = {
-  apiUrl: rawApiUrl.replace(/\/+$/, ''),
+  apiUrl,
   useMock,
   /** Whether `module` ('auth', 'resume') uses mock data: VITE_USE_MOCK, unless VITE_REAL_MODULES lists it. */
   useMockFor: (module) => useMock && !realModules.has(module),

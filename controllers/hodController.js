@@ -78,6 +78,10 @@ const getHodDashboard = async (req, res, next) => {
         academicOverview: {
           averageCgpa: Number(avgCgpa),
         },
+        // The portal builds its totals, year/section breakdowns and bands from the roster.
+        department: hod.department,
+        pendingCtpos: pendingCtpos.length,
+        students: scopedStudents,
       },
     });
   } catch (error) {

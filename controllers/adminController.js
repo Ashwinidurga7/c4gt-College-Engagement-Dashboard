@@ -8,7 +8,55 @@ const Project = require('../models/Project');
 const Department = require('../models/Department');
 const Hod = require('../models/Hod');
 const Campus = require('../models/Campus');
+const Club = require('../models/Club');
+const Event = require('../models/Event');
 const notificationService = require('../services/notificationService');
+const { normalizeCollege } = require('../services/accessControlService');
+
+const COLLEGES = ['KIET', 'KIET+', 'KIEW'];
+
+const average = (values) => {
+  const numbers = values.map(Number).filter((n) => Number.isFinite(n));
+  return numbers.length ? Number((numbers.reduce((sum, n) => sum + n, 0) / numbers.length).toFixed(2)) : null;
+};
+
+/** The figures the admin dashboard shows: role totals, per-college students and the newest pending registrations. */
+const dashboardOverview = async (users, students, activities, certificates) => {
+  const [clubs, events] = await Promise.all([Club.find().lean(), Event.find().lean()]);
+  const today = new Date().toISOString().slice(0, 10);
+  const pending = users.filter((u) => ['faculty', 'hod', 'ctpo'].includes(u.role) && u.approvalStatus === 'pending');
+  const byRole = (role) => users.filter((u) => u.role === role && u.approvalStatus !== 'pending' && u.approvalStatus !== 'rejected').length;
+
+  return {
+    totals: {
+      students: students.length,
+      faculty: byRole('faculty'),
+      hods: byRole('hod'),
+      ctpos: byRole('ctpo'),
+      activeClubs: clubs.filter((c) => c.status === 'active' || c.isActive === true).length,
+      upcomingEvents: events.filter((e) => String(e.date || '').slice(0, 10) >= today).length,
+      pendingApprovals: pending.filter((u) => u.role !== 'ctpo').length,
+      pendingVerifications:
+        certificates.filter((c) => c.status === 'pending').length + activities.filter((a) => a.status === 'pending').length,
+    },
+    byCollege: COLLEGES.map((college) => {
+      const inCollege = students.filter((s) => normalizeCollege(s.college) === college);
+      return {
+        college,
+        label: college,
+        total: inCollege.length,
+        averageAttendance: average(inCollege.map((s) => s.attendance)),
+        averageCgpa: average(inCollege.map((s) => s.cgpa)),
+        lowAttendance: inCollege.filter((s) => Number.isFinite(Number(s.attendance)) && s.attendance !== null && Number(s.attendance) < 75).length,
+        withBacklogs: inCollege.filter((s) => Number(s.backlogs) > 0).length,
+      };
+    }),
+    recentRegistrations: pending
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5)
+      .map((u) => ({ _id: u._id, name: u.name, email: u.email, role: u.role, college: u.college, department: u.department, approvalStatus: u.approvalStatus, createdAt: u.createdAt })),
+  };
+};
 const defaultSystemSettings = {
   academicYear: '2025-2026',
   currentSemester: 'Even (Spring 2026)',
@@ -70,9 +118,12 @@ const getAdminDashboardStats = async (req, res, next) => {
       active: users.filter((u) => u.isActive !== false).length,
     };
 
+    const overview = await dashboardOverview(users, students, activities, certificates);
+
     res.status(200).json({
       success: true,
       data: {
+        ...overview,
         users: userRoles,
         studentsCount: students.length,
         facultyCount: faculty.length,
