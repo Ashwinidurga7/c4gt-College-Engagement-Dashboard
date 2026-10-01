@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 /**
  * Creates a flexible Mongoose Schema supporting both string IDs and ObjectIds,
  * timestamps, and query normalization for embedded user/student references.
+ * `indexes` is an optional list of [fields, options] pairs for compound indexes.
  */
-function createModel(modelName, collectionName, additionalFields = {}, schemaOptions = {}) {
+function createModel(modelName, collectionName, additionalFields = {}, schemaOptions = {}, indexes = []) {
   // If model is already compiled, return existing
   if (mongoose.models[modelName]) {
     return mongoose.models[modelName];
@@ -23,6 +24,8 @@ function createModel(modelName, collectionName, additionalFields = {}, schemaOpt
     strict: false,
     ...schemaOptions,
   });
+
+  indexes.forEach(([fields, options]) => schema.index(fields, options));
 
   // Query normalization hook: matches { user: id } or { 'user._id': id }
   schema.pre(/^find/, function () {

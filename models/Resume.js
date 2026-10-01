@@ -12,6 +12,10 @@ const Resume = createModel('Resume', 'resumes', {
   certifications: { type: Array, default: [] },
   title: { type: String },
   fileUrl: { type: String },
+  fileName: { type: String },
+  size: { type: Number },
+  fileId: { type: String },
+  uploadedAt: { type: Date },
   isPrimary: { type: Boolean, default: false },
   isDefault: { type: Boolean, default: false },
 });

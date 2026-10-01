@@ -6,28 +6,61 @@ const Activity = require('../models/Activity');
 const Internship = require('../models/Internship');
 const Achievement = require('../models/Achievement');
 const User = require('../models/User');
+const ResumeFile = require('../models/ResumeFile');
+const jwt = require('jsonwebtoken');
+
+const FILE_LINK_PURPOSE = 'resume-file';
+const UPDATABLE_FIELDS = ['title', 'summary', 'skills', 'education', 'experience', 'projects', 'certifications', 'template', 'fileName', 'isPrimary', 'isDefault'];
+
+/**
+ * Adds a short-lived signed link to an uploaded PDF, so "View" can open it in a new tab
+ * without the auth header. The link only opens that one file and expires after an hour.
+ */
+const withFileUrl = (resume) => {
+  if (!resume) return resume;
+  const data = typeof resume.toObject === 'function' ? resume.toObject() : { ...resume };
+  if (data.fileId) {
+    const token = jwt.sign({ purpose: FILE_LINK_PURPOSE, resume: String(data._id) }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    data.fileUrl = `/api/resumes/${data._id}/file?token=${token}`;
+  }
+  delete data.fileId;
+  return data;
+};
+
+/** The signed-in student's profile id, or null. */
+const ownStudentId = async (req) => {
+  const studentProfile = await Student.findOne({ user: String(req.user.id) });
+  return studentProfile ? String(studentProfile._id) : null;
+};
+
+const isOwnResume = async (req, resume) => {
+  const studentId = await ownStudentId(req);
+  return Boolean(studentId) && String(resume.student) === studentId;
+};
 
 // @desc    Get all resumes (filtered by student)
 // @route   GET /api/resumes
 // @access  Private
 const getResumes = async (req, res, next) => {
   try {
-    let resumes = await Resume.find();
+    let filter = {};
 
     if (req.user.role === 'student') {
-      const studentProfile = await Student.findOne({ user: req.user.id });
-      if (!studentProfile) {
+      const studentId = await ownStudentId(req);
+      if (!studentId) {
         return res.status(200).json({ success: true, count: 0, data: [] });
       }
-      resumes = resumes.filter((r) => String(r.student) === String(studentProfile._id));
+      filter = { student: studentId };
     } else if (req.query.studentId) {
-      resumes = resumes.filter((r) => String(r.student) === String(req.query.studentId));
+      filter = { student: String(req.query.studentId) };
     }
+
+    const resumes = await Resume.find(filter).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       count: resumes.length,
-      data: resumes,
+      data: resumes.map(withFileUrl),
     });
   } catch (error) {
     next(error);
@@ -51,7 +84,7 @@ const getMyResume = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'No resume found for student' });
     }
 
-    res.status(200).json({ success: true, data: defaultResume });
+    res.status(200).json({ success: true, data: withFileUrl(defaultResume) });
   } catch (error) {
     next(error);
   }
@@ -63,10 +96,11 @@ const getMyResume = async (req, res, next) => {
 const getResumeById = async (req, res, next) => {
   try {
     const resume = await Resume.findById(req.params.id);
-    if (!resume) {
+    // Students only see their own resumes; another student's reads as not found.
+    if (!resume || (req.user.role === 'student' && !(await isOwnResume(req, resume)))) {
       return res.status(404).json({ success: false, message: 'Resume not found' });
     }
-    res.status(200).json({ success: true, data: resume });
+    res.status(200).json({ success: true, data: withFileUrl(resume) });
   } catch (error) {
     next(error);
   }
@@ -77,14 +111,30 @@ const getResumeById = async (req, res, next) => {
 // @access  Private (Student)
 const createResume = async (req, res, next) => {
   try {
-    const { title, summary, skills, education, experience, projects, certifications, template, isDefault, isPrimary } = req.body;
+    const { title, summary, skills, education, experience, projects, certifications, template, isDefault, isPrimary, fileUrl } = req.body || {};
 
     const studentProfile = await Student.findOne({ user: req.user.id });
     if (!studentProfile) {
       return res.status(404).json({ success: false, message: 'Student profile not found for logged in user' });
     }
 
-    const makePrimary = isPrimary === true || isDefault === true;
+    // An uploaded PDF (multipart field "resume") is kept in its own collection.
+    let file = null;
+    if (req.file) {
+      if (req.file.buffer.subarray(0, 5).toString('latin1') !== '%PDF-') {
+        return res.status(400).json({ success: false, message: 'Only PDF files can be uploaded.' });
+      }
+      file = await ResumeFile.create({
+        user: String(req.user.id),
+        contentType: 'application/pdf',
+        size: req.file.size,
+        data: req.file.buffer,
+      });
+    }
+
+    // Multipart fields arrive as strings. The first resume becomes primary automatically.
+    const hasResumes = await Resume.exists({ student: String(studentProfile._id) });
+    const makePrimary = !hasResumes || [isPrimary, isDefault].some((flag) => flag === true || flag === 'true');
     if (makePrimary) {
       // Unset previous primary/default resumes
       await Resume.updateMany({ student: studentProfile._id }, { isDefault: false, isPrimary: false });
@@ -102,13 +152,17 @@ const createResume = async (req, res, next) => {
       template: template || 'modern',
       isDefault: makePrimary,
       isPrimary: makePrimary,
-      fileUrl: req.body.fileUrl || null,
+      fileName: file ? String(req.file.originalname || 'Resume.pdf').slice(0, 150) : undefined,
+      size: file ? file.size : undefined,
+      fileId: file ? file._id : undefined,
+      uploadedAt: new Date(),
+      fileUrl: file ? undefined : fileUrl || null,
     });
 
     res.status(201).json({
       success: true,
       message: 'Resume created successfully',
-      data: newResume,
+      data: withFileUrl(newResume),
     });
   } catch (error) {
     next(error);
@@ -125,17 +179,31 @@ const updateResume = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Resume not found' });
     }
 
-    if (req.body.isDefault || req.body.isPrimary) {
-      await Resume.updateMany({ student: resume.student }, { isDefault: false, isPrimary: false });
-      req.body.isDefault = true;
-      req.body.isPrimary = true;
+    if (req.user.role === 'student') {
+      if (!(await isOwnResume(req, resume))) {
+        return res.status(403).json({ success: false, message: 'Not authorized to update this resume' });
+      }
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the resume owner or an admin can update this resume' });
     }
 
-    const updated = await Resume.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    // Only resume content can change; the owner and the stored file stay as they are.
+    const changes = {};
+    UPDATABLE_FIELDS.forEach((field) => {
+      if (req.body && req.body[field] !== undefined) changes[field] = req.body[field];
+    });
+
+    if (changes.isDefault || changes.isPrimary) {
+      await Resume.updateMany({ student: resume.student }, { isDefault: false, isPrimary: false });
+      changes.isDefault = true;
+      changes.isPrimary = true;
+    }
+
+    const updated = await Resume.findByIdAndUpdate(req.params.id, { $set: changes }, { returnDocument: 'after' });
     res.status(200).json({
       success: true,
       message: 'Resume updated successfully',
-      data: updated,
+      data: withFileUrl(updated),
     });
   } catch (error) {
     next(error);
@@ -170,7 +238,7 @@ const setPrimaryResume = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Resume marked as primary successfully',
-      data: resume,
+      data: withFileUrl(resume),
     });
   } catch (error) {
     next(error);
@@ -197,10 +265,49 @@ const deleteResume = async (req, res, next) => {
     }
 
     await Resume.findByIdAndDelete(req.params.id);
+    if (resume.fileId) {
+      await ResumeFile.deleteOne({ _id: resume.fileId });
+    }
     res.status(200).json({
       success: true,
       message: 'Resume deleted successfully',
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Open an uploaded resume PDF through the signed link from withFileUrl
+// @route   GET /api/resumes/:id/file?token=...
+// @access  Signed link
+const getResumeFile = async (req, res, next) => {
+  try {
+    let link;
+    try {
+      link = jwt.verify(String(req.query.token || ''), process.env.JWT_SECRET, { algorithms: ['HS256'] });
+    } catch (e) {
+      return res.status(401).json({ success: false, message: 'This link has expired. Reload the page and open the resume again.' });
+    }
+    if (link.purpose !== FILE_LINK_PURPOSE || link.resume !== String(req.params.id)) {
+      return res.status(401).json({ success: false, message: 'This link is not valid for this resume.' });
+    }
+
+    const resume = await Resume.findById(req.params.id);
+    const file = resume && resume.fileId ? await ResumeFile.findById(resume.fileId) : null;
+    if (!file) {
+      return res.status(404).json({ success: false, message: 'Resume file not found' });
+    }
+
+    const fileName = resume.fileName || 'Resume.pdf';
+    const asciiName = fileName.replace(/[^\x20-\x7e]|["\\]/g, '_');
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Length': file.data.length,
+      'Content-Disposition': `inline; filename="${asciiName}"; filename*=UTF-8''${encodeURIComponent(fileName)}`,
+      'Cache-Control': 'private, max-age=3600',
+      'X-Content-Type-Options': 'nosniff',
+    });
+    res.send(file.data);
   } catch (error) {
     next(error);
   }
@@ -302,4 +409,5 @@ module.exports = {
   deleteResume,
   generateResumeData,
   setPrimaryResume,
+  getResumeFile,
 };
