@@ -2,6 +2,7 @@ import { env } from '@/lib/env'
 import { toListParams, toPage } from '@/lib/listQuery'
 import { appendPhotos, toMockPhotos } from '@/lib/photos'
 import { eventsMock } from '@/mocks/campusMock'
+import { toList } from '@/services/adapterUtils'
 import { apiClient } from '@/services/apiClient'
 import { toEvent } from '@/services/studentAdapters'
 
@@ -30,10 +31,28 @@ function toEventForm(values) {
   return appendPhotos(form, values.images)
 }
 
+const SEARCH_KEYS = ['title', 'organizer', 'venue', 'category']
+
+/** Today as YYYY-MM-DD in local time, the format event dates are stored in. */
+const today = () => new Date().toLocaleDateString('en-CA')
+
+/** The API returns every visible event; the upcoming/past split and "registration open" are worked out here by date. */
+function byWhen(events, when) {
+  const now = today()
+  const marked = events.map((event) => ({ ...event, registrationOpen: event.registrationOpen ?? (event.registrationDeadline ?? event.date) >= now }))
+  if (when === 'upcoming') return marked.filter((event) => event.date >= now)
+  if (when === 'past') return marked.filter((event) => event.date < now)
+  return marked
+}
+
 export const eventService = {
   async list(query = {}) {
-    const raw = env.useMock ? await eventsMock.list(query) : await apiClient.get('/events', { params: toListParams(query) })
-    return toPage(raw?.events ?? raw, query, toEvent, { searchKeys: ['title', 'organizer', 'venue', 'category'] })
+    if (env.useMock) return toPage(await eventsMock.list(query), query, toEvent, { searchKeys: SEARCH_KEYS })
+    const { when, ...filters } = query.filters ?? {}
+    const raw = await apiClient.get('/events', { params: toListParams({ ...query, filters }) })
+    const events = byWhen(toList(raw?.events ?? raw), when)
+    const sort = query.sort ?? { key: 'date', direction: when === 'past' ? 'desc' : 'asc' }
+    return toPage(events, { ...query, filters, sort }, toEvent, { searchKeys: SEARCH_KEYS })
   },
 
   async get(id) {

@@ -1,10 +1,12 @@
+import { apiUrlOf } from '@/lib/env'
 import { nameOf, pick, toId, toList, toNumber } from '@/services/adapterUtils'
 
-/** A photo may arrive as a bare URL string or as { url, caption }. */
+/** A photo may arrive as a bare URL string or as { url, caption }. Uploaded ones are served by the API. */
 export function toPhotos(raw) {
   return toList(raw)
     .map((photo) => (typeof photo === 'string' ? { url: photo, caption: '' } : { url: pick(photo?.url, photo?.src), caption: photo?.caption ?? '' }))
     .filter((photo) => photo.url)
+    .map((photo) => ({ ...photo, url: apiUrlOf(photo.url) }))
 }
 
 export function toClub(raw = {}) {

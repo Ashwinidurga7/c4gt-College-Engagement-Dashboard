@@ -206,8 +206,10 @@ export const previewMock = {
   saveFacility: (facility) => saveIn(facilities, 'fac', facility),
   deleteFacility: (id) => removeFrom(facilities, id),
 
+  /** The sample route, issued to whoever is signed in. */
   busPass() {
-    return mockResponse(busPass)
+    const user = currentMockUser()
+    return mockResponse(user?.role === 'student' ? { ...busPass, holder: user.name ?? busPass.holder, rollNumber: user.rollNumber ?? busPass.rollNumber } : busPass)
   },
 
   reportSource() {

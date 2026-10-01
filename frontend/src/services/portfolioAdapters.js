@@ -1,10 +1,8 @@
-import { env } from '@/lib/env'
+import { apiUrlOf } from '@/lib/env'
 import { nameOf, pick, toId, toNumber } from '@/services/adapterUtils'
 
 const lower = (value, fallback) => String(pick(value, fallback) ?? '').toLowerCase()
 const blankToNull = (value) => (value === '' || value === undefined ? null : value)
-/** File links the API returns as paths ("/api/...") are served by the API host, not the frontend's. */
-const apiUrlOf = (url) => (typeof url === 'string' && url.startsWith('/api/') ? `${env.apiUrl}${url}` : url)
 
 export function toCertification(raw = {}) {
   return {
@@ -38,7 +36,7 @@ export function toCertificate(raw = {}) {
     issuedBy: pick(raw.issuedBy, raw.issuer, raw.event),
     date: pick(raw.date, raw.issueDate, raw.createdAt),
     status: lower(pick(raw.status, raw.verificationStatus), verified ? 'verified' : 'pending'),
-    fileUrl: pick(raw.fileUrl, raw.url, raw.file?.url, raw.certificateUrl),
+    fileUrl: apiUrlOf(pick(raw.fileUrl, raw.url, raw.file?.url, raw.certificateUrl)),
     fileName: pick(raw.fileName, raw.originalName, raw.file?.name),
     verifiedBy: nameOf(raw.verifiedBy),
     remarks: pick(raw.remarks, raw.comment),
