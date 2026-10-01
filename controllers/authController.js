@@ -13,7 +13,7 @@ const {
 } = require('../services/accessControlService');
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'secret', {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
@@ -372,7 +372,7 @@ const loginUser = async (req, res, next) => {
   try {
     const rawId = req.body.email || req.body.identifier || req.body.rollNumber || '';
     const email = String(rawId).trim();
-    const password = String(req.body.password || '').trim();
+    const password = typeof req.body.password === 'string' ? req.body.password : '';
 
     if (!email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide roll number / email and password' });
