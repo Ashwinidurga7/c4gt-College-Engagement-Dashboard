@@ -47,7 +47,7 @@ Create the login accounts once (safe to re-run; it never deletes data):
 npm run seed:users
 ```
 
-It prints each account's password once. Share them privately, then clear the terminal. Run with `-- --reset-passwords` to issue new ones.
+It prints each account's password once. Share them privately, then clear the terminal. Run with `-- --reset-passwords` to issue new ones, and add `-- --save ~/kiet-logins.csv` to also get them as a spreadsheet (saved outside the repository only; delete it once everyone has their password).
 
 ## 3. Run with pm2
 

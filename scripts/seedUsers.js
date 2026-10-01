@@ -5,12 +5,15 @@
  *
  *   npm run seed:users                     create missing accounts, keep existing passwords
  *   npm run seed:users -- --reset-passwords   give every seeded account a new password
+ *   npm run seed:users -- --save ~/Desktop/kiet-logins.csv   also save the logins to a CSV
  *
- * New passwords are random and printed once in the terminal. They are never written to
- * a file. To choose a role's password instead, set SEED_PASSWORD_<ROLE> (for example
+ * New passwords are random and printed once in the terminal. They are only written to a
+ * file when --save is given, and never inside the repository, so they cannot be committed.
+ * To choose a role's password instead, set SEED_PASSWORD_<ROLE> (for example
  * SEED_PASSWORD_ADMIN); it applies to every account of that role on each run.
  */
 const crypto = require('crypto');
+const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
@@ -202,6 +205,32 @@ async function warnOnRollNumberClash(account, user) {
   }
 }
 
+/** The --save path, resolved. Refuses paths inside the repository, so the file cannot be committed. */
+function savePathFromArgs() {
+  const index = process.argv.indexOf('--save');
+  if (index === -1) return null;
+  const given = process.argv[index + 1];
+  if (!given || given.startsWith('--')) {
+    throw new Error('--save needs a file path, e.g. --save ~/Desktop/kiet-logins.csv');
+  }
+  const resolved = path.resolve(given.replace(/^~(?=$|[\\/])/, require('os').homedir()));
+  const repoRoot = path.resolve(__dirname, '..');
+  if (resolved === repoRoot || resolved.startsWith(repoRoot + path.sep)) {
+    throw new Error('Save the logins outside the repository (for example on your Desktop), so they are never committed.');
+  }
+  return resolved;
+}
+
+const csvCell = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+
+/** Writes the logins as a CSV that opens in Excel, readable only by the current user. */
+function saveLogins(file, rows) {
+  const header = ['Role', 'Name', 'Email', 'Roll number', 'Password'];
+  const lines = rows.map((row) => [row.role, row.name, row.email, row.rollNumber, row.password].map(csvCell).join(','));
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `﻿${header.join(',')}\r\n${lines.join('\r\n')}\r\n`, { mode: 0o600 });
+}
+
 async function main() {
   const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
   if (!uri) {
@@ -210,6 +239,7 @@ async function main() {
   }
 
   const resetPasswords = process.argv.includes('--reset-passwords');
+  const savePath = savePathFromArgs();
   ['student', ...STAFF.map((s) => s.role)].forEach(passwordOverride); // fail before writing anything
 
   await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
@@ -235,6 +265,14 @@ async function main() {
   console.table(rows);
   console.log('Students can sign in with their email or roll number.');
   console.log('Run with --reset-passwords to issue new ones (for example if this output was lost).');
+
+  if (savePath) {
+    saveLogins(savePath, rows);
+    console.log(`\nLogins saved to ${savePath}. Keep it private and delete it once everyone has their password.`);
+    if (rows.some((row) => row.password === '(unchanged)')) {
+      console.log('Accounts marked (unchanged) kept their old password; add --reset-passwords to put new ones in the file.');
+    }
+  }
 }
 
 main()
