@@ -25,8 +25,20 @@ const protect = async (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ success: false, message: 'User not found' });
   }
+
+  // An account still on its issued password (e.g. a roll number) can only read itself
+  // and change the password until it has done so.
+  if (req.user.mustChangePassword && !PASSWORD_CHANGE_ROUTES.includes(req.originalUrl.split('?')[0])) {
+    return res.status(403).json({
+      success: false,
+      code: 'PASSWORD_CHANGE_REQUIRED',
+      message: 'Set a new password to continue.',
+    });
+  }
   next();
 };
+
+const PASSWORD_CHANGE_ROUTES = ['/api/auth/me', '/api/auth/updatepassword'];
 
 const { authorize } = require('./roleMiddleware');
 

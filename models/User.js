@@ -27,6 +27,9 @@ if (mongoose.models.User) {
       section: { type: String },
       approvalStatus: { type: String, default: 'approved' },
       isActive: { type: Boolean, default: true },
+      // Set while the account still has its issued password (e.g. a roll number); the API
+      // only allows changing the password until it is cleared.
+      mustChangePassword: { type: Boolean, default: false },
     },
     {
       timestamps: true,

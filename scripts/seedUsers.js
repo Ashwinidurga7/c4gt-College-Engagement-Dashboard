@@ -1,15 +1,18 @@
 /**
  * Creates the real login accounts: the nine students of our team and one account for
- * each staff role. Safe to run again: accounts are matched by email and updated in
- * place, and nothing else in the database is touched.
+ * each staff role. Safe to run again: students are matched by roll number and staff by
+ * email, accounts are updated in place, and nothing else in the database is touched.
  *
  *   npm run seed:users                     create missing accounts, keep existing passwords
- *   npm run seed:users -- --reset-passwords   give every seeded account a new password
+ *   npm run seed:users -- --reset-passwords   issue every seeded account a new first password
+ *   npm run seed:users -- --reset-student-passwords   students back to their roll number; staff unchanged
  *   npm run seed:users -- --save ~/Desktop/kiet-logins.csv   also save the logins to a CSV
  *
- * New passwords are random and printed once in the terminal. They are only written to a
- * file when --save is given, and never inside the repository, so they cannot be committed.
- * To choose a role's password instead, set SEED_PASSWORD_<ROLE> (for example
+ * Students sign in with the email on their profile in the database (edit it there; the
+ * emails below are only used for new accounts) and their roll number as the first
+ * password, which they must change at their first sign-in. Staff get a random password,
+ * printed once in the terminal and only written to a file with --save, never inside the
+ * repository. To choose a role's password instead, set SEED_PASSWORD_<ROLE> (for example
  * SEED_PASSWORD_ADMIN); it applies to every account of that role on each run.
  */
 const crypto = require('crypto');
@@ -95,11 +98,34 @@ async function cseDepartment() {
   return { _id: 'dept_cse', name: 'Computer Science and Engineering', code: 'CSE' };
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * The email a student signs in with: the one on their profile in the database, where
+ * admins edit it, else the roster's (new accounts). Keeps the current email if another
+ * account already uses the profile's.
+ */
+async function studentEmail(account, user) {
+  const profile = await Student.findOne({ rollNumber: { $eq: account.rollNumber } }).lean();
+  const fromProfile = profile && typeof profile.email === 'string' ? profile.email.trim().toLowerCase() : '';
+  const wanted = EMAIL_PATTERN.test(fromProfile) ? fromProfile : (user && user.email) || account.email;
+  const taken = await User.findOne({ email: { $eq: wanted }, ...(user ? { _id: { $ne: user._id } } : {}) }).lean();
+  if (taken) {
+    console.warn(`⚠️  ${wanted} is already used by another account, so ${account.rollNumber} keeps ${(user && user.email) || account.email}.`);
+    return (user && user.email) || account.email;
+  }
+  return wanted;
+}
+
 /** Creates or updates the User. Returns the user and the plain password if one was set. */
 async function upsertUser(account, resetPasswords) {
-  const { email, role } = account;
-  let user = await User.findOne({ email: { $eq: email } });
+  const { role } = account;
+  const isStudent = role === 'student';
+  let user = isStudent
+    ? (await User.findOne({ rollNumber: { $eq: account.rollNumber }, role: 'student' })) || (await User.findOne({ email: { $eq: account.email } }))
+    : await User.findOne({ email: { $eq: account.email } });
   const isNew = !user;
+  const email = isStudent ? await studentEmail(account, user) : account.email;
 
   const fields = {
     name: account.name,
@@ -122,7 +148,7 @@ async function upsertUser(account, resetPasswords) {
   if (isNew) {
     user = new User({ email, ...fields });
   } else {
-    user.set(fields);
+    user.set({ email, ...fields });
   }
 
   const override = passwordOverride(role);
@@ -130,7 +156,9 @@ async function upsertUser(account, resetPasswords) {
   if (override) {
     password = override;
   } else if (isNew || resetPasswords) {
-    password = generatePassword();
+    // A student's first password is their roll number, changed at the first sign-in.
+    password = isStudent ? account.rollNumber : generatePassword();
+    if (isStudent) user.mustChangePassword = true;
   }
   // Only set when it changes, so an unchanged account keeps its hash (the model hashes on save).
   if (password && (isNew || !(await user.matchPassword(password)))) {
@@ -152,7 +180,7 @@ async function upsertStudentProfile(user, account) {
   const fields = {
     user: userId,
     name: account.name,
-    email: account.email,
+    email: user.email,
     rollNumber: account.rollNumber,
     college: account.college,
     department: 'CSE',
@@ -239,6 +267,8 @@ async function main() {
   }
 
   const resetPasswords = process.argv.includes('--reset-passwords');
+  // Students only: back to their roll number as the first password; staff keep theirs.
+  const resetStudentPasswords = resetPasswords || process.argv.includes('--reset-student-passwords');
   const savePath = savePathFromArgs();
   ['student', ...STAFF.map((s) => s.role)].forEach(passwordOverride); // fail before writing anything
 
@@ -249,10 +279,11 @@ async function main() {
   const rows = [];
 
   for (const account of STUDENTS) {
-    const { user, isNew, password } = await upsertUser(account, resetPasswords);
+    const { user, isNew, password } = await upsertUser(account, resetStudentPasswords);
     await upsertStudentProfile(user, account);
     await warnOnRollNumberClash(account, user);
-    rows.push({ role: 'student', name: account.name, email: account.email, rollNumber: account.rollNumber, status: isNew ? 'created' : 'updated', password: password || '(unchanged)' });
+    const firstPassword = password === account.rollNumber ? `${password} (change at first sign-in)` : password;
+    rows.push({ role: 'student', name: account.name, email: user.email, rollNumber: account.rollNumber, status: isNew ? 'created' : 'updated', password: firstPassword || '(unchanged)' });
   }
 
   for (const account of STAFF) {
@@ -263,8 +294,8 @@ async function main() {
 
   console.log('\nSeeded accounts. Passwords are shown only now: hand them out privately and clear this terminal.\n');
   console.table(rows);
-  console.log('Students can sign in with their email or roll number.');
-  console.log('Run with --reset-passwords to issue new ones (for example if this output was lost).');
+  console.log('Students sign in with their email (or roll number) and, the first time, their roll number as the password.');
+  console.log('Run with --reset-passwords to issue new first passwords (for example if a student is locked out).');
 
   if (savePath) {
     saveLogins(savePath, rows);
