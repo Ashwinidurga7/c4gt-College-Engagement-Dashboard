@@ -1,5 +1,6 @@
 const Club = require('../models/Club');
 const { isValidCollege, normalizeCollege } = require('../services/accessControlService');
+const { buildGallery, removeUnused } = require('../services/mediaService');
 
 /**
  * @desc    Get college clubs
@@ -114,17 +115,20 @@ const createClub = async (req, res, next) => {
       tags,
       status,
       isActive,
-    } = req.body;
+      fullName,
+      tagline,
+      coordinator,
+      email,
+      founded,
+      focusAreas,
+    } = req.body || {};
 
     if (!name) {
       return res.status(400).json({ success: false, message: 'Club name is required' });
     }
 
-    if (!college) {
-      return res.status(400).json({ success: false, message: 'College is required (KIET, KIET+, or KIEW)' });
-    }
-
-    const normCollege = normalizeCollege(college);
+    // Clubs are open to all three colleges; KIET is the home college unless one is given.
+    const normCollege = normalizeCollege(college || 'KIET');
     if (!isValidCollege(normCollege)) {
       return res.status(400).json({
         success: false,
@@ -152,6 +156,16 @@ const createClub = async (req, res, next) => {
       tags: Array.isArray(tags) ? tags : (tags ? [tags] : []),
       status: clubStatus,
       isActive: clubIsActive,
+      // Fields the portal's club form edits
+      fullName: fullName || '',
+      tagline: tagline || '',
+      coordinator: coordinator || facultyCoordinator || '',
+      email: email || contactEmail || '',
+      founded: founded ? Number(founded) : null,
+      focusAreas: Array.isArray(focusAreas) ? focusAreas : [],
+      photos: [],
+      stats: { projects: 0, workshops: 0, hackathons: 0 },
+      socials: {},
     });
 
     res.status(201).json({
@@ -176,7 +190,8 @@ const updateClub = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Club not found' });
     }
 
-    const updates = { ...req.body };
+    // Photos change through PUT /api/clubs/:id/photos, and the id never changes.
+    const { _id, photos, ...updates } = req.body || {};
 
     if (updates.college) {
       const normCollege = normalizeCollege(updates.college);
@@ -220,10 +235,12 @@ const deleteClub = async (req, res, next) => {
     }
 
     await Club.findByIdAndDelete(req.params.id);
+    await removeUnused((club.get('photos') || []).map((photo) => photo.url || photo), []);
 
     res.status(200).json({
       success: true,
       message: 'Club deleted successfully',
+      data: { _id: club._id },
     });
   } catch (error) {
     next(error);
@@ -329,6 +346,28 @@ const deactivateClub = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Replace a club's gallery: photos kept (keepImages) plus new uploads (images)
+ * @route   PUT /api/clubs/:id/photos
+ * @access  Private (Admin only)
+ */
+const updateClubPhotos = async (req, res, next) => {
+  try {
+    const club = await Club.findById(req.params.id);
+    if (!club) {
+      return res.status(404).json({ success: false, message: 'Club not found' });
+    }
+    const photos = await buildGallery(req, club.get('photos'), 'club');
+    const updated = await Club.findByIdAndUpdate(req.params.id, { $set: { photos } }, { returnDocument: 'after' });
+    res.status(200).json({ success: true, message: 'Club photos updated', data: updated });
+  } catch (error) {
+    if (error.status === 400) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    next(error);
+  }
+};
+
 module.exports = {
   getClubs,
   getClubById,
@@ -338,4 +377,5 @@ module.exports = {
   toggleClubStatus,
   activateClub,
   deactivateClub,
+  updateClubPhotos,
 };
