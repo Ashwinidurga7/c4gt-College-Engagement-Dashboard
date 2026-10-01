@@ -114,13 +114,28 @@ const updateActivity = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Activity not found' });
     }
 
-    // Only allow editing if pending or resubmit
-    if (activity.status === 'approved' && req.user.role === 'student') {
-      return res.status(400).json({ success: false, message: 'Approved activities cannot be modified' });
+    let changes = req.body || {};
+    if (req.user.role === 'student') {
+      const studentProfile = await Student.findOne({ user: req.user.id });
+      const activityStudentId = activity.student?._id || activity.student?.id || activity.student;
+      if (!studentProfile || String(activityStudentId) !== String(studentProfile._id)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to update this activity' });
+      }
+      // Only allow editing if pending or resubmit
+      if (activity.status === 'approved') {
+        return res.status(400).json({ success: false, message: 'Approved activities cannot be modified' });
+      }
+      // Details only: approval and points are set by faculty.
+      changes = {};
+      ['title', 'type', 'category', 'organizer', 'role', 'date', 'description'].forEach((field) => {
+        if (req.body[field] !== undefined) changes[field] = req.body[field];
+      });
+    } else if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the activity owner or an admin can update this activity' });
     }
 
-    activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+    activity = await Activity.findByIdAndUpdate(req.params.id, { $set: changes }, {
+      returnDocument: 'after',
       runValidators: true,
     });
 

@@ -75,9 +75,10 @@ const createCertification = async (data, currentUser) => {
     throw new ServiceError('Student profile not found for logged in user', 404);
   }
 
-  const title = (data.title || data.certificationName || '').trim();
-  const issuingOrganization = (data.issuingOrganization || data.platform || '').trim();
-  const platform = (data.platform || data.issuingOrganization || '').trim();
+  // The portal's form sends name and issuer.
+  const title = (data.title || data.certificationName || data.name || '').trim();
+  const issuingOrganization = (data.issuingOrganization || data.platform || data.issuer || '').trim();
+  const platform = (data.platform || data.issuingOrganization || data.issuer || '').trim();
   const issueDate = data.issueDate ? new Date(data.issueDate) : new Date();
   const credentialId = (data.credentialId || '').trim();
   const credentialUrl = (data.credentialUrl || data.website || data.websiteLink || '').trim();
