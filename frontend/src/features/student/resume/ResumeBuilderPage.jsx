@@ -18,12 +18,29 @@ import { useAuth } from '@/hooks/useAuth'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { formatDateTime } from '@/lib/formatters'
 
-function DraftStatus({ status }) {
+const SAVE_PROBLEMS = {
+  local: 'Not saved to your account. Your latest edits are only in this browser, so they will not show on another device yet.',
+  offline: 'Could not load your saved resume from your account. Edits stay in this browser until it is reachable.',
+  unavailable: 'Not saved: your account and this browser could not be reached.',
+}
+
+function DraftStatus({ status, onRetry }) {
+  const problem = SAVE_PROBLEMS[status.state]
+  if (problem) {
+    return (
+      <p role="alert" className="bg-warning-soft text-warning-text flex max-w-md items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium">
+        <CloudOff className="size-4 shrink-0" aria-hidden />
+        <span className="flex-1">{problem}</span>
+        <Button size="sm" variant="outline" onClick={onRetry}>
+          Retry
+        </Button>
+      </p>
+    )
+  }
+
   const content = {
     saving: [Loader2, 'Saving…', 'animate-spin'],
     saved: [Check, status.at ? `Saved to your account ${formatDateTime(status.at)}` : 'Saved to your account'],
-    local: [CloudOff, 'Saved in this browser only. Your account copy updates with your next edit once the connection is back.'],
-    unavailable: [CloudOff, 'Not saved: your account and this browser could not be reached'],
   }[status.state]
   if (!content) return null
   const [Icon, label, iconClass] = content
@@ -44,7 +61,7 @@ export function ResumeBuilderPage() {
   useDocumentTitle('Resume Builder')
   const { user } = useAuth()
   const data = useResumeData()
-  const { draft, update, reset, status } = useResumeDraft(user.id)
+  const { draft, update, reset, status, retry: retrySave } = useResumeDraft(user.id)
   const history = useResumeVersions()
   const [confirmReset, setConfirmReset] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
@@ -88,7 +105,7 @@ export function ResumeBuilderPage() {
                 <RotateCcw aria-hidden /> Reset to profile data
               </Button>
             </div>
-            <DraftStatus status={status} />
+            <DraftStatus status={status} onRetry={retrySave} />
           </div>
         }
       />

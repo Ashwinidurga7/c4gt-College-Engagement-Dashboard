@@ -35,40 +35,74 @@ const isNewer = (candidate, current) => candidate?.version === VERSION && (!curr
  * The browser copy opens the builder instantly; the account copy (resumeDraftService) is what survives
  * sign-out, refresh and a change of device. On load the newer of the two wins, and a browser copy the account
  * missed (say, an edit made as the session ended) is sent up. Each edit is written to the browser at once and to
- * the account shortly after; `status` drives the save indicator, and `local` means only this browser has it.
+ * the account shortly after, but only once the account copy has been read, so a failed load can never let an
+ * older browser copy overwrite a newer one. `status` drives the save indicator: `local` means only this browser
+ * has the latest edits and `offline` that the account copy could not be loaded; `retry` tries the account again.
  */
 export function useResumeDraft(userId) {
   const [stored] = useState(() => readResumeDraft(userId))
   const [draft, setDraft] = useState(stored ?? { version: VERSION })
   const [status, setStatus] = useState(stored ? { state: 'saved', at: stored.updatedAt } : { state: 'idle' })
+  const [attempt, setAttempt] = useState(0)
+  const latest = useRef(draft)
   const pending = useRef(null)
-  const edited = useRef(false)
+  // 'loading' until the account copy has been read, then 'ready', or 'failed' if it could not be.
+  const sync = useRef('loading')
 
-  // Take the account copy when it is newer than this browser's, unless the student has already started editing.
+  const failedStatus = useCallback(
+    (next) => (readResumeDraft(userId)?.updatedAt === next.updatedAt ? { state: 'local', at: next.updatedAt } : { state: 'unavailable' }),
+    [userId],
+  )
+
+  /** Sends a draft to the account and shows where it ended up. */
+  const push = useCallback(
+    async (next) => {
+      try {
+        await resumeDraftService.save(next)
+        // A newer edit is already on its way; its own save reports the status.
+        if (latest.current === next) setStatus({ state: 'saved', at: next.updatedAt })
+      } catch {
+        setStatus(failedStatus(next))
+      }
+    },
+    [failedStatus],
+  )
+
+  // Read the account copy, take it when it is newer than this browser's, otherwise send up what it missed.
   useEffect(() => {
     let active = true
+    sync.current = 'loading'
     resumeDraftService
       .get()
       .then((remote) => {
-        if (!active || edited.current) return
-        if (!isNewer(remote, stored)) {
-          if (stored?.updatedAt && stored.updatedAt !== remote?.updatedAt) resumeDraftService.save(stored).catch(() => {})
-          return
+        if (!active) return
+        sync.current = 'ready'
+        const current = latest.current
+        if (isNewer(remote, current)) {
+          writeDraft(userId, remote)
+          latest.current = remote
+          setDraft(remote)
+          setStatus({ state: 'saved', at: remote.updatedAt })
+        } else if (current.updatedAt && current.updatedAt !== remote?.updatedAt) {
+          push(current)
         }
-        writeDraft(userId, remote)
-        setDraft(remote)
-        setStatus({ state: 'saved', at: remote.updatedAt })
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!active) return
+        sync.current = 'failed'
+        const current = latest.current
+        setStatus(current.updatedAt ? failedStatus(current) : { state: 'offline' })
+      })
     return () => {
       active = false
     }
-  }, [userId, stored])
+  }, [userId, attempt, push, failedStatus])
 
-  // Send an edit made just before leaving the builder, signing out, or closing or reloading the tab.
+  // Send an edit made just before leaving the builder, signing out, or closing or reloading the tab. Nothing is
+  // left on screen to report a failure to, and the browser copy is sent up the next time the builder opens.
   useEffect(() => {
     const flush = () => {
-      if (!pending.current) return
+      if (!pending.current || sync.current !== 'ready') return
       resumeDraftService.save(pending.current).catch(() => {})
       pending.current = null
     }
@@ -81,29 +115,25 @@ export function useResumeDraft(userId) {
 
   useEffect(() => {
     if (!pending.current) return undefined
-    const next = pending.current
-    const timer = setTimeout(async () => {
+    const timer = setTimeout(() => {
+      const next = pending.current
       pending.current = null
-      const local = readResumeDraft(userId)?.updatedAt === next.updatedAt
-      try {
-        await resumeDraftService.save(next)
-        setStatus({ state: 'saved', at: next.updatedAt })
-      } catch {
-        setStatus(local ? { state: 'local', at: next.updatedAt } : { state: 'unavailable' })
-      }
+      if (sync.current === 'ready') push(next)
+      else if (sync.current === 'failed') setStatus(failedStatus(next))
+      // Still loading: the load sends the latest draft once it has compared it with the account copy.
     }, SAVE_DELAY)
     return () => clearTimeout(timer)
-  }, [draft, userId])
+  }, [draft, push, failedStatus])
 
   /** `change` receives the current draft and returns the next one. */
   const update = useCallback(
     (change) => {
-      edited.current = true
       setDraft((current) => {
         const next = { ...change(current), version: VERSION, updatedAt: new Date().toISOString() }
         // The browser copy is written at once, so no edit is lost to a reload; the account copy follows shortly.
         writeDraft(userId, next)
         pending.current = next
+        latest.current = next
         return next
       })
       setStatus({ state: 'saving' })
@@ -113,16 +143,22 @@ export function useResumeDraft(userId) {
 
   /** Discards the edits but remembers which saved resumes came from the builder. */
   const reset = useCallback(() => {
-    edited.current = true
+    const current = latest.current
+    const next = { version: VERSION, updatedAt: new Date().toISOString(), ...(current.savedResumeIds?.length && { savedResumeIds: current.savedResumeIds }) }
     pending.current = null
-    setDraft((current) => {
-      const next = { version: VERSION, updatedAt: new Date().toISOString(), ...(current.savedResumeIds?.length && { savedResumeIds: current.savedResumeIds }) }
-      writeDraft(userId, next)
-      resumeDraftService.save(next).catch(() => {})
-      return next
-    })
-    setStatus({ state: 'idle' })
-  }, [userId])
+    latest.current = next
+    writeDraft(userId, next)
+    setDraft(next)
+    setStatus({ state: 'saving' })
+    if (sync.current === 'ready') push(next)
+    else if (sync.current === 'failed') setStatus(failedStatus(next))
+  }, [userId, push, failedStatus])
 
-  return { draft, update, reset, status }
+  /** Tries the account again: loads its copy, then sends up anything it is missing. */
+  const retry = useCallback(() => {
+    setStatus({ state: 'saving' })
+    setAttempt((count) => count + 1)
+  }, [])
+
+  return { draft, update, reset, status, retry }
 }

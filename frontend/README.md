@@ -29,6 +29,7 @@ npm run dev               # http://localhost:5173
 | --- | --- | --- |
 | `VITE_API_URL` | `http://localhost:5000` | Backend origin. The client adds `/api`, so do not include it. A trailing slash is ignored. |
 | `VITE_USE_MOCK` | `true` in `.env.example` (`false` if unset) | `true` serves every module from `src/mocks/` and needs no backend. Set `false` to use the real API |
+| `VITE_REAL_MODULES` | empty | With `VITE_USE_MOCK=true`, the listed modules use the real API anyway, e.g. `auth,resume`. Services check `env.useMockFor('<module>')`. With real sign-in, the modules still on mock data show the demo data of the signed-in user's role |
 
 Vite reads these at build time, so restart `npm run dev` (or rebuild) after changing them.
 
