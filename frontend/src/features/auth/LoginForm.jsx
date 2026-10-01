@@ -80,13 +80,14 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
       {error && (isPending ? <PendingApprovalNotice message={error.message} /> : <LoginErrorNotice message={error.message} />)}
 
-      <FormField id="login-email" label="Institutional email" error={errors.email?.message}>
+      <FormField id="login-email" label="Email or roll number" error={errors.email?.message}>
         <IconInput
           icon={Mail}
-          type="email"
+          type="text"
           autoComplete="username"
-          inputMode="email"
-          placeholder="yourname@kiet.edu"
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="yourname@kiet.edu or 24B21A4345"
           {...fieldProps('login-email', errors.email)}
           {...register('email')}
         />

@@ -75,7 +75,8 @@ function publicUser({ _id, password: _password, ...rest }) {
 }
 
 export function mockLogin({ email, password }) {
-  const user = users.find((entry) => entry.email.toLowerCase() === email.trim().toLowerCase())
+  const id = email.trim().toLowerCase()
+  const user = users.find((entry) => entry.email.toLowerCase() === id || entry.rollNumber?.toLowerCase() === id)
   if (!user || password !== (user.password ?? MOCK_PASSWORD)) {
     return mockError('Invalid email or password.', 401)
   }

@@ -2,8 +2,16 @@ import { z } from 'zod'
 import { COLLEGES, DEPARTMENTS } from '@/lib/colleges'
 import { ROLE_LIST } from '@/lib/roles'
 
+/** JNTUK roll numbers: two-digit batch then eight letters and digits, e.g. 24B21A4345. */
+const ROLL_NUMBER = /^\d{2}[A-Z0-9]{8}$/i
+
 export const loginSchema = z.object({
-  email: z.string().trim().min(1, 'Enter your institutional email.').pipe(z.email('Enter a valid email address.')),
+  // Students may sign in with their roll number instead of their email.
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Enter your institutional email or roll number.')
+    .refine((value) => ROLL_NUMBER.test(value) || z.email().safeParse(value).success, 'Enter a valid email address or roll number.'),
   password: z.string().min(1, 'Enter your password.'),
   remember: z.boolean(),
   portal: z.enum(ROLE_LIST),
