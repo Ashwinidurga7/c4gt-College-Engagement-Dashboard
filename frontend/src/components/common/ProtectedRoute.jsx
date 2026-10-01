@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { FullPageError, FullPageLoader } from '@/components/common/FullPageStatus'
 import { useAuth } from '@/hooks/useAuth'
+import { SET_PASSWORD_PATH } from '@/lib/roles'
 
 /**
  * Requires a signed-in user whose role is in `roles`.
@@ -25,6 +26,11 @@ export function ProtectedRoute({ roles, children }) {
 
   if (status !== 'authenticated') {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  }
+
+  // Still on the issued password (a student's roll number): set their own before anything else.
+  if (user.mustChangePassword) {
+    return <Navigate to={SET_PASSWORD_PATH} replace />
   }
 
   if (roles && !roles.includes(user.role)) {

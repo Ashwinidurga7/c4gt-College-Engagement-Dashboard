@@ -17,6 +17,26 @@ export const loginSchema = z.object({
   portal: z.enum(ROLE_LIST),
 })
 
+/** Setting your own password after signing in with the issued one (a student's roll number). */
+export const setPasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Enter your current password.'),
+    newPassword: z
+      .string()
+      .min(8, 'Use at least 8 characters.')
+      .regex(/[A-Za-z]/, 'Include at least one letter.')
+      .regex(/\d/, 'Include at least one number.'),
+    confirmPassword: z.string().min(1, 'Re-enter your new password.'),
+  })
+  .superRefine((values, ctx) => {
+    if (values.newPassword !== values.confirmPassword) {
+      ctx.addIssue({ code: 'custom', path: ['confirmPassword'], message: 'Passwords do not match.' })
+    }
+    if (values.newPassword && values.newPassword === values.currentPassword) {
+      ctx.addIssue({ code: 'custom', path: ['newPassword'], message: 'Choose a password different from the current one.' })
+    }
+  })
+
 export const REGISTRABLE_ROLES = ['student', 'faculty', 'hod', 'ctpo']
 
 const requiredFor = {

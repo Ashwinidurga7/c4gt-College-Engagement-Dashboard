@@ -38,6 +38,16 @@ export function AuthProvider({ children }) {
     [queryClient],
   )
 
+  /** After the user sets their own password: keep the session on the new token and lift the gate. */
+  const passwordChanged = useCallback(
+    (nextToken) => {
+      tokenStorage.replace(nextToken)
+      queryClient.setQueryData(queryKeys.me, (user) => (user ? { ...user, mustChangePassword: false } : user))
+      setToken(nextToken)
+    },
+    [queryClient],
+  )
+
   useEffect(() => {
     setUnauthorizedHandler(() => signOut('expired'))
     return () => setUnauthorizedHandler(null)
@@ -64,8 +74,9 @@ export function AuthProvider({ children }) {
       retry: meQuery.refetch,
       signIn,
       signOut,
+      passwordChanged,
     }
-  }, [token, tokenRejected, meQuery.isPending, meQuery.isError, meQuery.data, meQuery.error, meQuery.refetch, signIn, signOut])
+  }, [token, tokenRejected, meQuery.isPending, meQuery.isError, meQuery.data, meQuery.error, meQuery.refetch, signIn, signOut, passwordChanged])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

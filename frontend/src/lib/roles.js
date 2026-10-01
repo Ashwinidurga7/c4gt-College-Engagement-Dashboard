@@ -55,6 +55,9 @@ export function dashboardPath(role) {
   return isRole(role) ? `/${role}/dashboard` : '/login'
 }
 
+/** Where an account still on its issued password (a student's roll number) sets its own. */
+export const SET_PASSWORD_PATH = '/set-password'
+
 /** Roles that need an approver before they can sign in. */
 export const APPROVAL_ROUTE = {
   faculty: 'Admin',

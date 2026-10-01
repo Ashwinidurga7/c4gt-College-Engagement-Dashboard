@@ -3,7 +3,7 @@ import { tokenStorage } from '@/lib/tokenStorage'
 import { mockError, mockResponse } from '@/mocks/mockUtils'
 
 /** Shared demo password for every mock account. Mock mode only; never used against the real API. */
-export const MOCK_PASSWORD = 'Kiet@2026'
+const MOCK_PASSWORD = 'Kiet@2026'
 
 const users = [
   {
@@ -66,7 +66,6 @@ const users = [
   { _id: 'u-hod-p1', name: 'Dr. V. Ramana Murthy', email: 'hod.mech@kietplus.edu', role: 'hod', college: 'KIET+', department: 'MECH', academicYear: '2026-27', approvalStatus: 'pending', createdAt: '2026-09-14T16:45:00+05:30' },
 ]
 
-export const MOCK_ACCOUNTS = users.filter((user) => user.approvalStatus === 'approved').map(({ email, role }) => ({ email, role }))
 
 const TOKEN_PREFIX = 'mock.'
 

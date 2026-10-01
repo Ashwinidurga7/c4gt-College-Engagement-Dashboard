@@ -5,7 +5,7 @@ import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 import { RootRedirect } from '@/components/common/RootRedirect'
 import { AppShell } from '@/components/layout/AppShell'
 import { navItemsFor } from '@/lib/navigation'
-import { ROLE_LIST } from '@/lib/roles'
+import { ROLE_LIST, SET_PASSWORD_PATH } from '@/lib/roles'
 
 /** Lazily loads a named page export as a route component. */
 function page(loader, name) {
@@ -119,6 +119,8 @@ export const router = createBrowserRouter([
       // Public: linked from the login page and readable whether or not you are signed in.
       { path: '/about', lazy: page(() => import('@/features/about/AboutPage'), 'AboutPage') },
       { path: '/awaiting-approval', lazy: page(() => import('@/features/auth/AwaitingApprovalPage'), 'AwaitingApprovalPage') },
+      // Signed in with an issued password (a student's roll number); the page sends everyone else on.
+      { path: SET_PASSWORD_PATH, lazy: page(() => import('@/features/auth/SetPasswordPage'), 'SetPasswordPage') },
       statusRoute('/forbidden', 'forbidden'),
       ...ROLE_LIST.map(roleRoutes),
       statusRoute('*', 'notFound'),

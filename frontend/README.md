@@ -46,15 +46,7 @@ return toPage(raw?.events ?? raw, query, toEvent)
 
 Both sources return raw data, which the adapters (`*Adapters.js`) turn into the shapes the UI uses. The adapters accept common field-name variants, so a small difference in the backend response usually needs a change in one adapter only.
 
-**Demo accounts (mock mode).** The login page shows a "Demo accounts" helper that fills in the credentials. All use the password `Kiet@2026`:
-
-| Role | Email |
-| --- | --- |
-| Student | `ashwini.durga@kiet.edu` |
-| Faculty | `ramesh.varma@kiet.edu` |
-| HOD | `hod.cse@kiet.edu` |
-| CTPO | `srinivasa.rao@kiet.edu` |
-| Admin | `admin@kiet.edu` |
+**Signing in (mock mode).** The mock accounts are defined in `src/mocks/authMock.js`. With the real API, students sign in with their email (or roll number) and, the first time, their roll number as the password; they then set their own.
 
 Changes made in mock mode (registrations, approvals, uploads, club edits) are kept in memory and reset when the page reloads.
 
